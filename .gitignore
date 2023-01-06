@@ -1,0 +1,8 @@
+.idea
+.venv
+**/*.env
+**/*.next
+**/node_modules
+
+pdf2json-api/temp
+pdf2json-api/output

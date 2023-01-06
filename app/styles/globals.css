@@ -1,0 +1,23 @@
+html,
+body {
+   padding: 0;
+   margin: 0;
+   font-family: 'Roboto', sans-serif;
+   text-align: center;
+   scroll-behavior: smooth;
+}
+
+* {
+   box-sizing: border-box;
+}
+
+h1 {
+   font-size: 5rem;
+}
+h2 {
+   font-size: 3rem
+}
+h3 {
+   font-size: 2rem;
+
+}

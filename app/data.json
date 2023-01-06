@@ -1,0 +1,67 @@
+{
+  "1": {
+    "title": "Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet",
+    "datasets": [
+      {"name": "RibFrac Dataset", "download_types": ["csv", "zip"], "source":  "https://zenodo.org/record/3893508", "size": "36.6GB"}
+    ]
+  },
+  "2": {
+    "title": "Microsoft COCO: Common Objects in Context",
+    "datasets": [
+      {"name": "Microsoft COCO", "download_types": ["zip", "API"], "source":  "https://cocodataset.org/#download", "size": "83.6GB"}
+    ]
+  },
+  "3": {
+    "title": "CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison",
+    "datasets": [
+      {"name": "CheXpert", "download_types": ["images"], "source":  "https://stanfordmlgroup.github.io/competitions/chexpert/?utm_source=www.tensorflow.org&utm_medium=referral", "size": "unkown"}
+    ]
+  },
+  "4": {
+    "title": "Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks",
+    "datasets": [
+      {
+        "name": "MNIST",
+        "download_types": ["jpg"],
+        "source":  ["https://www.tensorflow.org/datasets/catalog/mnist"],
+        "size": "30MB"
+      },
+      {
+        "name": "CIFAR-10",
+        "download_types": ["jpg"],
+        "source":  ["https://www.cs.toronto.edu/~kriz/cifar.html"],
+        "size": "175MB"
+      },
+      {
+        "name": "CIFAR-100",
+        "download_types": ["jpg"],
+        "source":  ["https://www.cs.toronto.edu/~kriz/cifar.html"],
+        "size": "175MB"
+      },
+      {
+        "name": "ImageNet",
+        "download_types": ["jpeg", "xml", "txt"],
+        "source":  ["https://www.kaggle.com/competitions/imagenet-object-localization-challenge/data"],
+        "size": "167GB"
+      }
+    ]
+  },
+  "5": {
+    "title": "Emidec: A Database Usable for the Automatic Evaluation of Myocardial Infarction from Delayed-Enhancement Cardiac MRI"
+  },
+  "6": {
+    "title": "REFUGE Challenge: A Unified Framework for Evaluating Automated Methods for Glaucoma Assessment from Fundus Photographs Journal Pre-proof REFUGE Challenge: A Unified Framework for Evaluating Automated Methods for Glaucoma Assessment from Fundus Photographs"
+  },
+  "7": {
+    "title": "Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation: The M&Ms Challenge"
+  },
+  "8": {
+    "title": "The Medical Segmentation Decathlon"
+  },
+  "9": {
+    "title": "Heidelberg colorectal data set for surgical data science in the sensor operating room"
+  },
+  "10": {
+    "title": "The Multimodal Brain Tumor Image Segmentation Benchmark (BRATS)"
+  }
+}

@@ -1,0 +1,3506 @@
+{
+    "paper_id": "2103",
+    "header": {
+        "generated_with": "S2ORC 1.0.0",
+        "date_generated": "2022-12-11T16:10:39.513596Z"
+    },
+    "title": "Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks",
+    "authors": [
+        {
+            "first": "Curtis",
+            "middle": [
+                "G"
+            ],
+            "last": "Northcutt",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Anish Athalye MIT",
+                "location": {
+                    "settlement": "Cleanlab"
+                }
+            },
+            "email": "curtis@cleanlab.ai"
+        },
+        {
+            "first": "",
+            "middle": [],
+            "last": "Chipbrain",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Anish Athalye MIT",
+                "location": {
+                    "settlement": "Cleanlab"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Jonas",
+            "middle": [],
+            "last": "Mueller",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Anish Athalye MIT",
+                "location": {
+                    "settlement": "Cleanlab"
+                }
+            },
+            "email": ""
+        }
+    ],
+    "year": "",
+    "venue": null,
+    "identifiers": {},
+    "abstract": "We identify label errors in the test sets of 10 of the most commonly-used computer vision, natural language, and audio datasets, and subsequently study the potential for these label errors to affect benchmark results. Errors in test sets are numerous and widespread: we estimate an average of at least 3.3% errors across the 10 datasets, where for example label errors comprise at least 6% of the ImageNet validation set. Putative label errors are identified using confident learning algorithms and then human-validated via crowdsourcing (51% of the algorithmically-flagged candidates are indeed erroneously labeled, on average across the datasets). Traditionally, machine learning practitioners choose which model to deploy based on test accuracy-our findings advise caution here, proposing that judging models over correctly labeled test sets may be more useful, especially for noisy real-world datasets. Surprisingly, we find that lower capacity models may be practically more useful than higher capacity models in real-world datasets with high proportions of erroneously labeled data. For example, on Ima-geNet with corrected labels: ResNet-18 outperforms ResNet-50 if the prevalence of originally mislabeled test examples increases by just 6%. On CIFAR-10 with corrected labels: VGG-11 outperforms VGG-19 if the prevalence of originally mislabeled test examples increases by just 5%.",
+    "pdf_parse": {
+        "paper_id": "2103",
+        "_pdf_hash": "",
+        "abstract": [
+            {
+                "text": "We identify label errors in the test sets of 10 of the most commonly-used computer vision, natural language, and audio datasets, and subsequently study the potential for these label errors to affect benchmark results. Errors in test sets are numerous and widespread: we estimate an average of at least 3.3% errors across the 10 datasets, where for example label errors comprise at least 6% of the ImageNet validation set. Putative label errors are identified using confident learning algorithms and then human-validated via crowdsourcing (51% of the algorithmically-flagged candidates are indeed erroneously labeled, on average across the datasets). Traditionally, machine learning practitioners choose which model to deploy based on test accuracy-our findings advise caution here, proposing that judging models over correctly labeled test sets may be more useful, especially for noisy real-world datasets. Surprisingly, we find that lower capacity models may be practically more useful than higher capacity models in real-world datasets with high proportions of erroneously labeled data. For example, on Ima-geNet with corrected labels: ResNet-18 outperforms ResNet-50 if the prevalence of originally mislabeled test examples increases by just 6%. On CIFAR-10 with corrected labels: VGG-11 outperforms VGG-19 if the prevalence of originally mislabeled test examples increases by just 5%.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Abstract",
+                "sec_num": null
+            }
+        ],
+        "body_text": [
+            {
+                "text": "Large labeled datasets have been critical to the success of supervised machine learning across the board in domains such as image classification, sentiment analysis, and audio classification. Yet, the processes used to construct datasets often involve some degree of automatic labeling or crowd-sourcing, techniques which are inherently error-prone [39] . Even with controls for error correction [20, 49] , errors can slip through. Prior work has considered the consequences of noisy labels, usually in the context of learning with noisy labels, and usually focused on noise in the train set. Some past research has concluded that label noise is not a major concern, because of techniques to learn with noisy labels [31, 35] , and also because deep learning is believed to be naturally robust to label noise [17, 28, 38, 43] .",
+                "cite_spans": [
+                    {
+                        "start": 349,
+                        "end": 353,
+                        "text": "[39]",
+                        "ref_id": "BIBREF38"
+                    },
+                    {
+                        "start": 396,
+                        "end": 400,
+                        "text": "[20,",
+                        "ref_id": "BIBREF19"
+                    },
+                    {
+                        "start": 401,
+                        "end": 404,
+                        "text": "49]",
+                        "ref_id": "BIBREF48"
+                    },
+                    {
+                        "start": 716,
+                        "end": 720,
+                        "text": "[31,",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 721,
+                        "end": 724,
+                        "text": "35]",
+                        "ref_id": "BIBREF34"
+                    },
+                    {
+                        "start": 808,
+                        "end": 812,
+                        "text": "[17,",
+                        "ref_id": "BIBREF16"
+                    },
+                    {
+                        "start": 813,
+                        "end": 816,
+                        "text": "28,",
+                        "ref_id": "BIBREF27"
+                    },
+                    {
+                        "start": 817,
+                        "end": 820,
+                        "text": "38,",
+                        "ref_id": "BIBREF37"
+                    },
+                    {
+                        "start": 821,
+                        "end": 824,
+                        "text": "43]",
+                        "ref_id": "BIBREF42"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "However, label errors in test sets are less-studied and have a different set of potential consequences. Whereas train set labels in a small number of machine learning datasets, e.g. in the ImageNet dataset, are well-known to contain errors [16, 33, 40] , labeled data in test sets is often considered \"correct\" as long as it is drawn from the same distribution as the train set. This is a fallacy: machine learning test sets can, and do, contain errors, and these errors can destabilize ML benchmarks. given labels, human-validated corrected labels, also the second label for multi-class data points, and CL-guessed alternatives. A gallery of label errors across all 10 datasets, including text and audio datasets, is available at https://labelerrors.com.",
+                "cite_spans": [
+                    {
+                        "start": 240,
+                        "end": 244,
+                        "text": "[16,",
+                        "ref_id": "BIBREF15"
+                    },
+                    {
+                        "start": 245,
+                        "end": 248,
+                        "text": "33,",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 249,
+                        "end": 252,
+                        "text": "40]",
+                        "ref_id": "BIBREF39"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "Researchers rely on benchmark test datasets to evaluate and measure progress in the state-of-theart and to validate theoretical findings. If label errors occurred profusely, they could potentially undermine the framework by which we measure progress in machine learning. Practitioners rely on their own real-world datasets which are often more noisy than carefully-curated benchmark datasets. Label errors in these test sets could potentially lead practitioners to incorrect conclusions about which models actually perform best in the real world.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "We present the first study that systematically characterizes label errors across 10 datasets commonly used for benchmarking models in computer vision, natural language processing, and audio processing. Unlike prior work on noisy labels, we do not experiment with synthetic noise but with naturallyoccurring errors. Rather than exploring a novel methodology for dealing with label errors, which has been extensively studied in the literature [4] , this paper aims to characterize the prevalence of label errors in the test data of popular benchmarks used to measure ML progress and subsequently analyze practical consequences of these errors, and in particular, their effects on model selection. Using confident learning [33] , we algorithmically identify putative label errors in test sets at scale, and we validate these label errors through human evaluation, estimating a lower-bound of 3.3% errors on average across the 10 datasets. We identify, for example, 2916 (6%) errors in the ImageNet validation set (which is commonly used as a test set), and estimate over 5 million (10%) errors in QuickDraw. Figure 1 shows examples of validated label errors for the image datasets in our study.",
+                "cite_spans": [
+                    {
+                        "start": 441,
+                        "end": 444,
+                        "text": "[4]",
+                        "ref_id": "BIBREF3"
+                    },
+                    {
+                        "start": 720,
+                        "end": 724,
+                        "text": "[33]",
+                        "ref_id": "BIBREF32"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1105,
+                        "end": 1113,
+                        "text": "Figure 1",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "We use ImageNet and CIFAR-10 as case studies to understand the consequences of test set label errors on benchmark stability. While there are numerous erroneous labels in these benchmarks' test data, we find that relative rankings of models in benchmarks are unaffected after removing or correcting these label errors. However, we find that these benchmark results are unstable: higher-capacity models (like NASNet) undesirably reflect the distribution of systematic label errors in their predictions to a greater degree than models with fewer parameters (like , and this effect increases with the prevalence of mislabeled test data. This is not traditional overfitting. Larger models are able to generalize better to the given noisy labels in the test data, but this is problematic because these models produce worse predictions than their lower-capacity counterparts when evaluated on the corrected labels for originally-mislabeled test examples.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "In real-world settings with high proportions of erroneously labeled data, lower capacity models may thus be practically more useful than their higher capacity counterparts. For example, it may appear NASNet is superior to ResNet-18 based on the test accuracy over originally given labels, but NASNet is in fact worse than ResNet-18 based on the test accuracy over corrected labels. Since the latter form of accuracy is what matters in practice, ResNet-18 should actually be deployed instead of NASNet here -but this is unknowable without correcting the test data labels.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "To evaluate how benchmarks of popular pre-trained models change, we incrementally increase the noise prevalence by controlling for the proportion of correctable (but originally mislabeled) data within the test dataset. This procedure allows us to determine, for a particular dataset, at what noise prevalence benchmark rankings change. For example, on ImageNet with corrected labels: ResNet-18 outperforms ResNet-50 if the prevalence of originally mislabeled test examples increases by just 6%.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "In summary, our contributions include:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "1. The discovery of pervasive label errors in test sets of 10 standard ML benchmarks 2. Open-sourced resources to clean and correct each test set, in which a large fraction of the label errors have been corrected by humans 3. An analysis of the implications of test set label errors on benchmarks, and the finding that higher-capacity models perform better on the subset of incorrectly-labeled test data in terms of their accuracy on the original labels (i.e., what one traditionally measures), but perform worse on this subset in terms of their accuracy on corrected labels (i.e., what one cares about in practice, but cannot measure without the corrected test data we provide) 4. The discovery that merely slight increases in the test label error prevalence would cause model selection to favor the wrong model based on standard test accuracy benchmarks",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "Our findings imply ML practitioners might benefit from correcting test set labels to benchmark how their models will perform in real-world deployment, and by using simpler/smaller models in applications where labels for their datasets tend to be noisier than the labels in gold-standard benchmark datasets. One way to ascertain whether a dataset is noisy enough to suffer from this effect is to correct at least the test set labels, e.g. using our straightforward approach.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1"
+            },
+            {
+                "text": "Experiments in learning with noisy labels [19, 31, 34, 42, 45] suffer a double-edged sword: either synthetic noise must be added to clean training data to measure performance on a clean test set (at the expense of modeling actual real-world label noise [18] ), or a naturally noisy dataset is used and accuracy is measured on a noisy test set. In the noisy WebVision dataset [24] , accuracy on the ImageNet validation data is often reported as a \"clean\" test set, but several studies [16, 33, 37, 44] have shown the existence of label issues in ImageNet. Unlike these works, we focus exclusively on existence and implications of label errors in the test set, and we extend our analysis to many types of datasets. Although extensive prior work deals with label errors in the training set [4, 7] , much less work has been done to understand the implications of label errors in the test set.",
+                "cite_spans": [
+                    {
+                        "start": 42,
+                        "end": 46,
+                        "text": "[19,",
+                        "ref_id": "BIBREF18"
+                    },
+                    {
+                        "start": 47,
+                        "end": 50,
+                        "text": "31,",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 51,
+                        "end": 54,
+                        "text": "34,",
+                        "ref_id": "BIBREF33"
+                    },
+                    {
+                        "start": 55,
+                        "end": 58,
+                        "text": "42,",
+                        "ref_id": "BIBREF41"
+                    },
+                    {
+                        "start": 59,
+                        "end": 62,
+                        "text": "45]",
+                        "ref_id": "BIBREF44"
+                    },
+                    {
+                        "start": 253,
+                        "end": 257,
+                        "text": "[18]",
+                        "ref_id": "BIBREF17"
+                    },
+                    {
+                        "start": 375,
+                        "end": 379,
+                        "text": "[24]",
+                        "ref_id": "BIBREF23"
+                    },
+                    {
+                        "start": 484,
+                        "end": 488,
+                        "text": "[16,",
+                        "ref_id": "BIBREF15"
+                    },
+                    {
+                        "start": 489,
+                        "end": 492,
+                        "text": "33,",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 493,
+                        "end": 496,
+                        "text": "37,",
+                        "ref_id": "BIBREF36"
+                    },
+                    {
+                        "start": 497,
+                        "end": 500,
+                        "text": "44]",
+                        "ref_id": "BIBREF43"
+                    },
+                    {
+                        "start": 787,
+                        "end": 790,
+                        "text": "[4,",
+                        "ref_id": "BIBREF3"
+                    },
+                    {
+                        "start": 791,
+                        "end": 793,
+                        "text": "7]",
+                        "ref_id": "BIBREF6"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Background and related work",
+                "sec_num": "2"
+            },
+            {
+                "text": "Crowd-sourced curation of labels via multiple human workers [5, 36, 49 ] is a common method for validating/correcting label issues in datasets, but it can be exorbitantly expensive for large datasets.",
+                "cite_spans": [
+                    {
+                        "start": 60,
+                        "end": 63,
+                        "text": "[5,",
+                        "ref_id": "BIBREF4"
+                    },
+                    {
+                        "start": 64,
+                        "end": 67,
+                        "text": "36,",
+                        "ref_id": "BIBREF35"
+                    },
+                    {
+                        "start": 68,
+                        "end": 70,
+                        "text": "49",
+                        "ref_id": "BIBREF48"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Background and related work",
+                "sec_num": "2"
+            },
+            {
+                "text": "To circumvent this issue, we only validate subsets of datasets by first estimating which examples are most likely to be mislabeled. To achieve this, we lean on a number of contributions in uncertainty quantification for finding label errors based on prediction/label agreement via confusion matrices [3, 15, 25, 48] ; however, these approaches lack either robustness to class imbalance or theoretical support for realistic settings with asymmetric, non-uniform noise (for instance, an image of a dog might be more likely to be mislabeled a coyote than a car). For robustness to class imbalance and theoretical support for exact uncertainty quantification, we use a model-agnostic framework, confident learning (CL) [33] , to estimate which labels are erroneous across diverse datasets. We choose the CL framework for finding putative label errors because it was empirically found to outperform several recent alternative label error identification methods [23, 33, 46] . Unlike prior work that only models symmetric label noise [45] , we quantify class-conditional label noise with CL, validating the correctable nature of the label errors via crowdsourced workers. Human validation confirms the noise in common benchmark datasets is indeed primarily systematic mislabeling, not just random noise or lack of signal (e.g. images with fingers blocking the camera).",
+                "cite_spans": [
+                    {
+                        "start": 300,
+                        "end": 303,
+                        "text": "[3,",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 304,
+                        "end": 307,
+                        "text": "15,",
+                        "ref_id": "BIBREF14"
+                    },
+                    {
+                        "start": 308,
+                        "end": 311,
+                        "text": "25,",
+                        "ref_id": "BIBREF24"
+                    },
+                    {
+                        "start": 312,
+                        "end": 315,
+                        "text": "48]",
+                        "ref_id": "BIBREF47"
+                    },
+                    {
+                        "start": 715,
+                        "end": 719,
+                        "text": "[33]",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 956,
+                        "end": 960,
+                        "text": "[23,",
+                        "ref_id": "BIBREF22"
+                    },
+                    {
+                        "start": 961,
+                        "end": 964,
+                        "text": "33,",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 965,
+                        "end": 968,
+                        "text": "46]",
+                        "ref_id": "BIBREF45"
+                    },
+                    {
+                        "start": 1028,
+                        "end": 1032,
+                        "text": "[45]",
+                        "ref_id": "BIBREF44"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Background and related work",
+                "sec_num": "2"
+            },
+            {
+                "text": "Here we summarize our algorithmic label error identification performed prior to crowd-sourced human verification. An overview of each dataset and any modifications is detailed in Appendix A.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Identifying label errors in benchmark datasets",
+                "sec_num": "3"
+            },
+            {
+                "text": "Step-bystep instructions to obtain each dataset and reproduce the label errors for each dataset are provided at https://github.com/cleanlab/label-errors. Our code relies on the implementation of confident learning open-sourced at https://github.com/cleanlab/cleanlab. The primary contribution of this section is not in the methodology, which is covered extensively in Northcutt et al. [33] , but in its utilization as a filtering process to significantly (often as much as 90%) reduce the number of examples requiring human validation in the next step.",
+                "cite_spans": [
+                    {
+                        "start": 385,
+                        "end": 389,
+                        "text": "[33]",
+                        "ref_id": "BIBREF32"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Identifying label errors in benchmark datasets",
+                "sec_num": "3"
+            },
+            {
+                "text": "To identify label errors in a test dataset with n examples and m classes, we first characterize label noise in the dataset using the confident learning (CL) framework [33] [47] . Table 1 shows the number of CL-guessed label errors for each test set in our study. CL estimation of Q\u1ef9 ,y * is summarized in Appendix C.",
+                "cite_spans": [
+                    {
+                        "start": 167,
+                        "end": 171,
+                        "text": "[33]",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 172,
+                        "end": 176,
+                        "text": "[47]",
+                        "ref_id": "BIBREF46"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 179,
+                        "end": 186,
+                        "text": "Table 1",
+                        "ref_id": "TABREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Identifying label errors in benchmark datasets",
+                "sec_num": "3"
+            },
+            {
+                "text": "Computing out-of-sample predicted probabilities Estimating Q\u1ef9 ,y * for CL noise characterization requires two inputs for each dataset: (1) out-of-sample predicted probabilitiesP k,i (n\u00d7m matrix) and",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Identifying label errors in benchmark datasets",
+                "sec_num": "3"
+            },
+            {
+                "text": "(2) the test set labels\u1ef9 k . We observe the best results computingP k,i by pre-training on the train set, then fine-tuning (all layers) on the test set using cross-validation to ensureP k,i is out-of-sample. If pre-trained models are open-sourced (e.g. ImageNet), we use them instead of pre-training ourselves. If the dataset did not have an explicit test set (e.g. QuickDraw and Amazon Reviews), we skip pre-training and computeP k,i using cross-validation on the entire dataset. For all datasets, we try common models that achieve reasonable accuracy with minimal hyper-parameter tuning and use the model yielding the highest cross-validation accuracy, reported in Table 1 .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 667,
+                        "end": 674,
+                        "text": "Table 1",
+                        "ref_id": "TABREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Identifying label errors in benchmark datasets",
+                "sec_num": "3"
+            },
+            {
+                "text": "Using this approach allows us to find label errors without manually checking the entire test set, because CL identifies potential label errors automatically. ",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Identifying label errors in benchmark datasets",
+                "sec_num": "3"
+            },
+            {
+                "text": "We validated the algorithmically identified label errors with a Mechanical Turk (MTurk) study. For two large datasets with a large number of errors (QuickDraw and Amazon Reviews), we checked a random sample; for the rest, we checked all identified errors.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Validating label errors with Mechanical Turk",
+                "sec_num": null
+            },
+            {
+                "text": "We presented workers with hypothesized errors and asked them whether they saw the (1) given label, (2) the top CL-predicted label, (3) both labels, or (4) neither label in the example. To aid the worker, the interface included high-confidence examples of the given class and the CL-predicted class. Figure S1 in Appendix B shows a screenshot of the MTurk worker interface.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 299,
+                        "end": 308,
+                        "text": "Figure S1",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Validating label errors with Mechanical Turk",
+                "sec_num": null
+            },
+            {
+                "text": "Each CL-flagged label error was independently presented to five workers. We consider the example validated (an \"error\") if fewer than three of the workers agree that the data point has the given label (agreement threshold = 3 of 5) , otherwise we consider it to be a \"non-error\" (i.e. the original label was correct). We further categorize the label errors, breaking them down into (1) \"correctable\", where a majority agree on the CL-predicted label; (2) \"multi-label\", where a majority agree on both labels appearing; (3) \"neither\", where a majority agree on neither label appearing; and (4) \"non-agreement\", a catch-all category for when there is no majority. Table summarizes the results, and Figure 1 shows examples of validated label errors from image datasets. Figure 2 : Difficult examples from various datasets where confident learning finds a potential label error but human validation shows that there actually is no error. Example (a) is a cropped image of part of an antiquated sewing machine; (b) is a viewpoint from inside an airplane, looking out at the runway and grass with a partial view of the nose of the plane; (c) is an ambiguous shape which could be a potato; (d) is likely a badly drawn \"5\"; (e) is a male whose exact age cannot be determined; and (f) is a straw used as a pole within a miniature replica of a village.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 662,
+                        "end": 678,
+                        "text": "Table summarizes",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 696,
+                        "end": 704,
+                        "text": "Figure 1",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 767,
+                        "end": 775,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Validating label errors with Mechanical Turk",
+                "sec_num": null
+            },
+            {
+                "text": "Confident learning sometimes flags data points that are not actually erroneous. By visually inspecting putative label errors, we identified certain previously unexamined failure modes of confident learning [33] . Appendix D provides a mathematical description of the conditions under which these failure modes occur. Figure 2 shows uniquely challenging examples, with excessively erroneousp(\u1ef9=j; x), where failure mode cases potentially occur. The sewing machine in Figure 2 (a), for example, exhibits a \"part versus whole\" issue where the image has been cropped to only show a small portion of the object. The airplane in Figure 2 (b) is an unusual example of the class, showing the plane from the perspective of the pilot looking out of the front cockpit window. Figure 2 clarifies that our corrected test set labels are not 100% perfect. Even with a stringent 5 of 5 agreement threshold where all human reviewers agreed on a label correction, the \"corrected\" label is not always actually correct. Fortunately, these failure mode cases are rare. Inspection of https://labelerrors.com shows that the majority of the labels we corrected are reasonable. Our corrected test sets, while imperfect in these cases, are improved from the original test sets.",
+                "cite_spans": [
+                    {
+                        "start": 206,
+                        "end": 210,
+                        "text": "[33]",
+                        "ref_id": "BIBREF32"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 317,
+                        "end": 325,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 466,
+                        "end": 474,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 623,
+                        "end": 631,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 765,
+                        "end": 773,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Failure modes of confident learning",
+                "sec_num": "4.1"
+            },
+            {
+                "text": "Finally, we consider how pervasive test set label errors may affect ML practitioners in real-world applications. To clarify the discussion, we first introduce some useful terminology.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Implications of label errors in test data",
+                "sec_num": "5"
+            },
+            {
+                "text": "Definition 1 (original accuracy,\u00c3). The accuracy of a model's predicted labels over a given dataset, computed with respect to the original labels present in the dataset. Measuring\u00c3 over the test set is the standard way practitioners evaluate their models today. Definition 2 (corrected accuracy, A * ). The accuracy of a model's predicted labels, computed over a modified dataset in which previously identified erroneous labels have been corrected by humans to the true class when possible and removed when not. Measuring A * over the test set is preferable t\u00f5 A for evaluating models because A * better reflects performance in real-world applications.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Implications of label errors in test data",
+                "sec_num": "5"
+            },
+            {
+                "text": "The human labelers referenced throughout this section are the workers from our MTurk study in Section 4. In the following definitions, \\ denotes a set difference and D denotes the full test dataset. These definitions imply B, C, U are disjoint with D = B \u222a C \u222a U and also P = B \u222a C. In subsequent experiments, we report corrected test accuracy over P after correcting all of the labels in C \u2282 P.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Implications of label errors in test data",
+                "sec_num": "5"
+            },
+            {
+                "text": "We ignore the unknown-label set U (and do not include those examples in our estimate of noise prevalence) because it is unclear how to measure corrected accuracy for examples whose true underlying label remains ambiguous. Thus the noise prevalence reported throughout this section differs from the fraction of label errors originally found in each of the test sets.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Implications of label errors in test data",
+                "sec_num": "5"
+            },
+            {
+                "text": "A major issue in ML today is that one only sees the original test accuracy in practice, whereas one would prefer to base modeling decisions on the corrected test accuracy instead. Our subsequent discussion highlights the potential implications of this mismatch. What are the consequences of test set label errors? Figure 3 compares performance on the ImageNet validation set, commonly used in place of the test set, of 34 pre-trained models from the PyTorch and Keras repositories (throughout, we use provided checkpoints of models that have been fit to the original training set). Figure 3a confirms the observations of Recht et al. [37] ; benchmark conclusions are largely unchanged by using a corrected test set, i.e. in our case by removing errors.",
+                "cite_spans": [
+                    {
+                        "start": 634,
+                        "end": 638,
+                        "text": "[37]",
+                        "ref_id": "BIBREF36"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 314,
+                        "end": 322,
+                        "text": "Figure 3",
+                        "ref_id": "FIGREF3"
+                    },
+                    {
+                        "start": 582,
+                        "end": 591,
+                        "text": "Figure 3a",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Implications of label errors in test data",
+                "sec_num": "5"
+            },
+            {
+                "text": "However, we find a surprising result upon closer examination of the models' performance on the correctable set C. When evaluating models only on these originally-mislabeled test data, models which perform best on the original (incorrect) labels perform the worst on the corrected labels. Table S1 in the Appendix). We verified that the same trend occurs independently across pre-trained CIFAR-10 models ( Figure 3c ), e.g. VGG-11 significantly outperforms VGG-19 [41] in terms of corrected accuracy over C. Note that all numbers reported here are over subsets of the held-out test data, so this is not overfitting in the classical sense.",
+                "cite_spans": [
+                    {
+                        "start": 463,
+                        "end": 467,
+                        "text": "[41]",
+                        "ref_id": "BIBREF40"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 288,
+                        "end": 296,
+                        "text": "Table S1",
+                        "ref_id": "TABREF1"
+                    },
+                    {
+                        "start": 405,
+                        "end": 414,
+                        "text": "Figure 3c",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Benchmarking on the correctable set",
+                "sec_num": "5.1"
+            },
+            {
+                "text": "This phenomenon, depicted in Figures 3b and 3c , may indicate two key insights: (1) lower-capacity models provide unexpected regularization benefits and are more resistant to learning the asymmetric distribution of noisy labels, (2) over time, the more recent (larger) models have architecture/hyperparameter decisions that were made on the basis of the (original) test accuracy. Learning to capture systematic patterns of label error in their predictions allows these models to improve their original test accuracy, but this is not the sort of progress ML research should aim to achieve. Harutyunyan et al. [13] and Arpit et al. [2] have previously analyzed phenomena similar to (1), and here we demonstrate that this issue really does occur for the models/datasets widely used in current practice. (2) is an undesirable form of overfitting, albeit not in the classical sense (as the original test accuracy can further improve through better modeling of label errors), but rather overfitting to the specific benchmark (and quirks of the original label annotators) such that accuracy improvements for erroneous labels may not translate to superior performance in a deployed ML system. This phenomenon has important practical implications for real-world datasets with greater noise prevalence than the highly curated benchmark data studied here. In these relatively clean benchmark datasets, the noise prevalence is an underestimate as we could only verify a subset of our candidate label errors rather than all test labels, and thus the potential gap between original vs. corrected test accuracy over P is limited for these particular benchmarks. However, this gap increases proportionally for data with more (correctable) label errors in the test set, i.e. as N increases.",
+                "cite_spans": [
+                    {
+                        "start": 608,
+                        "end": 612,
+                        "text": "[13]",
+                        "ref_id": "BIBREF12"
+                    },
+                    {
+                        "start": 630,
+                        "end": 633,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 29,
+                        "end": 46,
+                        "text": "Figures 3b and 3c",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Benchmarking on the correctable set",
+                "sec_num": "5.1"
+            },
+            {
+                "text": "To investigate how benchmarks of popular models change with varying proportions of label errors in test sets, we randomly and incrementally remove correctly-labeled examples, one at a time, until only the original set of mislabeled test data (with corrected labels) is left. We create alternate versions (subsets) of the pruned benchmark test data P, in which we additionally randomly omit some fraction, x from 0 to 1, we can simulate any noise prevalence ranging from |C|/|P| to 1. We operationalize averaging over all choices of removal by linearly interpolating from accuracies over the corrected test set (P, with corrected labels for the subset C) to accuracies over the erroneously labeled subset (C, with corrected labels). Over these corrected test sets, we evaluate popular pre-trained models (again using provided checkpoints of models that have been fit to the original training set). As our removal of test examples was random from the non-mislabeled set, we expect this reduced test data is representative of test sets that would be used in applications with a similarly greater prevalence of label errors. Note that we ignore non-correctable data with unknown labels (U) throughout this analysis, as it is unclear how to report a better version of the accuracy for such ill-specified examples.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Benchmark instability",
+                "sec_num": "5.2"
+            },
+            {
+                "text": "Over alternative (reduced) test sets created by imposing increasing degrees of noise prevalence in ImageNet/CIFAR-10, Figures 4-5 depict the resulting original (erroneous) test set accuracy and corrected accuracy of the models, expected on each alternative test set. For a given test set (i.e. point along the x-axis of these plots), the vertical ordering of the lines indicates how models would be favored based on original accuracy or corrected accuracy over this test set. Unsurprisingly, we see that more flexible/recent architectures tend to be favored on the basis of original accuracy, regardless of which test set (of varying noise prevalence) is considered. This aligns with conventional expectations that powerful models like NASNet will outperform simpler models like ResNet-18. However, if we shift our focus to the corrected accuracy (i.e. what actually matters in practice), it is no longer the case that more powerful models are reliably better than their simpler counterparts: the performance strongly depends on the degree of noise prevalence in the test data. For datasets where label errors are common, a practitioner is more likely to select a model (based on original accuracy) that is not actually the best model (in terms of corrected accuracy) to deploy.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Benchmark instability",
+                "sec_num": "5.2"
+            },
+            {
+                "text": "Finally, we note that this analysis only presents a loose lower bound on the magnitude of these issues due to unaccounted for label errors in the non-CL-flagged data (see Section 6). We only identified a subset of the actual correctable set as we are limited to human-verifiable label corrections for a subset of data candidates (algorithmically prioritized via confident learning). Because the actual correctable sets are likely larger, our noise prevalence estimates are optimistic in favor of higher capacity models. Thus, the true gap between corrected vs. original accuracy may be larger and of greater practical significance, even for the gold-standard benchmark datasets considered here. For many application-specific datasets collected by ML practitioners, the noise prevalence will be greater than the numbers presented here: thus, it is imperative to be cognizant of the distinction between corrected vs. original accuracy, and to utilize careful data curation practices, perhaps by allocating more of an annotation budget to ensure higher quality labels in the test data.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Benchmark instability",
+                "sec_num": "5.2"
+            },
+            {
+                "text": "Up to this point, we have only evaluated the subsets of the datasets flagged by CL: how do we know that CL-flagged examples are indeed more erroneous than a random subset of a dataset? How many label errors are missed in the non-CL-flagged data? And how reliable are MTurk workers in comparison to expert reviewers? In this section, we address these questions by conducting an additional expert review of both CL-flagged and non-CL-flagged examples in the ImageNet val set.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Expert review of CL-flagged and non-CL-flagged label errors in ImageNet",
+                "sec_num": "6"
+            },
+            {
+                "text": "The expert review was conducted in two phases (details in Appendix G). In the first phase, experts reviewed 1 randomly-selected CL-flagged example and 1 randomly-selected non-CL-flagged example from each of the 1,000 ImageNet classes (66 classes had no CL-flagged example, i.e. 934 + 1,000 = 1934 images were evaluated in total). Given a similar interface as MTurk workers, the expert reviewers selected one choice from: (1) the given label, (2) the top-most predicted label that differs from the given label, (3) \"both\", and (4) \"neither\". Experts researched any unfamiliar classes by looking up related images and taxonomy information online, spending on average 13x more time per label than MTurk workers. Each image was reviewed by at least two experts, and experts agreed on decisions for 77% of the images. In the second phase, all experts jointly revisited the remaining 23% where there was disagreement and came to a consensus on a single choice. Table 3 reveals that the set of CL-flagged examples has significantly higher proportions of every type of label issue than the set of non-CL-flagged examples. An image flagged by CL was 2.6x as likely to be erroneously labeled than an non-CL-flagged image. Given a limited budget for human review, we thus recommend using CL to prioritize examples when verifying the labels in a large dataset.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 955,
+                        "end": 962,
+                        "text": "Table 3",
+                        "ref_id": "TABREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Expert review of CL-flagged and non-CL-flagged label errors in ImageNet",
+                "sec_num": "6"
+            },
+            {
+                "text": "Comparing CL (expert) to CL (MTurk) in Table 3 indicates that for CL-flagged examples, MTurk workers favored correcting labels in cases where experts agreed neither label was appropriate. For this analysis, we only consider the subset of MTurk reviewed images that overlaps with the 1,934 expert reviewed images. This may be attributed to experts knowing a better choice than the two label choices presented in the task (c.f. Figure S2 ). Nonetheless the MTurk results overall agree with those from our expert review. This validates our overall approach of using CL followed by MTurk to characterize label errors, and demonstrates that a well-designed interface ( Figure S1 ) suffices for non-expert workers to provide high-quality label verification of datasets. We further estimate that the analysis in previous sections missed around 14% of the label errors in ImageNet because 89% of images were not flagged by CL and Table 3 indicates around 16% of these were mislabeled. By including the additional 14% error found from the 9x larger set of non-CL-flagged examples, we can more accurately estimate that the ImageNet validation set contains closer to 20% label errors (up from the 6% reported in Table 1 ). This roughly indicates how much more severe the issue of label errors actually is compared to what we reported in Sections 4 and 5.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 39,
+                        "end": 46,
+                        "text": "Table 3",
+                        "ref_id": "TABREF5"
+                    },
+                    {
+                        "start": 426,
+                        "end": 435,
+                        "text": "Figure S2",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 664,
+                        "end": 673,
+                        "text": "Figure S1",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 922,
+                        "end": 929,
+                        "text": "Table 3",
+                        "ref_id": "TABREF5"
+                    },
+                    {
+                        "start": 1201,
+                        "end": 1208,
+                        "text": "Table 1",
+                        "ref_id": "TABREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Expert review of CL-flagged and non-CL-flagged label errors in ImageNet",
+                "sec_num": "6"
+            },
+            {
+                "text": "This paper demonstrates that label errors are ubiquitous in the test sets of many popular benchmarks used to gauge progress in machine learning. We hypothesize that this has not been previously discovered and publicized at such scale due to various challenges. Firstly, human verification of all labels can be quite costly, which we circumvented here by using CL algorithms to filter automatically for likely label errors prior to human verification. Secondly, working with 10 differently formatted datasets was nontrivial, with some exhibiting peculiar issues upon close inspection (despite being standard benchmarks). For example, IMDB, QuickDraw, and Caltech-256 lack a global index making it difficult to map model outputs to corrected test examples on different systems. We provide index files in our repository 1 to address this. Furthermore, Caltech-256 contains several duplicate images, of which which we found no previous mention. Lastly, ImageNet contains duplicate class labels, e.g. \"maillot\" (638 & 639) and \"crane\" (134 & 517) [33, 44] .",
+                "cite_spans": [
+                    {
+                        "start": 1042,
+                        "end": 1046,
+                        "text": "[33,",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 1047,
+                        "end": 1050,
+                        "text": "44]",
+                        "ref_id": "BIBREF43"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "7"
+            },
+            {
+                "text": "Traditionally, ML practitioners choose which model to deploy based on test accuracy -our findings advise caution here. Instead, judging models over correctly labeled test sets may be important, especially for real-world datasets that are likely noisier than these popular benchmarks. Small increases in the prevalence of mislabeled test data can destabilize ML benchmarks, indicating that lowcapacity models may actually outperform high-capacity models in noisy real-world applications, even if their measured performance on the original test data appears worse. We recommend considering the distinction between corrected vs. original test accuracy and curating datasets to maximize high-quality test labels, even if budget constraints only allow for lower-quality training labels. This paper shares new findings about pervasive label errors in test sets and their effects on benchmark stability, but it does not address whether the apparent overfitting of high-capacity models versus low-capacity models is due to overfitting to train set noise, overfitting to validation set noise during hyper-parameter tuning, or heightened sensitivity to train/test label distribution shift that occurs when test labels are corrected. An intuitive hypothesis is that high-capacity models more closely fit all statistical patterns present in the data, including those patterns related to systematic label errors that models with more limited capacity are less capable of closely approximating. A rigorous analysis to disambiguate and understand the contribution of each of these causes and their effects on benchmarking stability is a natural next step, which we leave for future work. How to best allocate a given human label verification budget between training and test data also remains an open question.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "7"
+            },
+            {
+                "text": "For our study, we select 10 of the most-cited, open-source datasets created in the last 20 years from the Wikipedia List of ML Research Datasets [26] , with preference for diversity across computer vision, NLP, sentiment analysis, and audio modalities. Citation counts were obtained via the Microsoft Cognitive API. In total, we evaluate six visual datasets: MNIST, CIFAR-10, CIFAR-100, Caltech-256, ImageNet, and QuickDraw; three text datasets: 20news, IMDB, and Amazon Reviews; and one audio dataset: AudioSet.",
+                "cite_spans": [
+                    {
+                        "start": 145,
+                        "end": 149,
+                        "text": "[26]",
+                        "ref_id": "BIBREF25"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Appendix: Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks A Datasets",
+                "sec_num": null
+            },
+            {
+                "text": "For each of the datasets we investigate, we summarize the original data collection and labeling procedure as they pertain to potential label errors.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "MNIST [22] . MNIST is a database of binary images of handwritten digits. The dataset was constructed from Handwriting Sample Forms distributed to Census Bureau employees and high school students; the ground-truth labels were determined by matching digits to the instructions of the task to copy a particular set of digits [11] . Label errors may arise from failure to follow instructions or from handwriting ambiguities.",
+                "cite_spans": [
+                    {
+                        "start": 6,
+                        "end": 10,
+                        "text": "[22]",
+                        "ref_id": "BIBREF21"
+                    },
+                    {
+                        "start": 322,
+                        "end": 326,
+                        "text": "[11]",
+                        "ref_id": "BIBREF10"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "CIFAR-10 / CIFAR-100 [21] . The CIFAR-10 and CIFAR-100 datasets are collections of small 32 \u00d7 32 images and labels from a set of 10 or 100 classes, respectively. The images were collected by searching the internet for the class label. Human labelers were instructed to select images that matched their class label (query term) by filtering out mislabeled images. Images were intended to only have one prominent instance of the object, but could be partially occluded as long as it was identifiable to the labeler.",
+                "cite_spans": [
+                    {
+                        "start": 21,
+                        "end": 25,
+                        "text": "[21]",
+                        "ref_id": "BIBREF20"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "Caltech-256 [10] . Caltech-256 is a database of images sorted into 256 classes, plus an extra class called \"clutter\". Images were scraped from image search engines. Four human labelers were instructed to rate the images into \"good,\" \"bad,\" and \"not applicable,\" eliminating the images that were confusing, occluded, cluttered, artistic, or not an example of the object category from the dataset. Because no explicit test set is provided, we study label errors in the entire dataset to ensure coverage of any test set split used by practitioners. Modifications: In our study, we ignore data with the ambiguous \"clutter\" label (class 257) and consider only the images labeled class 1 to class 256.",
+                "cite_spans": [
+                    {
+                        "start": 12,
+                        "end": 16,
+                        "text": "[10]",
+                        "ref_id": "BIBREF9"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "ImageNet [6] . ImageNet is a database of images belonging to one of 1,000 classes. Images were scraped by querying words from WordNet \"synonym sets\" (synsets) on several image search engines. The images were labeled by Amazon Mechanical Turk workers who were asked whether each image contains objects of a particular given synset. Workers were instructed to select images that contain objects of a given subset regardless of occlusions, number of objects, and clutter to \"ensure diversity\" in the dataset's images.",
+                "cite_spans": [
+                    {
+                        "start": 9,
+                        "end": 12,
+                        "text": "[6]",
+                        "ref_id": "BIBREF5"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "QuickDraw [12] . The Quick, Draw! dataset contains more than 1 billion doodles collected from users of an experimental game to benchmark image classification models. Users were instructed to draw pictures corresponding to a given label, but the drawings may be \"incomplete or may not match the label.\" Because no explicit test set is provided, we study label errors in the entire dataset to ensure coverage of any test set split used by practitioners.",
+                "cite_spans": [
+                    {
+                        "start": 10,
+                        "end": 14,
+                        "text": "[12]",
+                        "ref_id": "BIBREF11"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "20news [30] . The 20 Newsgroups dataset is a collection of articles posted to Usenet newsgroups used to benchmark text classification and clustering models. The label for each example is the newsgroup it was originally posted in (e.g. \"misc.forsale\"), so it is obtained during the overall data collection procedure.",
+                "cite_spans": [
+                    {
+                        "start": 7,
+                        "end": 11,
+                        "text": "[30]",
+                        "ref_id": "BIBREF29"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "IMDB [27] . The IMDB Large Movie Review Dataset is a collection of movie reviews to benchmark binary sentiment classification. The labels were determined by the user's review: a score \u2264 4 out of 10 is considered negative; \u2265 7 out of 10 is considered positive.",
+                "cite_spans": [
+                    {
+                        "start": 5,
+                        "end": 9,
+                        "text": "[27]",
+                        "ref_id": "BIBREF26"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "Amazon Reviews [29] . The Amazon Reviews dataset is a collection of textual reviews and 5-star ratings from Amazon customers used to benchmark sentiment analysis models. We use the 5-core (9.9 GB) variant of the dataset. Modifications: In our study, 2-star and 4-star reviews are removed due to ambiguity with 1-star and 5-star reviews, respectively. If these reviews were left in the dataset, they could inflate error counts. Because no explicit test set is provided, we study label errors in the entire dataset to ensure coverage of any test set split used by practitioners.",
+                "cite_spans": [
+                    {
+                        "start": 15,
+                        "end": 19,
+                        "text": "[29]",
+                        "ref_id": "BIBREF28"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "AudioSet [8] . AudioSet is a collection of 10-second sound clips drawn from YouTube videos and multiple labels describing the sounds that are present in the clip. Three human labelers independently rated the presence of one or more labels (as \"present,\" \"not present,\" and \"unsure\"), and majority agreement was required to assign a label. The authors note that spot checking revealed some label errors due to \"confusing labels, human error, and difference in detection of faint/non-salient audio events.\"",
+                "cite_spans": [
+                    {
+                        "start": 9,
+                        "end": 12,
+                        "text": "[8]",
+                        "ref_id": "BIBREF7"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A.1 Dataset details",
+                "sec_num": null
+            },
+            {
+                "text": "Mechanical Turk budget Mechanical Turk workers were paid an hourly rate of $7.20 (based on an estimated evaluation time of 5 seconds per image). In total, we spent $1623.29 on human verification experiments on Mechanical Turk. Results would likely improve with a larger budget. Figure S1 : Mechanical Turk worker interface showing an example from ImageNet (with given label \"southern black window\"). For each data point algorithmically identified as a potential label error, the interface presents the data point, along with examples belonging to the given class. The interface also shows data points belonging to the confidently predicted class (in this case, \"scorpion\"). Either the given label is shown as option (a) and the predicted label is shown as option (b), or vice versa (chosen randomly). The worker is asked whether the image belongs to class (a), (b), both, or neither. Figure S2 : An example from https://labelerrors.com that Mechanical Turk workers got wrong. The image clearly doesn't match the ImageNet given label \"tick,\" but upon close inspection, it does not match the predicted label \"scorpion\" either. The insect shown is in fact an arachnid of the order Solifugae, commonly known as camel spiders or wind scorpions. Despite the common name, this animal is not a true scorpion.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 278,
+                        "end": 287,
+                        "text": "Figure S1",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 884,
+                        "end": 893,
+                        "text": "Figure S2",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "B Mechanical Turk details",
+                "sec_num": null
+            },
+            {
+                "text": "Here we summarize CL joint estimation and how it is used to algorithmically flag candidates with likely label errors for subsequent human review. An unnormalized representation of the joint distribution between observed and true label, called the confident joint and denoted C\u1ef9 ,y * , is estimated by counting all the examples with noisy label\u1ef9 = i, with high probability of actually belonging to label y * = j. This binning can be expressed as:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "C\u1ef9 ,y * = |{x \u2208 X\u1ef9 =i :p(\u1ef9 = j; x, \u03b8) \u2265 t j }|",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "where x is a data example (e.g. an image), X\u1ef9 =i is the set of examples with noisy label\u1ef9 = i, p(\u1ef9 = j; x, \u03b8) is the out-of-sample predicted probability that example x actually belongs to noisy class\u1ef9 = j (even though its given label\u1ef9 = i) for a given model \u03b8. Finally, t j is a per-class threshold that, in comparison to other confusion matrix approaches, provides robustness to heterogeneity in class distributions and class distributions, defined as:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "t j = 1 |X\u1ef9 =j | x\u2208X\u1ef9=jp (\u1ef9 = j; x, \u03b8)",
+                        "eq_num": "(1)"
+                    }
+                ],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "A caveat occurs when an example is confidently counted into more than one bin. When this occurs, the example is only counted in the arg max l\u2208[m]p (\u1ef9 = l; x, \u03b8) bin.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "Q\u1ef9 ,y * is estimated by normalizing C\u1ef9 ,y * , as follows:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "Q\u1ef9 =i,y * =j = C\u1ef9 =i,y * =j j\u2208[m] C\u1ef9 =i,y * =j \u2022 |X\u1ef9 =i | i\u2208[m],j\u2208[m] C\u1ef9 =i,y * =j j\u2208[m] C\u1ef9 =i,y * =j \u2022 |X\u1ef9 =i |",
+                        "eq_num": "(2)"
+                    }
+                ],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "The numerator calibrates jQ\u1ef9 =i,y * =j = |X i |/ i\u2208[m] |X i |, \u2200i\u2208[m] so that row-sums match the observed prior over noisy labels. The denominator makes the distribution sum to 1.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C Details of confident learning (CL) for finding label errors",
+                "sec_num": null
+            },
+            {
+                "text": "Confident learning can fail to exactly estimate X\u1ef9 =i,y * =j (the set of examples with noisy label i and actual label j) when either:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "\u2022 Case 1:p(\u1ef9=j; x, \u03b8) < t j \u2212\u2192 x \u2208X\u1ef9 =i,y * =j , or",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "\u2022 Case 2:p(\u1ef9=k; x, \u03b8) \u2265 t k \u2212\u2192 x \u2208X\u1ef9 =i,y * =k , for some k = j where t j is the per-class average threshold (Eqn. above, in Appendix C). In the real-world datasets we study, the predicted probabilities are noisy such thatp x,\u1ef9=j = p * x,\u1ef9=j + x,\u1ef9=j , wherep x,\u1ef9=j is shorthand forp(\u1ef9=j; x, \u03b8); p *",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "x,\u1ef9=j is the ideal/non-noisy predicted probability; and x,\u1ef9=j \u2208 R is the error/deviation from ideal. Unlike learning with perfect labels, p *",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "x,\u1ef9=j is not always 0 or 1 because in our setting some classes are mislabeled as other classes some fraction of the time. Expressing the two failure cases in terms of error, we have:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "\u2022 Case 1: x,\u1ef9=j < t j \u2212 p * x,\u1ef9=j \u2212\u2192 x \u2208X\u1ef9 =i,y * =j , or \u2022 Case 2: x,\u1ef9=k \u2265 t k \u2212 p *",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "x,\u1ef9=k \u2212\u2192 x \u2208X\u1ef9 =i,y * =k , for some k = j Case 1 bounds the error ofp(\u1ef9=j; x, \u03b8) (in the limit to \u2212\u221e) and Case 2 bound the error of p(\u1ef9=j; x, \u03b8) (in the limit to \u221e) such that when either occurs,",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "\u2203(i, j)\u2208[m]\u00d7[m], s.t.X\u1ef9 =i,y * =j = X\u1ef9 =i,y * =j , i.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "e., we imperfectly estimate the label errors prior to human validation. Figure shows uniquely challenging examples (with excessively erroneousp(\u1ef9=j; x, \u03b8)) when these failure mode cases potentially occur.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 72,
+                        "end": 84,
+                        "text": "Figure shows",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "D Failure modes of confident learning",
+                "sec_num": null
+            },
+            {
+                "text": "For all 10 datasets, label errors were found using a Linux 18.04 LTS server comprising 128GB of memory, an Intel Core i9-9820X Skylake X 10-Core 3.3GHz, and one RTX 2080 TI GPU. We open-source a single script to reproduce the label errors for every dataset at https://github.com/cleanlab/label-errors/blob/main/examples/Tutorial% 20-%20How%20To%20Find%20Label%20Errors%20With%20CleanLab.ipynb. Reproducing the label errors for all 10 datasets using this tutorial takes about 5 minutes on a modern consumer-grade laptop (e.g., a 2021 Apple M1 MacBook Air).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "E Reproducibility and computational requirements",
+                "sec_num": null
+            },
+            {
+                "text": "Here we provide some additional details/results to complement Section from the main text. Figure  3 depicts how the benchmarking rankings on the correctable subset of ImageNet examples change significantly for an agreement threshold = 5, meaning 5 of 5 human raters need to independently select the same alternative label for that data point and a new label to be included in the accuracy evaluation. To ascertain that the results of this figure are not due to the setting of the agreement threshold, the results for all three settings of the agreement threshold are shown in Sub-figure S3b. Observe the negative correlation (for top-1 accuracy) occurs in all three settings. Furthermore, observe that this negative correlation no longer holds when top-5 accuracy is used (shown in S3a), likely because many of these models use a loss which maximizes (and overfits to noise) based on top-1 accuracy, not top-5 accuracy. Regardless of whether top-1 or top-5 accuracy is used, model benchmark rankings change significantly on the correctable set in comparison to the original test set (see Table S1 ).",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 90,
+                        "end": 99,
+                        "text": "Figure  3",
+                        "ref_id": "FIGREF3"
+                    },
+                    {
+                        "start": 1088,
+                        "end": 1096,
+                        "text": "Table S1",
+                        "ref_id": "TABREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "F Additional findings on implications of label errors in test data",
+                "sec_num": null
+            },
+            {
+                "text": "Top The dramatic changes in ranking shown in Table S1 may be explained by overfitting to the validation set when these models are trained, which can occur inadvertently during hyper-parameter tuning, or by overfitting to the noise in the training set. These results also suggest that keeping some correct labels on a secret correctable set of label errors may provide a useful framework for detecting overfitting on test sets toward a more reliable approach for benchmarking generalization accuracy across ML models. Table S1 : Individual accuracy scores for Sub-figure 3b with agreement threshold = 3 of 5. Acc@1 stands for the (top-1 validation) original accuracy on the correctable set, in terms of original ImageNet examples and labels. cAcc@1 stands for the (top-1 validation) corrected accuracy on the correctable set of ImageNet examples with correct labels. To be corrected, at least 3 of 5 Mechanical Turk raters had to independently agree on a new label, proposed by us using the class with the arg max probability for the example.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 45,
+                        "end": 53,
+                        "text": "Table S1",
+                        "ref_id": "TABREF1"
+                    },
+                    {
+                        "start": 517,
+                        "end": 525,
+                        "text": "Table S1",
+                        "ref_id": "TABREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "5% 12% 20%",
+                "sec_num": null
+            },
+            {
+                "text": "Platform Model Acc@1 cAcc@1 Acc@5 cAcc@5 Rank@1 cRank@1 Rank@5 cRank@5 The benchmarking experiment was replicated on CIFAR-10 in addition to ImageNet. The individual accuracies for CIFAR-10 are reported in Table S2 . Similar to ImageNet, lower capacity models tend to outperform higher capacity models when benchmarked using corrected labels (instead of the original, erroneous labels).",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 206,
+                        "end": 214,
+                        "text": "Table S2",
+                        "ref_id": "TABREF2"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "5% 12% 20%",
+                "sec_num": null
+            },
+            {
+                "text": "Whereas traditional notions of benchmarking generalization accuracy assume the train and test distributions are the same, this is nonsensical in the case of noisy training data -the test dataset should never contain noise because in real-world applications, we want a trained model to predict the error-free outputs on unseen examples, and benchmarking should measure as such. In two independent experiments in ImageNet and CIFAR-10, we observe that models, pre-trained on the original (noisy) datasets, with less expressibility (e.g., ResNet-18) tend to outperform higher capacity models (e.g., NASNet) on the corrected test set labels. Table S2 : Individual CIFAR-10 accuracy scores for Sub-figure 3c with agreement threshold = 3 of 5. Acc@1 stands for the top-1 validation accuracy on the correctable set (n = 18) of original CIFAR-10 examples and labels. See Table S1 caption for more details. Discretization of accuracies occurs due to the limited number of corrected examples on the CIFAR-10 test set.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 638,
+                        "end": 646,
+                        "text": "Table S2",
+                        "ref_id": "TABREF2"
+                    },
+                    {
+                        "start": 863,
+                        "end": 871,
+                        "text": "Table S1",
+                        "ref_id": "TABREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "5% 12% 20%",
+                "sec_num": null
+            },
+            {
+                "text": "Acc@1 cAcc@1 Acc@5 cAcc@5 Rank@1 cRank@1 Rank@5 cRank@5 ",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Platform Model",
+                "sec_num": null
+            }
+        ],
+        "back_matter": [
+            {
+                "text": "This work was supported in part by funding from the MIT-IBM Watson AI Lab. We thank Jessy Lin for her contributions to early stages of this research, and we thank Wei Jing Lok for his contributions to the ImageNet expert labeling experiments.https://github.com/cleanlab/label-errors#how-to-download-prepare-and-index-the-datasets",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Acknowledgments",
+                "sec_num": null
+            },
+            {
+                "text": "To mitigate possible bias in our expert reviewing process, we did not show reviewers whether a particular image was CL-flagged or not, and we randomized whether a CL-flagged or non CL-flagged image was shown first for each ImageNet class. We also randomized whether the given or predicted label was the first or second choice offered to the reviewer. We did not however randomize the class order as reviewing was much more efficient when the classes were presented in order (required less drastic context switching) and helped reviewers to learn while reviewing, especially for taxonomies with many related classes (e.g., dog breeds). The three authors of this paper, aided by an experienced data labeler, served as these expert reviewers, spending around 67 seconds in total on average to review each image label (14x more time than MTurk workers) and around 109 seconds on average to review the images where a second phase was required for the expert reviewers to come to consensus due to disagreement (28x more time than MTurk workers).There were 66 ImageNet classes (out of the 1000) that had no CL-flagged image in the validation set. For these classes, the experts could not review a CL-flagged image, but experts still reviewed a non CL-flagged image. Thus, 1934 images were reviewed by experts (934 CL-flagged and 1000 non-CL flagged). These images were assigned into 3 non-disjoint evenly-sized partitions (one for each expert to review) such that each image was reviewed by at least 2 experts. Expert reviewer 1 was assigned images from classes 1-666. Expert reviewer 2 was assigned classes 1-333 and 667-1000. Expert reviewer 3 was assigned classes 334-1000. After independently reviewing the images (spending seconds per image, on average), experts disagreed on 438 images. The experts subsequently discussed each of these images to reach a consensus decision (spending 55 seconds on average in discussions to come to consensus on a choice for each label). Table S3 counts the different types of label issues identified by experts in the CL-flagged and non-CL flagged images, from which we computed the percentages reported in Table 3 .The time spent for expert review in Table is computed as: (1934 / 1934 ) * 54 seconds + (438 / 1934) * 55 seconds = 67 seconds (i.e., time spent on average for all 1934 images for independent expert review + additional time spent on the 438 images requiring experts to discuss their choices and come to agreement).In some cases, experts agreed that neither the given nor the predicted label was appropriate, but Mechanical Turk workers chose the predicted label. These were tricky cases which often required careful scrutiny to identify the true class of the given image. Figure S2 shows an example of such a case, where the image clearly doesn't match the ImageNet given label, and upon close inspection, doesn't match the predicted label either. Table S3 : Counts of various types of label issues identified by experts in CL-flagged examples vs non-CL flagged examples from ImageNet (see Section 6). Here, count(errors) = count(correctable) + count(multi-label) + count(neither) + count(non-agreement). Also, count(total) = count(non-errors) + count(errors). After independently making decisions about each label, experts were subsequently required to resolve any non-agreement by reaching a consensus via group deliberation. There were ImageNet classes which did not have a CL-flagged error, thus only 934 CL-flagged examples were reviewed instead of 1000 (1 example for every class ",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 1969,
+                        "end": 1977,
+                        "text": "Table S3",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 2139,
+                        "end": 2146,
+                        "text": "Table 3",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 2720,
+                        "end": 2729,
+                        "text": "Figure S2",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 2896,
+                        "end": 2904,
+                        "text": "Table S3",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "G Expert label review details",
+                "sec_num": null
+            }
+        ],
+        "bib_entries": {
+            "BIBREF0": {
+                "ref_id": "b0",
+                "title": "Learning from noisy examples",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Angluin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Laird",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1988,
+                "venue": "Machine Learning",
+                "volume": "2",
+                "issue": "",
+                "pages": "343--370",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Angluin and P. Laird. Learning from noisy examples. Machine Learning, 2(4):343-370, 1988.",
+                "links": null
+            },
+            "BIBREF1": {
+                "ref_id": "b1",
+                "title": "A closer look at memorization in deep networks",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Arpit",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Jastrz\u0119bski",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Ballas",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Krueger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Bengio",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Kanwal",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Maharaj",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Fischer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Courville",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Bengio",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "International Conference on Machine Learning",
+                "volume": "",
+                "issue": "",
+                "pages": "233--242",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Arpit, S. Jastrz\u0119bski, N. Ballas, D. Krueger, E. Bengio, M. S. Kanwal, T. Maharaj, A. Fischer, A. Courville, Y. Bengio, et al. A closer look at memorization in deep networks. In International Conference on Machine Learning, pages 233-242. Proceedings of Machine Learning Research (PMLR), 2017.",
+                "links": null
+            },
+            "BIBREF2": {
+                "ref_id": "b2",
+                "title": "Understanding and utilizing deep neural networks trained with noisy labels",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [
+                            "B"
+                        ],
+                        "last": "Liao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Chen, B. B. Liao, G. Chen, and S. Zhang. Understanding and utilizing deep neural networks trained with noisy labels. In International Conference on Machine Learning (ICML), 2019.",
+                "links": null
+            },
+            "BIBREF3": {
+                "ref_id": "b3",
+                "title": "A survey on deep learning with noisy labels: How to train your model when you cannot trust on the annotations?",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [
+                            "R"
+                        ],
+                        "last": "Cordeiro",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Carneiro",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Conference on Graphics, Patterns and Images (SIBGRAPI)",
+                "volume": "",
+                "issue": "",
+                "pages": "9--16",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "F. R. Cordeiro and G. Carneiro. A survey on deep learning with noisy labels: How to train your model when you cannot trust on the annotations? In Conference on Graphics, Patterns and Images (SIBGRAPI), pages 9-16, 2020.",
+                "links": null
+            },
+            "BIBREF4": {
+                "ref_id": "b4",
+                "title": "Maximum likelihood estimation of observer error-rates using the em algorithm",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [
+                            "P"
+                        ],
+                        "last": "Dawid",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Skene",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1979,
+                "venue": "Journal of the Royal Statistical Society: Series C (Applied Statistics)",
+                "volume": "28",
+                "issue": "1",
+                "pages": "20--28",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. P. Dawid and A. M. Skene. Maximum likelihood estimation of observer error-rates using the em algorithm. Journal of the Royal Statistical Society: Series C (Applied Statistics), 28(1): 20-28, 1979.",
+                "links": null
+            },
+            "BIBREF5": {
+                "ref_id": "b5",
+                "title": "ImageNet: A Large-Scale Hierarchical Image Database",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Deng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Dong",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Socher",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L.-J",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Fei-Fei",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "Conference on Computer Vision and Pattern Recognition (CVPR)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei. ImageNet: A Large-Scale Hierarchical Image Database. In Conference on Computer Vision and Pattern Recognition (CVPR), 2009.",
+                "links": null
+            },
+            "BIBREF6": {
+                "ref_id": "b6",
+                "title": "Classification in the presence of label noise: A survey",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Fr\u00e9nay",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Verleysen",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "IEEE Transactions on Neural Networks and Learning Systems",
+                "volume": "25",
+                "issue": "5",
+                "pages": "845--869",
+                "other_ids": {
+                    "DOI": [
+                        "10.1109/TNNLS.2013.2292894"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "B. Fr\u00e9nay and M. Verleysen. Classification in the presence of label noise: A survey. IEEE Transactions on Neural Networks and Learning Systems, 25(5):845-869, 2014. ISSN 21622388. doi: 10.1109/TNNLS.2013.2292894.",
+                "links": null
+            },
+            "BIBREF7": {
+                "ref_id": "b7",
+                "title": "Audio set: An ontology and human-labeled dataset for audio events",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "Gemmeke",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [
+                            "P W"
+                        ],
+                        "last": "Ellis",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Freedman",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Jansen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Lawrence",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [
+                            "C"
+                        ],
+                        "last": "Moore",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Plakal",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Ritter",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. F. Gemmeke, D. P. W. Ellis, D. Freedman, A. Jansen, W. Lawrence, R. C. Moore, M. Plakal, and M. Ritter. Audio set: An ontology and human-labeled dataset for audio events. In IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP), New Orleans, LA, 2017.",
+                "links": null
+            },
+            "BIBREF8": {
+                "ref_id": "b8",
+                "title": "Training deep neural-networks using a noise adaptation layer",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Goldberger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Ben-Reuven",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "International Conference on Learning Representations (ICLR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Goldberger and E. Ben-Reuven. Training deep neural-networks using a noise adaptation layer. In International Conference on Learning Representations (ICLR), 2017.",
+                "links": null
+            },
+            "BIBREF9": {
+                "ref_id": "b9",
+                "title": "Caltech-256 object category dataset",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Griffin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Holub",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Perona",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2007,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Griffin, A. Holub, and P. Perona. Caltech-256 object category dataset. Technical Report 7694, California Institute of Technology, 2007. URL http://authors.library.caltech.edu/7694.",
+                "links": null
+            },
+            "BIBREF10": {
+                "ref_id": "b10",
+                "title": "Nist special database 19 handprinted forms and characters database",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [
+                            "J"
+                        ],
+                        "last": "Grother",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1995,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. J. Grother. Nist special database 19 handprinted forms and characters database. National Institute of Standards and Technology, 1995.",
+                "links": null
+            },
+            "BIBREF11": {
+                "ref_id": "b11",
+                "title": "A neural representation of sketch drawings",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Ha",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Eck",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1704.03477"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Ha and D. Eck. A neural representation of sketch drawings. arXiv preprint arXiv:1704.03477, 2017.",
+                "links": null
+            },
+            "BIBREF12": {
+                "ref_id": "b12",
+                "title": "Improving generalization by controlling label-noise information in neural network weights",
+                "authors": [
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Harutyunyan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Reing",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Ver",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Steeg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Galstyan",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "H. Harutyunyan, K. Reing, G. Ver Steeg, and A. Galstyan. Improving generalization by controlling label-noise information in neural network weights. In International Conference on Machine Learning (ICML), pages 4071-4081. Proceedings of Machine Learning Research (PMLR), 2020.",
+                "links": null
+            },
+            "BIBREF13": {
+                "ref_id": "b13",
+                "title": "Deep residual learning for image recognition",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Ren",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Conference on Computer Vision and Pattern Recognition (CVPR)",
+                "volume": "",
+                "issue": "",
+                "pages": "770--778",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning for image recognition. In Conference on Computer Vision and Pattern Recognition (CVPR), pages 770-778, 2016.",
+                "links": null
+            },
+            "BIBREF14": {
+                "ref_id": "b14",
+                "title": "Using trusted data to train deep networks on labels corrupted by severe noise",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Hendrycks",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Mazeika",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Wilson",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Gimpel",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Conference on Neural Information Processing Systems (NeurIPS)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Hendrycks, M. Mazeika, D. Wilson, and K. Gimpel. Using trusted data to train deep networks on labels corrupted by severe noise. In Conference on Neural Information Processing Systems (NeurIPS), 2018.",
+                "links": null
+            },
+            "BIBREF15": {
+                "ref_id": "b15",
+                "title": "Selective brain damage: Measuring the disparate impact of model pruning",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Hooker",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Courville",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Dauphin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Frome",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1911.05248"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "S. Hooker, A. Courville, Y. Dauphin, and A. Frome. Selective brain damage: Measuring the disparate impact of model pruning. arXiv preprint arXiv:1911.05248, 2019.",
+                "links": null
+            },
+            "BIBREF16": {
+                "ref_id": "b16",
+                "title": "Understanding generalization through visualizations",
+                "authors": [
+                    {
+                        "first": "W",
+                        "middle": [
+                            "R"
+                        ],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Z",
+                        "middle": [],
+                        "last": "Emam",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Goldblum",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Fowl",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "K"
+                        ],
+                        "last": "Terry",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Goldstein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1906.03291"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "W. R. Huang, Z. Emam, M. Goldblum, L. Fowl, J. K. Terry, F. Huang, and T. Goldstein. Understanding generalization through visualizations. arXiv preprint arXiv:1906.03291, 2019.",
+                "links": null
+            },
+            "BIBREF17": {
+                "ref_id": "b17",
+                "title": "Beyond synthetic noise: Deep learning on controlled noisy labels",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Jiang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Liu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "119",
+                "issue": "",
+                "pages": "13--18",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "L. Jiang, D. Huang, M. Liu, and W. Yang. Beyond synthetic noise: Deep learning on controlled noisy labels. In International Conference on Machine Learning (ICML), volume 119 of Proceedings of Machine Learning Research (PMLR), pages 4804-4815. Proceedings of Machine Learning Research (PMLR), 13-18 Jul 2020. URL http://proceedings.mlr.press/v119/ jiang20c.html.",
+                "links": null
+            },
+            "BIBREF18": {
+                "ref_id": "b18",
+                "title": "Learning deep networks from noisy labels with dropout regularization",
+                "authors": [
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Jindal",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Nokleby",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "International Conference on Data Mining (ICDM)",
+                "volume": "",
+                "issue": "",
+                "pages": "967--972",
+                "other_ids": {
+                    "DOI": [
+                        "10.1109/ICDM.2016.0121"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "I. Jindal, M. Nokleby, and X. Chen. Learning deep networks from noisy labels with dropout regularization. In International Conference on Data Mining (ICDM), pages 967-972, Dec. 2016. doi: 10.1109/ICDM.2016.0121.",
+                "links": null
+            },
+            "BIBREF19": {
+                "ref_id": "b19",
+                "title": "Robust active label correction",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Kremer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Sha",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Igel",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Proceedings of Machine Learning Research",
+                "volume": "84",
+                "issue": "",
+                "pages": "9--11",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Kremer, F. Sha, and C. Igel. Robust active label correction. In Proceedings of Machine Learning Research (PMLR), volume 84 of Proceedings of Machine Learning Research, pages 308-316, Playa Blanca, Lanzarote, Canary Islands, 09-11 Apr 2018. Proceedings of Machine Learning Research (PMLR). URL http://proceedings.mlr.press/v84/kremer18a.html.",
+                "links": null
+            },
+            "BIBREF20": {
+                "ref_id": "b20",
+                "title": "Learning multiple layers of features from tiny images",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Krizhevsky",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Hinton",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Krizhevsky and G. Hinton. Learning multiple layers of features from tiny images. Master's thesis, Department of Computer Science, University of Toronto, 2009. URL http://www.cs. toronto.edu/~kriz/cifar.html.",
+                "links": null
+            },
+            "BIBREF21": {
+                "ref_id": "b21",
+                "title": "Gradient-based learning applied to document recognition",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Lecun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Bottou",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Bengio",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Haffner",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1998,
+                "venue": "Proceedings of the IEEE",
+                "volume": "",
+                "issue": "",
+                "pages": "2278--2324",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Y. Lecun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-based learning applied to document recognition. In Proceedings of the IEEE, pages 2278-2324, 1998.",
+                "links": null
+            },
+            "BIBREF22": {
+                "ref_id": "b22",
+                "title": "CleanML: a study for evaluating the impact of data cleaning on ml classification tasks",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Rao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Blase",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Chu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "IEEE International Conference on Data Engineering",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Li, X. Rao, J. Blase, Y. Zhang, X. Chu, and C. Zhang. CleanML: a study for evaluating the impact of data cleaning on ml classification tasks. In IEEE International Conference on Data Engineering, 2021.",
+                "links": null
+            },
+            "BIBREF23": {
+                "ref_id": "b23",
+                "title": "Webvision database: Visual learning and understanding from web data",
+                "authors": [
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Wang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Agustsson",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Van Gool",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1708.02862"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "W. Li, L. Wang, W. Li, E. Agustsson, and L. Van Gool. Webvision database: Visual learning and understanding from web data. arXiv preprint arXiv:1708.02862, 2017.",
+                "links": null
+            },
+            "BIBREF24": {
+                "ref_id": "b24",
+                "title": "Detecting and correcting for label shift with black box predictors",
+                "authors": [
+                    {
+                        "first": "Z",
+                        "middle": [],
+                        "last": "Lipton",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y.-X",
+                        "middle": [],
+                        "last": "Wang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Smola",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Z. Lipton, Y.-X. Wang, and A. Smola. Detecting and correcting for label shift with black box predictors. In International Conference on Machine Learning (ICML), 2018.",
+                "links": null
+            },
+            "BIBREF25": {
+                "ref_id": "b25",
+                "title": "List of datasets for machine learning research -Wikipedia, the free encyclopedia",
+                "authors": [],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "List of Datasets for Machine Learning Research. List of datasets for machine learning research -Wikipedia, the free encyclopedia. https://en.wikipedia.org/wiki/List_of_datasets_ for_machine-learning_research, 2018. [Online; accessed 22-October-2018].",
+                "links": null
+            },
+            "BIBREF26": {
+                "ref_id": "b26",
+                "title": "Learning word vectors for sentiment analysis",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Maas",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [
+                            "E"
+                        ],
+                        "last": "Daly",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "T"
+                        ],
+                        "last": "Pham",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "Y"
+                        ],
+                        "last": "Ng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Potts",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "Annual Conference of the Association for Computational Linguistics (ACL)",
+                "volume": "",
+                "issue": "",
+                "pages": "142--150",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. L. Maas, R. E. Daly, P. T. Pham, D. Huang, A. Y. Ng, and C. Potts. Learning word vectors for sentiment analysis. In Annual Conference of the Association for Computational Linguistics (ACL), pages 142-150, Portland, Oregon, USA, June 2011. Annual Conference of the Association for Computational Linguistics (ACL). URL http://www.aclweb.org/anthology/ P11-1015.",
+                "links": null
+            },
+            "BIBREF27": {
+                "ref_id": "b27",
+                "title": "Exploring the limits of weakly supervised pretraining",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Mahajan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Girshick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Ramanathan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Paluri",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Bharambe",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Van Der Maaten",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "European Conference on Computer Vision (ECCV)",
+                "volume": "",
+                "issue": "",
+                "pages": "181--196",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Mahajan, R. Girshick, V. Ramanathan, K. He, M. Paluri, Y. Li, A. Bharambe, and L. Van Der Maaten. Exploring the limits of weakly supervised pretraining. European Conference on Computer Vision (ECCV), pages 181-196, 2018.",
+                "links": null
+            },
+            "BIBREF28": {
+                "ref_id": "b28",
+                "title": "Image-based recommendations on styles and substitutes",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Mcauley",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Targett",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Q",
+                        "middle": [],
+                        "last": "Shi",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Van Den",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Hengel",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Special Interest Group on Information Retrieval (SIGIR)",
+                "volume": "",
+                "issue": "",
+                "pages": "43--52",
+                "other_ids": {
+                    "DOI": [
+                        "http://doi.acm.org/10.1145/2766462.2767755"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "J. McAuley, C. Targett, Q. Shi, and A. van den Hengel. Image-based recommendations on styles and substitutes. In Special Interest Group on Information Retrieval (SIGIR), pages 43-52. ACM, 2015. ISBN 978-1-4503-3621-5. doi: 10.1145/2766462.2767755. URL http: //doi.acm.org/10.1145/2766462.2767755.",
+                "links": null
+            },
+            "BIBREF29": {
+                "ref_id": "b29",
+                "title": "Twenty newsgroups dataset",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Mitchell",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1999,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "T. Mitchell. Twenty newsgroups dataset. https://archive.ics.uci.edu/ml/datasets/ Twenty+Newsgroups, 1999.",
+                "links": null
+            },
+            "BIBREF30": {
+                "ref_id": "b30",
+                "title": "Learning with noisy labels",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Natarajan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "I",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Dhillon",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "K"
+                        ],
+                        "last": "Ravikumar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Tewari",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2013,
+                "venue": "Conference on Neural Information Processing Systems (NeurIPS)",
+                "volume": "",
+                "issue": "",
+                "pages": "1196--1204",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "N. Natarajan, I. S. Dhillon, P. K. Ravikumar, and A. Tewari. Learning with noisy labels. In Conference on Neural Information Processing Systems (NeurIPS), pages 1196-1204, 2013. URL http://papers.nips.cc/paper/5073-learning-with-noisy-labels.pdf.",
+                "links": null
+            },
+            "BIBREF31": {
+                "ref_id": "b31",
+                "title": "Learning with confident examples: Rank pruning for robust classification with noisy labels",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Northcutt",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Wu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "I",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Chuang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Conference on Uncertainty in Artificial Intelligence (UAI)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. G. Northcutt, T. Wu, and I. L. Chuang. Learning with confident examples: Rank pruning for robust classification with noisy labels. In Conference on Uncertainty in Artificial Intelligence (UAI), 2017.",
+                "links": null
+            },
+            "BIBREF32": {
+                "ref_id": "b32",
+                "title": "Confident learning: Estimating uncertainty in dataset labels",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Northcutt",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Jiang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Chuang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Journal of Artificial Intelligence Research",
+                "volume": "70",
+                "issue": "",
+                "pages": "1373--1411",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. G. Northcutt, L. Jiang, and I. Chuang. Confident learning: Estimating uncertainty in dataset labels. Journal of Artificial Intelligence Research, 70:1373-1411, 2021.",
+                "links": null
+            },
+            "BIBREF33": {
+                "ref_id": "b33",
+                "title": "Loss factorization, weakly supervised learning and label noise robustness",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Patrini",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Nielsen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Nock",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Carioni",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "",
+                "issue": "",
+                "pages": "708--717",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Patrini, F. Nielsen, R. Nock, and M. Carioni. Loss factorization, weakly supervised learning and label noise robustness. In International Conference on Machine Learning (ICML), pages 708-717, 2016.",
+                "links": null
+            },
+            "BIBREF34": {
+                "ref_id": "b34",
+                "title": "Making deep neural networks robust to label noise: A loss correction approach",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Patrini",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Rozza",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Menon",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Nock",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Qu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Conference on Computer Vision and Pattern Recognition (CVPR)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Patrini, A. Rozza, A. Krishna Menon, R. Nock, and L. Qu. Making deep neural networks robust to label noise: A loss correction approach. In Conference on Computer Vision and Pattern Recognition (CVPR), 2017.",
+                "links": null
+            },
+            "BIBREF35": {
+                "ref_id": "b35",
+                "title": "Data programming: Creating large training sets, quickly",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [
+                            "J"
+                        ],
+                        "last": "Ratner",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "De Sa",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Wu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Selsam",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "R\u00e9",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Conference on Neural Information Processing Systems (NeurIPS)",
+                "volume": "",
+                "issue": "",
+                "pages": "3567--3575",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. J. Ratner, C. M. De Sa, S. Wu, D. Selsam, and C. R\u00e9. Data programming: Creating large training sets, quickly. In Conference on Neural Information Process- ing Systems (NeurIPS), pages 3567-3575, 2016. URL http://papers.nips.cc/paper/ 6523-data-programming-creating-large-training-sets-quickly.pdf.",
+                "links": null
+            },
+            "BIBREF36": {
+                "ref_id": "b36",
+                "title": "Do imagenet classifiers generalize to imagenet",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Recht",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Roelofs",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Schmidt",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Shankar",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "",
+                "issue": "",
+                "pages": "5389--5400",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "B. Recht, R. Roelofs, L. Schmidt, and V. Shankar. Do imagenet classifiers generalize to imagenet? In International Conference on Machine Learning (ICML), pages 5389-5400, 2019.",
+                "links": null
+            },
+            "BIBREF37": {
+                "ref_id": "b37",
+                "title": "Deep learning is robust to massive label noise",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Rolnick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Veit",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Belongie",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Shavit",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1705.10694"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Rolnick, A. Veit, S. Belongie, and N. Shavit. Deep learning is robust to massive label noise. arXiv preprint arXiv:1705.10694, 2017.",
+                "links": null
+            },
+            "BIBREF38": {
+                "ref_id": "b38",
+                "title": "Everyone wants to do the model work, not the data work\": Data cascades in high-stakes ai",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Sambasivan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Kapania",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Highfill",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Akrong",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Paritosh",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Aroyo",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Human Factors in Computing Systems (CHI)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "N. Sambasivan, S. Kapania, H. Highfill, D. Akrong, P. Paritosh, and L. M. Aroyo. \"Everyone wants to do the model work, not the data work\": Data cascades in high-stakes ai. In Human Factors in Computing Systems (CHI), 2021.",
+                "links": null
+            },
+            "BIBREF39": {
+                "ref_id": "b39",
+                "title": "Evaluating machine accuracy on ImageNet",
+                "authors": [
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Shankar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Roelofs",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Mania",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Fang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Recht",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Schmidt",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "International Conference on Machine Learning (ICML)",
+                "volume": "119",
+                "issue": "",
+                "pages": "13--18",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "V. Shankar, R. Roelofs, H. Mania, A. Fang, B. Recht, and L. Schmidt. Evaluating machine accuracy on ImageNet. In International Conference on Machine Learning (ICML), volume 119 of Proceedings of Machine Learning Research, pages 8634-8644. Proceedings of Machine Learning Research (PMLR), 13-18 Jul 2020.",
+                "links": null
+            },
+            "BIBREF40": {
+                "ref_id": "b40",
+                "title": "Very deep convolutional networks for large-scale image recognition",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Simonyan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Zisserman",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1409.1556"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "K. Simonyan and A. Zisserman. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556, 2014.",
+                "links": null
+            },
+            "BIBREF41": {
+                "ref_id": "b41",
+                "title": "Training convolutional networks with noisy labels",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Sukhbaatar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Bruna",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Paluri",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Bourdev",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Fergus",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "International Conference on Learning Representations (ICLR)",
+                "volume": "",
+                "issue": "",
+                "pages": "1--11",
+                "other_ids": {
+                    "DOI": [
+                        "10.1051/0004-6361/201527329"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "S. Sukhbaatar, J. Bruna, M. Paluri, L. Bourdev, and R. Fergus. Training convolutional networks with noisy labels. In International Conference on Learning Representations (ICLR), pages 1-11, 2015. ISBN 9781611970685. doi: 10.1051/0004-6361/201527329. URL http://arxiv. org/abs/1406.2080.",
+                "links": null
+            },
+            "BIBREF42": {
+                "ref_id": "b42",
+                "title": "Revisiting unreasonable effectiveness of data in deep learning era",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Shrivastava",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Singh",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Gupta",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "International Conference on Computer Vision (ICCV)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Sun, A. Shrivastava, S. Singh, and A. Gupta. Revisiting unreasonable effectiveness of data in deep learning era. In International Conference on Computer Vision (ICCV), Oct 2017.",
+                "links": null
+            },
+            "BIBREF43": {
+                "ref_id": "b43",
+                "title": "From imagenet to image classification: Contextualizing progress on benchmarks",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Tsipras",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Santurkar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Engstrom",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Ilyas",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Madry",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "International Conference on Machine Learning",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Tsipras, S. Santurkar, L. Engstrom, A. Ilyas, and A. Madry. From imagenet to image classi- fication: Contextualizing progress on benchmarks. In International Conference on Machine Learning, pages 9625-9635. Proceedings of Machine Learning Research (PMLR), 2020.",
+                "links": null
+            },
+            "BIBREF44": {
+                "ref_id": "b44",
+                "title": "Learning with symmetric label noise: The importance of being unhinged",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Van Rooyen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Menon",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [
+                            "C"
+                        ],
+                        "last": "Williamson",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Conference on Neural Information Processing Systems (NeurIPS)",
+                "volume": "",
+                "issue": "",
+                "pages": "10--18",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "B. Van Rooyen, A. Menon, and R. C. Williamson. Learning with symmetric label noise: The importance of being unhinged. In Conference on Neural Information Pro- cessing Systems (NeurIPS), pages 10-18, 2015. URL http://papers.nips.cc/paper/ 5941-learning-with-symmetric-label-noise-the-importance-of-being-unhinged.",
+                "links": null
+            },
+            "BIBREF45": {
+                "ref_id": "b45",
+                "title": "Fair classification with group-dependent label noise",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Wang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Liu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Levy",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Proceedings of the ACM Conference on Fairness, Accountability, and Transparency",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Wang, Y. Liu, and C. Levy. Fair classification with group-dependent label noise. In Proceed- ings of the ACM Conference on Fairness, Accountability, and Transparency, 2021.",
+                "links": null
+            },
+            "BIBREF46": {
+                "ref_id": "b46",
+                "title": "On the margin theory of feedforward neural networks",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Wei",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "D"
+                        ],
+                        "last": "Lee",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Q",
+                        "middle": [],
+                        "last": "Liu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Ma",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Computing Research Repository (CoRR)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Wei, J. D. Lee, Q. Liu, and T. Ma. On the margin theory of feedforward neural networks. Computing Research Repository (CoRR), 2018. URL http://arxiv.org/abs/1810.05369.",
+                "links": null
+            },
+            "BIBREF47": {
+                "ref_id": "b47",
+                "title": "L_dmi: A novel information-theoretic loss function for training deep nets robust to label noise",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Xu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Cao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Kong",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Wang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Conference on Neural Information Processing Systems (NeurIPS)",
+                "volume": "",
+                "issue": "",
+                "pages": "6225--6236",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Y. Xu, P. Cao, Y. Kong, and Y. Wang. L_dmi: A novel information-theoretic loss function for training deep nets robust to label noise. In Conference on Neural Information Processing Systems (NeurIPS), pages 6225-6236, 2019.",
+                "links": null
+            },
+            "BIBREF48": {
+                "ref_id": "b48",
+                "title": "Improving crowdsourced label quality using noise correction",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Sheng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Wu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "IEEE Transactions on Neural Networks and Learning Systems",
+                "volume": "29",
+                "issue": "5",
+                "pages": "1675--1688",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Zhang, V. S. Sheng, T. Li, and X. Wu. Improving crowdsourced label quality using noise correction. IEEE Transactions on Neural Networks and Learning Systems, 29(5):1675-1688, 2017.",
+                "links": null
+            },
+            "BIBREF49": {
+                "ref_id": "b49",
+                "title": "Learning transferable architectures for scalable image recognition",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Zoph",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Vasudevan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Shlens",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Q",
+                        "middle": [
+                            "V"
+                        ],
+                        "last": "Le",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Conference on Computer Vision and Pattern Recognition (CVPR)",
+                "volume": "",
+                "issue": "",
+                "pages": "8697--8710",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "B. Zoph, V. Vasudevan, J. Shlens, and Q. V. Le. Learning transferable architectures for scalable image recognition. In Conference on Computer Vision and Pattern Recognition (CVPR), pages 8697-8710, 2018.",
+                "links": null
+            }
+        },
+        "ref_entries": {
+            "FIGREF1": {
+                "num": null,
+                "fig_num": "1",
+                "text": "An example label error from each category (Section 4) for image datasets. The figure shows",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF2": {
+                "num": null,
+                "fig_num": null,
+                "text": "Definition 3 (benign set, B). The subset of benign test examples, comprising data that CL did not flag as likely label errors and data that was flagged but for which human reviewers agreed that the original label should be kept. (B \u2282 D) Definition 4 (unknown-label set, U). The subset of CL-flagged test examples for which human labelers could not agree on a single correct label. This includes examples where human reviewers agreed that multiple classes or none of the classes are appropriate. (U \u2282 D\\B) Definition 5 (pruned set, P). The remaining test data after removing U from D. (P = D\\U) Definition 6 (correctable set, C). The subset of CL-flagged examples for which human-validation reached consensus on a different label than the originally given label. (C = P\\B) Definition 7 (noise prevalence, N ). The percentage of the pruned set comprised of the correctable set, i.e. what fraction of data received the wrong label in the original benchmark when a clear alternative ground-truth label should have been assigned (disregarding any data for which humans failed to find a clear alternative). Here we operationalize noise prevalence as N = |C| |P| .",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF3": {
+                "num": null,
+                "fig_num": "3",
+                "text": "Benchmark ranking comparison of 34 pre-trained ImageNet models and 13 pre-trained CIFAR-10 models (details in Tables S2 and S1 and Figure S3 in the Appendix). Benchmarks are unchanged by removing label errors (a), but change drastically (b) on the Correctable set with original (erroneous) labels versus corrected labels, e.g. NASNet: 1/34 \u2192 29/34, ResNet-18: 34/34 \u2192 1/34. over C, despite exhibiting far worse original test accuracy. The change in ranking can be dramatic: NASNet-large drops from ranking 1/34 \u2192 29/34, Xception drops from ranking 2/34 \u2192 24/34, ResNet-18 increases from ranking 34/34 \u2192 1/34, and ResNet-50 increases from ranking 20/24 \u2192 2/24 (see",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF4": {
+                "num": null,
+                "fig_num": null,
+                "text": "x, of B (the non-CL-flagged test examples). This effectively increases the proportion of the resulting test dataset comprised of the correctable set C, and reflects how test sets function in applications with greater prevalence of label errors. If we remove a fraction x of benign test examples (in B) from P, we estimate the noise prevalence in the new (reduced) test dataset to be N = |C| |P|\u2212x|B| . By varying",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF5": {
+                "num": null,
+                "fig_num": "4",
+                "text": "ImageNet top-1 original accuracy (top) and corrected accuracy (bottom) vs noise prevalence (agreement threshold = 3). Vertical lines indicate noise levels at which the ranking of two models changes (in terms of original/corrected accuracy). The left-most point (N = 2.9%) on the x-axis is |C|/|P|, i.e. the (rounded) estimated noise prevalence of the pruned set, P. The leftmost vertical dotted line in the bottom panel is read, \"The ResNet-50 and ResNet-18 benchmarks cross at noise prevalence N = 9%,\" implying ResNet-18 outperforms ResNet-50 when N increases by around 6% relative to the original pruned test data (N = 2.9% originally, c.f.Table 2). Noise prevalance of 50% indicates the correctable set comprises half of the test set.",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF6": {
+                "num": null,
+                "fig_num": "5",
+                "text": "CIFAR-10 top-1 original accuracy (top panel) and corrected accuracy (bottom panel) vs Noise Prevalence (agreement threshold = 3). For additional details, see the caption ofFigure 4.For a given model M, its resulting accuracy (as a function of x) over the reduced test data is given by A(x; M) = A C (M)\u2022|C|+(1\u2212x)\u2022A B (M)\u2022|B| |C|+(1\u2212x)\u2022|B|, where A C (M) and A B (M) denote the (original or corrected) accuracy over the correctable set and benign set, respectively (accuracy before removing any examples). Here A B = A * B =\u00c3 B because no erroneous labels were identified in B. The expectation is taken over which fraction x of examples are randomly removed from B to produce the reduced test set: the resulting expected accuracy, A(x; M), is depicted on the y-axis of",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF7": {
+                "num": null,
+                "fig_num": "1",
+                "text": "Acc on Correctable Set (original labels)",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF8": {
+                "num": null,
+                "fig_num": null,
+                "text": "Benchmark ranking comparison of 34 pre-trained models on the ImageNet val set (used as test data here) for various settings of the agreement threshold. Top-5 benchmarks are unchanged by removing label errors (a), but change drastically on the correctable subset with original (erroneous) labels versus corrected labels. Corrected test set sizes: 1428 ( ), 960 (\u2022), 468 ( ).",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "FIGREF9": {
+                "num": null,
+                "fig_num": null,
+                "text": "ImageNet top-1 original accuracy (top panel) and top-1 corrected accuracy (bottom panel) vs Noise Prevalence with agreement threshold = 5 (instead of threshold = 3, c.f.,Figure 4).",
+                "uris": null,
+                "type_str": "figure"
+            },
+            "TABREF0": {
+                "num": null,
+                "text": "tiger is more likely to be mislabeled cheetah than CD player.The diagonal entryp(\u1ef9=i, y * =i) of matrix Q\u1ef9 ,y * is the probability that examples in class i are correctly labeled. If the dataset is error-free, then i\u2208[m]p (\u1ef9=i, y * =i) = 1. The fraction of label errors is \u03c1 = 1 \u2212 i\u2208[m]p (\u1ef9=i, y * =i) and the number of label errors is \u03c1 \u2022 n. To find label errors, we choose the top \u03c1 \u2022 n examples ordered by the normalized margin:p(\u1ef9=i; x) \u2212 max j =ip (\u1ef9=j; x)",
+                "content": "<table><tr><td>to estimate Q\u1ef9 ,y  *  , the m \u00d7 m discrete joint distribution of observed, noisy labels,\u1ef9, and unknown, true labels, y  *  . Inherent in</td></tr><tr><td>Q\u1ef9 ,y  *  is the assumption that noise is class-conditional [1], depending only on the latent true class,</td></tr><tr><td>not the data. This assumption is commonly used [9, 32, 42] because it is reasonable. For example, in</td></tr><tr><td>ImageNet, a</td></tr></table>",
+                "html": null,
+                "type_str": "table"
+            },
+            "TABREF1": {
+                "num": null,
+                "text": "Test set errors are prominent across common benchmark datasets. We observe that error rates vary across datasets, from 0.15% (MNIST) to 10.12% (QuickDraw); unsurprisingly, simpler datasets, datasets with more carefully designed labeling methodologies, and datasets with more careful human curation generally had less error than datasets that used more automated data collection procedures.",
+                "content": "<table><tr><td>Dataset</td><td>Modality</td><td>Size</td><td>Model</td><td colspan=\"5\">Test Set Errors CL guessed MTurk checked validated estimated % error</td></tr><tr><td>MNIST</td><td>image</td><td colspan=\"2\">10,000 2-conv CNN</td><td>100</td><td>100 (100%)</td><td>15</td><td>-</td><td>0.15</td></tr><tr><td>CIFAR-10</td><td>image</td><td>10,000 VGG</td><td/><td>275</td><td>275 (100%)</td><td>54</td><td>-</td><td>0.54</td></tr><tr><td>CIFAR-100</td><td>image</td><td>10,000 VGG</td><td/><td>2,235</td><td>2,235 (100%)</td><td>585</td><td>-</td><td>5.85</td></tr><tr><td>Caltech-256  \u2020</td><td>image</td><td colspan=\"2\">29,780 Wide ResNet-50-2</td><td>2,360</td><td>2,360 (100%)</td><td>458</td><td>-</td><td>1.54</td></tr><tr><td>ImageNet *</td><td>image</td><td colspan=\"2\">50,000 ResNet-50</td><td>5,440</td><td>5,440 (100%)</td><td>2,916</td><td>-</td><td>5.83</td></tr><tr><td>QuickDraw  \u2020</td><td>image</td><td>50,426,266 VGG</td><td/><td>6,825,383</td><td>2,500 (0.04%)</td><td colspan=\"2\">1870 5,105,386</td><td>10.12</td></tr><tr><td>20news</td><td>text</td><td colspan=\"2\">7,532 TFIDF + SGD</td><td>93</td><td>93 (100%)</td><td>82</td><td>-</td><td>1.09</td></tr><tr><td>IMDB</td><td>text</td><td colspan=\"2\">25,000 FastText</td><td>1,310</td><td>1,310 (100%)</td><td>725</td><td>-</td><td>2.90</td></tr><tr><td colspan=\"2\">Amazon Reviews  \u2020 text</td><td colspan=\"2\">9,996,437 FastText</td><td>533,249</td><td>1,000 (0.2%)</td><td>732</td><td>390,338</td><td>3.90</td></tr><tr><td>AudioSet</td><td>audio</td><td>20,371 VGG</td><td/><td>307</td><td>307 (100%)</td><td>275</td><td>-</td><td>1.35</td></tr></table>",
+                "html": null,
+                "type_str": "table"
+            },
+            "TABREF2": {
+                "num": null,
+                "text": "Mechanical Turk validation of CL-flagged errors and categorization of label issues.",
+                "content": "<table><tr><td>Dataset</td><td colspan=\"6\">Test Set Errors Categorization non-errors errors non-agreement correctable multi-label neither</td></tr><tr><td>MNIST</td><td>85</td><td>15</td><td>2</td><td>10</td><td>-</td><td>3</td></tr><tr><td>CIFAR-10</td><td>221</td><td/><td>32</td><td>18</td><td>0</td><td>4</td></tr><tr><td>CIFAR-100</td><td colspan=\"2\">1650 585</td><td>210</td><td>318</td><td>20</td><td>37</td></tr><tr><td>Caltech-256</td><td colspan=\"2\">1902 458</td><td>99</td><td>221</td><td>115</td><td>23</td></tr><tr><td>ImageNet</td><td colspan=\"2\">2524 2916</td><td>598</td><td>1428</td><td>597</td><td>293</td></tr><tr><td>QuickDraw</td><td colspan=\"2\">630 1870</td><td>563</td><td>1047</td><td>20</td><td/></tr><tr><td>20news</td><td>11</td><td>82</td><td>43</td><td>22</td><td>12</td><td>5</td></tr><tr><td>IMDB</td><td colspan=\"2\">585 725</td><td>552</td><td>173</td><td>-</td><td>-</td></tr><tr><td>Amazon Reviews</td><td colspan=\"2\">268 732</td><td>430</td><td>302</td><td>-</td><td>-</td></tr><tr><td>AudioSet</td><td colspan=\"2\">32 275</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table>",
+                "html": null,
+                "type_str": "table"
+            },
+            "TABREF5": {
+                "num": null,
+                "text": "Percentages of label errors identified by experts vs. MTurk workers in CL-flagged examples and random non-CL-flagged examples from ImageNet. Only experts reviewed non-CL examples. The first two rows are computed over the same subset of images. The last column lists average time spent reviewing each image. Percentages are row-normalized, with raw counts provided inTable S3.non-errors errors correctable multi-label neither Avg. time spent",
+                "content": "<table><tr><td>CL (MTurk)</td><td>57.9% 42.2%</td><td>24.7%</td><td>11.1%</td><td>6.4%</td><td>5 seconds</td></tr><tr><td>CL (expert)</td><td>58.7% 41.4%</td><td>17.7%</td><td colspan=\"2\">13.1% 10.6%</td><td>67 seconds</td></tr><tr><td>non-CL (expert)</td><td>84.0% 16.0%</td><td>3.2%</td><td>9.1%</td><td>3.7%</td><td>67 seconds</td></tr></table>",
+                "html": null,
+                "type_str": "table"
+            },
+            "TABREF6": {
+                "num": null,
+                "text": "Noise prevalance of 50% indicates the correctable set comprises half of the test set.",
+                "content": "<table><tr><td>Imagenet Top-1 Test Accuracy Imagenet Top-1 Test Accuracy</td><td>(original labels) labels) (corrected</td><td>40% 60% 80% 60% 70% 80%</td><td>1.0% 1.0%</td><td>8%</td><td>22%</td><td>25.0% 25.0%</td><td>42%</td><td>45%</td><td>48%</td><td>50.0% 50.0%</td><td>Platform &amp; Model --------Keras 2.2.4 densenet169 Keras 2.2.4 nasnetlarge Keras 2.2.4 resnet50 PyTorch 1.0 alexnet PyTorch 1.0 resnet18 PyTorch 1.0 resnet50 PyTorch 1.0 vgg11</td></tr><tr><td/><td/><td/><td/><td colspan=\"4\">Noise Prevalence (% of test set with correctable labels)</td><td/><td/><td/><td/></tr><tr><td/><td/><td/><td/><td>*</td><td/><td/><td/><td/><td/><td/><td/></tr></table>",
+                "html": null,
+                "type_str": "table"
+            }
+        }
+    }
+}
