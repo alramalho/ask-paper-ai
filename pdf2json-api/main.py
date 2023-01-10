@@ -14,11 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/get-paper")
-def getpapers(request: Request):
-    with open(request.body.path, "r") as f:
-        return json.load(f)
-
 @app.get("/get-papers")
 def getpapers():
     return os.listdir("papers")
@@ -33,8 +28,3 @@ def parsepaper(name: str):
     abs_output_file = os.path.abspath(output_file)
     return abs_output_file
 
-@app.post("/ask")
-def ask(request: Request):
-
-    response = chatbot.ask(request.body.text, conversation_id=None, parent_id=None)
-    return response
