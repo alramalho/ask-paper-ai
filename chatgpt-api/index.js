@@ -1,35 +1,33 @@
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config()
-import express from 'express'
-import axios from 'axios';
+import express, {json} from 'express'
 import fs from 'fs';
 import cors from 'cors';
 import {ChatGPTAPIBrowser} from 'chatgpt'
+import bodyParser from "body-parser";
 
 const PORT = 4000
 const app = express();
 let api = undefined
 
-app.use(express.json());
-app.use(cors())
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+app.use(cors());
 
-app.get('/find-datasets', async (req, res) => {
-    const result = await api.sendMessage("Extract the datasets present in the following text: \n" + req.body.text)
-    res.json(result)
-
+app.post('/get-paper', async (req, res) => {
+    const jsonPaperPath = req.body.path
+    const paper = readJSON(jsonPaperPath)
+    res.send(paper)
 });
-app.get('/extract-ds-from-paper', async (req, res) => {
-    axios.get(`${process.env.PDF2JSON_APIURL}/parse-paper?name=${req.query.name}`)
-        .then(async (response) => {
-            const jsonPaperPath = response.data["output_file"]
-            const paper = readJSON(jsonPaperPath)
-            const result = await api.sendMessage("Extract the datasets present in the following text: \n" + paper.abstract)
-            res.json(result)
-        })
-        .catch(error => {
-            console.log(error);
-            res.sendStatus(500)
-        });
+app.post('/ask', async (req, res) => {
+    try {
+        console.log(req.body.text)
+        const result = await api.sendMessage(req.body.text)
+        res.json(result)
+    } catch (e) {
+        console.log(e)
+        res.sendStatus(500)
+    }
 });
 
 app.listen(PORT, async () => {

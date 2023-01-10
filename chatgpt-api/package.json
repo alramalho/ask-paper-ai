@@ -5,8 +5,8 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "axios": "^1.2.2",
-    "chatgpt": "^3.3.10",
+    "body-parser": "^1.20.1",
+    "chatgpt": "^3.3.11",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
