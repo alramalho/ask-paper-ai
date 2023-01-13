@@ -3,3 +3,5 @@ uvicorn
 
 revChatGPT
 python-dotenv
+
+selenium

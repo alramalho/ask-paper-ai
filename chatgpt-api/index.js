@@ -10,7 +10,7 @@ const PORT = 4000
 const app = express();
 let api = undefined
 
-app.use(bodyParser.json()); // for parsing application/json
+app.use(express.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 app.use(cors());
 
@@ -21,9 +21,8 @@ app.post('/get-paper', async (req, res) => {
 });
 app.post('/ask', async (req, res) => {
     try {
-        console.log(req.body.text)
-        const result = await api.sendMessage(req.body.text)
-        res.json(result)
+        console.log("Requeast body: " + req.body.text)
+        const result = await api.sendMessage(`${req.body.text}`)
     } catch (e) {
         console.log(e)
         res.sendStatus(500)

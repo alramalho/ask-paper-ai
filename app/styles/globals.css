@@ -19,5 +19,13 @@ h2 {
 }
 h3 {
    font-size: 2rem;
+}
 
+ul {
+   list-style: unset;
+   padding: 0;
+}
+table {
+   border: 1px solid gray,
+   
 }

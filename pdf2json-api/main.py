@@ -14,6 +14,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/get-paper")
+async def getpaper(path: str):
+    with open(path, "r") as f:
+        return json.load(f)
+
 @app.get("/get-papers")
 def getpapers():
     return os.listdir("papers")
@@ -27,4 +32,3 @@ def parsepaper(name: str):
     output_file = process_pdf_file(input_file=f'{input_dir}/{name}', temp_dir=temp_dir, output_dir=output_dir)
     abs_output_file = os.path.abspath(output_file)
     return abs_output_file
-
