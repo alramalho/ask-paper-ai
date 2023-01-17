@@ -1,7 +1,5 @@
 fastapi
 uvicorn
 
-revChatGPT
+openai
 python-dotenv
-
-selenium
