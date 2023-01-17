@@ -61,7 +61,7 @@ def read_from_json_cache(key):
 
 @app.get("/get-paper")
 async def get_paper(path: str):
-
+    print(f"Get paper {path}")
     with open(path, "r") as f:
         return json.load(f)
 
