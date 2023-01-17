@@ -1,0 +1,1237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 /Users/alramalho/grobid-0.6.1/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">The Medical Segmentation Decathlon</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Michela</forename><surname>Antonelli</surname></persName>
+							<idno type="ORCID">0000-0002-3005-4523</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Annika</forename><surname>Reinke</surname></persName>
+							<idno type="ORCID">0000-0003-4363-1876</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Spyridon</forename><surname>Bakas</surname></persName>
+							<idno type="ORCID">0000-0001-8734-6482</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Keyvan</forename><surname>Farahani</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Annette</forename><surname>Kopp-Schneider</surname></persName>
+							<idno type="ORCID">0000-0002-1810-0267</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Bennett</forename><forename type="middle">A</forename><surname>Landman</surname></persName>
+							<idno type="ORCID">0000-0001-5733-2127</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Geert</forename><surname>Litjens</surname></persName>
+							<idno type="ORCID">0000-0003-1554-1291</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Bjoern</forename><surname>Menze</surname></persName>
+							<idno type="ORCID">0000-0003-4136-5690</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Olaf</forename><surname>Ronneberger</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Ronald</forename><forename type="middle">M</forename><surname>Summers</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Bram</forename><surname>Van Ginneken</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Michel</forename><surname>Bilello</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Patrick</forename><surname>Bilic</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Patrick</forename><forename type="middle">F</forename><surname>Christ</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Richard</forename><forename type="middle">K G</forename><surname>Do</surname></persName>
+							<idno type="ORCID">0000-0002-6554-0310</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Marc</forename><forename type="middle">J</forename><surname>Gollub</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Stephan</forename><forename type="middle">H</forename><surname>Heckers</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Henkjan</forename><surname>Huisman</surname></persName>
+							<idno type="ORCID">0000-0001-6753-3221</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">William</forename><forename type="middle">R</forename><surname>Jarnagin</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Maureen</forename><forename type="middle">K</forename><surname>Mchugo</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Sandy</forename><surname>Napel</surname></persName>
+							<idno type="ORCID">0000-0002-6876-5507</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jennifer</forename><forename type="middle">S</forename><surname>Golia Pernicka</surname></persName>
+							<idno type="ORCID">0000-0002-1076-7948</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Kawal</forename><surname>Rhode</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Catalina</forename><surname>Tobon-Gomez</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Eugene</forename><surname>Vorontsov</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">James</forename><forename type="middle">A</forename><surname>Meakin</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Sebastien</forename><surname>Ourselin</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Manuel</forename><surname>Wiesenfarth</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Pablo</forename><surname>Arbeláez</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Byeonguk</forename><surname>Bae</surname></persName>
+							<idno type="ORCID">0000-0003-2309-8517</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Sihong</forename><surname>Chen</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Laura</forename><surname>Daza</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jianjiang</forename><surname>Feng</surname></persName>
+							<idno type="ORCID">0000-0002-5940-0063</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Baochun</forename><surname>He</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Fabian</forename><surname>Isensee</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Yuanfeng</forename><surname>Ji</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Fucang</forename><surname>Jia</surname></persName>
+							<idno type="ORCID">0000-0003-0075-979X</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Ildoo</forename><surname>Kim</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Klaus</forename><surname>Maier-Hein</surname></persName>
+							<idno type="ORCID">0000-0002-6626-2463</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Dorit</forename><surname>Merhof</surname></persName>
+							<idno type="ORCID">0000-0002-1672-2185</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Akshay</forename><surname>Pai</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Beomhee</forename><surname>Park</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Mathias</forename><surname>Perslev</surname></persName>
+							<idno type="ORCID">0000-0002-0358-4692</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Ramin</forename><surname>Rezaiifar</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Oliver</forename><surname>Rippel</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Ignacio</forename><surname>Sarasua</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Wei</forename><surname>Shen</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jaemin</forename><surname>Son</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Christian</forename><surname>Wachinger</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Liansheng</forename><surname>Wang</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Yan</forename><surname>Wang</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Yingda</forename><surname>Xia</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Daguang</forename><surname>Xu</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Zhanwei</forename><surname>Xu</surname></persName>
+							<idno type="ORCID">0000-0003-0225-7662</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Yefeng</forename><surname>Zheng</surname></persName>
+							<idno type="ORCID">0000-0003-2195-2847</idno>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Amber</forename><forename type="middle">L</forename><surname>Simpson</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Lena</forename><surname>Maier-Hein</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">&amp;</forename><forename type="middle">M Jorge</forename><surname>Cardoso</surname></persName>
+							<idno type="ORCID">0000-0003-1284-2558</idno>
+						</author>
+						<title level="a" type="main">The Medical Segmentation Decathlon</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="DOI">10.1038/s41467-022-30695-9</idno>
+					<note type="submission">Received: 16 August 2021; Accepted: 13 May 2022;</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.6.1" ident="GROBID" when="2023-01-13T17:00+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+				<p>International challenges have become the de facto standard for comparative assessment of image analysis algorithms. Although segmentation is the most widely investigated medical image processing task, the various challenges have been organized to focus only on specific clinical tasks. We organized the Medical Segmentation Decathlon (MSD)-a biomedical image analysis challenge, in which algorithms compete in a multitude of both tasks and modalities to investigate the hypothesis that a method capable of performing well on multiple tasks will generalize well to a previously unseen task and potentially outperform a customdesigned solution. MSD results confirmed this hypothesis, moreover, MSD winner continued generalizing well to a wide range of other clinical problems for the next two years. Three main conclusions can be drawn from this study: (1) state-of-the-art image segmentation algorithms generalize well when retrained on unseen tasks; (2) consistent algorithmic performance across multiple tasks is a strong surrogate of algorithmic generalizability; (3) the training of accurate AI segmentation models is now commoditized to scientists that are not versed in AI model training.</p>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>M</head><p>achine learning is beginning to revolutionize many fields of medicine, with success stories ranging from the accurate diagnosis and staging of diseases <ref type="bibr">1</ref> , to the early prediction of adverse events 2 and the automatic discovery of antibiotics <ref type="bibr" target="#b2">3</ref> . In this context, a large amount of literature has been dedicated to the automatic analysis of medical images <ref type="bibr" target="#b3">4</ref> . Semantic segmentation refers to the process of transforming raw medical images into clinically relevant, spatially structured information, such as outlining tumor boundaries, and is an essential prerequisite for a number of clinical applications, such as radiotherapy planning <ref type="bibr" target="#b4">5</ref> and treatment response monitoring <ref type="bibr" target="#b5">6</ref> . It is so far the most widely investigated medical image processing task, with about 70% of all biomedical image analysis challenges dedicated to it <ref type="bibr" target="#b6">7</ref> . With thousands of algorithms published in the field of biomedical image segmentation per year <ref type="bibr" target="#b7">8</ref> , however, it has become challenging to decide on a baseline architecture as starting point when designing an algorithm for a new given clinical problem.</p><p>International challenges have become the de facto standard for comparative assessment of image analysis algorithms given a specific task <ref type="bibr" target="#b6">7</ref> . Yet, a deep learning architecture well-suitable for a certain clinical problem (e.g., segmentation of brain tumors) may not necessarily generalize well to different, unseen tasks (e.g., vessel segmentation in the liver). Such a "generalizable learner", which in this setting would represent a fullyautomated method that can learn any segmentation task given some training data and without the need for human intervention, would provide the missing technical scalability to allow many new applications in computer-aided diagnosis, biomarker extraction, surgical intervention planning, disease prognosis, etc. To address this gap in the literature, we proposed the concept of the Medical Segmentation Decathlon (MSD), an international challenge dedicated to identifying a generalpurpose algorithm for medical image segmentation. The competition comprised ten different data sets with various challenging characteristics, as shown in <ref type="figure">Fig. 1</ref>. Two subsequent phases were presented to participants, first the development phase serving for model development and including seven open training data sets. Then, the mystery phase, aiming to investigate whether algorithms were able to generalize to three unseen segmentation tasks. During the mystery phase, participants were allowed to submit only one solution, able to solve all problems without changing the architecture or hyperparameters.</p><p>The contribution of this paper is threefold: <ref type="bibr">(1)</ref> We are the first to organize a biomedical image analysis challenge in which algorithms compete in a multitude of both tasks and modalities. More specifically, the underlying data set has been designed to feature some of the representative difficulties typically encountered when dealing with medical images, such as small data sets, unbalanced labels, multi-site data and small objects.</p><p>(2) Based on the MSD, we released the first open framework for benchmarking medical segmentation algorithms with a specific focus on generalizability. (3) By monitoring the winning algorithm, we show that generalization across various clinical applications is possible with one single framework.</p><p>In the following, we will show the MSD results in "Results", in which we present the submitted methods and rankings based on the Dice Similarity Coefficient (DSC) <ref type="bibr" target="#b8">9</ref> and the Normalized Surface Dice (NSD) <ref type="bibr" target="#b9">10</ref> metrics as well as the results for the live challenge. We conclude with a discussion in "Discussion". The challenge design, including the mission, challenge data sets and assessment method, can be found in the "Methods". Further details including the overall challenge organization, detailed participating method descriptions and further results are presented in the Supplementary Information.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Results</head><p>Challenge submissions. In total, 180 teams registered for the challenge, from which 31 submitted fully-valid and complete results for the development phase. From these, a subset of 19 teams submitted final and valid results for the mystery phase. Among the methods that fulfilled all the criteria to move to the mystery phase, all methods were based on convolutional neural networks, with the U-Net 11 being the most frequently used base architecture-employed by more than half of the teams (64%). The most commonly used loss function was the DSC loss (29%), followed by the cross entropy loss (21%). <ref type="figure">Figure 2</ref> provides a complete list of both network architectures and loss functions used in the challenge. 61% of the teams used the adaptive moment estimation (Adam) optimizer <ref type="bibr" target="#b11">12</ref> , while the stochastic gradient descent (SGD) <ref type="bibr" target="#b12">13</ref> was used by 33% of the teams.</p><p>Method description of top three algorithms. In the following, the top three methods are briefly described while the remaining participating methods are described in the Supplementary Methods 2. <ref type="table" target="#tab_3">Supplementary Table 1</ref> further provides an overview over all methods that were submitted for the mystery phase and who provided full algorithmic information (n = 14 teams), including links to public repositories (when available).</p><p>The key idea of nnU-Net's method was to use a fully-automated dynamic adaptation of the segmentation pipeline, done independently for each task in the MSD, based on an analysis of the respective training data set. Image pre-processing, network topologies and post-processing were determined fully automatically and considered more important than the actual architecture 8 . nnU-Net was based on the U-Net architecture with the following modifications: the use of leaky ReLU, instance normalization and strided convolutions for downsampling <ref type="bibr" target="#b7">8</ref> . It further applied a combination of augmentation strategies, namely affine transformation, non-linear deformation, intensity transformation (similar to gamma correction), mirroring along all axes and random crop. The sum of the DSC and cross entropy loss was used, while utilizing the Adam optimizer. The method applied a purposely defined ensembling strategy in which four different architectures were used. The selection of the task-specific optimal combination was found automatically via cross-validation on the training set.</p><p>The key idea of NVDLMED's method was to use a fullysupervised uncertainty-aware multi-view co-training strategy <ref type="bibr" target="#b13">14</ref> . They achieved robustness and generalization by initializing the model from 2D pre-trained models and using three views of networks to gain more 3D information through the multi-view co-training process. They further used a resampling strategy to cope with the differences among the ten tasks. The NVDLMED team utilized a 3D version of the ResNet with anisotropic 3D kernels <ref type="bibr" target="#b13">14</ref> . The team further applied a combination of augmentation strategies, namely affine transformation, geometric left-right flip and random crop. The DSC loss and the SGD optimizer were employed. NVDLMED ensembled three models, each trained on a different view (coronal, saggital and axial).</p><p>The key idea of K.A.V.athlon's method was a generalization strategy in the spirit of AutoML <ref type="bibr" target="#b15">16</ref> . The process was designed to train and predict automatically using given image data and description without any parameter change or intervention by a human. K.A.V.athlon's method was based on a combination of the V-Net and U-Net architectures with the addition of a Squeeze-and-Excitation (SE) block and a residual block. The team further applied different types of augmentation, namely affine transformation, noise application, geometric left-right flip, random crop, and blurring. The DSC loss with a thresholded ReLU (threshold 0.5) and the Adam optimizer were employed. No ensembling strategy was used.  <ref type="figure">Fig. 1</ref> Overview of the ten different tasks of the Medical Segmentation Decathlon (MSD). The challenge comprised different target regions, modalities and challenging characteristics and was separated into seven known tasks (blue; the development phase: brain, heart, hippocampus, liver, lung, pancreas, prostate) and three mystery tasks (gray; the mystery phase: colon, hepatic vessels, spleen). MRI magnetic resonance imaging, mp-MRI multiparametricmagnetic resonance imaging, CT computed tomography.    <ref type="table">Table 5</ref>) and spleen segmentations (the mystery phase), cf. <ref type="table" target="#tab_3">Supplementary Table 11</ref>). The full list of values are provided in the <ref type="table" target="#tab_3">Supplementary Tables 2-11</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Mystery tasks</head><p>The rankings for the challenge are shown in <ref type="table" target="#tab_3">Table 1</ref>. The winning method (nnU-Net) was extremely robust with respect to the different tasks and target regions for both phases (cf.   ranks was achieved for team nnU-Net (minimum rank: 1, maximum rank: 4; the development phase) and the largest rank difference of sixteen ranks is obtained for team Whale (minimum rank: 2, maximum rank: 18; the development phase).</p><p>To investigate ranking robustness, line plots <ref type="bibr" target="#b16">17</ref> are provided in the <ref type="figure">Supplementary Figs.</ref> 3-12 for all individual target regions, indicating how ranks change for different ranking schemes. Furthermore, a comparison of the achieved ranks of algorithms for 1000 bootstrapped samples is provided in the form of a stacked frequency plot <ref type="bibr" target="#b16">17</ref> in <ref type="figure" target="#fig_3">Supplementary Fig. 13</ref>. For each participant, the frequency of the achieved ranks is provided for every task individually. It can be easily seen from both uncertainty analyses that team nnU-Net implemented an extremely successful method that was at rank 1 for nearly every tasks and bootstrap set.</p><p>The variability of the original rankings computed for the development phase and the mystery phase and the ranking lists based on the individual bootstrap samples was determined via Kendall's τ <ref type="bibr" target="#b17">18</ref> . The median (interquartile range (IQR)) Kendall's τ was 0.94 (0.91, 0.95) for the colon task, 0.99 (0.98, 0.99) for the hepatic-vessel task and 0.92 (0.89, 0.94) for the spleen task. This shows that the rankings for the mystery phase were stable against small perturbations.</p><p>Impact of the challenge winner. In the 2 years after the challenge, the winning algorithm, nnU-Net (with sometimes minor modification) competed in a total of 53 further segmentation tasks. The method won 33 out of tasks with a median rank of 1 The ranking was computed as described in "Assessment of competing teams". (interquartile range (IQR) of (1;2)) in the 53 tasks , for example being the winning method of the famous BraTS challenge in 2020 (Team Name: MIC_DKFZ, https://www.med.upenn.edu/cbica/ brats2020/rankings.html). This confirmed our hypothesis that a method capable of performing well on multiple tasks will generalize well to a previously unseen task and potentially outperform a custom-designed solution. The method further became the new state-of-the-art method and was used in several segmentation challenges by other researchers. For instance, eight nnU-Net derivatives were ranked in the top 15 algorithms of the 2019 Kidney and Kidney Tumor Segmentation Challenge (KiTShttps://kits19.grand-challenge.org/) 8 , the MICCAI challenge with the most participants in the year 2019. Nine out of the top ten algorithms in the COVID-19 Lung CT Lesion Segmentation Challenge 2020 (COVID-19-20 https://covid-segmentation. grand-challenge.org/) built their solutions on top of nnU-Net (98 participants in total). As demonstrated in , nine out of ten challenge winners in 2020 built solutions on top of nnU-Net.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Discussion</head><p>We organized the first biomedical image segmentation challenge, in which algorithms competed in ten different disciplines. We showed that it is indeed possible that one single algorithm can generalize over various different applications without humanbased adjustments. This was further demonstrated by monitoring the winning method for 2 years to show the continuation of the generalizability to other segmentation tasks. In the following sections, we will discuss specific aspects of the MSD challenge, namely the challenge infrastructure, data set, assessment method and outcome.</p><p>Challenge infrastructure. The participating teams were asked to submit their results in the form of a compressed archive to the grand-challenge.org platform. For the development phase, a fullyautomated validation script was run for each submission and the leaderboard was updated accordingly. Each team was allowed to submit one solution per day. In contrast, for the mystery phase, only one valid submission per algorithm could be submitted to prevent overfitting.</p><p>Despite the above-mentioned policies, there were attempts to create multiple accounts so that a team could test their method beyond the allowed limit, a problem which was found due to result's similarity between certain accounts. Teams who were found to be evading the rules were disqualified. Identity verification and fraud detection tooling has now been added to grand-challenge.org to help organizers mitigate this problem in the future.</p><p>Possibly, a better way of controlling overfitting, or possible forms of cheating (e.g., manual refinement of submitted results <ref type="bibr" target="#b19">20 )</ref> would have been to containerize the algorithms using Docker containers and for inference to be run by the organizers. This approach was unfortunately not possible at the time of the organization of MSD due to the lack of computational resources to run inference on all data for all participants. Thanks to a partnership with Amazon Web Services (AWS), the grandchallenge.org platform now offers the possibility to upload Docker container images that can participate in challenges and made available to researchers for processing new scans. With the recent announcement of a partnership between NVIDIA and the MICCAI 2020 and 2021 conferences, and the increased standardization of containers, such a solution should be adopted for further iterations of the MSD challenge.</p><p>Challenge data set. In the MSD, we presented a unique data set, including ten heterogeneous tasks from various body parts and regions of interest, numerous modalities and challenging characteristics. MSD is the largest and most comprehensive medical image segmentation data set available to date. The MSD data set has been downloaded more than 2000 times in its first year alone, via the main challenge website (http://medicaldecathlon.com/). The data set has recently been accepted into the AWS Open-Data registry, (https://registry.opendata.aws/msd/) allowing for unlimited download and availability. The data set is also publicly available under a Creative Commons license CC-BY-SA4.0, allowing broad (including commercial) use. Due to data set heterogeneity, and usage in generalizability and domain adaptation research, it is likely to be very valuable for the biomedical image analysis community in the long term.</p><p>Regarding limitations, the MSD data set was gathered from retrospectively acquired and labeled data from many different sources, resulting in heterogeneous imaging protocols, differences in annotation procedures, and limiting the annotations to a single human rater. While the introduction of additional annotators would have benefited the challenge by allowing inter-rater reliability estimates and possibly improve the reliability of annotations, this was not possible due to restricted resources and the scale of the data. As shown in , several annotators are often necessary to overcome issues related to inter-observer variability. Furthermore, the data set only consists of radiological data, we can therefore only draw conclusions for this application. Other areas like dermatology, pathology or ophthalmology were not covered. Finally, one specific region from one task (the vessel annotations of liver data set) was found to be non-optimal from a segmentation point of view after the data release, we opted to follow the best practice recommendations on challenges <ref type="bibr" target="#b6">7,</ref><ref type="bibr" target="#b19">20,</ref><ref type="bibr" target="#b21">22</ref> and not change the challenge design after it was released to participants. Note, however, that the message of this challenge would not change if the vessel data set was omited from the competition.</p><p>Challenge assessment. Two common segmentation metrics have been used to evaluate the participant's methods, namely the DSC, an overlap measure, and the NSD, a distance-based metric. The choice of the right metrics was heavily discussed, as it is extremely important for the challenge outcome and interpretation. Some metrics are more suitable for specific clinical use-cases than others <ref type="bibr" target="#b22">23</ref> . For instance, the DSC metric is a good proxy for comparing large structures but should not be used intensively for very small objects, as single-pixel differences may already lead to substantial changes in the metric scores. However, to ensure that the results are comparable across all ten tasks, a decision was taken to focus on the two above-mentioned metrics, rather than using clinically-driven task-specific metrics.</p><p>Comparability was another issue for the ranking as the number of samples varied heavily across all tasks and target ROIs, which made a statistical comparison difficult. We therefore decided to use a ranking approach similar to the evaluation of the popular BraTS challenge, (http://braintumorsegmentation.org/) which was based on a Wilcoxon-signed-rank pairwise statistical test between algorithms. The rank of each algorithm was determined (independently per task and ROI) by counting the number of competing algorithms with a significantly worse performance. This strategy avoided the need of similar sample sizes for all tasks and reduced the need for task-specific weighting and score normalization.</p><p>Identifying an appropriate ranking scheme is a non-trivial challenge. It is important to note that each task of the MSD data set comprised one to three different target ROIs, introducing a hierarchical structure within the data set. Starting from a significance ranking for each target ROI, we considered two different aggregation schemes: (1) averaging the significance ranks across all target ROIs; (2) averaging the significance ranks per task (data set) and averaging those per-task ranks for the final rank. The drawback of (1) is that a possible bias between tasks might be introduced, as tasks with multiple target ROIs (e.g., the brain task with three target ROIs) would be over-weighted. We therefore chose ranking scheme <ref type="bibr" target="#b1">(2)</ref> to avoid this issue. This decision was made prior to the start of the challenge, as per the challenge statistical analysis protocol. A post-challenge analysis was performed to test this decision, and results found that overall ranking structure remained unchanged. The first three ranks were preserved, only minor changes (1 to 2 ranks) were seen in a couple of examples at the middle and end of the rank list. As shown in <ref type="figure" target="#fig_3">Supplementary Figs. 3-12</ref>, changing the ranking scheme will typically lead to different rankings in the end, but we observed the first three ranks to be robust across various ranking variations. More complex ranking schemes were discussed among organizers, such as modeling the variations across tasks and target ROIs with a linear mixed model <ref type="bibr" target="#b23">24</ref> . As explainability and a clear articulation of the ranking procedure was found to be important, it was ultimately decided to use significance ranking.</p><p>Challenge outcome. A total of 180 teams registered for the MSD challenge, of which only 31 teams submitted valid results for the development and 19 teams for the mystery phase. Having a high number of registrations but only a fraction of final participants is a typical phenomenon happening for biomedical image analysis challenges (e.g., the Skin lesion analysis toward melanoma detection 2017 challenge with 46/593 submissions <ref type="bibr" target="#b24">25</ref> , the Robust Medical Instrument Segmentation (RobustMIS) challenge 2019 with 12/75 submissions <ref type="bibr" target="#b25">26</ref> or the Multi-Center, Multi-Vendor, and Multi-Disease Cardiac Segmentation (M&amp;Ms) challenge 2020 with 16/80 submissions <ref type="bibr">27</ref> ). Many challenge participants usually register to get data access. However, teams are often not able to submit their methods within the deadline due to other commitments. Furthermore, participants may be dissatisfied with their training and validation performance and step back from the final submission. The performance of the submitted algorithms varied dramatically across the different tasks, as shown in <ref type="figure" target="#fig_3">Figs. 3, 4</ref> and <ref type="table" target="#tab_3">Supplementary Tables 2-11</ref>. For the development phase, the median algorithmic performance, defined as the median of the mean DSC, changed widely across tasks, with lowest being the tumor mass segmentation of the pancreas data set (0.21, Supplementary <ref type="table">Table 7</ref>) and the highest median for the liver segmentation (0.94, Supplementary <ref type="table">Table 5</ref>). The performance drop was much more modest for the best performing method nnU-Net (0.52 and 0.93 median DSC for the pancreas mass and liver ROI, respectively), demonstrating that methods have varying degrees of learning resiliency to the challenges posed by each task. The largest difference within one task was also obtained for the pancreas data set, with a median of the mean DSC of 0.69 for the pancreas ROI, and 0.21 for the pancreas tumor mass, which is likely explained by the very small relative intensity difference between the pancreas and its tumor mass.</p><p>In the mystery phase, colon cancer segmentation received the lowest median DSC (0.16, <ref type="figure">Supplementary Table 9</ref>), and the spleen segmentation the highest median DSC (0.94, Supplementary <ref type="table" target="#tab_3">Table 11</ref>). Similarly to the development phase, a much smaller drop in performance (0.56 and 0.96 for colon and spleen respectively) was observed in the top ranking method. Most of the observed task-specific performances reflect the natural difficulty and expected inter-rater variability of the tasks: Liver and spleen are large organs that are easy to detect and outline , whereas pancreas and colon cancers are much harder to segment as annotation experts themselves often do not agree on the correct outlines <ref type="bibr" target="#b28">29,</ref><ref type="bibr" target="#b29">30</ref> . We also observed that the challenging characteristics of each task (presented in <ref type="figure">Fig. 1</ref>) had some non-trivial effect on algorithmic performance, a problem which was exacerbated in lower-ranking methods. For example, some methods struggled to segment regions such as the lung cancer mass, pancreas mass, and colon cancer primaries, achieving a mean DSC below 0.1. These regions, characterized by small, non-obvious and heterogeneous masses, appear to represent a particularly challenging axis of algorithmic learning complexity. The number of subjects in the training data set (only 30 subjects for the heart task), the size and resolution of the images (large liver images and small hippocampus images), and complex region shapes (e.g., brain tumors) were not found to introduce significant inter-team performance differences. As summarized in <ref type="figure" target="#fig_3">Supplementary Fig. 13</ref>, nnU-Net was ranked first on both the development and mystery phases. Under the proposed definition of a "generalizable learner", the winning method was found to be the most generalizable approach across all MSD tasks given the comparison methodology, with a significant performance margin. The K.A.V.athlon and NVDLMED teams were ranked second and third during the development phase, respectively; their ranks were swapped (third and second, respectively) during the mystery phase. We observed small changes in team rankings between the development and mystery phases for top ranking teams; within the top 8 teams, no team changed their ranking by more than 2 positions from the development to the mystery phase. This correlation between development and mystery rankings suggest limited amount of methodological overfitting to the development phase, and that the proposed ranking approach is a good surrogate of expected task performance. We observed some algorithmic commonalities between top methods, such the use of ensembles, intensity and spatial normalization augmentation, the use of Dice loss, the use of Adam as an optimizer, and some degree of post-processing (e.g., region removal). While none of these findings are surprising, they provide evidence towards a reasonable choice of initial parameters for new methodological developments. We also observed that the most commonly applied architecture across participants was the U-Net, used by 64% of teams. Some evidence was found that architectural adjustments to the baseline U-Net approach are less important than other relevant algorithmic design decisions, such as data augmentation and data set split/ cross-validation methodology, as demonstrated by the winning methodology. Note that similar findings, albeit in a different context and applied to ResNet, have been recently observed <ref type="bibr" target="#b30">31</ref> .</p><p>The years after the challenge. Following the challenge event at MICCAI 2018, the competition was opened again for rolling submissions. This time participants were asked to submit results for all ten data sets (https://decathlon-10.grand-challenge.org/) in a single phase. In total, 742 users signed up. To restrict the exploitation of the submission system for other purposes, only submissions with per-task metric values different from zero were accepted as valid, resulting in only 17 complete and valid submissions. In order to avoid overfit but still allow for some degree of methodological development, each team was allowed submit their results 15 times. The winner of the 2018 MSD challenge (nnU-Net, denoted as Isensee on the live challenge), submitted to the live challenge leaderboard on the 6th of December 2019, and held the first position for almost 1 year, until the 30th of October 2020.</p><p>Since for the live challenge teams were allowed to tune their method on all ten data sets, the minimum value of the data set specific median DSC improved quite substantially from the 2018 MSD challenge, as shown in <ref type="figure">Supplementary Fig. 14</ref>. The two hardest tasks during the 2018 MSD challenge were the segmentation of the tumor inside the pancreas, with an overall median of the mean DSC of 0.21 over all participants (0.37 for the top five teams) and the segmentation of the colon cancer primaries, with an overall median of the mean DSC of 0.16 over all participants (0.41 for the top five teams). The worst task for the rolling challenge was the segmentation of the non-enhancing tumor segmentation inside the brain, with a median DSC of 0.47.</p><p>At the other end of the spectrum was the spleen segmentation task, where the median task DSC over all participants was 0.94 during the 2018 challenge, and improved to 0.97 for the rolling challenge. These observations suggest that the ability for multiple methods to solve the task has improved, with methods performing slightly better on harder tasks and significantly better on easy tasks.</p><p>In 2019 and 2020, the rolling challenges have resulted in three methods that superseded the winning results of the 2018 MSD challenge. Within these two follow-up years, two main trends were observed: the first major trend is the continuous and gradual improvement of "well performing" algorithms, such as the heuristics and task fingerprinting of the nnU-Net method; the second major trend that was observed was the rise of Neural Architecture Search (NAS) <ref type="bibr" target="#b31">32</ref> among the top teams. More specifically, both the third and the current (as of April 2021) leader of the rolling challenge used this approach. NAS optimizes the network architecture itself to each task in a fully-automated manner. Such an approach uses a network-configuration fitness function that is optimized independently for each task, thus providing an empirical approach for network architectural optimization. When compared to heuristic methods (e.g., nnU-Net), NAS appears to result in improved algorithmic performance at the expense of increased computational cost.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Conclusion.</head><p>Machine learning based semantic segmentation algorithms are becoming increasingly general purpose and accurate, but have historically required significant field-specific expertise to use. The MSD challenge was set up to investigate how accurate fully-automated image segmentation learning methods can be on a plethora of tasks with different types of task complexity. Results from the MSD challenge have demonstrated that fully-automated methods can now achieve state-of-the-art performance without the need for manual parameter optimization, even when applied to previously unseen tasks. A central hypothesis of the MSD challenge-that an algorithm which works well and automatically on several tasks should also work well on other unseen tasks-has been validated among the challenge participants and across tasks. This hypothesis was further corroborated by monitoring the generalizability of the winning method in the 2 years following the challenge, where we found that nnU-Net achieved state-of-the-art performance on many tasks including against task-optimized networks. While it is important to note that many classic semantic segmentation problems (e.g., domain shift and label accuracy) remain, and that methodological progress (e.g., NAS and better heuristics) will continue pushing the boundaries of algorithmic performance and generalizability, the MSD challenge has demonstrated that the training of accurate semantic segmentation networks can now be fully automated. This commoditization of semantic segmentation methods allows computationally-versed scientists that lack AIspecific knowledge to use these techniques without any knowledge on how the models work or how to tune the hyperparameters. However, in order to make the tools easier to use by clinicians and other scientists, the current platforms would need to be wrapped around a graphical user interface and the installation processes need to be made simpler.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Methods</head><p>This section is organized according to the EQUATOR (https://www.equatornetwork.org) guideline BIAS (Biomedical Image Analysis ChallengeS) , a recently published guideline specifically designed for the reporting of biomedical image analysis challenges. It comprises information on challenge organization and mission, as well as the data sets and assessment methods used to evaluate the submitted results.</p><p>Challenge organization. The Decathlon challenge was organized at the International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI) 2018, held in Granada, Spain. After the main challenge event at MICCAI, a live challenge was opened for submissions which is still open and regularly receives new submissions (more than 500 as of May 15th 2021).</p><p>The MSD challenge aimed to test the ability of machine-learning algorithms to accurately segment a large collection of prescribed regions of interest, as defined by ten different data sets, each corresponding to a different anatomical structure (see <ref type="figure">Fig. 1</ref>) and to at least one medical-imaging task . The challenge itself consisted of two phases:</p><p>In the first phase, named the development phase, the training cases (comprising images and labels) for seven data sets were released, namely for brain, liver, heart, hippocampus, prostate, lung, and pancreas. Participants were expected to download the data, develop a general-purpose learning algorithm, train the algorithm on each task's training data independently and without human interaction (no task-specific manual parameter settings), run the learned model on each task's test data, and submit the segmentation results. Each team was only allowed to make one submission per day to avoid model overfit, and the results were presented in form of a live leaderboard on the challenge website (http:// medicaldecathlon.com/), visible to the public. Note that participants were only able to see the average performance obtained by their algorithm on the test data of the seven development tasks.</p><p>The purpose of the second phase of the challenge, named the mystery phase, was to investigate whether algorithms were able to generalize to unseen segmentation tasks. Teams that submitted to the first phase and completed all necessary steps were invited to download three more data sets (images and labels), i.e., hepatic vessels, colon, and spleen. They were allowed to train their previously developed algorithm on the new data, without any modifications to the method itself. Segmentation results of the mystery phase could only be submitted once. A detailed description of the challenge organization is summarized in is summarized in Appendix A of Supplementary Material, following the form introduced in ref. <ref type="bibr" target="#b21">22</ref> .</p><p>The Decathlon mission. Medical image segmentation, i.e., the act of labeling or contouring structures of interest in medical-imaging data, is a task of crucial importance, both clinically and scientifically, as it allows the quantitative characterization of regions of interest. When performed by human raters, image segmentation is very time-consuming, thus limiting its clinical usage. Algorithms can be used to automate this segmentation process, but, classically, a different algorithm had to be developed for each segmentation task. The goal of the MSD challenge was finding a single algorithm, or learning system, that would be able to generalize and work accurately across multiple different medical segmentation tasks, without the need for any human interaction.</p><p>The tasks of the Decathlon challenge were chosen as a representative sample of real-world applications, so as to test for algorithmic generalizability to these. Different axes of complexity were explicitly explored: the type and number of input modalities, the number of regions of interest, their shape and size, and the complexity of the surrounding tissue environment (see <ref type="figure">Fig. 1</ref>). Detailed information of each data set is provided in "Challenge data sets" and <ref type="table" target="#tab_4">Table 2</ref>.</p><p>Challenge data sets. The Decathlon challenge made ten data sets available online <ref type="bibr" target="#b34">35</ref> , where each data set had between one and three region-of-interest (ROI) targets (17 targets in total). Importantly, all data sets have been released with a permissive copyright-license (CC-BY-SA 4.0), thus allowing for data sharing, redistribution, and commercial usage, and subsequently promoting the data set as a standard test-bed for all users. The images (2,633 in total) were acquired across multiple institutions, anatomies and modalities during real-world clinical applications. All images were de-identified and reformatted to the Neuroimaging Informatics Technology Initiative (NIfTI) format https://nifti.nimh.nih.gov. All images were transposed (without resampling) to the most approximate rightanterior-superior coordinate frame, ensuring the data matrix x-y-z direction was consistent (using fslreorient2std) and converted to the NIFTI radiological standard. This data transformation was performed to minimize medical-imaging specific data loading issues for non-expert participants. Lastly, non-quantitative modalities (e.g., MRI) were robust min-max scaled to the same range. For each segmentation task, a pixel-level label annotation was provided depending on the definition of each specific task. Information on how the data sets were annotated is provided in <ref type="bibr" target="#b34">35</ref> . For 8 out of 10 data sets, two thirds of the data were released as training sets (images and labels) and one third as test set (images without labels). As the remaining two tasks (brain tumor and liver) consisted of data from two wellknown challenges, the original training/test split was preserved. Note that interrater reliability estimates are not available for the MSD tasks due to the complexity of double-labeling the data, limiting comparisons to human (or super-human) level performance. <ref type="table" target="#tab_4">Table 2</ref> presents a summary of the ten data sets, including the modality, image series, ROI targets and data set size. A brief description of each data set is provided below.</p><p>• Development Phase (1st) contained seven data sets with thirteen target regions of interest in total: 1. Brain: The data set consists of 750 multiparametric-magnetic resonance images (mp-MRI) from patients diagnosed with either glioblastoma or lower-grade glioma. The sequences used were native T1-weighted (T1), post-Gadolinium (Gd) contrast T1-weighted (T1-Gd), native T2weighted (T2), and T2 Fluid-Attenuated Inversion Recovery (FLAIR). The corresponding target ROIs were the three tumor sub-regions, namely edema, enhancing, and non-enhancing tumor. This data set was selected due to the challenge of locating these complex and heterogeneously-located targets. The Brain data set contains the same cases as the 2016 and 2017 Brain Tumor Segmentation (BraTS) challenges <ref type="bibr" target="#b35">[36]</ref><ref type="bibr">[37]</ref><ref type="bibr" target="#b37">[38]</ref> . The filenames were changed to avoid participants mapping cases between the two challenges. 2. Heart: The data set consists of 30 mono-modal MRI scans of the entire heart acquired during a single cardiac phase (free breathing with respiratory and electrocardiogram (ECG) gating). The corresponding target ROI was the left atrium. This data set was selected due to the combination of a small training data set with large anatomical variability. The data was acquired as part of the 2013 Left Atrial Segmentation Challenge (LASC) <ref type="bibr" target="#b38">39</ref> . 3. Hippocampus: The data set consists of 195 MRI images acquired from 90 healthy adults and 105 adults with a non-affective psychotic disorder. T1-weighted MPRAGE was used as the imaging sequence. The corresponding target ROIs were the anterior and posterior of the hippocampus, defined as the hippocampus proper and parts of the subiculum. This data set was selected due to the precision needed to segment such a small object in the presence of a complex surrounding environment. The data was acquired at the Vanderbilt University Medical Center, Nashville, US. 4. Liver: The data set consists of 201 contrast-enhanced CT images from patients with primary cancers and metastatic liver disease, as a consequence of colorectal, breast, and lung primary cancers. The corresponding target ROIs were the segmentation of the liver and tumors inside the liver. This data set was selected due to the challenging nature of having significant label unbalance between large (liver) and small (tumor) target region of interests (ROIs). The data was acquired in the IRCAD Hôpitaux Universitaires, Strasbourg, France and contained a subset of patients from the 2017 Liver Tumor Segmentation (LiTS) challenge <ref type="bibr" target="#b39">40</ref> . 5. Lung: The data set consists of preoperative thin-section CT scans from 96 patients with non-small cell lung cancer. The corresponding target ROI was the tumors within the lung. This data set was selected due to the challenge of segmenting small regions (tumor) in an image with a large field-of-view. Data was acquired via the Cancer Imaging.Archive (https://www.cancerimagingarchive.net/). 6. Prostate: The data set consists of 48 prostate multiparametric MRI (mp-MRI) studies comprising T2-weighted, Diffusion-weighted and T1-weighted contrast-enhanced series. A subset of two series, transverse T2-weighted and the apparent diffusion coefficient (ADC) was selected.</p><p>The corresponding target ROIs were the prostate peripheral zone (PZ) and the transition zone (TZ). This data set was selected due to the challenge of segmenting two adjoined regions with very large intersubject variability. The data was acquired at Radboud University Medical Center, Nijmegen Medical Center, Nijmegen, The Netherlands. 7. Pancreas: The data set consists of 420 portal-venous phase CT scans of patients undergoing resection of pancreatic masses. The corresponding target ROIs were the pancreatic parenchyma and pancreatic mass (cyst or tumor). This data set was selected due to label unbalance between large (background), medium (pancreas) and small (tumor) structures. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US.</p><p>• Mystery Phase (2nd) contained three (hidden) data sets with four target regions of interest in total:</p><p>1. Colon: The data set consists of 190 portal-venous phase CT scans of patients undergoing resection of primary colon cancer. The corresponding target ROI was colon cancer primaries. This data set was selected due to the challenge of the heterogeneous appearance, and the annotation difficulties. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US. 2. Hepatic Vessels: The data set consists of 443 portal-venous phase CT scans obtained from patients with a variety of primary and metastatic liver tumors. The corresponding target ROIs were the vessels and tumors within the liver. This data set was selected due to the tubular and connected nature of hepatic vessels neighboring heterogeneous tumors. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US. 3. Spleen: The data set consists of 61 portal-venous phase CT scans from patients undergoing chemotherapy treatment for liver metastases. The corresponding target ROI was the spleen. This data set was selected due to the large variations in the field-of-view. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Assessment method</head><p>Assessment of competing teams. Two widely known semantic segmentation metrics were used to evaluate the submitted approaches, namely the DSC and the Normalized Surface Distance (NSD) <ref type="bibr" target="#b9">10</ref> , both computed on 3D volumes. The implementation of both metrics can be downloaded in the form of a Jupyter notebook from the challenge website, (http://www.medicaldecathlon.com section Assessment Criteria). A more memory-efficient recently implementation of the NSD metric, which has been recently made available, can be obtained by computing the distance transform map using (https://evalutils.readthedocs.io/en/latest/modules.html# evalutils.stats.distance_transform_edt_float32) rather than scipy.ndimage. morphology.distance_transform_edt. The metrics DSC and NSD were chosen due to their popularity, rank stability <ref type="bibr" target="#b33">34</ref> , and smooth, well-understood and well-defined behavior when ROIs do not overlap. Having simple and rank-stable metrics also allows the statistical comparison between methods. For the NSD,tolerance values were based on clinical feedback and consensus, and were chosen by the clinicians segmenting each organ. NSD was defined at task level and was the same for all the targets of each task. The value represented what they would consider an acceptable error for the segmentation they were performing. The following values have been mp-MRI multiparametric-magnetic resonance imaging, FLAIR fluid-attenuated inversion recovery, T1w T1-weighted image, T1\w Gd post-Gadolinium (Gd) contrast T1-weighted image, T2w T2-weighted image, CT computed tomography, PZ peripheral zone, TZ transition zone.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head></head><label></label><figDesc>Figs. 3, 4). Ranks 2 and 3 switched places (K.A.V.athlon and NVDLMED) for both the development and mystery phase.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>Figure furthershows the ranks of all algorithms for all thirteen target regions of the development phase (red) and all four target regions of the mystery phase in form of a box-plot. Many teams show a large variation in their ranks across target ROIs. The lowest rank difference of three</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 3</head><label>3</label><figDesc>Dot-and box-plots of the Dice Similarity Coefficient (DSC) values of all 19 participating algorithms for the seven tasks (brain, heart, hippocampus, liver, lung, pancreas, prostate) of the development phase, color-coded by the target regions (edema (red), non-enhancing tumor (purple), enhancing tumor (blue), left atrium (green), anterior (olive), posterior (light purple), liver (dark orange), liver tumor (orange), lung tumor (yellow), pancreas (dark yellow), tumor mass (light brown), prostate peripheral zone (PZ) (brown), prostate transition zone (TZ) (pink)). The boxplots represent descriptive statistics over all test cases. The median value is shown by the black horizontal line within the box, the first and third quartiles as the lower and upper border of the box, respectively, and the 1.5 interquartile range by the vertical black lines. Outliers are shown as black circles. The raw DSC values are provided as gray circles. ROI Region of Interest.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig.</head><label></label><figDesc>Dot-and box-plots of the Dice Similarity Coefficient (DSC) values of all 19 participating algorithms for the three tasks of the mystery phase (colon, hepatic vessel, spleen), color-coded by the target regions (colon cancer primaries (red), hepatic tumor (green), hepatic vessel (yellow), spleen (pink)). The box-plots represent descriptive statistics over all test cases. The median value is shown by the black horizontal line within the box, the first and third quartiles as the lower and upper border of the box, respectively, and the 1.5 interquartile range by the vertical black lines. Outliers are shown as black circles. The raw DSC values are provided as gray circles. ROI Region of Interest.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 5</head><label>5</label><figDesc>Dot-and box-plots of ranks for all 19 participating algorithms over all seven tasks and thirteen target regions of the development phase (red) and all three tasks and four target regions of the mystery phase (blue). The median value is shown by the black vertical line within the box, the first and third quartiles as the lower and upper border of the box, respectively, and the 1.5 interquartile range by the horizontal black lines. Individual ranks are shown as gray circles.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 9 )</head><label>9</label><figDesc></figDesc><table><row><cell>to 0.94 (liver (the development phase), cf. Supplemen-</cell></row><row><cell>tary</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 1</head><label>1</label><figDesc>Rankings for the development phase and the mystery phase, median and interquartile range (IQR) of the Dice Similarity Coefficient (DSC) values of all 19 teams.</figDesc><table><row><cell cols="2">The development phase</cell><cell></cell><cell></cell><cell cols="2">The mystery phase</cell><cell></cell><cell></cell></row><row><cell>Rank</cell><cell>Team ID</cell><cell>Median DSC</cell><cell>IQR DSC</cell><cell>Rank</cell><cell>Team ID</cell><cell>Median DSC</cell><cell>IQR DSC</cell></row><row><cell>1</cell><cell>nnU-Net</cell><cell>0.79</cell><cell>(0.61, 0.88)</cell><cell>1</cell><cell>nnU-Net</cell><cell>0.71</cell><cell>(0.58, 0.82)</cell></row><row><cell>2</cell><cell>K.A.V.athlon</cell><cell>0.77</cell><cell>(0.58, 0.87)</cell><cell>2</cell><cell>NVDLMED</cell><cell>0.69</cell><cell>(0.55, 0.79)</cell></row><row><cell>3</cell><cell>NVDLMED</cell><cell>0.78</cell><cell>(0.57, 0.87)</cell><cell>3</cell><cell>K.A.V.athlon</cell><cell>0.67</cell><cell>(0.49, 0.80)</cell></row><row><cell>4</cell><cell>Lupin</cell><cell>0.75</cell><cell>(0.52, 0.86)</cell><cell>4</cell><cell>LS Wang's Group</cell><cell>0.64</cell><cell>(0.46, 0.78)</cell></row><row><cell>5</cell><cell>CerebriuDIKU</cell><cell>0.76</cell><cell>(0.51, 0.88)</cell><cell>5</cell><cell>MIMI</cell><cell>0.65</cell><cell>(0.45, 0.75)</cell></row><row><cell></cell><cell>LS Wang's Group</cell><cell>0.75</cell><cell>(0.51, 0.88)</cell><cell>6</cell><cell>CerebriuDIKU</cell><cell>0.56</cell><cell>(0.15, 0.71)</cell></row><row><cell>7</cell><cell>MIMI</cell><cell>0.73</cell><cell>(0.51, 0.86)</cell><cell>7</cell><cell>Whale</cell><cell>0.55</cell><cell>(0.20, 0.68)</cell></row><row><cell>8</cell><cell>Whale</cell><cell>0.65</cell><cell>(0.28, 0.83)</cell><cell>8</cell><cell>UBIlearn</cell><cell>0.55</cell><cell>(0.05, 0.69)</cell></row><row><cell>9</cell><cell>VST</cell><cell>0.69</cell><cell>(0.39, 0.84)</cell><cell>9</cell><cell>Jiafucang</cell><cell>0.48</cell><cell>(0.04, 0.67)</cell></row><row><cell>10</cell><cell>UBIlearn</cell><cell>0.72</cell><cell>(0.40, 0.85)</cell><cell>10</cell><cell>Lupin</cell><cell>0.57</cell><cell>(0.19, 0.69)</cell></row><row><cell></cell><cell>A-REUMI01</cell><cell>0.70</cell><cell>(0.42, 0.85)</cell><cell>11</cell><cell>LfB</cell><cell>0.49</cell><cell>(0.16, 0.64)</cell></row><row><cell>12</cell><cell>BCVuniandes</cell><cell>0.70</cell><cell>(0.42, 0.86)</cell><cell>12</cell><cell>A-REUMI01</cell><cell>0.51</cell><cell>(0.14, 0.65)</cell></row><row><cell>13</cell><cell>BUT</cell><cell>0.72</cell><cell>(0.40, 0.84)</cell><cell>13</cell><cell>VST</cell><cell>0.41</cell><cell>(0.00, 0.64)</cell></row><row><cell>14</cell><cell>LfB</cell><cell>0.68</cell><cell>(0.43, 0.82)</cell><cell>14</cell><cell>AI-MED</cell><cell>0.33</cell><cell>(0.01, 0.52)</cell></row><row><cell>15</cell><cell>Jiafucang</cell><cell>0.49</cell><cell>(0.11, 0.81)</cell><cell>15.5</cell><cell>Lesswire1</cell><cell>0.40</cell><cell>(0.08, 0.52)</cell></row><row><cell>16</cell><cell>AI-Med</cell><cell>0.63</cell><cell>(0.30, 0.79)</cell><cell>15.5</cell><cell>BUT</cell><cell>0.38</cell><cell>(0.01, 0.60)</cell></row><row><cell>17</cell><cell>Lesswire1</cell><cell>0.65</cell><cell>(0.33, 0.79)</cell><cell>17</cell><cell>RegionTec</cell><cell>0.29</cell><cell>(0.00, 0.50)</cell></row><row><cell>18</cell><cell>EdwardMa12593</cell><cell>0.31</cell><cell>(0.01, 0.69)</cell><cell>18</cell><cell>BCVuniandes</cell><cell>0.10</cell><cell>(0.01, 0.38)</cell></row><row><cell>19</cell><cell>RegionTec</cell><cell>0.57</cell><cell>(0.19, 0.73)</cell><cell>19</cell><cell>EdwardMa12593</cell><cell>0.08</cell><cell>(0.01, 0.17)</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>Table 2</head><label>2</label><figDesc>Summary of the ten data sets of the Medical Segmentation Decathlon.</figDesc><table><row><cell>Phase</cell><cell>Task</cell><cell cols="2">Modality Protocol</cell><cell>Target</cell><cell># Cases (Train/Test)</cell></row><row><cell cols="2">Development phase Brain</cell><cell>mp-MRI</cell><cell>FLAIR, T1w, T1 \w</cell><cell>Edema, enhancing and non-</cell><cell>750 4D volumes (484/</cell></row><row><cell></cell><cell></cell><cell></cell><cell>Gd, T2w</cell><cell>enhancing tumor</cell><cell>266)</cell></row><row><cell></cell><cell>Heart</cell><cell>MRI</cell><cell>-</cell><cell>Left atrium</cell><cell>30 3D volumes (20/10)</cell></row><row><cell></cell><cell>Hippocampus</cell><cell>MRI</cell><cell>T1w</cell><cell cols="2">Anterior and posterior of hippocampus 394 3D volumes (263/</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>131)</cell></row><row><cell></cell><cell>Liver</cell><cell>CT</cell><cell>Portal-venous phase</cell><cell>Liver and liver tumor</cell><cell>210 3D volumes (131/70)</cell></row><row><cell></cell><cell>Lung</cell><cell>CT</cell><cell>-</cell><cell>Lung and lung cancer</cell><cell>96 3D volumes (64/32)</cell></row><row><cell></cell><cell>Pancreas</cell><cell>CT</cell><cell>Portal-venous phase</cell><cell>Pancreas and pancreatic tumor mass</cell><cell>420 3D volumes (282/</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>139)</cell></row><row><cell></cell><cell>Prostate</cell><cell>mp-MRI</cell><cell>T2, ADC</cell><cell>Prostate PZ and TZ</cell><cell>48 4D volumes (32/16)</cell></row><row><cell>Mystery phase</cell><cell>Colon</cell><cell>CT</cell><cell>Portal-venous phase</cell><cell>Colon cancer primaries</cell><cell>190 3D volumes (126/</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>64)</cell></row><row><cell></cell><cell cols="2">Hepatic Vessels CT</cell><cell>Portal-venous phase</cell><cell>Hepatic vessels and hepatic tumor</cell><cell>443 3D volumes (303/</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>140)</cell></row><row><cell></cell><cell>Spleen</cell><cell>CT</cell><cell>Portal-venous phase</cell><cell>Spleen</cell><cell>61 3D volumes (41/20)</cell></row></table><note></note></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot">NATURE COMMUNICATIONS | (2022) 13:4128 | https://doi.org/10.1038/s41467-022-30695-9 | www.nature.com/naturecommunications</note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Acknowledgements</head><p>boration with Silvana Castillo, from Universidad de los Andes. We would like to thank Minu D. Tizabi for proof-reading the paper.</p></div>
+			</div>
+
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>chosen for the individual tasks (in mm): Brain-5; Heart-4; Hippocampus-1; Liver-7; Lung-2; Prostate-4; Pancreas-5; Colon-4; Hepatic vessel-3; Spleen -3. It is important to note that the proposed metrics are not task-specific nor taskoptimal, and thus, they do not fulfill the necessary criteria for clinical algorithmic validation of each task, as discussed in "Challenge assessment".</p><p>A so-called significance score was determined for each algorithm a, separately for each task/target ROI c i and metric m j ∈ {DSC, NSD} and referred to as s i,j (a). Similarly to what was used to infer the ranking across the different BRATS tasks , the significance score was computed according to the following four-step process:</p><p>1. Performance assessment per case: Determine performance m j (a l , t ik ) of all algorithms a l , with l = {1, …, N A }, for all test cases t ik , with k = {1, …, N i }, where N A is the number of competing algorithms and N i is the number of test cases in competition c i . Set m j (a l , t ik ) to 0 if its value is undefined. 2. Statistical tests: Perform a Wilcoxon signed-rank pairwise statistical test between algorithms ða l ; a l 0 Þ, with values m j ða l ; t ik Þ À m j ða l 0 ; t ik Þ, 8k = {1, . . . , N i }. 3. Significance scoring: s i,j (a l ) then equals the number of algorithms performing significantly worse than a l , according to the statistical test (per comparison α = 0.05, not adjusted for multiplicity). 4. Significance ranking: The ranking is computed from the scores s i,j (a l ), with the highest score (rank 1) corresponding to the best algorithm. Note that shared scores/ranks are possible. If a task has multiple target ROI, the ranking scheme is applied to each ROI separately, and the final ranking per task is computed as the mean significance rank. The final score for each algorithm over all tasks of the development phase (the seven development tasks) and over all tasks of the mystery phase (the three mystery tasks) was computed as the average of the respective task's significance ranks. The full validation algorithm was defined and released prior to the start of the challenge, and available on the decathlon website (http://medicaldecathlon.com/files/MSD-Ranking-scheme.pdf).</p><p>To investigate ranking uncertainty and stability, bootstrapping methods were applied with 1000 bootstrap samples as described in <ref type="bibr" target="#b33">34</ref> . The statistical analysis was performed using the open-source R toolkit challengeR (https://phabricator.mitk. org/source/challenger/), version 1.0.2 <ref type="bibr" target="#b16">17</ref> , for analyzing and visualizing challenge results. The original rankings computed for the development and mystery phases were compared to the ranking lists based on the individual bootstrap samples. The correlation of pairwise rankings was determined via Kendall's τ <ref type="bibr" target="#b17">18</ref> , which provides values between −1 (for reverse ranking order) and 1 (for identical ranking order). The source code for generating the results presented in "Results" and the Appendix is publicly available (https://phabricator.mitk.org/source/msd_evaluation/).</p><p>Monitoring of the challenge winner and algorithmic progress. To investigate our hypothesis that a method capable of performing well on multiple tasks will generalize its performance to an unseen task, and potentially even outperform a custom-designed task-specific solution, we monitored the winner of the challenge for a period of 2 years. Specifically, we reviewed the rank analysis and leaderboards presented in the corresponding article <ref type="bibr" target="#b7">8</ref> , as well as the leaderboard of challenges from the grand-challenge.org website organized in 2020. We also reviewed further articles mentioning the new state-of-the-art method nnU-Net <ref type="bibr" target="#b18">19</ref> . Finally, as the MSD challenge submission was reopened after the challenge event (denoted the "MSD Live Challenge"), we monitored submissions for new algorithmic approaches which achieve state-of-the-art performance, in order to probe new areas of scientific interest and development.</p><p>Reporting summary. Further information on research design is available in the Nature Research Reporting Summary linked to this article.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data availability</head><p>Challenge data set. The MSD data set is publicly available under a Creative Commons license CC-BY-SA4.0, allowing broad (including commercial) use. The training data used in this study is available at http://medicaldecathlon.com/. The test data of the challenge cannot be released since the live challenge is still open and users are able to submit their results anytime; we currently have no intentions of closing the challenge.</p><p>Challenge assessment data. The raw challenge assessment data used to calculate the challenge rankings cannot be made publicly available due to privacy reasons. It contains the DSC and NSD values for every participating team for every task and target region. However, the aggregated results can be found in <ref type="table">Table 1 and Supplementary Tables 2-11</ref>. Furthermore, they can be found here: https://phabricator.mitk.org/source/msd_ evaluation/ in the folders descriptive-statistics, mean-values-persubtask and rankings-per-subtask.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Code availability</head><p>The implementation of the metrics used in the challenge, namely the DSC and NSD, were provided as a Python Notebook <ref type="bibr" target="#b41">42</ref> . The significance rankings have been computed with the R package challengeR, version 1.0.2, which is publicly available: https:// phabricator.mitk.org/source/challenger/. Finally, the code to compute the final rankings and all tables and figures of this paper can be found here: https://phabricator.mitk.org/ source/msd_evaluation/.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Author contributions</head><p>M.A. worked on the conceptual design and data preparation of the challenge, gave challenge day-to-day support as co-organizer, coordinated the work, validated the participating methods and wrote the document. A.R. worked on the conceptual design of the challenge, coordinated the work, performed the statistical analysis of participating methods, designed the figures and wrote the document. S.B. donated the brain tumor data set and co-organized the challenge. K.F. donated the lung tumors data set and co-organized the challenge. A.K.S. worked on the conceptual design of the challenge, led the statistical analysis committee and co-organized the challenge. B.A.L. worked on the conceptual design, was a member of the metrics committee, coorganized the challenge and donated the hippocampus data set. G.L. donated the prostate data set and co-organized the challenge. B.M. donated the brain and liver tumors data sets for the challenge, was a member of the statistics and metrics committee and co-organized the challenge. O.R. worked on the conceptual design of the challenge, was a member of the metrics committee and co-organized the challenge. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Competing interests</head><p>No funding contributed explicitly to the organization and running of the challenge. The challenge award has been kindly provided by NVIDIA. However, NVIDIA did not influence the design or running of the challenge as they were not part of the organizing committee. R.M.S. received royalties from iCAD, Philips, ScanMed, Translation Holdings, and PingAn. Individually funding sourcing unrelated to the challenge has been listed in the Acknowledgments section. The remaining authors declare no competing interests.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Additional information</head><p>Supplementary information The online version contains supplementary material available at https://doi.org/10.1038/s41467-022-30695-9.</p><p>Correspondence and requests for materials should be addressed to Michela Antonelli.</p><p>Peer review information Nature Communications thanks Elena Casiraghi and the other, anonymous, reviewer(s) for their contribution to the peer review of this work. Peer reviewer reports are available.</p><p>Reprints and permission information is available at http://www.nature.com/reprints Publisher's note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.</p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Deep learning as a tool for increased accuracy and efficiency of histopathological diagnosis</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Litjens</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Sci. Rep</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="page" from="1" to="11" />
+			<date type="published" when="2016" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Litjens, G. et al. Deep learning as a tool for increased accuracy and efficiency of histopathological diagnosis. Sci. Rep. 6, 1-11 (2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Prediction of cardiovascular risk factors from retinal fundus photographs via deep learning</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Poplin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nat. Biomed. Eng</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="158" to="164" />
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Poplin, R. et al. Prediction of cardiovascular risk factors from retinal fundus photographs via deep learning. Nat. Biomed. Eng. 2, 158-164 (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">A deep learning approach to antibiotic discovery</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">M</forename><surname>Stokes</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Cell</title>
+		<imprint>
+			<biblScope unit="volume">180</biblScope>
+			<biblScope unit="page" from="688" to="702" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Stokes, J. M. et al. A deep learning approach to antibiotic discovery. Cell 180, 688-702 (2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">20th anniversary of the medical image analysis journal (media)</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Ayache</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Duncan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Med. Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="1" to="3" />
+			<date type="published" when="2016" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ayache, N. &amp; Duncan, J. 20th anniversary of the medical image analysis journal (media). Med. Image Anal. 33, 1-3 (2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Deep-learning-based detection and segmentation of organs at risk in nasopharyngeal carcinoma computed tomographic images for radiotherapy planning</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Liang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eur. Radiol</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<date type="published" when="1961" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liang, S. et al. Deep-learning-based detection and segmentation of organs at risk in nasopharyngeal carcinoma computed tomographic images for radiotherapy planning. Eur. Radiol. 29, 1961-1967 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Robust texture features for response monitoring of glioblastoma multiforme on-weighted and-flair mr images: A preliminary investigation in terms of identification and segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Assefa</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Med. Phys</title>
+		<imprint>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="page" from="1722" to="1736" />
+			<date type="published" when="2010" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Assefa, D. et al. Robust texture features for response monitoring of glioblastoma multiforme on-weighted and-flair mr images: A preliminary investigation in terms of identification and segmentation. Med. Phys. 37, 1722-1736 (2010).</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Why rankings of biomedical image analysis competitions should be interpreted with care</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Maier-Hein</surname></persName>
+		</author>
+		<idno type="DOI">10.1038/s41467-018-07619-7</idno>
+		<idno>s41467-018-07619-7</idno>
+		<ptr target="https://doi.org/10.1038/" />
+	</analytic>
+	<monogr>
+		<title level="j">Nat. Commun</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maier-Hein, L et al. Why rankings of biomedical image analysis competitions should be interpreted with care. Nat. Commun. 9. https://doi.org/10.1038/ s41467-018-07619-7 (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">nnu-net: a self-configuring method for deep learning-based biomedical image segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Isensee</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><forename type="middle">F</forename><surname>Jaeger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><forename type="middle">A</forename><surname>Kohl</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Petersen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><forename type="middle">H</forename><surname>Maier-Hein</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nat. Commun</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="page" from="203" to="211" />
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J. &amp; Maier-Hein, K. H. nnu-net: a self-configuring method for deep learning-based biomedical image segmentation. Nat. Commun. 18, 203-211 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Measures of the amount of ecologic association between species</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><forename type="middle">R</forename><surname>Dice</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Ecology</title>
+		<imprint>
+			<biblScope unit="volume">26</biblScope>
+			<biblScope unit="page" from="297" to="302" />
+			<date type="published" when="1945" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dice, L. R. Measures of the amount of ecologic association between species. Ecology 26, 297-302 (1945).</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Clinically Applicable Segmentation of Head and Neck Anatomy for Radiotherapy: Deep Learning Algorithm Development and Validation Study</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Nikolov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J Med Internet Res</title>
+		<imprint>
+			<biblScope unit="volume">23</biblScope>
+			<biblScope unit="page">26151</biblScope>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nikolov, S. et al. Clinically Applicable Segmentation of Head and Neck Anatomy for Radiotherapy: Deep Learning Algorithm Development and Validation Study. J Med Internet Res. 23, e26151 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">U-net: Convolutional networks for biomedical image segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">O</forename><surname>Ronneberger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Fischer</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Brox</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention</title>
+		<meeting>International Conference on Medical Image Computing and Computer-Assisted Intervention</meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2015" />
+			<biblScope unit="page" from="234" to="241" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ronneberger, O., Fischer, P. &amp; Brox, T. U-net: Convolutional networks for biomedical image segmentation, In Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention, 234-241 (Springer, 2015).</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">A method for stochastic optimization</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><forename type="middle">P</forename><surname>Kingma</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Ba</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>Adam</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/1412.6980" />
+		<imprint>
+			<date type="published" when="2014" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv Preprint at</note>
+	<note type="raw_reference">Kingma, D. P. &amp; Ba, J. Adam: A method for stochastic optimization. arXiv Preprint at https://arxiv.org/abs/1412.6980 (2014).</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Solving large scale linear prediction problems using stochastic gradient descent algorithms</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. Twenty-First International Conference on Machine Learning</title>
+		<meeting>Twenty-First International Conference on Machine Learning</meeting>
+		<imprint>
+			<publisher>Association for Computing Machinery</publisher>
+			<date type="published" when="2004" />
+			<biblScope unit="volume">116</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, T. Solving large scale linear prediction problems using stochastic gradient descent algorithms, In Proc. Twenty-First International Conference on Machine Learning. 116 (Association for Computing Machinery, 2004).</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">3d semi-supervised learning with uncertainty-aware multi-view co-training</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Xia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. IEEE Winter Conference on Applications of Computer Vision</title>
+		<meeting>IEEE Winter Conference on Applications of Computer Vision</meeting>
+		<imprint>
+			<publisher>IEEE Computer Society</publisher>
+			<date type="published" when="2020" />
+			<biblScope unit="page" from="3646" to="3655" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xia, Y. et al. 3d semi-supervised learning with uncertainty-aware multi-view co-training, In Proc. IEEE Winter Conference on Applications of Computer Vision, 3646-3655 (IEEE Computer Society, 2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Deep residual learning for image recognition</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Sun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. IEEE Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>IEEE Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2016" />
+			<biblScope unit="page" from="770" to="778" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, K., Zhang, X., Ren, S. &amp; Sun, J. Deep residual learning for image recognition, In Proc. IEEE Conference on Computer Vision and Pattern Recognition. 770-778 (IEEE, 2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Automl: a survey of the state-of-the-art</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Chu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowl. Based Syst</title>
+		<imprint>
+			<biblScope unit="volume">212</biblScope>
+			<biblScope unit="page">106622</biblScope>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, X., Zhao, K. &amp; Chu, X. Automl: a survey of the state-of-the-art. Knowl. Based Syst. 212, 106622 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Methods and open-source toolkit for analyzing and visualizing challenge results</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Wiesenfarth</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Sci. Rep</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="page" from="1" to="15" />
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wiesenfarth, M. et al. Methods and open-source toolkit for analyzing and visualizing challenge results. Sci. Rep. 11, 1-15 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">A new measure of rank correlation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><forename type="middle">G</forename><surname>Kendall</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Biometrika</title>
+		<imprint>
+			<biblScope unit="volume">30</biblScope>
+			<biblScope unit="page" from="81" to="93" />
+			<date type="published" when="1938" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kendall, M. G. A new measure of rank correlation. Biometrika 30, 81-93 (1938).</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Cutting-edge 3d medical image segmentation methods in 2020: Are happy families all alike?</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Ma</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/2101.00232" />
+		<imprint>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv Preprint</note>
+	<note type="raw_reference">Ma, J. Cutting-edge 3d medical image segmentation methods in 2020: Are happy families all alike? arXiv Preprint at https://arxiv.org/abs/2101.00232 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">How to exploit weaknesses in biomedical challenge design and organization</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Reinke</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention</title>
+		<meeting>International Conference on Medical Image Computing and Computer-Assisted Intervention</meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018" />
+			<biblScope unit="page" from="388" to="395" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Reinke, A. et al. How to exploit weaknesses in biomedical challenge design and organization, In Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention, 388-395 (Springer, 2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Inter-observer variability ofmanual contour delineation of structures in ct</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Joskowicz</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Cohen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Caplan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Sosna</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eur. Radiol</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="page" from="1391" to="1399" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Joskowicz,L.,Cohen, D.,Caplan, N.&amp; Sosna, J.Inter-observer variability ofmanual contour delineation of structures in ct. Eur. Radiol. 29, 1391-1399 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Bias: transparent reporting of biomedical image analysis challenges</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Maier-Hein</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Med. Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">66</biblScope>
+			<biblScope unit="page">101796</biblScope>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maier-Hein, L. et al. Bias: transparent reporting of biomedical image analysis challenges. Med. Image Anal. 66, 101796 (2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title level="m" type="main">Common limitations of image processing metrics: A picture story</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Reinke</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/2104.05642" />
+		<imprint>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv Preprint at</note>
+	<note type="raw_reference">Reinke, A. et al. Common limitations of image processing metrics: A picture story. arXiv Preprint at https://arxiv.org/abs/2104.05642 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Approximate inference in generalized linear mixed models</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><forename type="middle">E</forename><surname>Breslow</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><forename type="middle">G</forename><surname>Clayton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Am. Stat. Assoc</title>
+		<imprint>
+			<biblScope unit="volume">88</biblScope>
+			<biblScope unit="page" from="9" to="25" />
+			<date type="published" when="1993" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Breslow, N. E. &amp; Clayton, D. G. Approximate inference in generalized linear mixed models. J. Am. Stat. Assoc. 88, 9-25 (1993).</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Skin lesion analysis toward melanoma detection: a challenge at the 2017 international symposium on biomedical imaging (ISBN), hosted by the international skin imaging collaboration (ISIC)</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><forename type="middle">C</forename><surname>Codella</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. IEEE 15th International Symposium on Biomedical Imaging</title>
+		<meeting>IEEE 15th International Symposium on Biomedical Imaging</meeting>
+		<imprint>
+			<biblScope unit="page" from="168" to="172" />
+		</imprint>
+	</monogr>
+	<note>ISBI 2018</note>
+	<note type="raw_reference">Codella, N.C.F et al. Skin lesion analysis toward melanoma detection: a challenge at the 2017 international symposium on biomedical imaging (ISBN), hosted by the international skin imaging collaboration (ISIC). In Proc. IEEE 15th International Symposium on Biomedical Imaging, 168-172 (ISBI 2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Comparative validation of multi-instance instrument segmentation in endoscopy: results of the ROBUST-MIS 2019 challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Ross</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Med. Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">70</biblScope>
+			<biblScope unit="page">101920</biblScope>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ross, T. et al. Comparative validation of multi-instance instrument segmentation in endoscopy: results of the ROBUST-MIS 2019 challenge. Med. Image Anal. 70, 101920 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation: The M&amp;Ms Challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">V</forename><forename type="middle">M</forename><surname>Campello</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Medical Imaging</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="page" from="3543" to="3554" />
+			<date type="published" when="2021" />
+			<publisher>IEEE</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Campello, V. M. et al. Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation: The M&amp;Ms Challenge. IEEE Transactions on Medical Imaging. 40, 3543-3554 (IEEE, 2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Liver segmentation from computed tomography scans: a survey and a new algorithm</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Campadelli</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><surname>Casiraghi</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Esposito</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Artif. Intel. Med</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="page" from="185" to="196" />
+			<date type="published" when="2009" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Campadelli, P., Casiraghi, E. &amp; Esposito, A. Liver segmentation from computed tomography scans: a survey and a new algorithm. Artif. Intel. Med. 45, 185-196 (2009).</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Gland segmentation in colon histology images: the glas challenge contest</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Sirinukunwattana</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Med. Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">35</biblScope>
+			<biblScope unit="page" from="489" to="502" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sirinukunwattana, K. et al. Gland segmentation in colon histology images: the glas challenge contest. Med. Image Anal. 35, 489-502 (2017).</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Enhancing pancreatic adenocarcinoma delineation in diffusion derived intravoxel incoherent motion f-maps through automatic vessel and duct segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><forename type="middle">J</forename><surname>Re</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Magn. Reson. Med</title>
+		<imprint>
+			<biblScope unit="volume">66</biblScope>
+			<biblScope unit="page" from="1327" to="1332" />
+			<date type="published" when="2011" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Re, T. J. et al. Enhancing pancreatic adenocarcinoma delineation in diffusion derived intravoxel incoherent motion f-maps through automatic vessel and duct segmentation. Magn. Reson. Med. 66, 1327-1332 (2011).</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><surname>Bello</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/2103.07579" />
+		<title level="m">Revisiting resnets: Improved training and scaling strategies</title>
+		<imprint>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv Preprint at</note>
+	<note type="raw_reference">Bello, I. et al. Revisiting resnets: Improved training and scaling strategies. arXiv Preprint at https://arxiv.org/abs/2103.07579 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Neural architecture search: a survey</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Elsken</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">H</forename><surname>Metzen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Hutter</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Mach. Learn. Res</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="page" from="1" to="21" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Elsken, T., Metzen, J. H. &amp; Hutter, F. et al. Neural architecture search: a survey. J. Mach. Learn. Res. 20, 1-21 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<monogr>
+		<title level="m" type="main">Dints: differentiable neural network topology search for 3d medical image segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Roth</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Xu</surname></persName>
+		</author>
+		<idno>abs/ 2103.15954</idno>
+		<ptr target="http://arxiv.org/abs/2103.15954" />
+		<imprint>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, Y., Yang, D., Roth, H., Zhao, C. &amp; Xu, D. Dints: differentiable neural network topology search for 3d medical image segmentation. CoRR abs/ 2103.15954. http://arxiv.org/abs/2103.15954 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Why rankings of biomedical image analysis competitions should be interpreted with care</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Maier-Hein</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nat. Commun</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="page">5217</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maier-Hein, L. et al. Why rankings of biomedical image analysis competitions should be interpreted with care. Nat. Commun. 9, 5217 (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<monogr>
+		<title level="m" type="main">A large annotated medical image dataset for the development and evaluation of segmentation algorithms</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">L</forename><surname>Simpson</surname></persName>
+		</author>
+		<idno>org/abs/1902.09063</idno>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Simpson, A.L. et al. A large annotated medical image dataset for the development and evaluation of segmentation algorithms. arXiv e-prints http:// arxiv.org/abs/1902.09063 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">The multimodal brain tumor image segmentation benchmark (brats)</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><forename type="middle">H</forename><surname>Menze</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Med. Imag</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<date type="published" when="1993" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Menze, B. H. et al. The multimodal brain tumor image segmentation benchmark (brats). IEEE Trans. Med. Imag. 34, 1993-2024 (2015).</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Advancing the cancer genome atlas glioma mri collections with expert segmentation labels and radiomic features</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Bakas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Sci. Data</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="page" from="1" to="13" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bakas, S. et al. Advancing the cancer genome atlas glioma mri collections with expert segmentation labels and radiomic features. Sci. Data 4, 1-13 (2017).</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<monogr>
+		<title level="m" type="main">Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the brats challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Bakas</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/1811.02629" />
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv Preprint at</note>
+	<note type="raw_reference">Bakas, S. et al. Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the brats challenge. arXiv Preprint at https://arxiv.org/abs/1811.02629 (2018b).</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Benchmark for algorithms segmenting the left atrium from 3d ct and mri datasets</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Tobon-Gomez</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Med. Imag</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="page" from="1460" to="1473" />
+			<date type="published" when="2015" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tobon-Gomez, C. et al. Benchmark for algorithms segmenting the left atrium from 3d ct and mri datasets. IEEE Trans. Med. Imag. 34, 1460-1473 (2015).</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Bilic</surname></persName>
+		</author>
+		<ptr target="http://arxiv.org/abs/1901.04056" />
+		<title level="m">The Liver Tumor Segmentation Benchmark (LiTS)</title>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bilic, P. et al. The Liver Tumor Segmentation Benchmark (LiTS). arXiv e-prints http://arxiv.org/abs/1901.04056 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<monogr>
+		<title level="m" type="main">Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the BRATS challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Bakas</surname></persName>
+		</author>
+		<idno>abs/1811.02629</idno>
+		<ptr target="http://arxiv.org/abs/1811.02629" />
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bakas, S. et al. Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the BRATS challenge. CoRR abs/1811.02629. http://arxiv.org/abs/1811. 02629 (2018a).</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>The Msd Challenge</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>Organisers</surname></persName>
+		</author>
+		<ptr target="http://medicaldecathlon.com/files/Surface_distance_based_measures.ipynb" />
+		<title level="m">MSD metrics jupyter notebook</title>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">The MSD Challenge Organisers. MSD metrics jupyter notebook. http:// medicaldecathlon.com/files/Surface_distance_based_measures.ipynb (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">V-net: Fully convolutional neural networks for volumetric medical image segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Milletari</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Navab</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S.-A</forename><surname>Ahmadi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. Fourth International Conference on 3D Vision (3DV)</title>
+		<meeting>Fourth International Conference on 3D Vision (3DV)</meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2016" />
+			<biblScope unit="page" from="565" to="571" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Milletari, F., Navab, N. &amp; Ahmadi, S.-A. V-net: Fully convolutional neural networks for volumetric medical image segmentation, In Proc. Fourth International Conference on 3D Vision (3DV), 565-571. (IEEE, 2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">G</forename><surname>Roy</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Conjeti</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Navab</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Wachinger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>Quicknat</surname></persName>
+		</author>
+		<idno>abs/1801.04161</idno>
+		<ptr target="http://arxiv.org/abs/1801.04161" />
+		<title level="m">Segmenting MRI neuroanatomy in 20 seconds. CoRR</title>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Roy, A.G., Conjeti, S., Navab, N. &amp; Wachinger, C. Quicknat: Segmenting MRI neuroanatomy in 20 seconds. CoRR abs/1801.04161. http://arxiv.org/abs/ 1801.04161 (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Deepmedic for brain tumor segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Kamnitsas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. International workshop on Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries</title>
+		<meeting>International workshop on Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries</meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2016" />
+			<biblScope unit="page" from="138" to="149" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kamnitsas, K. et al. Deepmedic for brain tumor segmentation. In Proc. International workshop on Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries, 138-149 (Springer, 2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">HI Helmholtz Imaging</title>
+	</analytic>
+	<monogr>
+		<title level="j">Computer Assisted Medical Interventions</title>
+		<imprint>
+			<biblScope unit="issue">3</biblScope>
+			<publisher>DKFZ</publisher>
+		</imprint>
+		<respStmt>
+			<orgName>School of Biomedical Engineering &amp; Imaging Sciences, King&apos;s College London</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">School of Biomedical Engineering &amp; Imaging Sciences, King&apos;s College London, London, UK. 2 Div. Computer Assisted Medical Interventions, German Cancer Research Center (DKFZ), Heidelberg, Germany. 3 HI Helmholtz Imaging, German Cancer Research Center (DKFZ),</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">18 Department of Surgery, Memorial Sloan Kettering Cancer Center</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Germany</forename><surname>Heidelberg</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">for Biomedical Informatics and Information Technology</title>
+		<meeting><address><addrLine>Philadelphia, PA, USA. 8 Center; Nashville, TN, USA; Nijmegen, The Netherlands; Bethesda, MD, USA; München, Germany; New York, NY, USA; Nashville, TN, USA; New York, NY, USA; Stanford, CA, USA; Bogota, Colombia; Seoul, Korea; Shenzhen, China; Beijing, China; Shenzhen, China</addrLine></address></meeting>
+		<imprint>
+			<publisher>VUNO Inc</publisher>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="page">26</biblScope>
+		</imprint>
+		<respStmt>
+			<orgName>Faculty of Mathematics and Computer Science, University of Heidelberg, Heidelberg, Germany. 5 Center for Biomedical Image Computing and Analytics (CBICA), University of Pennsylvania, Philadelphia, PA, USA. 6 Department of Radiology, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA, USA. 7 Department of Pathology and Laboratory Medicine, Perelman School of Medicine, University of Pennsylvania ; National Cancer Institute (NIH), Bethesda, MD, USA. 9 Div. Biostatistics, German Cancer Research Center (DKFZ), Heidelberg, Germany. Electrical Engineering and Computer Science, Vanderbilt University ; Radboud University Medical Center, Radboud Institute for Health Sciences ; 12 Quantitative Biomedicine, University of Zurich, Zurich, Switzerland. DeepMind, London, UK. 14 Imaging Biomarkers and Computer-Aided Diagnosis Laboratory, Department of Radiology and Imaging Sciences ; 15 Department of Informatics, Technische Universität München ; Vanderbilt University Medical Center ; Department of Radiology, Stanford University ; 20 Department of Computer Science and Software Engineering, École Polytechnique de Montréal, Montréal, QC, Canada. 21 Universidad de los Andes ; 24 Department of Automation, Tsinghua University</orgName>
+		</respStmt>
+	</monogr>
+	<note>Chinese Academy of Sciences</note>
+	<note type="raw_reference">Heidelberg, Germany. 4 Faculty of Mathematics and Computer Science, University of Heidelberg, Heidelberg, Germany. 5 Center for Biomedical Image Computing and Analytics (CBICA), University of Pennsylvania, Philadelphia, PA, USA. 6 Department of Radiology, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA, USA. 7 Department of Pathology and Laboratory Medicine, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA, USA. 8 Center for Biomedical Informatics and Information Technology, National Cancer Institute (NIH), Bethesda, MD, USA. 9 Div. Biostatistics, German Cancer Research Center (DKFZ), Heidelberg, Germany. Electrical Engineering and Computer Science, Vanderbilt University, Nashville, TN, USA. Radboud University Medical Center, Radboud Institute for Health Sciences, Nijmegen, The Netherlands. 12 Quantitative Biomedicine, University of Zurich, Zurich, Switzerland. DeepMind, London, UK. 14 Imaging Biomarkers and Computer-Aided Diagnosis Laboratory, Department of Radiology and Imaging Sciences, National Institutes of Health Clinical Center (NIH), Bethesda, MD, USA. 15 Department of Informatics, Technische Universität München, München, Germany. Department of Radiology, Memorial Sloan Kettering Cancer Center, New York, NY, USA. Department of Psychiatry &amp; Behavioral Sciences, Vanderbilt University Medical Center, Nashville, TN, USA. 18 Department of Surgery, Memorial Sloan Kettering Cancer Center, New York, NY, USA. Department of Radiology, Stanford University, Stanford, CA, USA. 20 Department of Computer Science and Software Engineering, École Polytechnique de Montréal, Montréal, QC, Canada. 21 Universidad de los Andes, Bogota, Colombia. 22 VUNO Inc., Seoul, Korea. 23 Tencent Jarvis Lab, Shenzhen, China. 24 Department of Automation, Tsinghua University, Beijing, China. 25 Shenzhen Institute of Advanced Technology, Chinese Academy of Sciences, Shenzhen, China. 26</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<monogr>
+		<title level="m" type="main">35 Lab for Artificial Intelligence in Medical Imaging</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<pubPlace>Heidelberg, Germany; Copenhagen, Denmark; San Diego, CA, USA; Shanghai, China</pubPlace>
+		</imprint>
+		<respStmt>
+			<orgName>Department of Computer Science, Xiamen University, Xiamen, China. 28 Kakao Brain, Seongnam-si, Republic of Korea. 29 Cerebriu A/S, Copenhagen, Denmark. 30 Pattern Analysis and Learning Group, Department of Radiation Oncology, Heidelberg University Hospital ; RWTH Aachen University, Aachen, Germany. Fraunhofer Institute for Digital Medicine MEVIS, Bremen, Germany. 33 Department of Computer Science, University of Copenhagen ; AI-Med), Department of Child and Adolescent Psychiatry, University Hospital, LMU München, Germany. 36 MoE Key Lab of Artificial Intelligence, AI Institute, Shanghai Jiao Tong University</orgName>
+		</respStmt>
+	</monogr>
+	<note>31 Institute of Imaging &amp; Computer Vision</note>
+	<note type="raw_reference">Department of Computer Science, Xiamen University, Xiamen, China. 28 Kakao Brain, Seongnam-si, Republic of Korea. 29 Cerebriu A/S, Copenhagen, Denmark. 30 Pattern Analysis and Learning Group, Department of Radiation Oncology, Heidelberg University Hospital, Heidelberg, Germany. 31 Institute of Imaging &amp; Computer Vision, RWTH Aachen University, Aachen, Germany. Fraunhofer Institute for Digital Medicine MEVIS, Bremen, Germany. 33 Department of Computer Science, University of Copenhagen, Copenhagen, Denmark. 34 MaaDoTaa.com, San Diego, CA, USA. 35 Lab for Artificial Intelligence in Medical Imaging (AI-Med), Department of Child and Adolescent Psychiatry, University Hospital, LMU München, Germany. 36 MoE Key Lab of Artificial Intelligence, AI Institute, Shanghai Jiao Tong University, Shanghai, China.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">These authors contributed equally: Michela Antonelli, Annika Reinke. 43 These authors jointly supervised this work: Lena Maier-Hein</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jorge</forename><surname>Cardoso</surname></persName>
+		</author>
+		<ptr target="email:michela.antonelli@kcl.ac.uk" />
+	</analytic>
+	<monogr>
+		<title level="j">Medical Faculty</title>
+		<imprint>
+			<biblScope unit="volume">39</biblScope>
+		</imprint>
+		<respStmt>
+			<orgName>Shanghai Key Laboratory of Multidimensional Information Processing, East China Normal University ; 38 Johns Hopkins University ; Queen&apos;s University ; University of Heidelberg</orgName>
+		</respStmt>
+	</monogr>
+	<note>School of Computing/Department of Biomedical and Molecular Sciences</note>
+	<note type="raw_reference">Shanghai Key Laboratory of Multidimensional Information Processing, East China Normal University, Shanghai, China. 38 Johns Hopkins University, Baltimore, MD, USA. 39 NVIDIA, Santa Clara, CA, USA. School of Computing/Department of Biomedical and Molecular Sciences, Queen&apos;s University, Kingston, ON, Canada. Medical Faculty, University of Heidelberg, Heidelberg, Germany. These authors contributed equally: Michela Antonelli, Annika Reinke. 43 These authors jointly supervised this work: Lena Maier-Hein, M. Jorge Cardoso. ✉ email: michela.antonelli@kcl.ac.uk</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

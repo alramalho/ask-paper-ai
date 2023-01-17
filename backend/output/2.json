@@ -1,0 +1,3627 @@
+{
+    "paper_id": "2",
+    "header": {
+        "generated_with": "S2ORC 1.0.0",
+        "date_generated": "2023-01-17T12:03:09.728156Z"
+    },
+    "title": "Microsoft COCO: Common Objects in Context",
+    "authors": [
+        {
+            "first": "Tsung-Yi",
+            "middle": [],
+            "last": "Lin",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Michael",
+            "middle": [],
+            "last": "Maire",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Serge",
+            "middle": [],
+            "last": "Belongie",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Lubomir",
+            "middle": [],
+            "last": "Bourdev",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ross",
+            "middle": [],
+            "last": "Girshick",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "James",
+            "middle": [],
+            "last": "Hays",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Pietro",
+            "middle": [],
+            "last": "Perona",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Deva",
+            "middle": [],
+            "last": "Ramanan",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "C",
+            "middle": [
+                "Lawrence"
+            ],
+            "last": "Zitnick",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Piotr",
+            "middle": [],
+            "last": "Doll\u00e1r",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        }
+    ],
+    "year": "",
+    "venue": null,
+    "identifiers": {},
+    "abstract": "We present a new dataset with the goal of advancing the state-of-the-art in object recognition by placing the question of object recognition in the context of the broader question of scene understanding. This is achieved by gathering images of complex everyday scenes containing common objects in their natural context. Objects are labeled using per-instance segmentations to aid in precise object localization. Our dataset contains photos of 91 objects types that would be easily recognizable by a 4 year old. With a total of 2.5 million labeled instances in 328k images, the creation of our dataset drew upon extensive crowd worker involvement via novel user interfaces for category detection, instance spotting and instance segmentation. We present a detailed statistical analysis of the dataset in comparison to PASCAL, ImageNet, and SUN. Finally, we provide baseline performance analysis for bounding box and segmentation detection results using a Deformable Parts Model.",
+    "pdf_parse": {
+        "paper_id": "2",
+        "_pdf_hash": "",
+        "abstract": [
+            {
+                "text": "We present a new dataset with the goal of advancing the state-of-the-art in object recognition by placing the question of object recognition in the context of the broader question of scene understanding. This is achieved by gathering images of complex everyday scenes containing common objects in their natural context. Objects are labeled using per-instance segmentations to aid in precise object localization. Our dataset contains photos of 91 objects types that would be easily recognizable by a 4 year old. With a total of 2.5 million labeled instances in 328k images, the creation of our dataset drew upon extensive crowd worker involvement via novel user interfaces for category detection, instance spotting and instance segmentation. We present a detailed statistical analysis of the dataset in comparison to PASCAL, ImageNet, and SUN. Finally, we provide baseline performance analysis for bounding box and segmentation detection results using a Deformable Parts Model.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Abstract",
+                "sec_num": null
+            }
+        ],
+        "body_text": [
+            {
+                "text": "One of the primary goals of computer vision is the understanding of visual scenes. Scene understanding involves numerous tasks including recognizing what objects are present, localizing the objects in 2D and 3D, determining the objects' and scene's attributes, characterizing relationships between objects and providing a semantic description of the scene. The current object classification and detection datasets [1] , [2] , [3] , [4] help us explore the first challenges related to scene understanding. For instance the ImageNet dataset [1] , which contains an unprecedented number of images, has recently enabled breakthroughs in both object classification and detection research [5] , [6] , [7] . The community has also created datasets containing object attributes [8] , scene attributes [9] , keypoints [10] , and 3D scene information [11] . This leads us to the obvious question: what datasets will best continue our advance towards our ultimate goal of scene understanding?",
+                "cite_spans": [
+                    {
+                        "start": 414,
+                        "end": 417,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 420,
+                        "end": 423,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 426,
+                        "end": 429,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 432,
+                        "end": 435,
+                        "text": "[4]",
+                        "ref_id": "BIBREF3"
+                    },
+                    {
+                        "start": 539,
+                        "end": 542,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 683,
+                        "end": 686,
+                        "text": "[5]",
+                        "ref_id": "BIBREF4"
+                    },
+                    {
+                        "start": 689,
+                        "end": 692,
+                        "text": "[6]",
+                        "ref_id": "BIBREF5"
+                    },
+                    {
+                        "start": 695,
+                        "end": 698,
+                        "text": "[7]",
+                        "ref_id": "BIBREF6"
+                    },
+                    {
+                        "start": 770,
+                        "end": 773,
+                        "text": "[8]",
+                        "ref_id": "BIBREF7"
+                    },
+                    {
+                        "start": 793,
+                        "end": 796,
+                        "text": "[9]",
+                        "ref_id": "BIBREF8"
+                    },
+                    {
+                        "start": 809,
+                        "end": 813,
+                        "text": "[10]",
+                        "ref_id": "BIBREF9"
+                    },
+                    {
+                        "start": 841,
+                        "end": 845,
+                        "text": "[11]",
+                        "ref_id": "BIBREF10"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "INTRODUCTION",
+                "sec_num": "1"
+            },
+            {
+                "text": "We introduce a new large-scale dataset that addresses three core research problems in scene understanding: detecting non-iconic views (or non-canonical perspectives [12] ) of objects, contextual reasoning between objects and the precise 2D localization of objects. For many categories of objects, there exists an iconic view. For example, when performing a web-based image search for the object category \"bike,\" the top-ranked retrieved examples appear in profile, unobstructed near the center of a neatly composed photo. We posit that current recognition systems perform fairly well on iconic views, but struggle to recognize objects otherwise -in the We introduce a large, richly-annotated dataset comprised of images depicting complex everyday scenes of common objects in their natural context. background, partially occluded, amid clutter [13] -reflecting the composition of actual everyday scenes. We verify this experimentally; when evaluated on everyday scenes, models trained on our data perform better than those trained with prior datasets. A challenge is finding natural images that contain multiple objects. The identity of many objects can only be resolved using context, due to small size or ambiguous appearance in the image. To push research in contextual reasoning, images depicting scenes [3] rather than objects in isolation are necessary. Finally, we argue that detailed spatial understanding of object layout will be a core component of scene analysis. An object's spatial location can be defined coarsely using a bounding box [2] or with a precise pixel-level segmentation [14] , [15] , [16] . As we demonstrate, to measure either kind of localization performance it is essential for the dataset to have every instance of every object category labeled and fully segmented. Our dataset is unique in its annotation of instance-level segmentation masks, Fig. 1 .",
+                "cite_spans": [
+                    {
+                        "start": 165,
+                        "end": 169,
+                        "text": "[12]",
+                        "ref_id": "BIBREF11"
+                    },
+                    {
+                        "start": 843,
+                        "end": 847,
+                        "text": "[13]",
+                        "ref_id": "BIBREF12"
+                    },
+                    {
+                        "start": 1307,
+                        "end": 1310,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 1548,
+                        "end": 1551,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 1595,
+                        "end": 1599,
+                        "text": "[14]",
+                        "ref_id": "BIBREF13"
+                    },
+                    {
+                        "start": 1602,
+                        "end": 1606,
+                        "text": "[15]",
+                        "ref_id": "BIBREF14"
+                    },
+                    {
+                        "start": 1609,
+                        "end": 1613,
+                        "text": "[16]",
+                        "ref_id": "BIBREF15"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1873,
+                        "end": 1879,
+                        "text": "Fig. 1",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "INTRODUCTION",
+                "sec_num": "1"
+            },
+            {
+                "text": "To create a large-scale dataset that accomplishes these three goals we employed a novel pipeline for gathering data with extensive use of Amazon Mechanical Turk. First and most importantly, we harvested a large set of images containing contextual relationships and noniconic object views. We accomplished this using a surprisingly simple yet effective technique that queries for pairs of objects in conjunction with images retrieved via scene-based queries [17] , [3] . Next, each image was labeled as containing particular object categories using a hierarchical labeling approach [18] . For each category found, the individual instances were labeled, verified, and finally segmented. Given the inherent ambiguity of labeling, each of these stages has numerous tradeoffs that we explored in detail.",
+                "cite_spans": [
+                    {
+                        "start": 457,
+                        "end": 461,
+                        "text": "[17]",
+                        "ref_id": "BIBREF16"
+                    },
+                    {
+                        "start": 464,
+                        "end": 467,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 581,
+                        "end": 585,
+                        "text": "[18]",
+                        "ref_id": "BIBREF17"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "INTRODUCTION",
+                "sec_num": "1"
+            },
+            {
+                "text": "The Microsoft Common Objects in COntext (MS COCO) dataset contains 91 common object categories with 82 of them having more than 5,000 labeled instances, Fig. 6 . In total the dataset has 2,500,000 labeled instances in 328,000 images. In contrast to the popular ImageNet dataset [1] , COCO has fewer categories but more instances per category. This can aid in learning detailed object models capable of precise 2D localization. The dataset is also significantly larger in number of instances per category than the PASCAL VOC [2] and SUN [3] datasets. Additionally, a critical distinction between our dataset and others is the number of labeled instances per image which may aid in learning contextual information, Fig. 5 . MS COCO contains considerably more object instances per image (7.7) as compared to ImageNet (3.0) and PASCAL (2.3) . In contrast, the SUN dataset, which contains significant contextual information, has over 17 objects and \"stuff\" per image but considerably fewer object instances overall.",
+                "cite_spans": [
+                    {
+                        "start": 278,
+                        "end": 281,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 524,
+                        "end": 527,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 536,
+                        "end": 539,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 831,
+                        "end": 836,
+                        "text": "(2.3)",
+                        "ref_id": null
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 153,
+                        "end": 159,
+                        "text": "Fig. 6",
+                        "ref_id": "FIGREF6"
+                    },
+                    {
+                        "start": 713,
+                        "end": 719,
+                        "text": "Fig. 5",
+                        "ref_id": "FIGREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "INTRODUCTION",
+                "sec_num": "1"
+            },
+            {
+                "text": "An abridged version of this work appeared in [19] .",
+                "cite_spans": [
+                    {
+                        "start": 45,
+                        "end": 49,
+                        "text": "[19]",
+                        "ref_id": "BIBREF18"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "INTRODUCTION",
+                "sec_num": "1"
+            },
+            {
+                "text": "Throughout the history of computer vision research datasets have played a critical role. They not only provide a means to train and evaluate algorithms, they drive research in new and more challenging directions. The creation of ground truth stereo and optical flow datasets [20] , [21] helped stimulate a flood of interest in these areas. The early evolution of object recognition datasets [22] , [23] , [24] facilitated the direct comparison of hundreds of image recognition algorithms while simultaneously pushing the field towards more complex problems. Recently, the ImageNet dataset [1] containing millions of images has enabled breakthroughs in both object classification and detection research using a new class of deep learning algorithms [5] , [6] , [7] . Datasets related to object recognition can be roughly split into three groups: those that primarily address object classification, object detection and semantic scene labeling. We address each in turn.",
+                "cite_spans": [
+                    {
+                        "start": 275,
+                        "end": 279,
+                        "text": "[20]",
+                        "ref_id": "BIBREF19"
+                    },
+                    {
+                        "start": 282,
+                        "end": 286,
+                        "text": "[21]",
+                        "ref_id": "BIBREF20"
+                    },
+                    {
+                        "start": 391,
+                        "end": 395,
+                        "text": "[22]",
+                        "ref_id": "BIBREF21"
+                    },
+                    {
+                        "start": 398,
+                        "end": 402,
+                        "text": "[23]",
+                        "ref_id": "BIBREF22"
+                    },
+                    {
+                        "start": 405,
+                        "end": 409,
+                        "text": "[24]",
+                        "ref_id": "BIBREF23"
+                    },
+                    {
+                        "start": 589,
+                        "end": 592,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 748,
+                        "end": 751,
+                        "text": "[5]",
+                        "ref_id": "BIBREF4"
+                    },
+                    {
+                        "start": 754,
+                        "end": 757,
+                        "text": "[6]",
+                        "ref_id": "BIBREF5"
+                    },
+                    {
+                        "start": 760,
+                        "end": 763,
+                        "text": "[7]",
+                        "ref_id": "BIBREF6"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "RELATED WORK",
+                "sec_num": "2"
+            },
+            {
+                "text": "The task of object classification requires binary labels indicating whether objects are present in an image; see Fig. 1(a) . Early datasets of this type comprised images containing a single object with blank backgrounds, such as the MNIST handwritten digits [25] or COIL household objects [26] . Caltech 101 [22] and Caltech 256 [23] marked the transition to more realistic object images retrieved from the internet while also increasing the number of object categories to 101 and 256, respectively. Popular datasets in the machine learning community due to the larger number of training examples, CIFAR-10 and CIFAR-100 [27] offered 10 and 100 categories from a dataset of tiny 32 \u00d7 32 images [28] . While these datasets contained up to 60,000 images and hundreds of categories, they still only captured a small fraction of our visual world.",
+                "cite_spans": [
+                    {
+                        "start": 258,
+                        "end": 262,
+                        "text": "[25]",
+                        "ref_id": "BIBREF24"
+                    },
+                    {
+                        "start": 289,
+                        "end": 293,
+                        "text": "[26]",
+                        "ref_id": "BIBREF25"
+                    },
+                    {
+                        "start": 308,
+                        "end": 312,
+                        "text": "[22]",
+                        "ref_id": "BIBREF21"
+                    },
+                    {
+                        "start": 329,
+                        "end": 333,
+                        "text": "[23]",
+                        "ref_id": "BIBREF22"
+                    },
+                    {
+                        "start": 621,
+                        "end": 625,
+                        "text": "[27]",
+                        "ref_id": "BIBREF26"
+                    },
+                    {
+                        "start": 694,
+                        "end": 698,
+                        "text": "[28]",
+                        "ref_id": "BIBREF27"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 113,
+                        "end": 122,
+                        "text": "Fig. 1(a)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Image Classification",
+                "sec_num": null
+            },
+            {
+                "text": "Recently, ImageNet [1] made a striking departure from the incremental increase in dataset sizes. They proposed the creation of a dataset containing 22k categories with 500-1000 images each. Unlike previous datasets containing entry-level categories [29] , such as \"dog\" or \"chair,\" like [28] , ImageNet used the WordNet Hierarchy [30] to obtain both entry-level and fine-grained [31] categories. Currently, the ImageNet dataset contains over 14 million labeled images and has enabled significant advances in image classification [5] , [6] , [7] .",
+                "cite_spans": [
+                    {
+                        "start": 19,
+                        "end": 22,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 249,
+                        "end": 253,
+                        "text": "[29]",
+                        "ref_id": "BIBREF28"
+                    },
+                    {
+                        "start": 287,
+                        "end": 291,
+                        "text": "[28]",
+                        "ref_id": "BIBREF27"
+                    },
+                    {
+                        "start": 330,
+                        "end": 334,
+                        "text": "[30]",
+                        "ref_id": "BIBREF29"
+                    },
+                    {
+                        "start": 379,
+                        "end": 383,
+                        "text": "[31]",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 529,
+                        "end": 532,
+                        "text": "[5]",
+                        "ref_id": "BIBREF4"
+                    },
+                    {
+                        "start": 535,
+                        "end": 538,
+                        "text": "[6]",
+                        "ref_id": "BIBREF5"
+                    },
+                    {
+                        "start": 541,
+                        "end": 544,
+                        "text": "[7]",
+                        "ref_id": "BIBREF6"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Image Classification",
+                "sec_num": null
+            },
+            {
+                "text": "Object detection Detecting an object entails both stating that an object belonging to a specified class is present, and localizing it in the image. The location of an object is typically represented by a bounding box, Fig. 1(b) . Early algorithms focused on face detection [32] using various ad hoc datasets. Later, more realistic and challenging face detection datasets were created [33] . Another popular challenge is the detection of pedestrians for which several datasets have been created [24] , [4] . The Caltech Pedestrian Dataset [4] contains 350,000 labeled instances with bounding boxes.",
+                "cite_spans": [
+                    {
+                        "start": 273,
+                        "end": 277,
+                        "text": "[32]",
+                        "ref_id": "BIBREF31"
+                    },
+                    {
+                        "start": 384,
+                        "end": 388,
+                        "text": "[33]",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 494,
+                        "end": 498,
+                        "text": "[24]",
+                        "ref_id": "BIBREF23"
+                    },
+                    {
+                        "start": 501,
+                        "end": 504,
+                        "text": "[4]",
+                        "ref_id": "BIBREF3"
+                    },
+                    {
+                        "start": 538,
+                        "end": 541,
+                        "text": "[4]",
+                        "ref_id": "BIBREF3"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 218,
+                        "end": 227,
+                        "text": "Fig. 1(b)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Image Classification",
+                "sec_num": null
+            },
+            {
+                "text": "For the detection of basic object categories, a multiyear effort from 2005 to 2012 was devoted to the creation and maintenance of a series of benchmark datasets that were widely adopted. The PASCAL VOC [2] datasets contained 20 object categories spread over 11,000 images. Over 27,000 object instance bounding boxes were labeled, of which almost 7,000 had detailed segmentations. Recently, a detection challenge has been created from 200 object categories using a subset of 400,000 images from ImageNet [34] . An impressive 350,000 objects have been labeled using bounding boxes.",
+                "cite_spans": [
+                    {
+                        "start": 202,
+                        "end": 205,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 503,
+                        "end": 507,
+                        "text": "[34]",
+                        "ref_id": "BIBREF33"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Image Classification",
+                "sec_num": null
+            },
+            {
+                "text": "Since the detection of many objects such as sunglasses, cellphones or chairs is highly dependent on contextual information, it is important that detection datasets contain objects in their natural environments. In our dataset we strive to collect images rich in contextual information. The use of bounding boxes also limits the accuracy for which detection algorithms may be evaluated. We propose the use of fully segmented instances to enable more accurate detector evaluation. ",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Image Classification",
+                "sec_num": null
+            },
+            {
+                "text": "The task of labeling semantic objects in a scene requires that each pixel of an image be labeled as belonging to a category, such as sky, chair, floor, street, etc. In contrast to the detection task, individual instances of objects do not need to be segmented, Fig. 1(c) . This enables the labeling of objects for which individual instances are hard to define, such as grass, streets, or walls. Datasets exist for both indoor [11] and outdoor [35] , [14] scenes. Some datasets also include depth information [11] . Similar to semantic scene labeling, our goal is to measure the pixel-wise accuracy of object labels. However, we also aim to distinguish between individual instances of an object, which requires a solid understanding of each object's extent.",
+                "cite_spans": [
+                    {
+                        "start": 426,
+                        "end": 430,
+                        "text": "[11]",
+                        "ref_id": "BIBREF10"
+                    },
+                    {
+                        "start": 443,
+                        "end": 447,
+                        "text": "[35]",
+                        "ref_id": "BIBREF34"
+                    },
+                    {
+                        "start": 450,
+                        "end": 454,
+                        "text": "[14]",
+                        "ref_id": "BIBREF13"
+                    },
+                    {
+                        "start": 508,
+                        "end": 512,
+                        "text": "[11]",
+                        "ref_id": "BIBREF10"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 261,
+                        "end": 270,
+                        "text": "Fig. 1(c)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Semantic scene labeling",
+                "sec_num": null
+            },
+            {
+                "text": "A novel dataset that combines many of the properties of both object detection and semantic scene labeling datasets is the SUN dataset [3] for scene understanding. SUN contains 908 scene categories from the WordNet dictionary [30] with segmented objects. The 3,819 object categories span those common to object detection datasets (person, chair, car) and to semantic scene labeling (wall, sky, floor). Since the dataset was collected by finding images depicting various scene types, the number of instances per object category exhibits the long tail phenomenon. That is, a few categories have a large number of instances (wall: 20,213, window: 16,080, chair: 7,971) while most have a relatively modest number of instances (boat: 349, airplane: 179, floor lamp: 276). In our dataset, we ensure that each object category has a significant number of instances, Fig. 5 .",
+                "cite_spans": [
+                    {
+                        "start": 134,
+                        "end": 137,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 225,
+                        "end": 229,
+                        "text": "[30]",
+                        "ref_id": "BIBREF29"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 857,
+                        "end": 863,
+                        "text": "Fig. 5",
+                        "ref_id": "FIGREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Semantic scene labeling",
+                "sec_num": null
+            },
+            {
+                "text": "Other vision datasets Datasets have spurred the advancement of numerous fields in computer vision. Some notable datasets include the Middlebury datasets for stereo vision [20] , multi-view stereo [36] and optical flow [21] . The Berkeley Segmentation Data Set (BSDS500) [37] has been used extensively to evaluate both segmentation and edge detection algorithms. Datasets have also been created to recognize both scene [9] and object attributes [8] , [38] . Indeed, numerous areas of vision have benefited from challenging datasets that helped catalyze progress.",
+                "cite_spans": [
+                    {
+                        "start": 171,
+                        "end": 175,
+                        "text": "[20]",
+                        "ref_id": "BIBREF19"
+                    },
+                    {
+                        "start": 196,
+                        "end": 200,
+                        "text": "[36]",
+                        "ref_id": "BIBREF35"
+                    },
+                    {
+                        "start": 218,
+                        "end": 222,
+                        "text": "[21]",
+                        "ref_id": "BIBREF20"
+                    },
+                    {
+                        "start": 270,
+                        "end": 274,
+                        "text": "[37]",
+                        "ref_id": "BIBREF36"
+                    },
+                    {
+                        "start": 418,
+                        "end": 421,
+                        "text": "[9]",
+                        "ref_id": "BIBREF8"
+                    },
+                    {
+                        "start": 444,
+                        "end": 447,
+                        "text": "[8]",
+                        "ref_id": "BIBREF7"
+                    },
+                    {
+                        "start": 450,
+                        "end": 454,
+                        "text": "[38]",
+                        "ref_id": "BIBREF37"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Semantic scene labeling",
+                "sec_num": null
+            },
+            {
+                "text": "We next describe how the object categories and candidate images are selected.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "IMAGE COLLECTION",
+                "sec_num": null
+            },
+            {
+                "text": "The selection of object categories is a non-trivial exercise. The categories must form a representative set of all categories, be relevant to practical applications and occur with high enough frequency to enable the collection of a large dataset. Other important decisions are whether to include both \"thing\" and \"stuff\" categories [39] and whether fine-grained [31] , [1] and object-part categories should be included. \"Thing\" categories include objects for which individual instances may be easily labeled (person, chair, car) where \"stuff\" categories include materials and objects with no clear boundaries (sky, street, grass). Since we are primarily interested in precise localization of object instances, we decided to only include \"thing\" categories and not \"stuff.\" However, since \"stuff\" categories can provide significant contextual information, we believe the future labeling of \"stuff\" categories would be beneficial.",
+                "cite_spans": [
+                    {
+                        "start": 332,
+                        "end": 336,
+                        "text": "[39]",
+                        "ref_id": "BIBREF38"
+                    },
+                    {
+                        "start": 362,
+                        "end": 366,
+                        "text": "[31]",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 369,
+                        "end": 372,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Common Object Categories",
+                "sec_num": "3.1"
+            },
+            {
+                "text": "The specificity of object categories can vary significantly. For instance, a dog could be a member of the \"mammal\", \"dog\", or \"German shepherd\" categories. To enable the practical collection of a significant number of instances per category, we chose to limit our dataset to entry-level categories, i.e. category labels that are commonly used by humans when describing objects (dog, chair, person). It is also possible that some object categories may be parts of other object categories. For instance, a face may be part of a person. We anticipate the inclusion of object-part categories (face, hands, wheels) would be beneficial for many real-world applications.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Common Object Categories",
+                "sec_num": "3.1"
+            },
+            {
+                "text": "We used several sources to collect entry-level object categories of \"things.\" We first compiled a list of categories by combining categories from PASCAL VOC [2] and a subset of the 1200 most frequently used words that denote visually identifiable objects [40] . To further augment our set of candidate categories, several children ranging in ages from 4 to 8 were asked to name every object they see in indoor and outdoor environments. The final 272 candidates may be found in the appendix. Finally, the co-authors voted on a 1 to scale for each category taking into account how commonly they occur, their usefulness for practical applications, and their diversity relative to other categories. The final selection of categories attempts to pick categories with high votes, while keeping the number of categories per supercategory (animals, vehicles, furniture, etc.) balanced. Categories for which obtaining a large number of instances (greater than 5,000) was difficult were also removed. To ensure backwards compatibility all categories from PASCAL VOC [2] are also included. Our final list of 91 proposed categories is in Fig. 5 (a).",
+                "cite_spans": [
+                    {
+                        "start": 157,
+                        "end": 160,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 255,
+                        "end": 259,
+                        "text": "[40]",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1056,
+                        "end": 1059,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1126,
+                        "end": 1132,
+                        "text": "Fig. 5",
+                        "ref_id": "FIGREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Common Object Categories",
+                "sec_num": "3.1"
+            },
+            {
+                "text": "Given the list of object categories, our next goal was to collect a set of candidate images. We may roughly group images into three types, Fig. 2 : iconic-object images [41] , iconic-scene images [3] and non-iconic images. Typical iconic-object images have a single large object in a canonical perspective centered in the image, Fig. 2(a) . Iconic-scene images are shot from canonical viewpoints and commonly lack people, Fig. 2(b) . Iconic images have the benefit that they may be easily found by directly searching for specific categories using Google or Bing image search. While iconic images generally provide high quality object instances, they can lack important contextual information and non-canonical viewpoints.",
+                "cite_spans": [
+                    {
+                        "start": 169,
+                        "end": 173,
+                        "text": "[41]",
+                        "ref_id": "BIBREF40"
+                    },
+                    {
+                        "start": 196,
+                        "end": 199,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 139,
+                        "end": 145,
+                        "text": "Fig. 2",
+                        "ref_id": "FIGREF2"
+                    },
+                    {
+                        "start": 329,
+                        "end": 338,
+                        "text": "Fig. 2(a)",
+                        "ref_id": "FIGREF2"
+                    },
+                    {
+                        "start": 422,
+                        "end": 431,
+                        "text": "Fig. 2(b)",
+                        "ref_id": "FIGREF2"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Non-iconic Image Collection",
+                "sec_num": "3.2"
+            },
+            {
+                "text": "Our goal was to collect a dataset such that a majority of images are non-iconic, Fig. 2 (c). It has been shown that datasets containing more non-iconic images are better at generalizing [42] . We collected non-iconic images using two strategies. First as popularized by PASCAL VOC [2] , we collected images from Flickr which tends to have fewer iconic images. Flickr contains photos uploaded by amateur photographers with searchable metadata and keywords. Second, we did not search for object categories in isolation. A search for \"dog\" will tend to return iconic images of large, centered dogs. However, if we searched for pairwise combinations of object categories, such as \"dog + car\" we found many more non-iconic images. Surprisingly, these images typically do not just contain the two categories specified in the search, but numerous other categories as well. To further supplement our dataset we also searched for scene/object category pairs, see the appendix. We downloaded at most 5 photos taken by a single photographer within a short time window. In the rare cases in which enough images could not be found, we searched for single categories and performed an explicit filtering stage to remove iconic images. The result is a collection of 328,000 images with rich contextual relationships between objects as shown in Figs. 2(c) and 6.",
+                "cite_spans": [
+                    {
+                        "start": 186,
+                        "end": 190,
+                        "text": "[42]",
+                        "ref_id": "BIBREF41"
+                    },
+                    {
+                        "start": 281,
+                        "end": 284,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 81,
+                        "end": 87,
+                        "text": "Fig. 2",
+                        "ref_id": "FIGREF2"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Non-iconic Image Collection",
+                "sec_num": "3.2"
+            },
+            {
+                "text": "We next describe how we annotated our image collection. Due to our desire to label over 2.5 million object instances, the design of a cost efficient yet high quality annotation pipeline was critical. The annotation pipeline is outlined in Fig. 3 . For all crowdsourcing tasks we used workers on Amazon's Mechanical Turk (AMT). Our user interfaces are described in detail in the appendix. Note that, since the original version of this work [19] , we have taken a number of steps to further improve the quality of the annotations. In particular, we have increased the number of annotators for the category labeling and instance spotting stages to eight. We also added a stage to verify the instance segmentations.",
+                "cite_spans": [
+                    {
+                        "start": 439,
+                        "end": 443,
+                        "text": "[19]",
+                        "ref_id": "BIBREF18"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 239,
+                        "end": 245,
+                        "text": "Fig. 3",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "IMAGE ANNOTATION",
+                "sec_num": "4"
+            },
+            {
+                "text": "The first task in annotating our dataset is determining which object categories are present in each image, Fig. 3(a) . Since we have 91 categories and a large number of images, asking workers to answer 91 binary classification questions per image would be prohibitively expensive. Instead, we used a hierarchical approach [18] . We group the object categories into 11 super-categories (see the appendix). For a given image, a worker was presented with each group of categories in turn and asked to indicate whether any instances exist for that super-category. This greatly reduces the time needed to classify the various categories. For example, a worker may easily determine no animals are present in the image without having to specifically look for cats, dogs, etc. If a worker determines instances from the super-category (animal) are present, for each subordinate category (dog, cat, etc.) present, the worker must drag the category's icon onto the image over one instance of the category. The placement of these icons is critical for the following stage. We emphasize that only a single instance of each category needs to be annotated in this stage. To ensure high recall, 8 workers were asked to label each image. A category is considered present if any worker indicated the category; false positives are handled in subsequent stages. A detailed analysis of performance is presented in \u00a74.4. This stage took \u223c20k worker hours to complete.",
+                "cite_spans": [
+                    {
+                        "start": 322,
+                        "end": 326,
+                        "text": "[18]",
+                        "ref_id": "BIBREF17"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 107,
+                        "end": 116,
+                        "text": "Fig. 3(a)",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Category Labeling",
+                "sec_num": "4.1"
+            },
+            {
+                "text": "In the next stage all instances of the object categories in an image were labeled, Fig. 3(b) . In the previous stage each worker labeled one instance of a category, but multiple object instances may exist. Therefore, for each image, a worker was asked to place a cross on top of each instance of a specific category found in the previous stage. To boost recall, the location of the instance found by a worker in the previous stage was shown to the current worker. Such priming helped workers quickly find an initial instance upon first seeing the image. The workers could also use a magnifying glass to find small instances. Each worker was asked to label at most 10 instances of a given category per image. Each image was labeled by 8 workers for a total of \u223c10k worker hours.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 83,
+                        "end": 92,
+                        "text": "Fig. 3(b)",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Instance Spotting",
+                "sec_num": "4.2"
+            },
+            {
+                "text": "Our final stage is the laborious task of segmenting each object instance, Fig. 3(c) . For this stage we modified the excellent user interface developed by Bell et al. [16] for image segmentation. Our interface asks the worker to segment an object instance specified by a worker in the previous stage. If other instances have already been segmented in the image, those segmentations are shown to the worker. A worker may also indicate there are no object instances of the given category in the image (implying a false positive label from the previous stage) or that all object instances are already segmented.",
+                "cite_spans": [
+                    {
+                        "start": 167,
+                        "end": 171,
+                        "text": "[16]",
+                        "ref_id": "BIBREF15"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 74,
+                        "end": 83,
+                        "text": "Fig. 3(c)",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Instance Segmentation",
+                "sec_num": "4.3"
+            },
+            {
+                "text": "Segmenting 2,500,000 object instances is an extremely time consuming task requiring over 22 worker hours per 1,000 segmentations. To minimize cost we only had a single worker segment each instance. However, when first completing the task, most workers produced only coarse instance outlines. As a consequence, we required all workers to complete a training task for each object category. The training task required workers to segment an object instance. Workers could not complete the task until their segmentation adequately matched the ground truth. The use of a training task vastly improved the quality of the workers (approximately 1 in 3 workers passed the training stage) and resulting segmentations. Example segmentations may be viewed in Fig. 6 .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 747,
+                        "end": 753,
+                        "text": "Fig. 6",
+                        "ref_id": "FIGREF6"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Instance Segmentation",
+                "sec_num": "4.3"
+            },
+            {
+                "text": "While the training task filtered out most bad workers, we also performed an explicit verification step on each segmented instance to ensure good quality. Multiple workers (3 to 5) were asked to judge each segmentation and indicate whether it matched the instance well or not. Segmentations of insufficient quality were discarded and the corresponding instances added back to the pool of unsegmented objects. Finally, some approved workers consistently produced poor segmentations; all work obtained from such workers was discarded.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Instance Segmentation",
+                "sec_num": "4.3"
+            },
+            {
+                "text": "For images containing 10 object instances or fewer of a given category, every instance was individually segmented (note that in some images up to 15 instances were segmented). Occasionally the number of instances is drastically higher; for example, consider a dense crowd of people or a truckload of bananas. In such cases, many instances of the same category may be tightly grouped together and distinguishing individual instances is difficult. After 10-15 instances of a category were segmented in an image, the remaining instances were marked as \"crowds\" using a single (possibly multipart) segment. For the purpose of evaluation, areas marked as crowds will be ignored and not affect a detector's score. Details are given in the appendix.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Instance Segmentation",
+                "sec_num": "4.3"
+            },
+            {
+                "text": "We analyzed crowd worker quality on the category labeling task by comparing to dedicated expert workers, see Fig. 4(a) . We compared precision and recall of seven expert workers (co-authors of the paper) with the results obtained by taking the union of one to ten AMT workers. Ground truth was computed using majority vote of the experts. For this task recall is of primary importance as false positives could be removed in later stages. Fig. 4(a) shows that the union of 8 AMT workers, the same number as was used to collect our labels, achieved greater recall than any of the expert workers. Note that worker recall saturates at around 9-10 AMT workers.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 109,
+                        "end": 118,
+                        "text": "Fig. 4(a)",
+                        "ref_id": "FIGREF4"
+                    },
+                    {
+                        "start": 438,
+                        "end": 447,
+                        "text": "Fig. 4(a)",
+                        "ref_id": "FIGREF4"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Annotation Performance Analysis",
+                "sec_num": "4.4"
+            },
+            {
+                "text": "Object category presence is often ambiguous. Indeed as Fig. 4(a) indicates, even dedicated experts often disagree on object presence, e.g. due to inherent ambiguity in the image or disagreement about category definitions. For any unambiguous examples having a probability of over 50% of being annotated, the probability all 8 annotators missing such a case is at most .5 8 \u2248 .004. Additionally, by observing how recall increased as we added annotators, we estimate that in practice over 99% of all object categories not later rejected as false positives are detected given 8 annotators. Note that a similar analysis may be done for instance spotting in which 8 annotators were also used.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 55,
+                        "end": 64,
+                        "text": "Fig. 4(a)",
+                        "ref_id": "FIGREF4"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Annotation Performance Analysis",
+                "sec_num": "4.4"
+            },
+            {
+                "text": "Finally, Fig. 4(b) re-examines precision and recall of AMT workers on category labeling on a much larger set of images. The number of workers (circle size) and average number of jobs per worker (circle color) is shown for each precision/recall range. Unlike in Fig. 4(a) , we used a leave-one-out evaluation procedure where a category was considered present if any of the remaining workers named the category. Therefore, overall worker precision is substantially higher. Workers who completed the most jobs also have the highest precision; all jobs from workers below the black line were rejected.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 9,
+                        "end": 18,
+                        "text": "Fig. 4(b)",
+                        "ref_id": "FIGREF4"
+                    },
+                    {
+                        "start": 261,
+                        "end": 270,
+                        "text": "Fig. 4(a)",
+                        "ref_id": "FIGREF4"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Annotation Performance Analysis",
+                "sec_num": "4.4"
+            },
+            {
+                "text": "We added five written caption descriptions to each image in MS COCO. A full description of the caption statistics and how they were gathered will be provided shortly in a separate publication.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Caption Annotation",
+                "sec_num": "4.5"
+            },
+            {
+                "text": "Next, we analyze the properties of the Microsoft Common Objects in COntext (MS COCO) dataset in comparison to several other popular datasets. These include ImageNet [1] , PASCAL VOC 2012 [2] , and SUN [3] . Each of these datasets varies significantly in size, list of labeled categories and types of images. ImageNet was created to capture a large number of object categories, many of which are fine-grained. SUN focuses on labeling scene types and the objects that commonly occur in them. Finally, PASCAL VOC's primary application is object detection in natural images. MS COCO is designed for the detection and segmentation of objects occurring in their natural context.",
+                "cite_spans": [
+                    {
+                        "start": 165,
+                        "end": 168,
+                        "text": "[1]",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 187,
+                        "end": 190,
+                        "text": "[2]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 201,
+                        "end": 204,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DATASET STATISTICS",
+                "sec_num": "5"
+            },
+            {
+                "text": "The number of instances per category for all 91 categories is shown in Fig. 5(a) . A summary of the datasets showing the number of object categories and the number of instances per category is shown in Fig. 5(d) . While MS COCO has fewer categories than ImageNet and SUN, it has more instances per category which we hypothesize will be useful for learning complex models capable of precise localization. In comparison to PASCAL VOC, MS COCO has both more categories and instances.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 71,
+                        "end": 80,
+                        "text": "Fig. 5(a)",
+                        "ref_id": "FIGREF5"
+                    },
+                    {
+                        "start": 202,
+                        "end": 211,
+                        "text": "Fig. 5(d)",
+                        "ref_id": "FIGREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "DATASET STATISTICS",
+                "sec_num": "5"
+            },
+            {
+                "text": "An important property of our dataset is we strive to find non-iconic images containing objects in their natural context. The amount of contextual information present in an image can be estimated by examining the average number of object categories and instances per image, Fig. 5(b, c) . For ImageNet we plot the object detection validation set, since the training data only has a single object labeled. On average our dataset contains 3.5 categories and 7.7 instances per image. In comparison ImageNet and PASCAL VOC both have less than 2 categories and 3 instances per image on average. Another interesting observation is only 10% of the images in MS COCO have only one category per image, in comparison, over 60% of images contain a single object category in ImageNet and PASCAL VOC. As expected, the SUN dataset has the most contextual information since it is scene-based and uses an unrestricted set of categories.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 273,
+                        "end": 285,
+                        "text": "Fig. 5(b, c)",
+                        "ref_id": "FIGREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "DATASET STATISTICS",
+                "sec_num": "5"
+            },
+            {
+                "text": "Finally, we analyze the average size of objects in the datasets. Generally smaller objects are harder to recognize and require more contextual reasoning to recognize. As shown in Fig. 5(e) , the average sizes of objects is smaller for both MS COCO and SUN.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 179,
+                        "end": 188,
+                        "text": "Fig. 5(e)",
+                        "ref_id": "FIGREF5"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "DATASET STATISTICS",
+                "sec_num": "5"
+            },
+            {
+                "text": "To accommodate a faster release schedule, we split the MS COCO dataset into two roughly equal parts. The first half of the dataset was released in 2014, the second half will be released in 2015. The 2014 release contains 82,783 training, 40,504 validation, and 40,775 testing images (approximately 1 train, 1 val, and 1 test). There are nearly 270k segmented people and a total of 886k segmented object instances in the 2014 train+val data alone. The cumulative 2015 release will contain a total of 165,482 train, 81,208 val, and 81,434 test images. We took care to minimize the chance of near-duplicate images existing across splits by explicitly removing near duplicates (detected with [43] ) and grouping images by photographer and date taken.",
+                "cite_spans": [
+                    {
+                        "start": 298,
+                        "end": 299,
+                        "text": "1",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 307,
+                        "end": 308,
+                        "text": "1",
+                        "ref_id": "BIBREF0"
+                    },
+                    {
+                        "start": 688,
+                        "end": 692,
+                        "text": "[43]",
+                        "ref_id": "BIBREF42"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DATASET SPLITS",
+                "sec_num": "6"
+            },
+            {
+                "text": "Following established protocol, annotations for train and validation data will be released, but not for test. We are currently finalizing the evaluation server for automatic evaluation on the test set. A full discussion of evaluation metrics will be added once the evaluation server is complete.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DATASET SPLITS",
+                "sec_num": "6"
+            },
+            {
+                "text": "Note that we have limited the 2014 release to a subset of 80 categories. We did not collect segmentations for the following 11 categories: hat, shoe, eyeglasses (too many instances), mirror, window, door, street sign (ambiguous and difficult to label), plate, desk (due to confusion with bowl and dining table, respectively) and blender, hair brush (too few instances). We may add segmentations for some of these categories in the cumulative 2015 release. ",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DATASET SPLITS",
+                "sec_num": "6"
+            },
+            {
+                "text": "Bounding-box detection For the following experiments we take a subset of 55,000 images from our dataset 1 and obtain tight-fitting bounding boxes from the annotated segmentation masks. We evaluate models tested on both MS COCO and PASCAL, see Table 1 . We evaluate two different models. DPMv5-P: the latest implementation 1. These preliminary experiments were performed before our final split of the dataset intro train, val, and test. Baselines on the actual test set will be added once the evaluation server is complete.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 243,
+                        "end": 250,
+                        "text": "Table 1",
+                        "ref_id": "TABREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "of [44] (release 5 [45] ) trained on PASCAL VOC 2012. DPMv5-C: the same implementation trained on COCO (5000 positive and 10000 negative images). We use the default parameter settings for training COCO models.",
+                "cite_spans": [
+                    {
+                        "start": 3,
+                        "end": 7,
+                        "text": "[44]",
+                        "ref_id": "BIBREF43"
+                    },
+                    {
+                        "start": 19,
+                        "end": 23,
+                        "text": "[45]",
+                        "ref_id": "BIBREF44"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "If we compare the average performance of DPMv5-P on PASCAL VOC and MS COCO, we find that average performance on MS COCO drops by nearly a factor of 2, suggesting that MS COCO does include more difficult (non-iconic) images of objects that are partially occluded, amid clutter, etc. We notice a similar drop in performance plane bike bird boat bottle bus car cat chair cow table dog horse moto person plant sheep sofa train tv avg. C) . For DPMv5-C we used 5000 positive and 10000 negative training examples. While MS COCO is considerably more challenging than PASCAL, use of more training data coupled with more sophisticated approaches [5] , [6] , [7] should improve performance substantially.",
+                "cite_spans": [
+                    {
+                        "start": 637,
+                        "end": 640,
+                        "text": "[5]",
+                        "ref_id": "BIBREF4"
+                    },
+                    {
+                        "start": 643,
+                        "end": 646,
+                        "text": "[6]",
+                        "ref_id": "BIBREF5"
+                    },
+                    {
+                        "start": 649,
+                        "end": 652,
+                        "text": "[7]",
+                        "ref_id": "BIBREF6"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 431,
+                        "end": 433,
+                        "text": "C)",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "for the model trained on MS COCO (DPMv5-C).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "The effect on detection performance of training on PASCAL VOC or MS COCO may be analyzed by comparing DPMv5-P and DPMv5-C. They use the same implementation with different sources of training data. Table 1 shows DPMv5-C still outperforms DPMv5-P in 6 out of 20 categories when testing on PASCAL VOC. In some categories (e.g., dog, cat, people), models trained on MS COCO perform worse, while on others (e.g., bus, tv, horse), models trained on our data are better.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 197,
+                        "end": 204,
+                        "text": "Table 1",
+                        "ref_id": "TABREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "Consistent with past observations [46] , we find that including difficult (non-iconic) images during training may not always help. Such examples may act as noise and pollute the learned model if the model is not rich enough to capture such appearance variability. Our dataset allows for the exploration of such issues.",
+                "cite_spans": [
+                    {
+                        "start": 34,
+                        "end": 38,
+                        "text": "[46]",
+                        "ref_id": "BIBREF45"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "Torralba and Efros [42] proposed a metric to measure cross-dataset generalization which computes the 'performance drop' for models that train on one dataset and test on another. The performance difference of the DPMv5-P models across the two datasets is 12.7 AP while the DPMv5-C models only have 7.7 AP difference. Moreover, overall performance is much lower on MS COCO. These observations support two hypotheses: 1) MS COCO is significantly more difficult than PASCAL VOC and 2) models trained on MS COCO can generalize better to easier datasets such as PASCAL VOC given more training data. To gain insight into the differences between the datasets, see the appendix for visualizations of person and chair examples from the two datasets.",
+                "cite_spans": [
+                    {
+                        "start": 19,
+                        "end": 23,
+                        "text": "[42]",
+                        "ref_id": "BIBREF41"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "Generating segmentations from detections We now describe a simple method for generating object bounding boxes and segmentation masks, following prior work that produces segmentations from object detections [47] , [48] , [49] , [50] . We learn aspect-specific pixel-level segmentation masks for different categories. These are readily learned by averaging together segmentation masks from aligned training instances. We learn different masks corresponding to the different mixtures in our DPM detector. Sample masks are visualized in Fig. 7 .",
+                "cite_spans": [
+                    {
+                        "start": 206,
+                        "end": 210,
+                        "text": "[47]",
+                        "ref_id": "BIBREF46"
+                    },
+                    {
+                        "start": 213,
+                        "end": 217,
+                        "text": "[48]",
+                        "ref_id": "BIBREF47"
+                    },
+                    {
+                        "start": 220,
+                        "end": 224,
+                        "text": "[49]",
+                        "ref_id": "BIBREF48"
+                    },
+                    {
+                        "start": 227,
+                        "end": 231,
+                        "text": "[50]",
+                        "ref_id": "BIBREF49"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 533,
+                        "end": 539,
+                        "text": "Fig. 7",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "Detection evaluated by segmentation Segmentation is a challenging task even assuming a detector reports correct results as it requires fine localization of object part Fig. 7 : We visualize our mixture-specific shape masks. We paste thresholded shape masks on each candidate detection to generate candidate segments. Fig. 8 : Evaluating instance detections with segmentation masks versus bounding boxes. Bounding boxes are a particularly crude approximation for articulated objects; in this case, the majority of the pixels in the (blue) tightfitting bounding-box do not lie on the object. Our (green) instance-level segmentation masks allows for a more accurate measure of object detection and localization.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 168,
+                        "end": 174,
+                        "text": "Fig. 7",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 317,
+                        "end": 323,
+                        "text": "Fig. 8",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "boundaries. To decouple segmentation evaluation from detection correctness, we benchmark segmentation quality using only correct detections. Specifically, given that the detector reports a correct bounding box, how well does the predicted segmentation of that object match the ground truth segmentation? As criterion for correct detection, we impose the standard requirement that intersection over union between predicted and ground truth boxes is at least 0.5. We then measure the intersection over union of the predicted and ground truth segmentation masks, see Fig. 8 . To establish a baseline for our dataset, we project learned DPM part masks onto the image to create segmentation masks. ",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 564,
+                        "end": 570,
+                        "text": "Fig. 8",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "ALGORITHMIC ANALYSIS",
+                "sec_num": "7"
+            },
+            {
+                "text": "We introduced a new dataset for detecting and segmenting objects found in everyday life in their natural environments. Utilizing over 70,000 worker hours, a vast collection of object instances was gathered, annotated and organized to drive the advancement of object detection and segmentation algorithms. Emphasis was placed on finding non-iconic images of objects in natural environments and varied viewpoints. Dataset statistics indicate the images contain rich contextual information with many objects present per image. There are several promising directions for future annotations on our dataset. We currently only label \"things\", but labeling \"stuff\" may also provide significant contextual information that may be useful for detection. Many object detection algorithms benefit from additional annotations, such as the amount an instance is occluded [4] or the location of keypoints on the object [10] . Finally, our dataset could provide a good benchmark for other types of labels, including scene types [3] , attributes [9] , [8] and full sentence written descriptions [51] . We are actively exploring adding various such annotations.",
+                "cite_spans": [
+                    {
+                        "start": 856,
+                        "end": 859,
+                        "text": "[4]",
+                        "ref_id": "BIBREF3"
+                    },
+                    {
+                        "start": 903,
+                        "end": 907,
+                        "text": "[10]",
+                        "ref_id": "BIBREF9"
+                    },
+                    {
+                        "start": 1011,
+                        "end": 1014,
+                        "text": "[3]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 1028,
+                        "end": 1031,
+                        "text": "[9]",
+                        "ref_id": "BIBREF8"
+                    },
+                    {
+                        "start": 1034,
+                        "end": 1037,
+                        "text": "[8]",
+                        "ref_id": "BIBREF7"
+                    },
+                    {
+                        "start": 1077,
+                        "end": 1081,
+                        "text": "[51]",
+                        "ref_id": "BIBREF50"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DISCUSSION",
+                "sec_num": "8"
+            },
+            {
+                "text": "To download and learn more about MS COCO please see the project website 2 . MS COCO will evolve and grow over time; up to date information is available online.",
+                "cite_spans": [
+                    {
+                        "start": 72,
+                        "end": 73,
+                        "text": "2",
+                        "ref_id": "BIBREF1"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DISCUSSION",
+                "sec_num": "8"
+            },
+            {
+                "text": "Acknowledgments Funding for all crowd worker tasks was provided by Microsoft. P.P. and D.R. were supported by ONR MURI Grant N00014-10-1-0933. We would like to thank all members of the community who provided valuable feedback throughout the process of defining and collecting the dataset.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DISCUSSION",
+                "sec_num": "8"
+            },
+            {
+                "text": "2. http://mscoco.org/",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "DISCUSSION",
+                "sec_num": "8"
+            },
+            {
+                "text": "In the appendix, we provide detailed descriptions of the AMT user interfaces and the full list of 272 candidate categories (from which our final 91 were selected) and 40 scene categories (used for scene-object queries).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "APPENDIX OVERVIEW",
+                "sec_num": null
+            },
+            {
+                "text": "We describe and visualize our user interfaces for collecting non-iconic images, category labeling, instance spotting, instance segmentation, segmentation verification and finally crowd labeling.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "APPENDIX I: USER INTERFACES",
+                "sec_num": null
+            },
+            {
+                "text": "Non-iconic Image Collection Flickr provides a rich image collection associated with text captions. However, captions might be inaccurate and images may be iconic. To construct a high-quality set of non-iconic images, we first collected candidate images by searching for pairs of object categories, or pairs of object and scene categories. We then created an AMT filtering task that allowed users to remove invalid or iconic images from a grid of 128 candidates, Fig. 10 . We found the choice of instructions to be crucial, and so provided users with examples of iconic and non-iconic images. Some categories rarely co-occurred with others. In such cases, we collected candidates using only the object category as the search term, but apply a similar filtering step, Fig. 10(b) .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 462,
+                        "end": 469,
+                        "text": "Fig. 10",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 766,
+                        "end": 776,
+                        "text": "Fig. 10(b)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "APPENDIX I: USER INTERFACES",
+                "sec_num": null
+            },
+            {
+                "text": "Category Labeling Fig. 12(a) shows our interface for category labeling. We designed the labeling task to encourage workers to annotate all categories present in the image. Workers annotate categories by dragging and dropping icons from the bottom category panel onto a corresponding object instance. Only a single instance of each object category needs to be annotated in the image. We group icons by the super-categories from Fig. 11 , allowing workers to quickly skip categories that are unlikely to be present. Fig. 12 (b) depicts our interface for labeling all instances of a given category. The interface is initialized with a blinking icon specifying a single instance obtained from the previous category-labeling stage. Workers are then asked to spot and click on up to 10 total instances of the given category, placing a single cross anywhere within the region of each instance. In order to spot small objects, we found it crucial to include a \"magnifying glass\" feature that doubles the resolution of a worker's currently selected region.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 18,
+                        "end": 28,
+                        "text": "Fig. 12(a)",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 427,
+                        "end": 434,
+                        "text": "Fig. 11",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 514,
+                        "end": 521,
+                        "text": "Fig. 12",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "APPENDIX I: USER INTERFACES",
+                "sec_num": null
+            },
+            {
+                "text": "Instance Segmentation Fig. 12(c) shows our user interface for instance segmentation. We modified source code from the OpenSurfaces project [16] , which defines a single AMT task for segmenting multiple regions of a homogenous material in real-scenes. In our case, we define a single task for segmenting a single object instance labeled from the previous annotation stage. To aid the segmentation process, we added a visualization of the object category icon to remind workers of the category to be segmented. Crucially, we also added zoom-in functionality to allow for efficient annotation of small objects and curved boundaries. In the previous annotation stage, to ensure high coverage of all object instances, we used multiple workers to label all instances per image. We would like to segment all such object instances, but instance annotations across different workers may refer to different or redundant instances. To resolve this correspondence ambiguity, we sequentially post AMT segmentation tasks, ignoring instance annotations that are already covered by an existing segmentation mask.",
+                "cite_spans": [
+                    {
+                        "start": 139,
+                        "end": 143,
+                        "text": "[16]",
+                        "ref_id": "BIBREF15"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 22,
+                        "end": 32,
+                        "text": "Fig. 12(c)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Instance Spotting",
+                "sec_num": null
+            },
+            {
+                "text": "Segmentation Verification Fig. 12(d) shows our user interface for segmentation verification. Due to the time consuming nature of the previous task, each object instance is segmented only once. The purpose of the veri-fication stage is therefore to ensure that each segmented instance from the previous stage is of sufficiently high quality. Workers are shown a grid of 64 segmentations and asked to select poor quality segmentations. Four of the 64 segmentation are known to be bad; a worker must identify 3 of the 4 known bad segmentations to complete the task. Each segmentation is initially shown to 3 annotators. If any of the annotators indicates the segmentation is bad, it is shown to 2 additional workers. At this point, any segmentation that doesn't receive at least 4 of 5 favorable votes is discarded and the corresponding instance added back to the pool of unsegmented objects. Examples of borderline cases that either passed (4/5 votes) or were rejected (3/5 votes) are shown in Fig. 15 .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 26,
+                        "end": 36,
+                        "text": "Fig. 12(d)",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 992,
+                        "end": 999,
+                        "text": "Fig. 15",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Instance Spotting",
+                "sec_num": null
+            },
+            {
+                "text": "Crowd Labeling Fig. 12 (e) shows our user interface for crowd labeling. As discussed, for images containing ten object instances or fewer of a given category, every object instance was individually segmented. In some images, however, the number of instances of a given category is much higher. In such cases crowd labeling provided a more efficient method for annotation. Rather than requiring workers to draw exact polygonal masks around each object instance, we allow workers to \"paint\" all pixels belonging to the category in question. Crowd labeling is similar to semantic segmentation as object instance are not individually identified. We emphasize that crowd labeling is only necessary for images containing more than ten object instances of a given category.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 15,
+                        "end": 22,
+                        "text": "Fig. 12",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Instance Spotting",
+                "sec_num": null
+            },
+            {
+                "text": "Our dataset contains 91 object categories (the 2014 release contains segmentation masks for 80 of these categories). We began with a list of frequent object categories taken from WordNet, LabelMe, SUN and other sources as well as categories derived from a free recall experiment with young children. The authors then voted on the resulting 272 categories with the aim of sampling a diverse and computationally challenging set of categories; see \u00a73 for details. The list in Table 2 enumerates those 272 categories in descending order of votes. As discussed, the final selection of 91 categories attempts to pick categories with high votes, while keeping the number of categories per super-category (animals, vehicles, furniture, etc.) balanced.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 473,
+                        "end": 480,
+                        "text": "Table 2",
+                        "ref_id": "TABREF2"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "APPENDIX II: OBJECT & SCENE CATEGORIES",
+                "sec_num": null
+            },
+            {
+                "text": "As discussed in \u00a73, in addition to using object-object queries to gather non-iconic images, object-scene queries also proved effective. For this task we selected a subset of scene categories from the SUN dataset that frequently co-occurred with object categories of interest. Table enumerates the 40 scene categories (evenly split between indoor and outdoor scenes). Fig. 11 : Icons of 91 categories in the MS COCO dataset grouped by 11 super-categories. We use these icons in our annotation pipeline to help workers quickly reference the indicated object category. Fig. 12 : User interfaces for collecting instance annotations, see text for details. ",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 367,
+                        "end": 374,
+                        "text": "Fig. 11",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 566,
+                        "end": 573,
+                        "text": "Fig. 12",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "APPENDIX II: OBJECT & SCENE CATEGORIES",
+                "sec_num": null
+            }
+        ],
+        "back_matter": [],
+        "bib_entries": {
+            "BIBREF0": {
+                "ref_id": "b0",
+                "title": "Im-ageNet: A Large-Scale Hierarchical Image Database",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Deng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Dong",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Socher",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L.-J",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Fei-Fei",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei, \"Im- ageNet: A Large-Scale Hierarchical Image Database,\" in CVPR, 2009.",
+                "links": null
+            },
+            "BIBREF1": {
+                "ref_id": "b1",
+                "title": "The PASCAL visual object classes (VOC) challenge",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Everingham",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Van Gool",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [
+                            "K I"
+                        ],
+                        "last": "Williams",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Winn",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Zisserman",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2010,
+                "venue": "IJCV",
+                "volume": "88",
+                "issue": "2",
+                "pages": "303--338",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "M. Everingham, L. Van Gool, C. K. I. Williams, J. Winn, and A. Zis- serman, \"The PASCAL visual object classes (VOC) challenge,\" IJCV, vol. 88, no. 2, pp. 303-338, Jun. 2010.",
+                "links": null
+            },
+            "BIBREF2": {
+                "ref_id": "b2",
+                "title": "SUN database: Large-scale scene recognition from abbey to zoo",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Xiao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Hays",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Ehinger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Oliva",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Torralba",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2010,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Xiao, J. Hays, K. A. Ehinger, A. Oliva, and A. Torralba, \"SUN database: Large-scale scene recognition from abbey to zoo,\" in CVPR, 2010.",
+                "links": null
+            },
+            "BIBREF3": {
+                "ref_id": "b3",
+                "title": "Pedestrian detection: An evaluation of the state of the art",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Doll\u00e1r",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Wojek",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Schiele",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Perona",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "PAMI",
+                "volume": "34",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Doll\u00e1r, C. Wojek, B. Schiele, and P. Perona, \"Pedestrian detec- tion: An evaluation of the state of the art,\" PAMI, vol. 34, 2012.",
+                "links": null
+            },
+            "BIBREF4": {
+                "ref_id": "b4",
+                "title": "ImageNet classification with deep convolutional neural networks",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Krizhevsky",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Sutskever",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Hinton",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "NIPS",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Krizhevsky, I. Sutskever, and G. Hinton, \"ImageNet classifica- tion with deep convolutional neural networks,\" in NIPS, 2012.",
+                "links": null
+            },
+            "BIBREF5": {
+                "ref_id": "b5",
+                "title": "Rich feature hierarchies for accurate object detection and semantic segmentation",
+                "authors": [
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Girshick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Donahue",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Darrell",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Malik",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "R. Girshick, J. Donahue, T. Darrell, and J. Malik, \"Rich feature hierarchies for accurate object detection and semantic segmenta- tion,\" in CVPR, 2014.",
+                "links": null
+            },
+            "BIBREF6": {
+                "ref_id": "b6",
+                "title": "OverFeat: Integrated recognition, localization and detection using convolutional networks",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Sermanet",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Eigen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Mathieu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Fergus",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Lecun",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Sermanet, D. Eigen, S. Zhang, M. Mathieu, R. Fergus, and Y. LeCun, \"OverFeat: Integrated recognition, localization and detection using convolutional networks,\" in ICLR, April 2014.",
+                "links": null
+            },
+            "BIBREF7": {
+                "ref_id": "b7",
+                "title": "Describing objects by their attributes",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Farhadi",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Endres",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Hoiem",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Forsyth",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Farhadi, I. Endres, D. Hoiem, and D. Forsyth, \"Describing objects by their attributes,\" in CVPR, 2009.",
+                "links": null
+            },
+            "BIBREF8": {
+                "ref_id": "b8",
+                "title": "SUN attribute database: Discovering, annotating, and recognizing scene attributes",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Patterson",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Hays",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Patterson and J. Hays, \"SUN attribute database: Discovering, annotating, and recognizing scene attributes,\" in CVPR, 2012.",
+                "links": null
+            },
+            "BIBREF9": {
+                "ref_id": "b9",
+                "title": "Poselets: Body part detectors trained using 3D human pose annotations",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Bourdev",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Malik",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "ICCV",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "L. Bourdev and J. Malik, \"Poselets: Body part detectors trained using 3D human pose annotations,\" in ICCV, 2009.",
+                "links": null
+            },
+            "BIBREF10": {
+                "ref_id": "b10",
+                "title": "Indoor segmentation and support inference from RGBD images",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Silberman",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Hoiem",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Kohli",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Fergus",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "ECCV",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "N. Silberman, D. Hoiem, P. Kohli, and R. Fergus, \"Indoor seg- mentation and support inference from RGBD images,\" in ECCV, 2012.",
+                "links": null
+            },
+            "BIBREF11": {
+                "ref_id": "b11",
+                "title": "Canonical perspective and the perception of objects",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Palmer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Rosch",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Chase",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1981,
+                "venue": "Attention and performance IX",
+                "volume": "1",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "S. Palmer, E. Rosch, and P. Chase, \"Canonical perspective and the perception of objects,\" Attention and performance IX, vol. 1, p. 4, 1981.",
+                "links": null
+            },
+            "BIBREF12": {
+                "ref_id": "b12",
+                "title": "Diagnosing error in object detectors",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Hoiem",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Chodpathumwan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Q",
+                        "middle": [],
+                        "last": "Dai",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "ECCV",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Hoiem, D, Y. Chodpathumwan, and Q. Dai, \"Diagnosing error in object detectors,\" in ECCV, 2012.",
+                "links": null
+            },
+            "BIBREF13": {
+                "ref_id": "b13",
+                "title": "Semantic object classes in video: A high-definition ground truth database",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Brostow",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Fauqueur",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Cipolla",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "PRL",
+                "volume": "30",
+                "issue": "2",
+                "pages": "88--97",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Brostow, J. Fauqueur, and R. Cipolla, \"Semantic object classes in video: A high-definition ground truth database,\" PRL, vol. 30, no. 2, pp. 88-97, 2009.",
+                "links": null
+            },
+            "BIBREF14": {
+                "ref_id": "b14",
+                "title": "LabelMe: a database and web-based tool for image annotation",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Russell",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Torralba",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Murphy",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Freeman",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2008,
+                "venue": "IJCV",
+                "volume": "77",
+                "issue": "1-3",
+                "pages": "157--173",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "B. Russell, A. Torralba, K. Murphy, and W. Freeman, \"LabelMe: a database and web-based tool for image annotation,\" IJCV, vol. 77, no. 1-3, pp. 157-173, 2008.",
+                "links": null
+            },
+            "BIBREF15": {
+                "ref_id": "b15",
+                "title": "OpenSurfaces: A richly annotated catalog of surface appearance",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Bell",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Upchurch",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Snavely",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Bala",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2013,
+                "venue": "SIGGRAPH",
+                "volume": "32",
+                "issue": "4",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "S. Bell, P. Upchurch, N. Snavely, and K. Bala, \"OpenSurfaces: A richly annotated catalog of surface appearance,\" SIGGRAPH, vol. 32, no. 4, 2013.",
+                "links": null
+            },
+            "BIBREF16": {
+                "ref_id": "b16",
+                "title": "Im2text: Describing images using 1 million captioned photographs",
+                "authors": [
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Ordonez",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Kulkarni",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "NIPS",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "V. Ordonez, G. Kulkarni, and T. Berg, \"Im2text: Describing images using 1 million captioned photographs.\" in NIPS, 2011.",
+                "links": null
+            },
+            "BIBREF17": {
+                "ref_id": "b17",
+                "title": "Scalable multi-label annotation",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Deng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "O",
+                        "middle": [],
+                        "last": "Russakovsky",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Krause",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Bernstein",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Fei-Fei",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Deng, O. Russakovsky, J. Krause, M. Bernstein, A. Berg, and L. Fei-Fei, \"Scalable multi-label annotation,\" in CHI, 2014.",
+                "links": null
+            },
+            "BIBREF18": {
+                "ref_id": "b18",
+                "title": "Microsoft COCO: Common objects in context",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Lin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Maire",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Belongie",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Hays",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Perona",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Ramanan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Doll\u00e1r",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Zitnick",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "ECCV",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "T. Lin, M. Maire, S. Belongie, J. Hays, P. Perona, D. Ramanan, P. Doll\u00e1r, and C. L. Zitnick, \"Microsoft COCO: Common objects in context,\" in ECCV, 2014.",
+                "links": null
+            },
+            "BIBREF19": {
+                "ref_id": "b19",
+                "title": "A taxonomy and evaluation of dense two-frame stereo correspondence algorithms",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Scharstein",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Szeliski",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2002,
+                "venue": "IJCV",
+                "volume": "47",
+                "issue": "1-3",
+                "pages": "7--42",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Scharstein and R. Szeliski, \"A taxonomy and evaluation of dense two-frame stereo correspondence algorithms,\" IJCV, vol. 47, no. 1-3, pp. 7-42, 2002.",
+                "links": null
+            },
+            "BIBREF20": {
+                "ref_id": "b20",
+                "title": "A database and evaluation methodology for optical flow",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Baker",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Scharstein",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Lewis",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Roth",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Black",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Szeliski",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "IJCV",
+                "volume": "92",
+                "issue": "1",
+                "pages": "1--31",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "S. Baker, D. Scharstein, J. Lewis, S. Roth, M. Black, and R. Szeliski, \"A database and evaluation methodology for optical flow,\" IJCV, vol. 92, no. 1, pp. 1-31, 2011.",
+                "links": null
+            },
+            "BIBREF21": {
+                "ref_id": "b21",
+                "title": "Learning generative visual models from few training examples: An incremental bayesian approach tested on 101 object categories",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Fei-Fei",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Fergus",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Perona",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2004,
+                "venue": "CVPR Workshop of Generative Model Based Vision (WGMBV)",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "L. Fei-Fei, R. Fergus, and P. Perona, \"Learning generative visual models from few training examples: An incremental bayesian approach tested on 101 object categories,\" in CVPR Workshop of Generative Model Based Vision (WGMBV), 2004.",
+                "links": null
+            },
+            "BIBREF22": {
+                "ref_id": "b22",
+                "title": "Caltech-256 object category dataset",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Griffin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Holub",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Perona",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2007,
+                "venue": "Tech. Rep",
+                "volume": "7694",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Griffin, A. Holub, and P. Perona, \"Caltech-256 object category dataset,\" California Institute of Technology, Tech. Rep. 7694, 2007.",
+                "links": null
+            },
+            "BIBREF23": {
+                "ref_id": "b23",
+                "title": "Histograms of oriented gradients for human detection",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Dalal",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Triggs",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2005,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "N. Dalal and B. Triggs, \"Histograms of oriented gradients for human detection,\" in CVPR, 2005.",
+                "links": null
+            },
+            "BIBREF24": {
+                "ref_id": "b24",
+                "title": "The MNIST database of handwritten digits",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Lecun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Cortes",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1998,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Y. Lecun and C. Cortes, \"The MNIST database of handwritten digits,\" 1998. [Online]. Available: http://yann.lecun.com/exdb/ mnist/",
+                "links": null
+            },
+            "BIBREF25": {
+                "ref_id": "b25",
+                "title": "Columbia object image library (coil-20)",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Nene",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [
+                            "K"
+                        ],
+                        "last": "Nayar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Murase",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1996,
+                "venue": "Columbia Universty, Tech. Rep",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "S. A. Nene, S. K. Nayar, and H. Murase, \"Columbia object image library (coil-20),\" Columbia Universty, Tech. Rep., 1996.",
+                "links": null
+            },
+            "BIBREF26": {
+                "ref_id": "b26",
+                "title": "Learning multiple layers of features from tiny images",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Krizhevsky",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Hinton",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Krizhevsky and G. Hinton, \"Learning multiple layers of fea- tures from tiny images,\" Computer Science Department, University of Toronto, Tech. Rep, 2009.",
+                "links": null
+            },
+            "BIBREF27": {
+                "ref_id": "b27",
+                "title": "80 million tiny images: A large data set for nonparametric object and scene recognition",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Torralba",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Fergus",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [
+                            "T"
+                        ],
+                        "last": "Freeman",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2008,
+                "venue": "PAMI",
+                "volume": "30",
+                "issue": "11",
+                "pages": "1958--1970",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Torralba, R. Fergus, and W. T. Freeman, \"80 million tiny images: A large data set for nonparametric object and scene recognition,\" PAMI, vol. 30, no. 11, pp. 1958-1970, 2008.",
+                "links": null
+            },
+            "BIBREF28": {
+                "ref_id": "b28",
+                "title": "From large scale image categorization to entry-level categories",
+                "authors": [
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Ordonez",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Deng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Choi",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2013,
+                "venue": "ICCV",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "V. Ordonez, J. Deng, Y. Choi, A. Berg, and T. Berg, \"From large scale image categorization to entry-level categories,\" in ICCV, 2013.",
+                "links": null
+            },
+            "BIBREF29": {
+                "ref_id": "b29",
+                "title": "WordNet: An electronic lexical database",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Fellbaum",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1998,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Fellbaum, WordNet: An electronic lexical database. Blackwell Books, 1998.",
+                "links": null
+            },
+            "BIBREF30": {
+                "ref_id": "b30",
+                "title": "Caltech-UCSD Birds 200",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Welinder",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Branson",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Mita",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Wah",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Schroff",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Belongie",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Perona",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2010,
+                "venue": "Caltech",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Welinder, S. Branson, T. Mita, C. Wah, F. Schroff, S. Belongie, and P. Perona, \"Caltech-UCSD Birds 200,\" Caltech, Tech. Rep. CNS-TR-201, 2010.",
+                "links": null
+            },
+            "BIBREF31": {
+                "ref_id": "b31",
+                "title": "Face detection: A survey",
+                "authors": [
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Hjelm\u00e5s",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Low",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2001,
+                "venue": "CVIU",
+                "volume": "83",
+                "issue": "3",
+                "pages": "236--274",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "E. Hjelm\u00e5s and B. Low, \"Face detection: A survey,\" CVIU, vol. 83, no. 3, pp. 236-274, 2001.",
+                "links": null
+            },
+            "BIBREF32": {
+                "ref_id": "b32",
+                "title": "Labeled faces in the wild",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [
+                            "B"
+                        ],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Ramesh",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Learned-Miller",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2007,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "7--49",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. B. Huang, M. Ramesh, T. Berg, and E. Learned-Miller, \"Labeled faces in the wild,\" University of Massachusetts, Amherst, Tech. Rep. 07-49, October 2007.",
+                "links": null
+            },
+            "BIBREF33": {
+                "ref_id": "b33",
+                "title": "Detecting avocados to zucchinis: what have we done, and where are we going?",
+                "authors": [
+                    {
+                        "first": "O",
+                        "middle": [],
+                        "last": "Russakovsky",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Deng",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Z",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Fei-Fei",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2013,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "O. Russakovsky, J. Deng, Z. Huang, A. Berg, and L. Fei-Fei, \"Detecting avocados to zucchinis: what have we done, and where are we going?\" in ICCV, 2013.",
+                "links": null
+            },
+            "BIBREF34": {
+                "ref_id": "b34",
+                "title": "TextonBoost for image understanding: Multi-class object recognition and segmentation by jointly modeling texture, layout, and context",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Shotton",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Winn",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Rother",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Criminisi",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "IJCV",
+                "volume": "81",
+                "issue": "1",
+                "pages": "2--23",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Shotton, J. Winn, C. Rother, and A. Criminisi, \"TextonBoost for image understanding: Multi-class object recognition and seg- mentation by jointly modeling texture, layout, and context,\" IJCV, vol. 81, no. 1, pp. 2-23, 2009.",
+                "links": null
+            },
+            "BIBREF35": {
+                "ref_id": "b35",
+                "title": "A comparison and evaluation of multi-view stereo reconstruction algorithms",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Seitz",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Curless",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Diebel",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Scharstein",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Szeliski",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2006,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "S. M. Seitz, B. Curless, J. Diebel, D. Scharstein, and R. Szeliski, \"A comparison and evaluation of multi-view stereo reconstruction algorithms,\" in CVPR, 2006.",
+                "links": null
+            },
+            "BIBREF36": {
+                "ref_id": "b36",
+                "title": "Contour detection and hierarchical image segmentation",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Arbelaez",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Maire",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Fowlkes",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Malik",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "PAMI",
+                "volume": "33",
+                "issue": "5",
+                "pages": "898--916",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Arbelaez, M. Maire, C. Fowlkes, and J. Malik, \"Contour detec- tion and hierarchical image segmentation,\" PAMI, vol. 33, no. 5, pp. 898-916, 2011.",
+                "links": null
+            },
+            "BIBREF37": {
+                "ref_id": "b37",
+                "title": "Learning to detect unseen object classes by between-class attribute transfer",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Lampert",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Nickisch",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Harmeling",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Lampert, H. Nickisch, and S. Harmeling, \"Learning to detect unseen object classes by between-class attribute transfer,\" in CVPR, 2009.",
+                "links": null
+            },
+            "BIBREF38": {
+                "ref_id": "b38",
+                "title": "Learning spatial context: Using stuff to find things",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Heitz",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Koller",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2008,
+                "venue": "ECCV",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "G. Heitz and D. Koller, \"Learning spatial context: Using stuff to find things,\" in ECCV, 2008.",
+                "links": null
+            },
+            "BIBREF40": {
+                "ref_id": "b40",
+                "title": "Finding iconic images",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Berg",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "T. Berg and A. Berg, \"Finding iconic images,\" in CVPR, 2009.",
+                "links": null
+            },
+            "BIBREF41": {
+                "ref_id": "b41",
+                "title": "Unbiased look at dataset bias",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Torralba",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Efros",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Torralba and A. Efros, \"Unbiased look at dataset bias,\" in CVPR, 2011.",
+                "links": null
+            },
+            "BIBREF42": {
+                "ref_id": "b42",
+                "title": "Evaluation of gist descriptors for web-scale image search",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Douze",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "J\u00e9gou",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Sandhawalia",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Amsaleg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Schmid",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "CIVR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "M. Douze, H. J\u00e9gou, H. Sandhawalia, L. Amsaleg, and C. Schmid, \"Evaluation of gist descriptors for web-scale image search,\" in CIVR, 2009.",
+                "links": null
+            },
+            "BIBREF43": {
+                "ref_id": "b43",
+                "title": "Object detection with discriminatively trained part-based models",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Felzenszwalb",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Girshick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Mcallester",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Ramanan",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2010,
+                "venue": "PAMI",
+                "volume": "32",
+                "issue": "9",
+                "pages": "1627--1645",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Felzenszwalb, R. Girshick, D. McAllester, and D. Ramanan, \"Object detection with discriminatively trained part-based mod- els,\" PAMI, vol. 32, no. 9, pp. 1627-1645, 2010.",
+                "links": null
+            },
+            "BIBREF44": {
+                "ref_id": "b44",
+                "title": "Discriminatively trained deformable part models, release 5",
+                "authors": [
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Girshick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Felzenszwalb",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Mcallester",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "R. Girshick, P. Felzenszwalb, and D. McAllester, \"Discriminatively trained deformable part models, release 5,\" PAMI, 2012.",
+                "links": null
+            },
+            "BIBREF45": {
+                "ref_id": "b45",
+                "title": "Do we need more training data or better models for object detection",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Zhu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Vondrick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Ramanan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Fowlkes",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "X. Zhu, C. Vondrick, D. Ramanan, and C. Fowlkes, \"Do we need more training data or better models for object detection?\" in BMVC, 2012.",
+                "links": null
+            },
+            "BIBREF46": {
+                "ref_id": "b46",
+                "title": "Object segmentation by alignment of poselet activations to image contours",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Brox",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Bourdev",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Maji",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Malik",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "T. Brox, L. Bourdev, S. Maji, and J. Malik, \"Object segmentation by alignment of poselet activations to image contours,\" in CVPR, 2011.",
+                "links": null
+            },
+            "BIBREF47": {
+                "ref_id": "b47",
+                "title": "Layered object models for image segmentation",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Hallman",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Ramanan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Fowlkes",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "PAMI",
+                "volume": "34",
+                "issue": "9",
+                "pages": "1731--1743",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Y. Yang, S. Hallman, D. Ramanan, and C. Fowlkes, \"Layered object models for image segmentation,\" PAMI, vol. 34, no. 9, pp. 1731-1743, 2012.",
+                "links": null
+            },
+            "BIBREF48": {
+                "ref_id": "b48",
+                "title": "Using segmentation to verify object hypotheses",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Ramanan",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2007,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Ramanan, \"Using segmentation to verify object hypotheses,\" in CVPR, 2007.",
+                "links": null
+            },
+            "BIBREF49": {
+                "ref_id": "b49",
+                "title": "Learning to localize detected objects",
+                "authors": [
+                    {
+                        "first": "Q",
+                        "middle": [],
+                        "last": "Dai",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Hoiem",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2012,
+                "venue": "CVPR",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Q. Dai and D. Hoiem, \"Learning to localize detected objects,\" in CVPR, 2012.",
+                "links": null
+            },
+            "BIBREF50": {
+                "ref_id": "b50",
+                "title": "Collecting image annotations using Amazon's Mechanical Turk",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Rashtchian",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Young",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Hodosh",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Hockenmaier",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2010,
+                "venue": "NAACL Workshop",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Rashtchian, P. Young, M. Hodosh, and J. Hockenmaier, \"Col- lecting image annotations using Amazon's Mechanical Turk,\" in NAACL Workshop, 2010.",
+                "links": null
+            }
+        },
+        "ref_entries": {
+            "FIGREF0": {
+                "text": "T.Y. Lin and S. Belongie are with Cornell NYC Tech and the Cornell Computer Science Department. \u2022 M. Maire is with the Toyota Technological Institute at Chicago. \u2022 L. Bourdev and P. Doll\u00e1r are with Facebook AI Research. The majority of this work was performed while P. Doll\u00e1r was with Microsoft Research. \u2022 R. Girshick and C. L. Zitnick are with Microsoft Research, Redmond. \u2022 J. Hays is with Brown University. \u2022 P. Perona is with the California Institute of Technology. \u2022 D. Ramanan is with the University of California at Irvine.",
+                "fig_num": null,
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF1": {
+                "text": "While previous object recognition datasets have focused on (a) image classification, (b) object bounding box localization or (c) semantic pixel-level segmentation, we focus on (d) segmenting individual object instances.",
+                "fig_num": "1",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF2": {
+                "text": "Example of (a) iconic object images, (b) iconic scene images, and (c) non-iconic images.",
+                "fig_num": "2",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF3": {
+                "text": "Our annotation pipeline is split into 3 primary tasks: (a) labeling the categories present in the image ( \u00a74.1), (b) locating and marking all instances of the labeled categories ( \u00a74.2), and (c) segmenting each object instance ( \u00a74.3).",
+                "fig_num": "3",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF4": {
+                "text": "Worker precision and recall for the category labeling task. (a) The union of multiple AMT workers (blue) has better recall than any expert (red). Ground truth was computed using majority vote of the experts. (b) Shows the number of workers (circle size) and average number of jobs per worker (circle color) for each precision/recall range. Most workers have high precision; such workers generally also complete more jobs. For this plot ground truth for each worker is the union of responses from all other AMT workers. See \u00a74.4 for details.",
+                "fig_num": "4",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF5": {
+                "text": "(a) Number of annotated instances per category for MS COCO and PASCAL VOC. (b,c) Number of annotated categories and annotated instances, respectively, per image for MS COCO, ImageNet Detection, PASCAL VOC and SUN (average number of categories and instances are shown in parentheses). (d) Number of categories vs. the number of instances per category for a number of popular object recognition datasets. (e) The distribution of instance sizes for the MS COCO, ImageNet Detection, PASCAL VOC and SUN datasets.",
+                "fig_num": "5",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF6": {
+                "text": "Samples of annotated images in the MS COCO dataset.",
+                "fig_num": "6",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF7": {
+                "text": "",
+                "fig_num": null,
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF8": {
+                "text": "Fig.shows results of this segmentation baseline for the DPM learned on the 20 PASCAL categories and tested on our dataset.",
+                "fig_num": null,
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF9": {
+                "text": "A predicted segmentation might not recover object detail even though detection and ground truth bounding boxes overlap well (left). Sampling from the person category illustrates that predicting segmentations from topdown projection of DPM part masks is difficult even for correct detections (center). Average segmentation overlap measured on MS COCO for the 20 PASCAL VOC categories demonstrates the difficulty of the problem (right).",
+                "fig_num": "9",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF10": {
+                "text": "User interfaces for non-iconic image collection. (a) Interface for selecting non-iconic images containing pairs of objects. (b) Interface for selecting non-iconic images for categories that rarely co-occurred with others.",
+                "fig_num": "10",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF11": {
+                "text": "(a) PASCAL VOC. (b) MS COCO.",
+                "fig_num": null,
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF13": {
+                "text": "Random chair instances from PASCAL VOC and MS COCO. At most one instance is sampled per image.",
+                "fig_num": "14",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF14": {
+                "text": "Fig. 15: Examples of borderline segmentations that passed (top) or were rejected (bottom) in the verification stage.",
+                "fig_num": null,
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "TABREF0": {
+                "text": "Top: Detection performance evaluated on PASCAL VOC 2012. DPMv5-P is the performance reported by Girshick et al. in VOC release 5. DPMv5-C uses the same implementation, but is trained with MS COCO.",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table><tr><td>Bottom: Performance evaluated on MS COCO for DPM models trained with PASCAL VOC 2012 (DPMv5-P) and</td></tr><tr><td>MS COCO (DPMv5-</td></tr></table>"
+            },
+            "TABREF1": {
+                "text": "Fig. 13: Random person instances from PASCAL VOC and MS COCO. At most one instance is sampled per image.",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table><tr><td>person chair fridge banana face eye street sign  *  headlights</td><td>bicycle couch microwave bread hand mouth umbrella window  *</td><td>car potted plant sink toilet apple scissors door  *  desk  *</td><td>motorcycle tv oven book keyboard truck fire hydrant computer</td><td>bird cow toaster boat backpack traffic light bowl refrigerator</td><td>cat airplane bus plate  *  steering wheel eyeglasses  *  teapot pizza</td><td>dog hat  *  train cell phone wine glass cup fork squirrel</td><td>horse license plate mirror  *  mouse chicken blender  *  knife duck</td><td>sheep bed dining table remote zebra hair drier spoon frisbee</td><td>bottle laptop elephant clock shoe  *  wheel bear guitar</td></tr><tr><td>nose</td><td>teddy bear</td><td>tie</td><td>stop sign</td><td>surfboard</td><td>sandwich</td><td>pen/pencil</td><td>kite</td><td>orange</td><td>toothbrush</td></tr><tr><td>printer</td><td>pans</td><td>head</td><td>sports ball</td><td>broccoli</td><td>suitcase</td><td>carrot</td><td>chandelier</td><td>parking meter</td><td>fish</td></tr><tr><td>handbag</td><td>hot dog</td><td>stapler</td><td>basketball hoop</td><td>donut</td><td>vase</td><td>baseball bat</td><td>baseball glove</td><td>giraffe</td><td>jacket</td></tr><tr><td>skis</td><td>snowboard</td><td>table lamp</td><td>egg</td><td>door handle</td><td>power outlet</td><td>hair</td><td>tiger</td><td>table</td><td>coffee table</td></tr><tr><td>skateboard chopping board</td><td>helicopter washer</td><td>tomato lion</td><td>tree monkey</td><td>bunny hair brush  *</td><td>pillow light switch</td><td>tennis racket arms</td><td>cake legs</td><td>feet house</td><td>bench cheese</td></tr><tr><td>goat</td><td>magazine</td><td>key</td><td>picture frame</td><td>cupcake</td><td>fan (ceil/floor)</td><td>frogs</td><td>rabbit</td><td>owl</td><td>scarf</td></tr><tr><td>ears</td><td>home phone</td><td>pig</td><td>strawberries</td><td>pumpkin</td><td>van</td><td>kangaroo</td><td>rhinoceros</td><td>sailboat</td><td>deer</td></tr><tr><td>playing cards</td><td>towel</td><td>hyppo</td><td>can</td><td>dollar bill</td><td>doll</td><td>soup</td><td>meat</td><td>window</td><td>muffins</td></tr><tr><td>tire</td><td>necklace</td><td>tablet</td><td>corn</td><td>ladder</td><td>pineapple</td><td>candle</td><td>desktop</td><td>carpet</td><td>cookie</td></tr><tr><td>toy cars</td><td>bracelet</td><td>bat</td><td>balloon</td><td>gloves</td><td>milk</td><td>pants</td><td>wheelchair</td><td>building</td><td>bacon</td></tr><tr><td>box</td><td>platypus</td><td>pancake</td><td>cabinet</td><td>whale</td><td>dryer</td><td>torso</td><td>lizard</td><td>shirt</td><td>shorts</td></tr><tr><td>pasta</td><td>grapes</td><td>shark</td><td>swan</td><td>fingers</td><td>towel</td><td>side table</td><td>gate</td><td>beans</td><td>flip flops</td></tr><tr><td>moon</td><td>road/street</td><td>fountain</td><td>fax machine</td><td>bat</td><td>hot air balloon</td><td>cereal</td><td>seahorse</td><td>rocket</td><td>cabinets</td></tr><tr><td>basketball</td><td>telephone</td><td>movie (disc)</td><td>football</td><td>goose</td><td>long sleeve shirt</td><td>short sleeve shirt</td><td>raft</td><td>rooster</td><td>copier</td></tr><tr><td>radio</td><td>fences</td><td>goal net</td><td>toys</td><td>engine</td><td>soccer ball</td><td>field goal posts</td><td>socks</td><td>tennis net</td><td>seats</td></tr><tr><td>elbows</td><td>aardvark</td><td>dinosaur</td><td>unicycle</td><td>honey</td><td>legos</td><td>fly</td><td>roof</td><td>baseball</td><td>mat</td></tr><tr><td>ipad</td><td>iphone</td><td>hoop</td><td>hen</td><td>back</td><td>table cloth</td><td>soccer nets</td><td>turkey</td><td>pajamas</td><td>underpants</td></tr><tr><td>goldfish</td><td>robot</td><td>crusher</td><td>animal crackers</td><td>basketball court</td><td>horn</td><td>firefly</td><td>armpits</td><td>nectar</td><td>super hero costume</td></tr><tr><td>jetpack</td><td>robots</td><td/><td/><td/><td/><td/><td/><td/><td/></tr></table>"
+            },
+            "TABREF2": {
+                "text": "",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table/>"
+            },
+            "TABREF3": {
+                "text": ".15: Examples of borderline segmentations that passed (top) or were rejected (bottom) in the verification stage.",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table><tr><td>library</td><td>church</td><td>office</td><td>restaurant</td><td colspan=\"2\">kitchen living room</td><td>bathroom</td><td>factory</td><td>campus</td><td>bedroom</td></tr><tr><td colspan=\"2\">child's room dining room</td><td>auditorium</td><td>shop</td><td>home</td><td>hotel</td><td colspan=\"3\">classroom cafeteria hospital room</td><td>food court</td></tr><tr><td>street</td><td>park</td><td>beach</td><td>river</td><td>village</td><td>valley</td><td>market</td><td>harbor</td><td>yard</td><td>parking lot</td></tr><tr><td>lighthouse</td><td>railway</td><td colspan=\"2\">playground swimming pool</td><td>forest</td><td>gas station</td><td>garden</td><td>farm</td><td>mountain</td><td>plaza</td></tr></table>"
+            },
+            "TABREF4": {
+                "text": "",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table/>"
+            }
+        }
+    }
+}

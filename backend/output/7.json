@@ -1,0 +1,2989 @@
+{
+    "paper_id": "7",
+    "header": {
+        "generated_with": "S2ORC 1.0.0",
+        "date_generated": "2023-01-17T13:22:00.928391Z"
+    },
+    "title": "Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation: The M&Ms Challenge",
+    "authors": [
+        {
+            "first": "V\u00edctor",
+            "middle": [
+                "M"
+            ],
+            "last": "Campello",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Polyxeni",
+            "middle": [],
+            "last": "Gkontra",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Cristian",
+            "middle": [],
+            "last": "Izquierdo",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Carl",
+            "middle": [],
+            "last": "Mart\u00edn-Isla",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Alire",
+            "middle": [],
+            "last": "Sojoudi",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Peter",
+            "middle": [
+                "M"
+            ],
+            "last": "Full",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Klaus",
+            "middle": [],
+            "last": "Maier-Hein",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Yao",
+            "middle": [],
+            "last": "Zhan",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Zhiqiang",
+            "middle": [],
+            "last": "He",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ju",
+            "middle": [],
+            "last": "Ma",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mario",
+            "middle": [],
+            "last": "Parre\u00f1",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Alberto",
+            "middle": [],
+            "last": "Albiol",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Fanwei",
+            "middle": [],
+            "last": "Kon",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Shawn",
+            "middle": [
+                "C"
+            ],
+            "last": "Shadde",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Jorge",
+            "middle": [],
+            "last": "Corral",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Vaanathi",
+            "middle": [],
+            "last": "Sundaresan",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mina",
+            "middle": [],
+            "last": "Saber",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mustafa",
+            "middle": [],
+            "last": "Elatta",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Hongwei",
+            "middle": [],
+            "last": "Li",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Bjoern",
+            "middle": [],
+            "last": "Menze",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Firas",
+            "middle": [],
+            "last": "Khader",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Christo",
+            "middle": [],
+            "last": "Haarburger",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Cian",
+            "middle": [
+                "M"
+            ],
+            "last": "Scannell",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mitko",
+            "middle": [],
+            "last": "Veta",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Adam",
+            "middle": [],
+            "last": "Carscadden",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Sotirios",
+            "middle": [
+                "A"
+            ],
+            "last": "Tsaftaris",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Xiaoqion",
+            "middle": [],
+            "last": "Huang",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Xin",
+            "middle": [],
+            "last": "Yan",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Lei",
+            "middle": [],
+            "last": "Li",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Xiahai",
+            "middle": [],
+            "last": "Zhuang",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "David",
+            "middle": [],
+            "last": "Vilad\u00e9",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mart\u00edn",
+            "middle": [
+                "L"
+            ],
+            "last": "Descalzo",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Andrea",
+            "middle": [],
+            "last": "Guala",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Lucia",
+            "middle": [
+                "La"
+            ],
+            "last": "Mura",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Matthias",
+            "middle": [
+                "G"
+            ],
+            "last": "Friedri",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ria",
+            "middle": [],
+            "last": "Garg",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Jul",
+            "middle": [],
+            "last": "Lebel",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Filipe",
+            "middle": [],
+            "last": "Henriques",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mah",
+            "middle": [],
+            "last": "Karakas",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ersin",
+            "middle": [],
+            "last": "\u00c7avu\u015f",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Steffen",
+            "middle": [
+                "E"
+            ],
+            "last": "Petersen",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Sergio",
+            "middle": [],
+            "last": "Escaler",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Santi",
+            "middle": [],
+            "last": "Segu\u00ed",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Jos\u00e9",
+            "middle": [
+                "F"
+            ],
+            "last": "Rodr\u00edguez-Palomares",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Karim",
+            "middle": [],
+            "last": "Lekadir",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        }
+    ],
+    "year": "",
+    "venue": null,
+    "identifiers": {},
+    "abstract": "The emergence of deep learning has considerably advanced the state-of-the-art in cardiac magnetic resonance (CMR) segmentation. Many techniques have been proposed over the last few years, bringing the accuracy of automated segmentation close to human performance. However, these models have been all too often trained and validated using cardiac imaging samples from single clinical centres or homogeneous imaging protocols. This has prevented the development and validation of models that are generalizable across different clinical centres, imaging conditions or scanner vendors. To promote further research and scientific benchmarking in the field of generalizable deep learning for cardiac segmentation, this paper presents the results of the Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation (M&Ms) Challenge, which was recently organized as part of the MICCAI 2020 Conference. A total of 14 teams submitted different solutions to the problem, combining various baseline models, data augmentation strategies, and domain adaptation techniques. The obtained results indicate the importance of intensity-driven data augmentation, as well as the need for further research to improve generalizability towards unseen scanner vendors or new imaging protocols. Furthermore, we present a new resource of 375 heterogeneous CMR datasets acquired by using four different scanner vendors in six hospitals and three different countries (Spain, Canada and Germany), which we provide as open-access for the community to enable future research in the field.",
+    "pdf_parse": {
+        "paper_id": "7",
+        "_pdf_hash": "",
+        "abstract": [
+            {
+                "text": "The emergence of deep learning has considerably advanced the state-of-the-art in cardiac magnetic resonance (CMR) segmentation. Many techniques have been proposed over the last few years, bringing the accuracy of automated segmentation close to human performance. However, these models have been all too often trained and validated using cardiac imaging samples from single clinical centres or homogeneous imaging protocols. This has prevented the development and validation of models that are generalizable across different clinical centres, imaging conditions or scanner vendors. To promote further research and scientific benchmarking in the field of generalizable deep learning for cardiac segmentation, this paper presents the results of the Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation (M&Ms) Challenge, which was recently organized as part of the MICCAI 2020 Conference. A total of 14 teams submitted different solutions to the problem, combining various baseline models, data augmentation strategies, and domain adaptation techniques. The obtained results indicate the importance of intensity-driven data augmentation, as well as the need for further research to improve generalizability towards unseen scanner vendors or new imaging protocols. Furthermore, we present a new resource of 375 heterogeneous CMR datasets acquired by using four different scanner vendors in six hospitals and three different countries (Spain, Canada and Germany), which we provide as open-access for the community to enable future research in the field.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Abstract",
+                "sec_num": null
+            }
+        ],
+        "body_text": [
+            {
+                "text": "A CCURATE segmentation of cardiovascular magnetic resonance (CMR) images is an important pre-requisite in clinical practice to reliably diagnose and assess a number of major cardiovascular diseases [1] , [2] . Currently, the process typically requires the clinician to provide a significant amount of manual input and correction to accurately and consistently annotate the cardiac boundaries across all image slices and cardiac phases. The automation of such a tedious and timeconsuming task has been pursued for a long time by using multiple approaches, such as statistical shape models [3] or cardiac atlases [4] . In the last few years, the advent of the deep learning paradigm has motivated the development of many neural network based techniques for improved CMR segmentation, as listed in a recent review [5] . However, most of these techniques have been all too often trained and evaluated using cardiac imaging samples collected from single clinical centres using similar imaging protocols. While these works have advanced the state-of-the-art in deep learning based cardiac image segmentation, their high performances were reported on samples with relatively homogeneous imaging characteristics.",
+                "cite_spans": [
+                    {
+                        "start": 198,
+                        "end": 201,
+                        "text": "[1]",
+                        "ref_id": "BIBREF27"
+                    },
+                    {
+                        "start": 204,
+                        "end": 207,
+                        "text": "[2]",
+                        "ref_id": "BIBREF28"
+                    },
+                    {
+                        "start": 588,
+                        "end": 591,
+                        "text": "[3]",
+                        "ref_id": "BIBREF29"
+                    },
+                    {
+                        "start": 611,
+                        "end": 614,
+                        "text": "[4]",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 811,
+                        "end": 814,
+                        "text": "[5]",
+                        "ref_id": "BIBREF31"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "I. INTRODUCTION",
+                "sec_num": null
+            },
+            {
+                "text": "As an example, the CMR datasets from the Automated Cardiac Diagnosis Challenge (ACDC) dataset [6] have been extensively used to build and test new implementations of deep neural networks for cardiac image segmentation. The top performing technique in the ACDC challenge, proposed by Isensee et al. [7] , obtained a very high segmentation accuracy for both the left and right ventricles. However, the ACDC datasets were compiled from 150 subjects scanned at a single clinical centre using the same imaging protocol, which limits the ability of the researchers to develop and test models that can generalize suitably across multiple centres and scanner vendors. Other researchers attempted to encode higher variability by building and testing their models based on much larger datasets obtained from the UK Biobank [8] . For instance, Bai et al. [9] implemented a fully convolutional network that achieved highly accurate results on this large dataset (over 4,875 cases), but the authors concluded that their model might not generalize well to other vendor or sequence datasets.",
+                "cite_spans": [
+                    {
+                        "start": 94,
+                        "end": 97,
+                        "text": "[6]",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 298,
+                        "end": 301,
+                        "text": "[7]",
+                        "ref_id": "BIBREF33"
+                    },
+                    {
+                        "start": 813,
+                        "end": 816,
+                        "text": "[8]",
+                        "ref_id": "BIBREF34"
+                    },
+                    {
+                        "start": 844,
+                        "end": 847,
+                        "text": "[9]",
+                        "ref_id": "BIBREF35"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "I. INTRODUCTION",
+                "sec_num": null
+            },
+            {
+                "text": "Some researchers proposed to improve CMR segmentation by training neural networks with images from multiple cohorts [10] , [11] , but these works do not include methods for addressing domain shifts between training and new unseen cohorts. Other works used data augmentation on models built from single cohorts such as the ACDC [12] or the UK Biobank [13] , then tested their techniques on other existing public cohorts, including the Sunnybrook Cardiac Data [14] , LV Segmentation Challenge Dataset (LVSC) [15] or RV Segmentation Challenge Dataset (RVSC) [16] . However, these studies are limited by the fact that these different CMR cohorts have been annotated with distinct standard operating procedures (SOPs), which makes it difficult to draw conclusions from the multi-cohort comparative results. Furthermore, such an approach requires a large training dataset from the single centre to model high variability across subjects. Another multi-centre and multi-vendor study conducted by Tao et al. [11] relied solely on private data, which makes it difficult to replicate the results and perform communitydriven benchmarking. While these recent works confirmed the difficulties encountered by deep learning models to generalize beyond the training samples, they also support the need for well-defined heterogeneous public datasets that can be used by the community to improve model generalizability through scientific benchmarking.",
+                "cite_spans": [
+                    {
+                        "start": 116,
+                        "end": 120,
+                        "text": "[10]",
+                        "ref_id": "BIBREF36"
+                    },
+                    {
+                        "start": 123,
+                        "end": 127,
+                        "text": "[11]",
+                        "ref_id": "BIBREF37"
+                    },
+                    {
+                        "start": 327,
+                        "end": 331,
+                        "text": "[12]",
+                        "ref_id": "BIBREF38"
+                    },
+                    {
+                        "start": 350,
+                        "end": 354,
+                        "text": "[13]",
+                        "ref_id": "BIBREF39"
+                    },
+                    {
+                        "start": 458,
+                        "end": 462,
+                        "text": "[14]",
+                        "ref_id": "BIBREF40"
+                    },
+                    {
+                        "start": 506,
+                        "end": 510,
+                        "text": "[15]",
+                        "ref_id": "BIBREF41"
+                    },
+                    {
+                        "start": 555,
+                        "end": 559,
+                        "text": "[16]",
+                        "ref_id": "BIBREF42"
+                    },
+                    {
+                        "start": 1000,
+                        "end": 1004,
+                        "text": "[11]",
+                        "ref_id": "BIBREF37"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "I. INTRODUCTION",
+                "sec_num": null
+            },
+            {
+                "text": "In this context, the Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation (M&Ms) Challenge was proposed and organized as part of the Statistical Atlases and Computational Modelling of the Heart (STACOM) Workshop, held in conjunction with the MICCAI 2020 Conference. The M&Ms challenge was set up as part of the euCanSHare international project, 1 which is aimed at developing interoperable data sharing and analytics solutions for multi-centre cardiovascular research data. Together with clinical collaborators from six different hospitals in Spain, Canada and Germany, a public CMR dataset was established from 375 participants, scanned with four different scanners (Siemens, Philips, General Electric (GE) and Canon) and annotated using a consistent contouring SOP across centres.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "I. INTRODUCTION",
+                "sec_num": null
+            },
+            {
+                "text": "To our knowledge, this dataset is the most diverse resource of CMR studies, which is provided as open-access 2 to promote further research and scientific benchmarking in the development and evaluation of future generalizable deep learning models in cardiac image segmentation. In this paper, we also present and discuss the results of the M&Ms challenge in detail, to which a total of 14 international teams submitted a range of solutions, including different strategies of transfer learning, domain adaptation and data augmentation, to accommodate for the differences in scanner vendors and imaging protocols. The obtained results show the extent of the problem, the promise of the proposed solutions, as well as the need for further research to build fully generalizable tools that can be Visual appearance of a CMR short axis middle slice for anatomically similar subjects in the four different vendors considered.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "I. INTRODUCTION",
+                "sec_num": null
+            },
+            {
+                "text": "VOLUNTEERS BETWEEN CENTRES. THE ABBREVIATIONS CORRESPOND TO HYPERTROPHIC CARDIOMYOPATHY (HCM), DILATED CARDIOMYOPATHY (DCM), HYPERTENSIVE HEART DISEASE (HHD), ABNORMAL RIGHT VENTRICLE (ARV), ATHLETE HEART SYNDROME (AHS), ISCHEMIC HEART DISEASE (IHD), AND LEFT VENTRICLE NON-COMPACTION (LVNC) translated reliably and deployed in routine clinical practice across the globe.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "TABLE II DISTRIBUTION OF THE MOST FREQUENT PATHOLOGIES AND HEALTHY",
+                "sec_num": null
+            },
+            {
+                "text": "A total of six clinical centres from Spain, Canada and Germany (numbered to 6 in this work) contributed to this III  AVERAGE SPECIFICATIONS FOR THE IMAGES ACQUIRED IN THE DIFFERENT CENTRES challenge by providing a different number of CMR studies from different scanner vendors, as detailed in Table I . In total, 375 studies were included in this challenge. The subjects considered for this multi-disease study were selected among groups of various cardiovascular diseases, such as hypertrophic cardiomyopathy, dilated cardiomyopathy, coronary heart disease, abnormal right ventricle, myocarditis and ischemic cardiomyopathy as well as healthy volunteers (see Table II for more details on the distribution of these cases). The specific scanner manufacturers are: 1) Siemens (Siemens Healthineers, Germany), 2) Philips (Philips Healthcare, Netherlands), 3) General Electric (GE, GE Healthcare, USA) and 4) Canon (Canon Inc., Japan). These four manufacturers were coded as A, B, C and D during the challenge, respectively. The CMR images derived from these four vendors are illustrated in Fig. 1 . More specific details on the studies are given in Table III .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 112,
+                        "end": 188,
+                        "text": "III  AVERAGE SPECIFICATIONS FOR THE IMAGES ACQUIRED IN THE DIFFERENT CENTRES",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 293,
+                        "end": 300,
+                        "text": "Table I",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 660,
+                        "end": 668,
+                        "text": "Table II",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 1087,
+                        "end": 1093,
+                        "text": "Fig. 1",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1146,
+                        "end": 1155,
+                        "text": "Table III",
+                        "ref_id": "TABREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "A. Data Preparation",
+                "sec_num": null
+            },
+            {
+                "text": "Every CMR study was annotated manually by an expert clinician from the centre of origin, with experiences ranging from 3 to more than 10 years. Following the clinical protocol, short-axis views were annotated at the end-diastolic (ED) and end-systolic (ES) phases, as they correspond to the phases used to compute the relevant clinical biomarkers for cardiac diagnosis and follow-up. Three main regions were considered: the left and right ventricle (LV and RV, respectively) cavities and the left ventricle myocardium (MYO). In order to reduce the inter-observer and inter-centre variability in the contours, in particular at the apical and basal regions, a detailed revision of the provided segmentations was performed by four researchers in pairs. They applied the same SOP across all CMR datasets to obtain the final ground truth. To generate consistent annotations for the research community, we chose to apply the SOP that was already used by the ACDC challenge, as follows:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A. Data Preparation",
+                "sec_num": null
+            },
+            {
+                "text": "a) The LV and RV cavities must be completely covered, including the papillary muscles. b) No interpolation of the MYO boundaries must be performed at the basal region. c) The RV must have a larger surface at the ED time-frame compared to ES. d) The RV does not include the pulmonary artery. Clinical delineations as well as later corrections were performed using CVI42 software (Circle Cardiovascular Imaging Inc., Calgary, Alberta, Canada). All studies were provided in DICOM format and contours were extracted in cvi42 workspace format (.cvi42ws). An in-house software was then used to extract the contours and transform the images into the NIFTI format, representing the final files delivered to the challenge participants.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A. Data Preparation",
+                "sec_num": null
+            },
+            {
+                "text": "The 375 CMR studies were divided into three sets, namely training, validation and testing, as detailed in Table IV . To decide on a particular subdivision, we first estimated the degree of generalizability of models trained from the four vendors, as shown in Figure 2 . We have thus decided to combine the datasets from vendors A, which generalize relatively well, with datasets from B, which generalize poorly to new vendors, as training datasets. The participants received the 175 training cases on 1st May 2020, including 75 annotated CMRs from vendor A, 75 annotated CMRs from vendor B, 25 CMRs from vendor C but without any annotations (only the raw images) and no datasets from vendor D, in order to test generalizability to different situations (e.g. image protocol included or not included in the training). Note that in the case of vendor A, the 75 CMRs were included from centre 1 but none from centre 6, to test generalizability across vendors but also across centres for the same vendors. Regarding vendor B, we included more training datasets from centre 2 (50 cases) than from centre 3 (25 cases) to assess the impact of imbalanced training data and fairness in multi-centre cardiac image segmentation. For optimizing the models, the participants were allowed to remotely validate against 40 additional CMRs, i.e. 10 from each of the four vendors. A maximum of 7 submissions were allowed per team during the validation process. Note that during training, it was not allowed to use any external datasets or pre-trained models, to enable a fair comparison between the proposed solutions.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 106,
+                        "end": 114,
+                        "text": "Table IV",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 259,
+                        "end": 267,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "B. Model Training",
+                "sec_num": null
+            },
+            {
+                "text": "The testing period for the challenge started on 8th June 2020 and concluded on 15th July 2020. The participants had to evaluate their models remotely to ensure the unseen datasets were totally hidden from the segmentation methods. As such, for example, the participants had no prior information on the images provided by vendor D. In order to evaluate the models, the participants were asked to build a Singularity image 3 and share it with the organizers via a MEGA 4 folder shared by the organizers or by any other secure cloud storage service. This Singularity image allows its execution on a similar architecture machine without the need to install all the diversity of used libraries. The necessary computing power was sponsored by NVIDIA, who provided the organizers with access to an NVIDIA V100 GPU card with 16GB of memory, as well as the Barcelona Supercomputing Center (BSC) who provided access to two K80 NVIDIA GPU cards.",
+                "cite_spans": [
+                    {
+                        "start": 421,
+                        "end": 422,
+                        "text": "3",
+                        "ref_id": "BIBREF29"
+                    },
+                    {
+                        "start": 467,
+                        "end": 468,
+                        "text": "4",
+                        "ref_id": "BIBREF30"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "In order to assess the quality of the automatically segmented masks P with respect to the ground truth G, four measures were proposed, namely:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "(i) Dice similarity coefficient (DSC):",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "DSC(P, G) = 2|P \u2229 G| |P| + |G|",
+                        "eq_num": "(1)"
+                    }
+                ],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "that measures the degree of overlapping of two volumes. (ii) Jaccard index (JI):",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "J I (P, G) = |P \u2229 G| |P \u222a G| = |P \u2229 G| |P| + |G| \u2212 |P \u2229 G|",
+                        "eq_num": "(2)"
+                    }
+                ],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "that measures overlapping as well but is more sensitive to results with average performance. (iii) Average symmetric surface distance (ASSD):",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "ASS D(P, G) = 1 |P| + |G| \u239b \u239d p\u2208P d( p, G) + g\u2208G d(g, P) \u239e \u23a0 d( p, G) := inf g\u2208G d( p, g)",
+                        "eq_num": "(3)"
+                    }
+                ],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "that measures the average distance between the two volumes.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "(iv) Hausdorff distance (HD):",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "H D(P, G) = max sup p\u2208 P d( p, G), sup g\u2208G d(g, P)",
+                        "eq_num": "(4)"
+                    }
+                ],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "that measures the largest disagreement between the volumes and it is useful for identifying small outliers. All these metrics were computed using the public library medpy. 5 These metrics were computed for the three target labels: LV, RV, and MYO, resulting in a total of 12 measures. In case one participant had a prediction missing for a specific subject, a value of zero was assumed for DSC and JI and maximum values of 150 and 50 milimetres were assumed for HD and ASSD, respectively, based on the worst results obtained by the participating methods. Any value above the thresholds on surface distances was set to the maximum value.",
+                "cite_spans": [
+                    {
+                        "start": 172,
+                        "end": 173,
+                        "text": "5",
+                        "ref_id": "BIBREF31"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "To obtain the final ranking for each team, a weighted average was computed giving a greater importance to the unlabelled and unseen scanner vendors. Therefore, if v A and v B are defined as the labelled vendors, v C , the unlabelled one and v D , the unseen one, the weighted sum for a metric M is obtained as follows:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "M = 1 M v A + 1 M v B + 1 M v C + 1 M v D (5)",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "Then, a min-max normalization was applied across participants for each measure and a final average over the normalized metrics yielded the performance (P) ranging from 0 to 1, being 1 the value that a team would obtain if it had the best results for every metric.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Model Evaluation",
+                "sec_num": null
+            },
+            {
+                "text": "In total, 80 teams registered to download the M&Ms training dataset, 16 submitted a solution for the final testing phase and 14 teams submitted their methodology as a paper to the STACOM Workshop (see Table V for details on these teams). All participants used deep learning as their segmentation approach. Table VI summarizes the main characteristics of the submitted techniques, including the backbone architectures and domain adaptation strategies, which are described in more detail in the following subsections. Furthermore, details on the hardware used during training and the times that each method took for training and inference as well as the number of parameters for each model are presented in Table VII .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 201,
+                        "end": 208,
+                        "text": "Table V",
+                        "ref_id": "TABREF3"
+                    },
+                    {
+                        "start": 306,
+                        "end": 314,
+                        "text": "Table VI",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 705,
+                        "end": 714,
+                        "text": "Table VII",
+                        "ref_id": "TABREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "III. PARTICIPATING METHODS",
+                "sec_num": null
+            },
+            {
+                "text": "There is a degree of variability in the backbone architectures used between the different participants, as shown in Table VI . Four teams used the nnUNet [33] (which includes UNet architectures in 2D and 3D as well as a cascaded UNet) as their baseline segmentation model (P1-P3 & P9). Four participants used a traditional UNet [17] (P6, P10, P13, P14), while other variants of UNets were adopted by the rest of the teams. In particular, UNets combined with residual connections were applied by three teams (P4, P8, P11), with P8 preferring a residual UNet with dilated convolutions (DRUNet) [34] . P5 proposed the use of an attention UNet [35] , As pre-processing techniques, all models that provided detailed information about this step performed either image normalization to a unit Gaussian distribution or pixel value rescaling to the range [0,1] (only P6 chose the range [0,255] instead). With regards to image resolution, images were resized based on target size or pixel resolution values in 10 out of 14 methods, while the other methods preferred to keep the original image resolution (P4, P7, P8, P11). In order to obtain squared images, cropping and zero padding were used depending on the desired image size for each case. Additionally, some methods applied intensity clipping between varying ranges to get rid of bright artifacts (P5, P6, P11). Finally, P8 was the only method to apply also a non-local means denoising filter prior to the training process.",
+                "cite_spans": [
+                    {
+                        "start": 154,
+                        "end": 158,
+                        "text": "[33]",
+                        "ref_id": "BIBREF59"
+                    },
+                    {
+                        "start": 328,
+                        "end": 332,
+                        "text": "[17]",
+                        "ref_id": "BIBREF43"
+                    },
+                    {
+                        "start": 592,
+                        "end": 596,
+                        "text": "[34]",
+                        "ref_id": "BIBREF60"
+                    },
+                    {
+                        "start": 640,
+                        "end": 644,
+                        "text": "[35]",
+                        "ref_id": "BIBREF61"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 116,
+                        "end": 124,
+                        "text": "Table VI",
+                        "ref_id": "TABREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "A. Backbone Architectures",
+                "sec_num": null
+            },
+            {
+                "text": "All participants in the challenge (except P11) used some form of data augmentation to enhance their models. Specifically, two families of data augmentations were considered: (1) spatial transformations to increase sample size through rotation, flipping, scaling or deformation of the original images; (2) intensity-driven techniques, which maintain the spatial configuration of the anatomical structures but modify their image appearance. The second type of augmentation seems particularly relevant for the M&Ms as it may increase the variability in image appearance, with the hypothesis that this may lead to improved adaptation to varying imaging protocols and scanner vendors. Two teams performed data augmentation using only spatial transformations (P4, P6). Eleven teams additionally implemented intensity-based transformations using one of two main approaches: (i) standard image transformations such as histogram matching, blurring, change in brightness, gamma and contrast, or addition of Gaussian noise (P1-P3, P7-P8, P10, P13) (see 3 for a visualization of a subset of these transformations on a training slice); (ii) advanced image synthesis by using generative adversarial networks (GANs) (P5, P8, P14) or variational auto-encoders (VAE) (P12). For the latter one, the generation of synthetic images for the unseen vendor D is not feasible since it was not included in the training. Note that the majority of the teams participating in the challenge (10 out of 14) relied solely on data augmentation of the training sample to address the domain-shift problem posed by the M&Ms challenge.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "B. Data Augmentation",
+                "sec_num": null
+            },
+            {
+                "text": "Additionally, some teams (P1-P3, P9, P13) applied testtime augmentation techniques, which consist of passing to the model two or more transformed versions of the same inference image to obtain several predictions. These predictions are then combined to obtain one final outcome, usually by averaging them. This method has been shown to improve the final performance in small data size scenarios and a net improvement with a scale effect that depends on the model architecture [38] .",
+                "cite_spans": [
+                    {
+                        "start": 476,
+                        "end": 480,
+                        "text": "[38]",
+                        "ref_id": "BIBREF64"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "B. Data Augmentation",
+                "sec_num": null
+            },
+            {
+                "text": "Of all participants, only three teams (P4, P6, P10) implemented a method to explicitly address the differences in the image distributions between the unseen and trained vendors. At training, P4 constructed a classifier to distinguish between scanner vendors and used it to modify the training images (through error propagation) until the classifier could not distinguish between the domain. In other words, this method resulted in training images and a trained model that are less dependent on the specific vendors. P6 and P10 proposed to train two models simultaneously with shared features, one for segmentation and one for classification, such that the classification loss is high while the segmentation loss is low, generating features that are robust to vendor-specific variations as well as optimal for segmentation.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Domain Adaptation",
+                "sec_num": null
+            },
+            {
+                "text": "As shown in Table IV , a balanced dataset across the four vendors was prepared for evaluating the final submissions (40 CMRs per vendor, total 160 datasets). In this section, we analyze the obtained results per (1) team, (2) vendor, (3) clinical center, and (4) show some qualitative results. For analysing the obtained results, we also implemented two baseline models to better appreciate the added value of the data augmentation and domain adaptation techniques used in this challenge: B1: A 2D UNet without any data augmentation as described in the original reference [17] , trained with weighted cross entropy loss. B2: The nnUNet pipeline, with a 2D UNet module and default parameters as given in [33] (the best fold according to the validation set was selected). In particular, B2 differed from those in P1-P3 in that it only included one architecture type [2D UNet] and \u00b1180 degrees rotations, flippings, scalings, deformations, gamma transformations and test-time augmentation as data augmentation. In contrast, P1, P2 and P3 methods included further augmentation techniques such as histogram matching, noise addition, brightness modification, contrast modification and pseudolabel generation by label propagation in time space. Fig. 4 displays the results of the challenge for all participants and according to two evaluation metrics (DSC and HD). It can be seen that the curves are flat for about half of the participating teams, which indicates comparable performances overall. Note that these methods (P1 to P7) are also the ones that performed better than the baseline methods and we hypothesize that the other models (P8 to P14) suffered from some form of over-fitting (see also the shapes of the curves in Fig. 4 ). Team P1 provided the most consistent results across all metrics. However, the difference with respect to other teams was relatively small and in many cases not statistically significant, as presented in Table VIII . The three best performing teams, P1 to P3, used nnUNet as the baseline pipeline, as well as standard intensity-based data augmentation (e.g. blurring, noise addition, histogram matching), but no domain adaptation, showing a significative improvement with respect to the standard nnUNet implementation B2. For a similar performance, P5 used an Attention UNet as the backbone architecture and CycleGANs for data augmentation through image synthesis. P4 and P6 also obtained similar performances overall, but implemented instead domain adaptation methods and no image-driven data augmentation. Fig. 5 displays the average DSC for all participating teams organised this time per pathology, showing better segmentation performance for healthy cases and dilated cardiomyopathy (DCM), followed by hypertrophic cardiomyopathy (HCM) and other pathologies. It can be seen that the performances of . It can be seen that overall, the differences in the segmentation errors between the vendors are reduced with respect to the results obtained by the two baseline methods as detailed in Table IX . Specifically, it can be seen that for the baseline methods there is a loss of accuracy of up to \u22126% in the segmentation of images from vendors C and D compared to A and B. However, this loss is reduced, for example, to \u22121.5% for P1 (e.g. from DSC = 0.92 for vendor A to 0.90 in vendor C and D, for the LV), \u22122.1% for P2 (e.g. from DSC = 0.87 in vendor B to 0.82 in vendor D, for the RV), and almost to 0% for P7. This indicates that while there is a need for further research to 7 . Boxplots with centre-wise results for DSC and HD when all participants predictions are considered. Same color-coding as in Fig. 6 is used for scanner vendors. bring segmentation accuracy in unseen and unlabelled vendors at the same level of the one obtained in trained vendors, data augmentation and data adaptation enable to close the gap and improve the generalizability of deep learning models.",
+                "cite_spans": [
+                    {
+                        "start": 571,
+                        "end": 575,
+                        "text": "[17]",
+                        "ref_id": "BIBREF43"
+                    },
+                    {
+                        "start": 702,
+                        "end": 706,
+                        "text": "[33]",
+                        "ref_id": "BIBREF59"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 12,
+                        "end": 20,
+                        "text": "Table IV",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 1237,
+                        "end": 1243,
+                        "text": "Fig. 4",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 1721,
+                        "end": 1727,
+                        "text": "Fig. 4",
+                        "ref_id": "FIGREF1"
+                    },
+                    {
+                        "start": 1934,
+                        "end": 1944,
+                        "text": "Table VIII",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 2538,
+                        "end": 2544,
+                        "text": "Fig. 5",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 3020,
+                        "end": 3028,
+                        "text": "Table IX",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 3510,
+                        "end": 3511,
+                        "text": "7",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 3637,
+                        "end": 3643,
+                        "text": "Fig. 6",
+                        "ref_id": "FIGREF2"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "IV. RESULTS",
+                "sec_num": null
+            },
+            {
+                "text": "In the previous subsection, centres were combined in the analysis despite having different machines or scanning protocols. In doing so, possible variabilities between centres using the same scanner may be overstated, making it necessary to consider also Fig. 7 , where the segmentation results are summarized according to the six clinical centres. Here too, it can be seen that there remains some degree of variation in the segmentation of the CMR images from the different centres. In more detail, there is a decrease in segmentation accuracy between centres 1 and 6 even though their images are from the same scanner vendor A. However, this difference can be explained by two facts: 1) the scanners in these two centres are different models and have different field strengths, as shown in Table III , and 2) all the 75 datasets included during training for vendor A were from centre 1 (Spain) and none from centre 6 (Canada). In this case, even though the images are from the same vendor, differences in scanner specifications resulted in the lack of generalizability. In contrast, images from both centres 2 and 3 were included in the training of vendor B, which resulted in segmentation accuracies for these two centres that are comparable. Finally, the datasets from centres 4 and 5 correspond to vendors C and D, respectively, which were not included in the training, which explain the loss of accuracy compared to centres 1, 2 and 3. In Fig. 8 , the results are grouped for all centres according to their inclusion (or not) in the training. Clearly, it can be seen that the segmentation accuracy is the highest for centres that are part of the training together with their labels, followed by those with images but no labels, and finally the performance is the lowest and most variable for images from fully unseen centres. This result confirms the need for further developments to optimize the generalizability of deep learning solutions in future tools for cardiac image segmentation. Fig. 9 presents the effect of the slice position in the final segmentation DSC for the top three performing teams, quantifying the loss of accuracy, especially prominent in the apical and basal slices. To illustrate this, Fig. 10 provides some visual examples from team P1 to further show the added value of the implemented techniques, as well as their limitations when applied to unseen vendors. In the two examples above, the segmentation techniques enabled to accurately identify the cardiac boundaries even though these imaging protocols were not included in the training set. However, in the two examples below, despite the use of data augmentation and domain adaptation, the models were unsuccessful in the segmentation of these unseen cases and diverged more notably from the ground truth in basal slices. These examples illustrate the need for future work to further improve the generalizability of deep learning models in cardiac image segmentation.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 254,
+                        "end": 260,
+                        "text": "Fig. 7",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 791,
+                        "end": 800,
+                        "text": "Table III",
+                        "ref_id": "TABREF0"
+                    },
+                    {
+                        "start": 1444,
+                        "end": 1450,
+                        "text": "Fig. 8",
+                        "ref_id": "FIGREF4"
+                    },
+                    {
+                        "start": 1994,
+                        "end": 2000,
+                        "text": "Fig. 9",
+                        "ref_id": "FIGREF5"
+                    },
+                    {
+                        "start": 2216,
+                        "end": 2223,
+                        "text": "Fig. 10",
+                        "ref_id": "FIGREF6"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "C. Analysis per Centre",
+                "sec_num": null
+            },
+            {
+                "text": "In this paper, we presented a comprehensive analysis of a range of deep learning solutions for the automated segmentation of multi-centre, multi-vendor and multi-disease CMR datasets. Roughly speaking, the 14 participants in the challenge developed varying workflows combining a baseline neural network, intensity-based and/or spatial data augmentation, and in some cases a data adaptation strategy. In addition to a relatively large sample of 175 cases for training, the authors were given a total of seven attempts for optimising the parameters and characteristics of their models during the validation process, to ensure an optimal design of the solutions.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "V. DISCUSSION",
+                "sec_num": null
+            },
+            {
+                "text": "The obtained results, first of all, indicate that data augmentation, though its primary purpose is to increase training size and reduce over-fitting, can perform well in addressing some of the differences in image appearance between vendors. In particular, by varying the parameters and types of intensity transformations (e.g. histogram matching, contrast modification, noise addition, image synthesis), one can generate new training images that enhance the generalizability of the models. As an example, one can look at the performance of the baselines models B1 and B2 and augmented models, such as P1, P2 and P3. While for the baseline models, the results do not differ significantly for specific cases, such as at ES, P1-P3 used many more data augmentation types, such as histogram matching, noise addition, brightness modification and contrast modification, and obtained a more marked improvement (e.g. the DSC for the myocardium at ES increased from 0.84 for B1 to 0.86 for P1, the DSC for the RV at ES increased from 0.81 for B1 to 0.84 for P3). This indicates the added value of more advanced image-driven data augmentation for multi-vendor image segmentation as well as that the domain shift between different scanners or protocols can be potentially solved by using an exhaustive set of image transformations during training. However, the results also clearly show that the obtained segmentations remain generally more stable in trained vendors compared to unseen vendors, as intensity-driven data augmentation alone cannot enable a full coverage of the variety of imaging protocols that can exist across clinical centres.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A. Analysis of the Methods",
+                "sec_num": null
+            },
+            {
+                "text": "As for domain adaptation, while it is theoretically suitable for multi-vendor image segmentation, as it can adapt on the spot to the imaging distribution of the unseen images, it did not result in better segmentations than when using exhaustive data augmentation alone. In fact, the three first techniques in the ranking did not use any domain adaptation, though it is important to reiterate that the first seven solutions obtained relatively similar results overall. It is worth noting that the choice of the baseline model may play a role, as again the first three techniques used the same model, namely the nnUNet. Finally, while the results indicate the potential of data augmentation and domain adaption, they also show that there is still a loss in segmentation accuracy when segmenting labelled versus unlabelled or unseen image samples. Note also that training and testing a model on two datasets from the same vendor does not guarantee a good generalizability. This is particularly true if the two sets of images are from two different centres and scanner types, such as 1.5T (e.g. centre 1) and 3T (e.g. centre 6) as shown in Figure 7 .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 1136,
+                        "end": 1144,
+                        "text": "Figure 7",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "A. Analysis of the Methods",
+                "sec_num": null
+            },
+            {
+                "text": "The results also show that advanced workflows integrating, for instance, data augmentation or generative adversarial networks, are not guaranteed to lead to robust segmentations. In fact, half of the submitted techniques had a lower performance than the two baselines implemented for comparison. This shows that over-fitting remains a challenge that requires special attention during the calibration and validation of complex deep learning solutions for cardiac image segmentation, in particular in the presence of highly heterogeneous data.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A. Analysis of the Methods",
+                "sec_num": null
+            },
+            {
+                "text": "Lastly, the presented methods show a vast diversity in hardware performance, with training times ranging from to 100 hours and inference times from tenths of seconds to almost half a minute. However, the amount of training and inference time do not correlate well with the final accuracy, indicating an excessive use of computational power for some techniques. For example, the methods implemented by P1 and P2, despite using the same baseline model than P3, needed around half the time for training and obtained slightly better results (1.2% average improvement in DSC), while P4 used around one tenth of computing time for similar loss of accuracy with respect to P1 (1.6% average loss in DSC). Furthermore, clinical centres usually lack dedicated hardware for deep learning models thus increasing even more the segmentation time. In this sense, a good equilibrium between accuracy and processing time needs to be attained, with methods such as P4 serving as a good example with a competitive performance and a prediction rate of around 3 images per second.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A. Analysis of the Methods",
+                "sec_num": null
+            },
+            {
+                "text": "In summary, the main findings are: a) Exhaustive data augmentation reduced considerably the domain gap, although the results were still more stable within the domains used during training. b) Domain adaptation did not result in better performance when compared to nnUNet models trained with spatial and intensity-driven data augmentation. c) Complex workflows did not always lead to better results, resulting sometimes in an excessive use of computing resources.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "A. Analysis of the Methods",
+                "sec_num": null
+            },
+            {
+                "text": "Compared to other publicly available and annotated multistructure (LV, MYO, RV) datasets in the field of CMR segmentation, M&Ms is the largest as well as the most diverse (375 cases from four vendors, six centres and three countries, vs. 150 cases for ACDC from one centre). However, given that ACDC is an established database, we selected to use its contouring SOP in this challenge to derive standardized annotations for the community, as well as to enable the combination of these datasets in future studies.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "B. Analysis of the Segmentation Results",
+                "sec_num": null
+            },
+            {
+                "text": "Note that our study, while it focuses on multi-scanner generalizable segmentation, confirms several of the results already obtained by the ACDC challenge and other previous works. Specifically:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "B. Analysis of the Segmentation Results",
+                "sec_num": null
+            },
+            {
+                "text": "a) The segmentations at ED were more accurate than at ES for LV and RV cavities, but not for the myocardium, which becomes thicker and therefore easier to segment when the heart contracts. b) The segmentation accuracy according to the DSC was the highest for the LV blood pool, followed by the RV and MYO, in this order, but it was the lowest for the RV for the distance-based measures, given its shape complexity. c) The segmentation accuracy was at its maximum at the mid-ventricular slices, while the performance decreased for the apical and basal slices, where there is higher variability and complexity. On average, the best performing method in this challenge obtained 0.88 as DSC and 11 mm as HD versus the values 0.93 and 9 mm obtained in the ACDC challenge, respectively, with the greatest difference shown at ES. This gap can be easily explained by the single-centre nature of the ACDC studies in comparison to a multi-centre scenario in this work, although other effects such as the training size may play a role and should be assessed (150 vs. 100 studies, respectively).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "B. Analysis of the Segmentation Results",
+                "sec_num": null
+            },
+            {
+                "text": "In addition to the results and analyses presented in this paper on multi-scanner cardiac image segmentation, we also provide the M&Ms dataset open-access for the community, which can be downloaded from the M&Ms website. 6 It represents one of the most heterogeneous datasets ever compiled in cardiac image analysis, comprising CMRs from a variety of imaging protocols and cardiology units, and including a range of cardiovascular diseases as distinct as coronary heart disease, cardiomyopathies, abnormal right ventricle or myocarditis. We thus hope the dataset will be of high value for the community to address a number of research topics in the field, such as multi-scanner image registration, multi-structure segmentation, cardiac quantification, motion analysis and image synthesis.",
+                "cite_spans": [
+                    {
+                        "start": 220,
+                        "end": 221,
+                        "text": "6",
+                        "ref_id": "BIBREF32"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Future Work",
+                "sec_num": null
+            },
+            {
+                "text": "It is important to note that a follow-up challenge is being organised on multi-centre, multi-vendor and multi-disease cardiac diagnosis. The diagnoses for the 375 cases are being gathered from the different hospitals in a legally compliant manner and the clinical information will be made available after the end of the next challenge, thus allowing the community to work on cardiac image analysis as well as on computer-aided diagnosis in a multi-centre setting. Note that the participants had less than three months to implement, optimize and test their techniques, which did not allow to go beyond the existing state-of-the-art techniques in data augmentation and domain adaptation. With more time at their disposal beyond the constraints of the challenge, we expect that researchers will have a valuable resource with the M&Ms dataset to investigate, develop and test new theories and frameworks for addressing the difficulties posed by domain-shift in cardiac image analysis.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "C. Future Work",
+                "sec_num": null
+            },
+            {
+                "text": "The M&Ms challenge is the first study to evaluate a range of deep learning solutions for the automated segmentation of multi-centre, multi-vendor and multi-disease cardiac images. The results show the promise of existing data augmentation and domain adaptation methods, but also calls for further research to develop highly generalizable solutions given the inherent heterogeneity in cardiac imaging between centres, vendors and protocols. More generally, there is a need for more research and development to realise the much-needed shift from single-centre image analysis towards multi-domain approaches that will enable wider translation and usability of future artificial intelligence tools in cardiac imaging and clinical cardiology.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D. Conclusion",
+                "sec_num": null
+            },
+            {
+                "text": "Sergio Escalera is with the Departament de Matem\u00e0tiques i Inform\u00e0tica, Universitat de Barcelona, 08007 Barcelona, Spain, and also with the Computer Vision Center, Universitat Aut\u00f2noma de Barcelona, 08193 Barcelona, Spain (e-mail: sergio.escalera.guerrero@gmail.com).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D. Conclusion",
+                "sec_num": null
+            },
+            {
+                "text": "Santi Segu\u00ed is with the Departament de Matem\u00e0tiques i Inform\u00e0tica, Universitat de Barcelona, 08007 Barcelona, Spain (e-mail: santi.segui@ub.edu).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "D. Conclusion",
+                "sec_num": null
+            },
+            {
+                "text": "euCanSHare project website: www.eucanshare.eu The dataset is publicly available at www.ub.edu/mnms",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "",
+                "sec_num": null
+            },
+            {
+                "text": "https://sylabs.io4 https://mega.nz",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "",
+                "sec_num": null
+            },
+            {
+                "text": "https://github.com/loli/medpy",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "",
+                "sec_num": null
+            },
+            {
+                "text": "www.ub.edu/mnms",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "",
+                "sec_num": null
+            }
+        ],
+        "back_matter": [
+            {
+                "text": "The authors would like to thank NVIDIA and the Barcelona Super Computing (BSC) Centre for providing the necessary computational resources for this work.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "ACKNOWLEDGMENT",
+                "sec_num": null
+            }
+        ],
+        "bib_entries": {
+            "BIBREF0": {
+                "ref_id": "b0",
+                "title": "Cristian Izquierdo, Carlos Mart\u00edn-Isla, and Karim Lekadir are with the Artificial Intelligence in Medicine Laboratory (BCN-AIM), Departament de Matem\u00e0tiques i Inform\u00e0tica",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "V\u00edctor",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Polyxeni",
+                        "middle": [],
+                        "last": "Campello",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Gkontra",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "V\u00edctor M. Campello, Polyxeni Gkontra, Cristian Izquierdo, Carlos Mart\u00edn-Isla, and Karim Lekadir are with the Artificial Intelligence in Medicine Laboratory (BCN-AIM), Departament de Matem\u00e0tiques i Inform\u00e0tica, Universitat de Barcelona, 08007 Barcelona, Spain (e-mail: victor.campello@ub.edu; polyxeni.gkontra@ub.edu;",
+                "links": null
+            },
+            "BIBREF1": {
+                "ref_id": "b1",
+                "title": "Calgary, AB T2P 3T6, Canada (e-mail: alireza.sojoudi@circlecvi.com)",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Alireza Sojoudi is with Circle Cardiovascular Imaging Pvt., Ltd., Calgary, AB T2P 3T6, Canada (e-mail: alireza.sojoudi@circlecvi.com).",
+                "links": null
+            },
+            "BIBREF2": {
+                "ref_id": "b2",
+                "title": "Full and Klaus Maier-Hein are with the Division of Medical Image Computing",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Peter",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Peter M. Full and Klaus Maier-Hein are with the Division of Medical Image Computing, German Cancer Research Center, Heidelberg, Germany (e-mail: p.full@dkfz-heidelberg.de;",
+                "links": null
+            },
+            "BIBREF3": {
+                "ref_id": "b3",
+                "title": "Yao Zhang is with the Institute of Computing Technology",
+                "authors": [],
+                "year": null,
+                "venue": "Chinese Academy of Sciences",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Yao Zhang is with the Institute of Computing Technology, Chinese Academy of Sciences, Beijing 100190, China (e-mail: zhangyao215@mails.ucas.ac.cn).",
+                "links": null
+            },
+            "BIBREF4": {
+                "ref_id": "b4",
+                "title": "China (e-mail: hezq@lenovo",
+                "authors": [],
+                "year": null,
+                "venue": "Zhiqiang He is with Lenovo Ltd",
+                "volume": "100085",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Zhiqiang He is with Lenovo Ltd., Beijing 100085, China (e-mail: hezq@lenovo.com).",
+                "links": null
+            },
+            "BIBREF5": {
+                "ref_id": "b5",
+                "title": "Jun Ma is with the Department of Mathematics, Nanjing University of Science and Technology",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "210094",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Jun Ma is with the Department of Mathematics, Nanjing Uni- versity of Science and Technology, Nanjing 210094, China (e-mail: junma@njust.edu.cn).",
+                "links": null
+            },
+            "BIBREF7": {
+                "ref_id": "b7",
+                "title": "Spain (e-mail: alalbiol@iteam.upv.es). Fanwei Kong and Shawn C. Shadden are with the Department of Mechanical Engineering",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Alberto Albiol is with the iTeam Research Institute, Universitat Polit\u00e8c- nica de Val\u00e8ncia, 46022 Valencia, Spain (e-mail: alalbiol@iteam.upv.es). Fanwei Kong and Shawn C. Shadden are with the Department of Mechanical Engineering, University of California at Berkeley, Berkeley, CA 94720 USA (e-mail: fanwei_kong@berkeley.edu;",
+                "links": null
+            },
+            "BIBREF8": {
+                "ref_id": "b8",
+                "title": "Vaanathi Sundaresan is with the Centre for the Functional MRI of the Brain",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Vaanathi Sundaresan is with the Centre for the Functional MRI of the Brain, Nuffield Department of Clinical Neurosciences, University of Oxford, Oxford OX3 9DU, U.K. (e-mail: vaanathi. sundaresan@ndcn.ox.ac.uk).",
+                "links": null
+            },
+            "BIBREF9": {
+                "ref_id": "b9",
+                "title": "Egypt (e-mail: mina.saber@intixel",
+                "authors": [],
+                "year": null,
+                "venue": "Mina Saber is with the Research and Development Division",
+                "volume": "11585",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Mina Saber is with the Research and Development Division, Intixel Company S.A.E., Cairo 11585, Egypt (e-mail: mina.saber@intixel.com).",
+                "links": null
+            },
+            "BIBREF10": {
+                "ref_id": "b10",
+                "title": "Cairo 11585, Egypt, and also with the Medical Imaging and Image Processing Group",
+                "authors": [],
+                "year": null,
+                "venue": "Mustafa Elattar is with the Research and Development Division",
+                "volume": "16453",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Mustafa Elattar is with the Research and Development Division, Intixel Company S.A.E., Cairo 11585, Egypt, and also with the Medical Imaging and Image Processing Group, Nile University, Giza 16453, Egypt (e-mail: melattar@nu.edu.eg).",
+                "links": null
+            },
+            "BIBREF11": {
+                "ref_id": "b11",
+                "title": "bjoern.menze@tum.de)",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "80333",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bjoern Menze is with the Department of Computer Science, Technische Universit\u00e4t M\u00fcnchen, 80333 Munich, Germany (e-mail: bjoern.menze@tum.de).",
+                "links": null
+            },
+            "BIBREF13": {
+                "ref_id": "b13",
+                "title": "(e-mail: cian.scannell@kcl",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Cian",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Scannell is with the School of Biomedical Engineering and Imaging Sciences",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Cian M. Scannell is with the School of Biomedical Engineering and Imaging Sciences, King's College London, London WC2R 2LS, U.K. (e-mail: cian.scannell@kcl.ac.uk).",
+                "links": null
+            },
+            "BIBREF14": {
+                "ref_id": "b14",
+                "title": "T6G 2R3, Canada, and also with the Servier Virtual Cardiac Centre, Mazankowski Alberta Heart Institute",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Adam Carscadden and Kumaradevan Punithakumar are with the Department of Radiology and Diagnostic Imaging, University of Alberta, Edmonton, AB T6G 2R3, Canada, and also with the Servier Virtual Cardiac Centre, Mazankowski Alberta Heart Insti- tute, Edmonton, AB T6G 2B7, Canada (e-mail: carscadd@ualberta.ca;",
+                "links": null
+            },
+            "BIBREF15": {
+                "ref_id": "b15",
+                "title": "Tsaftaris is with the School of Engineering",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Sotirios",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Sotirios A. Tsaftaris is with the School of Engineering, The University of Edinburgh, Edinburgh EH9 3FB, U.K., and also with The Alan Turing Institute, London NW1 2DB, U.K. (e-mail: s.tsaftaris@ed.ac.uk).",
+                "links": null
+            },
+            "BIBREF16": {
+                "ref_id": "b16",
+                "title": "Shenzhen 518037, China, and the Medical UltraSound Image Computing",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "518037",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Xiaoqiong Huang and Xin Yang are with the School of Biomedical Engineering, Shenzhen University, Shenzhen 518037, China, and the Medical UltraSound Image Computing (MUSIC) Laboratory, Shenzhen University, Shenzhen 518037, China (e-mail: xqiong0920@gmail.com;",
+                "links": null
+            },
+            "BIBREF17": {
+                "ref_id": "b17",
+                "title": "Xiahai Zhuang is with the School of Data Science",
+                "authors": [],
+                "year": 2004,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Xiahai Zhuang is with the School of Data Science, Fudan University, Shanghai 200433, China (e-mail: zxh@fudan.edu.cn).",
+                "links": null
+            },
+            "BIBREF18": {
+                "ref_id": "b18",
+                "title": "Descalzo are with the Cardiac Imaging Unit",
+                "authors": [
+                    {
+                        "first": "David",
+                        "middle": [],
+                        "last": "Vilad\u00e9s",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Mart\u00edn",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Cardiology Service",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "David Vilad\u00e9s and Mart\u00edn L. Descalzo are with the Cardiac Imag- ing Unit, Cardiology Service, Hospital de la Santa Creu i Sant Pau, Universitat Aut\u00f2noma de Barcelona, 08193 Barcelona, Spain (e-mail: dvilades@santpau.cat; mdescalzo@santpau.cat).",
+                "links": null
+            },
+            "BIBREF19": {
+                "ref_id": "b19",
+                "title": "Rodr\u00edguez-Palomares are with the CIBERCV, Department of Cardiology, Vall d'Hebron Institut de Recerca, Hospital Universitari Vall d'Hebron",
+                "authors": [
+                    {
+                        "first": "Andrea",
+                        "middle": [],
+                        "last": "Guala",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Jos\u00e9",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Andrea Guala and Jos\u00e9 F. Rodr\u00edguez-Palomares are with the CIBERCV, Department of Cardiology, Vall d'Hebron Institut de Recerca, Hospital Universitari Vall d'Hebron, Universitat Aut\u00f2noma de Barcelona, 08193 Barcelona, Spain (e-mail: andrea.guala86@gmail.com;",
+                "links": null
+            },
+            "BIBREF20": {
+                "ref_id": "b20",
+                "title": "(e-mail: lucia.lamura@hotmail",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "80138",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Lucia La Mura is with the Department of Advanced Biomedical Sciences, University of Naples Federico II, 80138 Naples, Italy (e-mail: lucia.lamura@hotmail.it).",
+                "links": null
+            },
+            "BIBREF21": {
+                "ref_id": "b21",
+                "title": "Julie Lebel, and Filipe Henriques are with the Department of Medicine and Diagnostic Radiology",
+                "authors": [
+                    {
+                        "first": "Matthias",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Friedrich",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Ria",
+                        "middle": [],
+                        "last": "Garg",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Matthias G. Friedrich, Ria Garg, Julie Lebel, and Filipe Henriques are with the Department of Medicine and Diagnostic Radiology, McGill University, Montreal, QC H3A 0G4, Canada (e-mail: matthias.friedrich@mcgill.ca;",
+                "links": null
+            },
+            "BIBREF22": {
+                "ref_id": "b22",
+                "title": "@muhc.mcgill.ca; filipe.henriques@muhc.mcgill.ca)",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "julie.lebel@muhc.mcgill.ca; filipe.henriques@muhc.mcgill.ca).",
+                "links": null
+            },
+            "BIBREF23": {
+                "ref_id": "b23",
+                "title": "Mahir Karakas and Ersin \u00c7avu\u015f are with the Department of Cardiology",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Mahir Karakas and Ersin \u00c7avu\u015f are with the Department of Cardiology, University Heart & Vascular Center Hamburg,",
+                "links": null
+            },
+            "BIBREF25": {
+                "ref_id": "b25",
+                "title": "e-mail: m.karakas@uke.de; e.cavus@uke.de)",
+                "authors": [
+                    {
+                        "first": "Germany",
+                        "middle": [],
+                        "last": "Berlin",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Berlin, Germany (e-mail: m.karakas@uke.de; e.cavus@uke.de).",
+                "links": null
+            },
+            "BIBREF26": {
+                "ref_id": "b26",
+                "title": "Petersen is with the Barts Heart Centre, Barts Health NHS Trust, London E1 1BB, U.K., and also with the NIHR Barts Biomedical Research Centre, The William Harvey Research Institute",
+                "authors": [
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Steffen",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Steffen E. Petersen is with the Barts Heart Centre, Barts Health NHS Trust, London E1 1BB, U.K., and also with the NIHR Barts Biomedical Research Centre, The William Harvey Research Institute, Queen Mary University of London, London E1 4NS, U.K. (e-mail: s.e.petersen@qmul.ac.uk).",
+                "links": null
+            },
+            "BIBREF27": {
+                "ref_id": "b27",
+                "title": "A radiomics approach to computer-aided diagnosis with cardiac cine-MRI",
+                "authors": [
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Cetin",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Statistical Atlases and Computational Models of the Heart. ACDC and MMWHS Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "82--90",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "I. Cetin et al., \"A radiomics approach to computer-aided diagnosis with cardiac cine-MRI,\" in Statistical Atlases and Computational Models of the Heart. ACDC and MMWHS Challenges. Cham, Switzerland: Springer, 2018, pp. 82-90.",
+                "links": null
+            },
+            "BIBREF28": {
+                "ref_id": "b28",
+                "title": "Image-based cardiac diagnosis with machine learning: A review",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Mart\u00edn-Isla",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Frontiers Cardiovascular Med",
+                "volume": "7",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Mart\u00edn-Isla et al., \"Image-based cardiac diagnosis with machine learning: A review,\" Frontiers Cardiovascular Med., vol. 7, p. 1, Jan. 2020.",
+                "links": null
+            },
+            "BIBREF29": {
+                "ref_id": "b29",
+                "title": "Automatic initialization and quality control of large-scale cardiac MRI segmentations",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Alb\u00e0",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Lekadir",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Perea\u00f1ez",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Medrano-Gracia",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Young",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "Frangi",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Med. Image Anal",
+                "volume": "43",
+                "issue": "",
+                "pages": "129--141",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "X. Alb\u00e0, K. Lekadir, M. Perea\u00f1ez, P. Medrano-Gracia, A. A. Young, and A. F. Frangi, \"Automatic initialization and quality control of large-scale cardiac MRI segmentations,\" Med. Image Anal., vol. 43, pp. 129-141, Jan. 2018.",
+                "links": null
+            },
+            "BIBREF30": {
+                "ref_id": "b30",
+                "title": "Multi-atlas segmentation with augmented features for cardiac MR images",
+                "authors": [
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Bai",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Shi",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Ledig",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Rueckert",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Med. Image Anal",
+                "volume": "19",
+                "issue": "1",
+                "pages": "98--109",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "W. Bai, W. Shi, C. Ledig, and D. Rueckert, \"Multi-atlas segmentation with augmented features for cardiac MR images,\" Med. Image Anal., vol. 19, no. 1, pp. 98-109, Jan. 2015.",
+                "links": null
+            },
+            "BIBREF31": {
+                "ref_id": "b31",
+                "title": "Deep learning for cardiac image segmentation: A review",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Frontiers Cardiovascular Med",
+                "volume": "7",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Chen et al., \"Deep learning for cardiac image segmenta- tion: A review,\" Frontiers Cardiovascular Med., vol. 7, p. 25, Mar. 2020.",
+                "links": null
+            },
+            "BIBREF32": {
+                "ref_id": "b32",
+                "title": "Deep learning techniques for automatic MRI cardiac multi-structures segmentation and diagnosis: Is the problem solved?",
+                "authors": [
+                    {
+                        "first": "O",
+                        "middle": [],
+                        "last": "Bernard",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "IEEE Trans. Med. Imag",
+                "volume": "37",
+                "issue": "11",
+                "pages": "2514--2525",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "O. Bernard et al., \"Deep learning techniques for automatic MRI cardiac multi-structures segmentation and diagnosis: Is the problem solved?\" IEEE Trans. Med. Imag., vol. 37, no. 11, pp. 2514-2525, Nov. 2018.",
+                "links": null
+            },
+            "BIBREF33": {
+                "ref_id": "b33",
+                "title": "Automatic cardiac disease assessment on cine-MRI via time-series segmentation and domain specific features",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Isensee",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "Jaeger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Full",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Wolf",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Engelhardt",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Statistical Atlases and Computational Models of the Heart. ACDC and MMWHS Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "120--129",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "F. Isensee, P. F. Jaeger, P. M. Full, I. Wolf, S. Engelhardt, and K. H. Maier-Hein, \"Automatic cardiac disease assessment on cine-MRI via time-series segmentation and domain specific features,\" in Statistical Atlases and Computational Models of the Heart. ACDC and MMWHS Challenges. Cham, Switzerland: Springer, 2018, pp. 120-129.",
+                "links": null
+            },
+            "BIBREF34": {
+                "ref_id": "b34",
+                "title": "Radiomics signatures of cardiovascular risk factors in cardiac MRI: Results from the UK Biobank",
+                "authors": [
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Cetin",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Frontiers Cardiovascular Med",
+                "volume": "7",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "I. Cetin et al., \"Radiomics signatures of cardiovascular risk factors in cardiac MRI: Results from the UK Biobank,\" Frontiers Cardiovascular Med., vol. 7, p. 232, Nov. 2020.",
+                "links": null
+            },
+            "BIBREF35": {
+                "ref_id": "b35",
+                "title": "Automated cardiovascular magnetic resonance image analysis with fully convolutional networks",
+                "authors": [
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Bai",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "J. Cardiovascular Magn. Reson",
+                "volume": "20",
+                "issue": "1",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "W. Bai et al., \"Automated cardiovascular magnetic resonance image analysis with fully convolutional networks,\" J. Cardiovascular Magn. Reson., vol. 20, no. 1, p. 65, Dec. 2018.",
+                "links": null
+            },
+            "BIBREF36": {
+                "ref_id": "b36",
+                "title": "A fully convolutional neural network for cardiac segmentation in short-axis MRI",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [
+                            "V"
+                        ],
+                        "last": "Tran",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1604.00494"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "P. V. Tran, \"A fully convolutional neural network for cardiac segmen- tation in short-axis MRI,\" 2016, arXiv:1604.00494. [Online]. Available: http://arxiv.org/abs/1604.00494",
+                "links": null
+            },
+            "BIBREF37": {
+                "ref_id": "b37",
+                "title": "Deep Learning-based method for fully automatic quantification of left ventricle function from cine MR images: A multivendor, multicenter study",
+                "authors": [
+                    {
+                        "first": "Q",
+                        "middle": [],
+                        "last": "Tao",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Radiology",
+                "volume": "290",
+                "issue": "1",
+                "pages": "81--88",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Q. Tao et al., \"Deep Learning-based method for fully automatic quantification of left ventricle function from cine MR images: A multivendor, multicenter study,\" Radiology, vol. 290, no. 1, pp. 81-88, Jan. 2019.",
+                "links": null
+            },
+            "BIBREF38": {
+                "ref_id": "b38",
+                "title": "Fully convolutional multi-scale residual DenseNets for cardiac segmentation and automated cardiac diagnosis using ensemble of classifiers",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Khened",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Kollerathu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Krishnamurthi",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Med. Image Anal",
+                "volume": "51",
+                "issue": "",
+                "pages": "21--45",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "M. Khened, V. A. Kollerathu, and G. Krishnamurthi, \"Fully convo- lutional multi-scale residual DenseNets for cardiac segmentation and automated cardiac diagnosis using ensemble of classifiers,\" Med. Image Anal., vol. 51, pp. 21-45, Jan. 2019.",
+                "links": null
+            },
+            "BIBREF39": {
+                "ref_id": "b39",
+                "title": "Improving the generalizability of convolutional neural network-based segmentation on CMR images",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Frontiers Cardiovascular Med",
+                "volume": "7",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Chen et al., \"Improving the generalizability of convolutional neural network-based segmentation on CMR images,\" Frontiers Cardiovascular Med., vol. 7, p. 105, Jun. 2020.",
+                "links": null
+            },
+            "BIBREF40": {
+                "ref_id": "b40",
+                "title": "Evaluation framework for algorithms segmenting short axis cardiac MRI",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Radau",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Lu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Connelly",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Paul",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "J W G"
+                        ],
+                        "last": "Dick",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Wright",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "MIDAS J.-Cardiac MR Left Ventricle Segmentation Challenge",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. Radau, Y. Lu, K. Connelly, G. Paul, A. J. W. G. Dick, and G. Wright, \"Evaluation framework for algorithms segmenting short axis cardiac MRI,\" MIDAS J.-Cardiac MR Left Ventricle Segmentation Challenge, 2009. [Online]. Available: http://hdl.handle.net/10380/3070",
+                "links": null
+            },
+            "BIBREF41": {
+                "ref_id": "b41",
+                "title": "A collaborative resource to build consensus for automated left ventricular segmentation of cardiac MR images",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Suinesiaputra",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "Med. Image Anal",
+                "volume": "18",
+                "issue": "1",
+                "pages": "50--62",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Suinesiaputra et al., \"A collaborative resource to build consensus for automated left ventricular segmentation of cardiac MR images,\" Med. Image Anal., vol. 18, no. 1, pp. 50-62, Jan. 2014.",
+                "links": null
+            },
+            "BIBREF42": {
+                "ref_id": "b42",
+                "title": "Right ventricle segmentation from cardiac MRI: A collation study",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Petitjean",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Med. Image Anal",
+                "volume": "19",
+                "issue": "1",
+                "pages": "187--202",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. Petitjean et al., \"Right ventricle segmentation from cardiac MRI: A collation study,\" Med. Image Anal., vol. 19, no. 1, pp. 187-202, 2015.",
+                "links": null
+            },
+            "BIBREF43": {
+                "ref_id": "b43",
+                "title": "U-Net: Convolutional networks for biomedical image segmentation",
+                "authors": [
+                    {
+                        "first": "O",
+                        "middle": [],
+                        "last": "Ronneberger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Fischer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Brox",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Proc. Int. Conf. Med. Image Comput",
+                "volume": "",
+                "issue": "",
+                "pages": "234--241",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "O. Ronneberger, P. Fischer, and T. Brox, \"U-Net: Convolutional net- works for biomedical image segmentation,\" in Proc. Int. Conf. Med. Image Comput. Comput.-Assist. Intervent., in Lecture Notes in Computer Science. Cham, Switzerland: Springer, 2015, pp. 234-241.",
+                "links": null
+            },
+            "BIBREF44": {
+                "ref_id": "b44",
+                "title": "Studying robustness of semantic segmentation under domain shift in cardiac MRI",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Full",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Isensee",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "J\u00e4ger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "238--249",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "P. M. Full, F. Isensee, P. F. J\u00e4ger, and K. Maier-Hein, \"Studying robustness of semantic segmentation under domain shift in cardiac MRI,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 238-249.",
+                "links": null
+            },
+            "BIBREF45": {
+                "ref_id": "b45",
+                "title": "Semi-supervised cardiac image segmentation via label propagation and style transfer",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "219--227",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Y. Zhang et al., \"Semi-supervised cardiac image segmentation via label propagation and style transfer,\" in Statistical Atlases and Computa- tional Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 219-227.",
+                "links": null
+            },
+            "BIBREF46": {
+                "ref_id": "b46",
+                "title": "Histogram matching augmentation for domain adaptation with application to multi-centre, multi-vendor and multi-disease cardiac image segmentation",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Ma",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "177--186",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. Ma, \"Histogram matching augmentation for domain adaptation with application to multi-centre, multi-vendor and multi-disease cardiac image segmentation,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 177-186.",
+                "links": null
+            },
+            "BIBREF47": {
+                "ref_id": "b47",
+                "title": "Deidentifying MRI data domain by iterative backpropagation",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Parre\u00f1o",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Paredes",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "277--286",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "M. Parre\u00f1o, R. Paredes, and A. Albiol, \"Deidentifying MRI data domain by iterative backpropagation,\" in Statistical Atlases and Compu- tational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 277-286.",
+                "links": null
+            },
+            "BIBREF48": {
+                "ref_id": "b48",
+                "title": "A generalizable deep-learning approach for cardiac magnetic resonance image segmentation using image augmentation and attention U-Net",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Kong",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [
+                            "C"
+                        ],
+                        "last": "Shadden",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "287--296",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "F. Kong and S. C. Shadden, \"A generalizable deep-learning approach for cardiac magnetic resonance image segmentation using image augmenta- tion and attention U-Net,\" in Statistical Atlases and Computational Mod- els of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 287-296.",
+                "links": null
+            },
+            "BIBREF49": {
+                "ref_id": "b49",
+                "title": "A 2-step deep learning method with domain adaptation for multi-centre, multi-vendor and multi-disease cardiac magnetic resonance segmentation",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [
+                            "C"
+                        ],
+                        "last": "Acero",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Sundaresan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Dinsdale",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "V",
+                        "middle": [],
+                        "last": "Grau",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Jenkinson",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "196--207",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "J. C. Acero, V. Sundaresan, N. Dinsdale, V. Grau, and M. Jenkinson, \"A 2-step deep learning method with domain adaptation for multi-centre, multi-vendor and multi-disease cardiac magnetic resonance segmenta- tion,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 196-207.",
+                "links": null
+            },
+            "BIBREF50": {
+                "ref_id": "b50",
+                "title": "Multi-center, multi-vendor, and multi-disease cardiac image segmentation using scale-independent multi-gate UNET",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Saber",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Abdelrauof",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Elattar",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "259--268",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "M. Saber, D. Abdelrauof, and M. Elattar, \"Multi-center, multi-vendor, and multi-disease cardiac image segmentation using scale-independent multi-gate UNET,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 259-268.",
+                "links": null
+            },
+            "BIBREF51": {
+                "ref_id": "b51",
+                "title": "Generalisable cardiac structure segmentation via attentional and stacked image adaptation",
+                "authors": [
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Menze",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "297--304",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "H. Li, J. Zhang, and B. Menze, \"Generalisable cardiac structure seg- mentation via attentional and stacked image adaptation,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 297-304.",
+                "links": null
+            },
+            "BIBREF52": {
+                "ref_id": "b52",
+                "title": "Adaptive preprocessing for generalization in cardiac MR image segmentation",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Khader",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Schock",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Truhn",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Morsbach",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Haarburger",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "269--276",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "F. Khader, J. Schock, D. Truhn, F. Morsbach, and C. Haarburger, \"Adaptive preprocessing for generalization in cardiac MR image seg- mentation,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 269-276.",
+                "links": null
+            },
+            "BIBREF53": {
+                "ref_id": "b53",
+                "title": "Domain-adversarial learning for multi-centre, multi-vendor, and multi-disease cardiac MR image segmentation",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Scannell",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Chiribiri",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Veta",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "228--237",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "C. M. Scannell, A. Chiribiri, and M. Veta, \"Domain-adversarial learning for multi-centre, multi-vendor, and multi-disease cardiac MR image segmentation,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 228-237.",
+                "links": null
+            },
+            "BIBREF54": {
+                "ref_id": "b54",
+                "title": "A deep convolutional neural network approach for the segmentation of cardiac structures from MRI sequences",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Carscadden",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Noga",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Punithakumar",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "250--258",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Carscadden, M. Noga, and K. Punithakumar, \"A deep convolutional neural network approach for the segmentation of cardiac structures from MRI sequences,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 250-258.",
+                "links": null
+            },
+            "BIBREF55": {
+                "ref_id": "b55",
+                "title": "Disentangled representations for domain-generalized cardiac segmentation",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Liu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Thermos",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Chartsias",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "O'neil",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Tsaftaris",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "187--195",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "X. Liu, S. Thermos, A. Chartsias, A. O'Neil, and S. A. Tsaftaris, \"Disen- tangled representations for domain-generalized cardiac segmentation,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 187-195.",
+                "links": null
+            },
+            "BIBREF56": {
+                "ref_id": "b56",
+                "title": "Style-invariant cardiac image segmentation with testtime augmentation",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "305--315",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "X. Huang et al., \"Style-invariant cardiac image segmentation with test- time augmentation,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges. Cham, Switzerland: Springer, 2021, pp. 305-315.",
+                "links": null
+            },
+            "BIBREF57": {
+                "ref_id": "b57",
+                "title": "Random style transfer based domain generalization networks integrating shape and spatial information",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Challenges",
+                "volume": "",
+                "issue": "",
+                "pages": "208--218",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "L. Li et al., \"Random style transfer based domain generalization networks integrating shape and spatial information,\" in Statistical Atlases and Computational Models of the Heart. M&Ms and EMIDEC Chal- lenges. Cham, Switzerland: Springer, pp. 208-218.",
+                "links": null
+            },
+            "BIBREF58": {
+                "ref_id": "b58",
+                "title": "Remove appearance shift for ultrasound image segmentation via fast and universal style transfer",
+                "authors": [
+                    {
+                        "first": "Z",
+                        "middle": [],
+                        "last": "Liu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Proc. IEEE 17th Int. Symp. Biomed. Imag. (ISBI)",
+                "volume": "",
+                "issue": "",
+                "pages": "1824--1828",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Z. Liu et al., \"Remove appearance shift for ultrasound image segmenta- tion via fast and universal style transfer,\" in Proc. IEEE 17th Int. Symp. Biomed. Imag. (ISBI), Apr. 2020, pp. 1824-1828.",
+                "links": null
+            },
+            "BIBREF59": {
+                "ref_id": "b59",
+                "title": "nnU-Net: A self-configuring method for deep learning-based biomedical image segmentation",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Isensee",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "Jaeger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [
+                            "A A"
+                        ],
+                        "last": "Kohl",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Petersen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Nature Methods",
+                "volume": "18",
+                "issue": "2",
+                "pages": "203--211",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "F. Isensee, P. F. Jaeger, S. A. A. Kohl, J. Petersen, and K. H. Maier-Hein, \"nnU-Net: A self-configuring method for deep learning-based biomed- ical image segmentation,\" Nature Methods, vol. 18, no. 2, pp. 203-211, Feb. 2021.",
+                "links": null
+            },
+            "BIBREF60": {
+                "ref_id": "b60",
+                "title": "Automatic brain structures segmentation using deep residual dilated U-Net",
+                "authors": [
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Zhygallo",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Menze",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1811.04312"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "H. Li, A. Zhygallo, and B. Menze, \"Automatic brain structures seg- mentation using deep residual dilated U-Net,\" 2018, arXiv:1811.04312. [Online]. Available: http://arxiv.org/abs/1811.04312",
+                "links": null
+            },
+            "BIBREF61": {
+                "ref_id": "b61",
+                "title": "Attention U-Net: Learning where to look for the pancreas",
+                "authors": [
+                    {
+                        "first": "O",
+                        "middle": [],
+                        "last": "Oktay",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:1804.03999"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "O. Oktay et al., \"Attention U-Net: Learning where to look for the pancreas,\" 2018, arXiv:1804.03999. [Online]. Available: http://arxiv. org/abs/1804.03999",
+                "links": null
+            },
+            "BIBREF62": {
+                "ref_id": "b62",
+                "title": "Disentangled representation learning in cardiac image analysis",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Chartsias",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Med. Image Anal",
+                "volume": "58",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "A. Chartsias et al., \"Disentangled representation learning in cardiac image analysis,\" Med. Image Anal., vol. 58, Dec. 2019, Art. no. 101535.",
+                "links": null
+            },
+            "BIBREF63": {
+                "ref_id": "b63",
+                "title": "Arbitrary style transfer in real-time with adaptive instance normalization",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Belongie",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Proc. IEEE Int. Conf. Comput. Vis. (ICCV)",
+                "volume": "",
+                "issue": "",
+                "pages": "1510--1519",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "X. Huang and S. Belongie, \"Arbitrary style transfer in real-time with adaptive instance normalization,\" in Proc. IEEE Int. Conf. Comput. Vis. (ICCV), Oct. 2017, pp. 1510-1519.",
+                "links": null
+            },
+            "BIBREF64": {
+                "ref_id": "b64",
+                "title": "When and why test-time augmentation works",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Shanmugam",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Blalock",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Balakrishnan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Guttag",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "arXiv": [
+                        "arXiv:2011.11156"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "D. Shanmugam, D. Blalock, G. Balakrishnan, and J. Guttag, \"When and why test-time augmentation works,\" 2020, arXiv:2011.11156. [Online].",
+                "links": null
+            },
+            "BIBREF65": {
+                "ref_id": "b65",
+                "title": "Available",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Available: http://arxiv.org/abs/2011.11156",
+                "links": null
+            }
+        },
+        "ref_entries": {
+            "FIGREF0": {
+                "uris": null,
+                "num": null,
+                "text": "The effect of data augmentation on a single CMR slice. In the top row, the original image and spatial augmentations are shown. In the bottom row, intensity-based augmentations.",
+                "fig_num": "3",
+                "type_str": "figure"
+            },
+            "FIGREF1": {
+                "uris": null,
+                "num": null,
+                "text": "Weighted average DSC and HD for all participating methods, according to equation(5).",
+                "fig_num": "4",
+                "type_str": "figure"
+            },
+            "FIGREF2": {
+                "uris": null,
+                "num": null,
+                "text": "summarizes the segmentation results for all teams for each vendor separately (A, B, C & D)",
+                "fig_num": "6",
+                "type_str": "figure"
+            },
+            "FIGREF3": {
+                "uris": null,
+                "num": null,
+                "text": "Boxplots with vendor-wise results for DSC and HD when all participants predictions are considered. Vendors are presented in order: Siemens (A), Philips (B), GE (C) and Canon (D).",
+                "fig_num": "6",
+                "type_str": "figure"
+            },
+            "FIGREF4": {
+                "uris": null,
+                "num": null,
+                "text": "Boxplots for DSC and HD results for centres that had labelled samples in the training set, unlabelled samples in the training set and no samples at all.",
+                "fig_num": "8",
+                "type_str": "figure"
+            },
+            "FIGREF5": {
+                "uris": null,
+                "num": null,
+                "text": "Boxplots for DSC results for the top 3 performing methods depending on different cardiac structures (LV, MYO and RV) and different slice position for both ED and ES. The apex and the base are defined as the last and first annotated slices, respectively. The middle slice is the slice located in between the apex and base slices. The remaining slices are defined based on their relative position with respect to the middle slice.",
+                "fig_num": "9",
+                "type_str": "figure"
+            },
+            "FIGREF6": {
+                "uris": null,
+                "num": null,
+                "text": "Prediction examples for method P1 for vendors C (GE) and D (Canon). Top two rows show satisfactory results, while the two bottom rows present some error in the final contours. Color correspondence: left ventricle endocardium (red), left ventricle epicardium (green) and right ventricle endocardium (yellow). Ground truth is drawn in white color.",
+                "fig_num": "10",
+                "type_str": "figure"
+            },
+            "TABREF0": {
+                "content": "<table/>",
+                "num": null,
+                "text": "FROM CENTRES INCLUDED IN THIS WORK Fig. 1.",
+                "type_str": "table",
+                "html": null
+            },
+            "TABREF1": {
+                "content": "<table/>",
+                "num": null,
+                "text": "",
+                "type_str": "table",
+                "html": null
+            },
+            "TABREF3": {
+                "content": "<table><tr><td>TABLE VI</td></tr><tr><td>CHARACTERISTICS OF PARTICIPATING MODELS. ABBR: ROTATIONS (R), FLIPPING (F), SCALING (S), DEFORMATIONS (D), HISTOGRAM</td></tr><tr><td>MATCHING (HM), GAUSSIAN NOISE (GN), BRIGHTNESS (B), GAMMA (G), TEST TIME AUGMENTATION (TTA)</td></tr></table>",
+                "num": null,
+                "text": "AND DETAILS OF THE PARTICIPATING TEAMS IN THE CHALLENGE",
+                "type_str": "table",
+                "html": null
+            },
+            "TABREF4": {
+                "content": "<table/>",
+                "num": null,
+                "text": "AND INFERENCE TIME, AND HARDWARE USED, FOR ALL PARTICIPATING METHODS. H, M, S AND MIL. STAND FOR HOURS, MINUTES, SECONDS AND MILLIONS, RESPECTIVELY",
+                "type_str": "table",
+                "html": null
+            },
+            "TABREF5": {
+                "content": "<table><tr><td>the 14 techniques relative to each other do not change when</td></tr><tr><td>analysed per pathology.</td></tr></table>",
+                "num": null,
+                "text": "AND HD FOR THE FINAL SUBMISSIONS OF ALL PARTICIPANTS AND THE TWO BASELINE MODELS. BOLD FACE NUMBERS ARE THE BEST RESULTS FOR EACH COLUMN AND BLUE NUMBERS ARE NON-SIGNIFICANTLY LOWER RESULTS WHEN COMPARED TO THE P1 RESULTS (p-VALUE > 0.01 FOR THE WELCH'S t-TEST). HD IS MEASURED IN MILLIMETERS Fig. 5. Average DSC for all participants for the most common pathologies in the dataset. HCM and DCM stand for hypertrophic and dilated cardiomyopathy, respectively.",
+                "type_str": "table",
+                "html": null
+            },
+            "TABREF6": {
+                "content": "<table/>",
+                "num": null,
+                "text": "RESULTS STRATIFIED BY VENDOR AND HEART SUBSTRUCTURE. THE LAST TWO COLUMNS ARE THE AVERAGE DSC LOSS FOR VENDORS C AND D WITH RESPECT TO THE COMBINED AVERAGE DSC RESULTS FROM VENDORS A AND BFig.",
+                "type_str": "table",
+                "html": null
+            }
+        }
+    }
+}

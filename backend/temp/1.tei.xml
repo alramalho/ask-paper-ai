@@ -1,0 +1,1337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 /Users/alramalho/grobid-0.6.1/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+				<date type="published" when="2020-11-10">10 November 2020</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jin</forename><surname>Liang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jiancheng</forename><surname>Yang</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Electronic Engineering</orgName>
+								<orgName type="institution">Shanghai Jiao Tong University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff2">
+								<orgName type="department">MoE Key Lab of Artificial Intelligence</orgName>
+								<orgName type="institution" key="instit1">AI Institute</orgName>
+								<orgName type="institution" key="instit2">Shanghai Jiao Tong University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff3">
+								<orgName type="department">Dianei Technology</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Kaiming</forename><surname>Kuang</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Dianei Technology</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Bingbing</forename><surname>Ni</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Electronic Engineering</orgName>
+								<orgName type="institution">Shanghai Jiao Tong University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff2">
+								<orgName type="department">MoE Key Lab of Artificial Intelligence</orgName>
+								<orgName type="institution" key="instit1">AI Institute</orgName>
+								<orgName type="institution" key="instit2">Shanghai Jiao Tong University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff4">
+								<orgName type="institution">Huawei Hisilicon</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Yiyi</forename><surname>Gao</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Yingli</forename><surname>Sun</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Pan</forename><surname>Gao</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Weiling</forename><surname>Ma</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Mingyu</forename><surname>Tan</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Hui</forename><surname>Kang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff3">
+								<orgName type="department">Dianei Technology</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jiajun</forename><surname>Chen</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Dianei Technology</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">P.R. China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Ming</forename><surname>Li</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Radiology Department</orgName>
+								<orgName type="institution" key="instit1">Huadong Hospital</orgName>
+								<orgName type="institution" key="instit2">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff5">
+								<orgName type="department">Institute of Functional and Molecular Medical Imaging</orgName>
+								<orgName type="institution">Fudan University</orgName>
+								<address>
+									<settlement>Shanghai</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2020-11-10">10 November 2020</date>
+						</imprint>
+					</monogr>
+					<idno type="DOI">10.1016/j.ebiom.2020.103106</idno>
+					<note type="submission">Received 30 July 2020 Revised 17 October 2020 Accepted 19 October 2020</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.6.1" ident="GROBID" when="2023-01-06T14:30+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>Rib fracture Deep learning Detection and segmentation</keywords>
+			</textClass>
+			<abstract>
+				<p>Background: Diagnosis of rib fractures plays an important role in identifying trauma severity. However, quickly and precisely identifying the rib fractures in a large number of CT images with increasing number of patients is a tough task, which is also subject to the qualification of radiologist. We aim at a clinically applicable automatic system for rib fracture detection and segmentation from CT scans. Methods: A total of 7,473 annotated traumatic rib fractures from 900 patients in a single center were enrolled into our dataset, named RibFrac Dataset, which were annotated with a human-in-the-loop labeling procedure. We developed a deep learning model, named FracNet, to detect and segment rib fractures. 720, 60 and 120 patients were randomly split as training cohort, tuning cohort and test cohort, respectively. Free-Response ROC (FROC) analysis was used to evaluate the sensitivity and false positives of the detection performance, and Intersection-over-Union (IoU) and Dice Coefficient (Dice) were used to evaluate the segmentation performance of predicted rib fractures. Observer studies, including independent human-only study and human-collaboration study, were used to benchmark the FracNet with human performance and evaluate its clinical applicability. A annotated subset of RibFrac Dataset, including 420 for training, 60 for tuning and 120 for test, as well as our code for model training and evaluation, was open to research community to facilitate both clinical and engineering research. Findings: Our method achieved a detection sensitivity of 92.9% with 5.27 false positives per scan and a segmentation Dice of 71.5%on the test cohort. Human experts achieved much lower false positives per scan, while underperforming the deep neural networks in terms of detection sensitivities with longer time in diagnosis. With human-computer collobration, human experts achieved higher detection sensitivities than human-only or computer-only diagnosis. Interpretation: The proposed FracNet provided increasing detection sensitivity of rib fractures with significantly decreased clinical time consumed, which established a clinically applicable method to assist the radiologist in clinical practice. Funding: A full list of funding bodies that contributed to this study can be found in the Acknowledgements section. The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication .</p>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Introduction</head><p>Recent advances in artificial intelligence and computer vision lead to a rapid development of deep learning technology <ref type="bibr" target="#b1">[1]</ref> in medical image analysis and digital medicine <ref type="bibr">[2À7]</ref>. With end-to-end learning of deep representation, deep supervised learning, as a unified methodology, achieved remarkable success in numerous 2D and 3D medical image tasks, e.g., classification <ref type="bibr" target="#b8">[8]</ref>, detection <ref type="bibr" target="#b9">[9]</ref>, segmentation <ref type="bibr" target="#b10">[10]</ref>. With the rise of deep learning, infrastructures, algorithms and data (with annotations) are known to be the keys to its success. Computer-aided diagnosis with a high-performance deep learning is expected to save human labor, improve diagnosis consistency and accuracy, personalize patient treatment, and improve patientÀdoctor relationship. <ref type="bibr" target="#b11">[11]</ref> Rib fracture represents an important indicator of trauma severity; the number of fractured ribs increases morbidity and mortality <ref type="bibr" target="#b12">[12]</ref>. Multidetector computed tomography (CT) provides a more accurate assessment to evaluate for the presence of rib fractures when standard posteroanterior (PA) chest radiograph is specific but insensitive <ref type="bibr">[12À15]</ref>. Definite diagnosis (counting) of the number of rib fractures is also an important indicator in forensic examination for degree of disability <ref type="bibr" target="#b14">[14,</ref><ref type="bibr" target="#b16">16,</ref><ref type="bibr" target="#b17">17]</ref>. However, the identification of rib fracture in CT images using conventional axial thin (1À1.5 mm) images is a difficult and labor-intensive task. Each rib has a complex shape with a diagonal course across numerous CT sections <ref type="bibr" target="#b18">[18]</ref>, which leads to missing rib fracture diagnosis (detection) in clinical practice. For instance, buckle fractures are the most frequently missing type of fracture reported in 2012 <ref type="bibr" target="#b19">[19,</ref><ref type="bibr" target="#b20">20]</ref>, due to the confusing appearance; nondisplaced rib fractures could be missing when parallel to the scan plane of the CT images. Besides, diagnosing subtle fractures is tedious and time-consuming for a large number of CT slices, which must be evaluated sequentially, rib-by-rib and side-by-side <ref type="bibr" target="#b18">[18]</ref>.</p><p>In this study, we aim at a clinically applicable automatic system for rib fracture detection and segmentation from CT scans. Few prior studies explore the development and validation of deep learning algorithms in this application. We proposed an automatic system named FracNet based on 3D UNet <ref type="bibr" target="#b21">[21]</ref>, trained and evaluated with a large-scale dataset, named RibFrac Dataset, consisting of 7,473 voxellevel rib fracture segmentation from 900 chest-abdomen CT scans (332,483 CT slices). The annotation of RibFrac Dataset followed a human-in-the-loop labeling procedure, which ensures a high standard of annotation quality. On RibFrac test cohort, the proposed Frac-Net system achieved a detection sensitivity of 92.9% (with 5.27 false positives per scan) and a segmentation Dice Coefficient of 71.5%, which outperformed counterpart methods based on 3D variants of FCN <ref type="bibr" target="#b22">[22]</ref> and DeepLab v3+ <ref type="bibr" target="#b23">[23]</ref> with a 3D ResNet-18 backbone <ref type="bibr" target="#b24">[24,</ref><ref type="bibr" target="#b25">25]</ref>. Furthermore, observer studies with two experienced radiologists, including independent human-only study and humancollobration study, were designed to validate the clinical value of the proposed system. Our system achieved higher detection sensitivities than human experts. Importantly, human-computer collaboration significantly improved detection sensitivities over computer-only and human-only diagnosis, with reduced clinical time compared to human-only diagnosis.</p><p>As the first open research in this application, a subset of the annotated RibFrac Dataset (600 CT scans, 221,308 CT slices) and our code for model training and evaluation will be open-source. We believe this large-scale dataset could facilitate both clinical research for automatic rib fracture diagnosis and engineering research for 3D computer vision.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Materials and methods</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1.">RibFrac dataset 2.1.1. Ethics</head><p>This retrospective study was approved by the ethics committee of Huadong Hospital affiliated to Fudan University (NO.2019K146), which waived the requirement for informed consent.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1.2.">Inclusion Criteria</head><p>From January 2017 to December 2018, a search of the electronic medical records and the radiology information systems of the hospital for patients with traumatic rib fractures identified on chest-abdomen CT scans (1À1.25 mm) was performed by one author. A total of 7,473 traumatic rib fractures from 900 patients [mean age, 55.1 years 11.82 (standard deviation); range, 21À94 years] were enrolled in the study. There were 580 men [63.8%] and 329 women <ref type="bibr">[36.2%]</ref>. Traumatic abdomen-thorax CT was performed by using the following two CT scanners: 16 cm wide coverage detector CT (Revolution CT, GE Healthcare, WI, USA); second-generation dual-source CT scanner (Somatom Definition Flash, Siemens Healthcare, Forchheim, Germany) with following parameters: 120 kVp; 100À200 mAs; pitch, 0.75À1.5; and collimation, 1À1.25 mm, respectively. All imaging data were reconstructed by using a bone or medium sharp reconstruction algorithm with a thickness of 1À1.25 mm.</p><p>As detailed in <ref type="figure" target="#fig_0">Fig. 1 (a)</ref>, the inclusion criteria are as follows: (1) Traumatic patients with thin-slice chest-abdomen CT images (1À1.25 mm) containing all ribs, and (2) Thin-slice CT images without breathing artifact debasing diagnostic accuracy.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1.3.">Human-in-the-loop labeling of rib fractures</head><p>In the whole labeling procedure, there were 5 radiologists involved: A (3-5 years), B (10-20 years), C (5 years), D (5 years), E (20 years); numbers in the brackets denote the years of experience in chest CT interpretation.</p><p>All enrolled CT scans were first randomly diagnosed by two radiologists A and B in radiology department after the CT examinations in 48 hours, who did not participate in this study. Two junior radiologists C and D manually delineated the volume of interest (VOI) of the traumatic rib fractures with diagnosed CT reports at voxel level on axial CT images with the help of the diagnosis reports (by the radiologists A or B) and a medical image processing and navigation software 3D Slicer (version 4.8.1, Brigham and Women's Hospital). The broken ends of fractured bone were included as much as possible for the volume of the fractures as <ref type="figure" target="#fig_0">Fig. 1 (b)</ref>; Besides, as illustrated in <ref type="figure" target="#fig_0">Fig. 1 (c)</ref>, axial images combining manually curve planar reformation images were used together to insure the accuracy of labeling the real fractures <ref type="bibr" target="#b14">[14]</ref>, as rib fractures can be variable and inconspicuous if the fracture line is not present or parallels the detection plane <ref type="bibr" target="#b18">[18]</ref>. After labeling by C and D, the VOIs were then confirmed by another senior radiologist E.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Research in context</head><p>Evidence before this study Quickly and precisely identifying the rib fractures in a large number of CT images is a tough and important task, which plays an important role in identifying trauma severity. Deep leanring has achieved a great success in medical image analysis. In this study, we aimed at a clinically applicable deep learning system to automatically detect and segment rib fractures.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Added value of this study</head><p>We present a deep learning system, named FracNet, for automatic detection and segmentation of the rib fractures. The proposed FracNet achieved high detection sensitivity, acceptable false positive per scan and segmentation overlap, which was proven to improve the human detection sensitivity with reduced clinical time comsued in our observer study. Besides, a subset of our dataset was open-source to research community, which is the first open large-scale dataset in this application.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Implications of all the available evidence</head><p>The proposed FracNet could help the radiologists in the diagnosis of rib fractures, to increase the efficiency of the clinical workflow, without decreasing the diagnostic accuracy at the same time.</p><p>An initial deep learning model following a same pipeline as Frac-Net (Section 2.2) was developed on the RibFrac training cohort (Section 2.1.3). The initial system was used to predict fractures on the RibFrac training, tuning and test cohorts. We excluded all predicted fractures with high overlap between any initial label; all remaining predictions were feedback to the radiologist E to verify (reduce false positives). This procedure was assisted by an interactive visual tool (see Supplementary Materials). Around 20% annotations were missing from initial labeling and added with the human-in-the-loop labeling. The verified annotations were used for the development and validation of the deep learning system. Please note that there was no data leakage issue in the human-in-the-loop labeling procedure and the following development and validation, since our deep learning system was only trained on the training cohort.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1.4.">Dataset pretreatment</head><p>The chest-abdomen CT DICOM (Digital Imaging and Communications in Medicine) format images were imported into the software for delineating, and the images with VOI information were then extracted with NII or NIFTI (Neuroimaging Informatics Technology Initiative) format for next-step analysis.</p><p>As depicted in <ref type="table" target="#tab_0">Table 1</ref>, we randomly split the whole RibFrac Dataset (900 cases, 332,483 CT slices in total) into 3 cohorts: training (720 cases, to train the deep learning system), tuning (60 cases, to tune hyper-parameters of the deep learning system) and test (120 cases, to evaluate the model and human performance). In standard machine learning terminology, tuning is regarded as "validation"; in standard medical terminology, test in regarded as "validation".</p><p>Considering several practical issues, we open source a subset of 600 cases (221,308 CT slices in total), with 420 cases for training, 60 cases for tuning and 120 for test. To our knowledge, it is the first open research dataset in this application. On the open-source subset of RibFrac Dataset, a deep learning system with same architecture of FracNet could be developed and validated with an acceptable performance. Please refer to Supplementary Materials for details.  Our algorithm follows a data-driven approach: it relies on the human annotations of rib fractures and learns to directly predict the voxel-level segmentation of fractures. Notably, the proposed FracNet does not rely on the extraction of rib centerlines in typical rib analysis algorithms <ref type="bibr" target="#b27">[27]</ref>. As illustrated in <ref type="figure" target="#fig_1">Fig. 2 (a)</ref>, our model pipeline consists of three stages: (a) pre-processing, (b) sliding-window prediction, and (c) post-processing.</p><p>(a) Pre-processing: To speed up the detection, we extracted the bone areas through a series of morphological operations (e.g., thresholding and filtering). The original spacing was preserved since only thin-section CT scans were included in our dataset. The intensity of input voxels was clipped to the bone window (level=450, width=1100) and normalized to [-1,1].</p><p>(b) Sliding-window prediction: Considering the elongated shape of rib fractures, standard labeling with bounding boxes could be missing much details. Therefore, we formulated the rib fracture detection as a 3D segmentation task. A customized 3D UNet, named FracNet (Section 2.2.2.), was developed to perform segmentation in a sliding-window fashion. Since a whole-volume CT scan could be too large to fit in a regular GPU memory, we cropped 64 Â 64 Â 64patches in a sliding-window fashion with a stride of 48 and feed them to our network. A raw segmentation was obtained by assembling patches of prediction. Maximum values were kept in the overlapping regions of multiple predictions.</p><p>(c) Post-processing: To efficiently reduce the false positive in our predictions, predictions of small sizes (smaller than 200 voxels) were filtered out. We also removed the spine regions according to their coordinates on the raw segmentation. To generate detection proposal, we first binarized the post-processed segmentation results with a low threshold of 0.1, and then computed connected components on the binary segmentation. Each connected component was regarded as a detection proposal, with a probability calculated by averaging raw segmentation scores over all voxels within the connected component.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2.2.">Network architecture of FracNet and counterparts</head><p>To capture both local and global contexts, we proposed a customized 3D UNet <ref type="bibr" target="#b21">[21]</ref> architecture, named FracNet, following an encoder-decoder architecture in <ref type="figure" target="#fig_1">Fig. 2 (b)</ref>. The encoder was a series of down-sampling stage, each of which is composed of 3D convolution, batch-normalization <ref type="bibr" target="#b28">[28]</ref>, non-linearity and max pooling. The resolution of feature maps was halved after each down-sampling stage, while the number of channels was doubled. In the decoder, the feature map resolution was gradually restored through a series of transposed convolution. Features from the encoder were reused through feature concatenation from the same levels of the encoder and decoder. After the feature maps were recovered to the original size, we used a 1 Â 1 Â 1convolution layer to shrink the output channel to 1. Activated with a sigmoid function, the output denoted back-ground=0 and lesions=1.</p><p>To benchmark our method, we also designed 3D variants of FCN and DeepLab v3+ 3 for 3D segmentation. In both models, we used a 3D backbone, named 3D ResNet18-HR based on ResNet <ref type="bibr" target="#b2">[2]</ref> to encode the 3D representation. Compared to standard ResNet achitecture (3D ResNet18-LR), the initial convolution layer with a stride of 2 followed by a down-sampling max pooling was modified into a single convolution layer with a stride of 1, thus the resolution of initial feature map from 3D ResNet18-HR is 4 times large as that of 3D ResNet18-LR. For 3D DeepLab, we added a 3D variant of atrous spatial pyramid pooling (ASPP) <ref type="bibr" target="#b3">[3]</ref> between the encoder and decoder of 3D FCN to refine the output features. The neural network architectures of 3D FCN and 3D DeepLab is illustrated in Supplementary Materials.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2.3.">Model training</head><p>Since rib fracture annotations were very sparse in whole CT volumes, during model training, we adopted a sampling strategy to alleviate the imbalance between positive and negative samples. Positive samples of size 64 £ 64 £ were randomly cropped from a 96 £ 96 £ 96 region centered at the rib fracture, while negative samples were extracted within bone regions without fractures. During training, each batch consisted of 12 positive and 12 negative samples. Data augmentation of random plane flipping was applied. We used a combination of soft Dice loss and binary cross-entropy (BCE) to train our network: where y 1 ; y 2 denote the ground truth and prediction of rib fracture segmentation, respectively, and ndenotes the batch size. We trained the network using Adam optimizer <ref type="bibr" target="#b29">[29]</ref> with a warm-up training strategy. The learning rate linearly increased from 0.00001 to 0.1 during the first epoch, and then linearly decreased to 0.001 in 100 epochs. The RibFrac tuning cohort was used for tuning the hyperparameters, including choosing the best model snapshot to be evaluated on the test cohort.</p><formula xml:id="formula_0">loss y 1 ; y 2<label>ð</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3.">Model evaluation and statistical analysis</head><p>2.3.1. Metrics Our method followed a segmentation methodology to perform a detection task, therefore both segmentation and detection metrics were critical to evaluate the model performance. For segmentation, we reported Dice Coefficient (Dice) and Intersection-over-Union (IoU),</p><formula xml:id="formula_1">IoU y 1 ; y 2 ð Þ¼ P y 1 ¢ y 2 P y 1 þ P y 2 À P y 1 ¢ y 2 :</formula><p>Note that both Dice and IoU are positively correlated, where Dice is the most popular metric for medical image segmentation.</p><p>The evaluation of detection performance was based on Free-Response Receiver Operating Characteristic (FROC) analysis, an evaluation approach balancing both sensitivity and false positives. The FROC analysis was reported with sensitivities at various false positive (FP) levels, typically FP¼ 0:5; 1; 2; 4; 8. We also reported their average as the overview metric for FROC analysis. Besides the FROC analysis, the overall detection sensitivity and average false positives per scan were also reported, which denoted the maximum sensitivity at maximum FP level in FROC analysis.</p><p>For each detection proposal, it was regarded as a hit when overlapped with IoU &gt; 0:2 between any rib fracture annotation. Please note that for objects with elongated shape, the IoU tended to vary, which was the reason why we chose IoU &gt; 0:2 as the detection hit criterion. See Section 3.1 for more explanation on this issue.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3.2.">Observer study</head><p>To benchmark the proposed deep learning system with human experts, two radiologists R1 (a junior radiologist with more than 3 years of experience in chest CT interpretation) and R2 (a senior radiologist with 10 years of experience in chest CT interpretation) were required to participate in an independent human-only observer study. R1 and R2 were shown the RibFrac test cohort with randomized order to independently detect and segment each rib fracture, blinded to the fracture results and patient information. We then computed the detection and segmentation metrics with the ground truth labels with a human-in-the-loop annotation procedure (Section 2.1.2). The standard of reference for the diagnosis of rib fractures was the accurate location of the fractured rib and positive rib fracture <ref type="bibr" target="#b14">[14]</ref>.</p><p>Besides the independent observer study, a human-computer collaboration study was conducted to simulate the real clinical scenario.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.4.">Role of funding source</head><p>The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Results</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.">FracNet performs consistently on RibFrac cohorts</head><p>We first reported the performance of the proposed FracNet on our RibFrac training, tuning and test cohorts. As illustrated in <ref type="figure" target="#fig_2">Fig 3 (a</ref> and <ref type="table" target="#tab_2">Table 2</ref>, our method achieved detection sensitivities of around 92%with average false positives per scan 6on the three cohorts consistently. Besides, our method achieved an acceptable segmentation performance, Dice¼ 87:3%; 74:0%; 71:5%on the training, tuning and test cohorts, respectively. Illustration of the predicted segmentation by FracNet was depicted in <ref type="figure" target="#fig_2">Fig. 3 (b)</ref>. There was overfitting observed in the segmentation tasks, as segmentation was the proxy task for training the FracNet system; however, no overfitting was observed on the detection task. Please note that numbers of lesions in the rib fracture task were associated with elongated shapes, while object segmentation with elongated shape tended to be associated with low segmentation metrics (IoU and Dice). In <ref type="figure" target="#fig_2">Fig. 3 (c)</ref>, we demonstrated 2 cases with rounded and elongated shape. Both cases were predicted with visually similarly segmentation to ground truth, while the segmentation metrics (IoU and Dice) of elongated shape were dramatically lower than those of rounded shape. It also explained why we choosed IoU &gt; 0:2 as the detection hit criterion.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2.">Benchmarking FracNet with counterparts and experts</head><p>To validate the effectiveness of the proposed FracNet system, we compared the model performance with several deep neural network counterparts and human experts in <ref type="table">Table 3</ref>. As demonstrated, the FracNet outperformed 3D FCN and 3D DeepLab by large margins, which verified the effectiveness of network design in the proposed FracNet. Please note that the model size of FracNet was smaller than these of 3D FCN and 3D DeepLab. Moreover, we conducted observer studies with two radiologists (R1 and R2, details in Section 2.3.2). Remarkably, though human experts achieved much lower false positives per scan, they underperformed the deep neural networks in terms of detection sensitivities. As for segmentation performance, FracNet underperformed R1 while outperformed R2. We also evaluated the performance of human collaboration with a simple union of human annotations <ref type="figure" target="#fig_0">(R1 [ R2)</ref>; the union improved detection sensitivities with a cost of additional false positives introduced.</p><p>We further evaluate the performance of human-computer unions (FracNet [ R1 and FracNet [ R2). The detection probabilities of human were set to 1, therefore sensitivities with low FP level 0.5 and 1 were missing. Excitingly, dramatical improvement in detection sensitivities was observed, which was the foundation of human-computer collaboration (Section 3.3).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3.">Human-computer collaboration</head><p>In this section, we validated the human-computer collaboration performance (Section 2.3.3) in <ref type="table">Table 4</ref> and <ref type="figure">Fig. 4</ref>. Average clinical time for detecting and segmenting all rib fractures was also reported. The average model time was measured with an implementation of PyTorch 1.3.1 and Python 3.7, on a machine with a single NVIDIA GTX 1080Ti with Intel Xeon E5-2650 and 128 G memory. The human-only diagnosis outperformed FracNet with given false positive levels. However, the human-computer collaboration could further improve their performance with reduced clinical time. Basically, the humancomputer collaboration followed the workflow of the FracNet system in clinical scenario: (a) model prediction (Model), (b) manual false positive reduction and verification (FPR), and (c) missing lesion detection and segmentation (Segmentation). Compared to conventional manual diagnosis by human experts (R1 and R2), the humancomputer collaboration significantly improved the detection sensitivities by large margins, with a sight cost in increasing false positives. Nevertheless, the computer-aided diagnosis with FracNet reduced the clinical time for rib fracture detection and segmentation. In real clinical practice, the clinicians are not asked to segmentation the rib fractures, where only diagnosis time should be counted. Even in such cases, human-computer collaboration could reduce clinical time with even better diagnosis performance. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">Discussion</head><p>This study proposed a deep learning system, named FracNet, to detect and segment the rib fractures from CT scans. In rib fracture detection, our model performed high sensitivity (92.9%) and average FPs (5.27); as a comparison, human experts achieve 79.1%, 1.34 and 75.9%, 0.92. Besides, our deep learning system showed acceptable performance on rib fracture segmentation (IoU: 55.6%; Dice: 71.5%), which had never been reported in prior studies . Collaborated with the deep learning system, sensitivity of rib fractures increased (up to 94.4%) with acceptable false positives and reduced clinical time consuming (approximate 86% clinical time decreased).</p><p>Through the observer study, the junior radiologist had higher sensitivity (79.1%) of rib fractures detection with increased FPs (1.34) than the senior radiologist (75.9%, 0.9), indicating that the radiologists have their own interpretation in rib fractures. Although the junior radiologist achieved 3.2% higher sensitivity of rib fractures, the FPs also increased about 31%. The human-computer collaboration improved both the sensitivity and FPs compared with human-only or computer-only diagnosis, indicating the existence of model-detected rib fractures that were missed by radiologists, and vice versa. The inspiring results achieved by human-computer collaboration were consistent with a pervious study <ref type="bibr" target="#b4">[4]</ref> in chest radiograph interpretation. When collaborated with human experts, FracNet achieved higher sensitivities with significantly reduced false positives. Moreover, deep-learning-assisted diagnosis significantly decreased about 86.3% and 85.6% clinical time with comparable or even better diagnostic accuracy (higher sensitivities and FPs).</p><p>Before our study, there were two related recent studies using deep learning to detect the rib fractures from CT images <ref type="bibr" target="#b30">[30,</ref><ref type="bibr" target="#b31">31]</ref>. Both studies formalized the task as 2D detection, however our study formalized it as 3D segmentation. As discussed in Section 3.1, the rib fractures were generally associated with elongated shapes; The formalization with segmentation masks in our study was expected to be more accurate than that with detection bounding boxes in these related studies. To our knowledge, it is the first study for rib fracture segmentation. Besides, the data and annotation were of higher standard in our study. High-quality thin-slice CT scans with thickness of 1À1.25 mm were used in our study, compared to 1.5 mm <ref type="bibr" target="#b30">[30]</ref> and partially 5 mm [679 of 974 patients (about 69.7%)] <ref type="bibr" target="#b31">[31]</ref>. It was reported that thin-slice images could be helpful for the diagnosis of bone fractures and incidental findings <ref type="bibr" target="#b32">[32]</ref>. On the other hand, we adapted a human-in-the-loop labeling procedure (Section 2.1.2), five radiologists were envovled to ensure the high quality of our annotations, which could help to reduce the risk of overestimating model performance <ref type="bibr">[4,33À35]</ref>. For these reasons, our model achieved a significantly higher detection sensitivity with less time-comsuing as time is crucial for trauma patients in the emergency setting throughout the whole diagnostic and therapeutic management process <ref type="bibr" target="#b36">[36]</ref>. The model performance was consistent on our external training, tuning and test cohorts. More importantly, we open source the first large scale dataset for rib fracture detection and segmentaiton with voxellevel annotations, to improve research reproducibility and facilitate further research.</p><p>There are limitations in this study. Although developed and validated on a large-scale dataset, this is a single-center study. In our site, the performance of diagnostic performance between junior and senior human experts was similar, this may benefit from the expertise of our radiologists in rib fracture diagnosis. However, in our experience, the diagnostic performance of radiologists with different expertise from different sites may vary significantl. Besides, even the annotations were verified with a human-in-the-loop labeling procedure, there could still be false positive or false negative annotation. Moreover, the landscape of deep neural networks was not fully explored. In further studies, we are investigating model generalization of our method on multi-center datasets, with more rounds of human-in-the-loop labeling procedure. It is also interesting to explore segmentation loss for elongated objects <ref type="bibr" target="#b37">[37,</ref><ref type="bibr" target="#b38">38]</ref> or leverage the pretraining from natural / medical images <ref type="bibr" target="#b39">[39,</ref><ref type="bibr" target="#b40">40]</ref>. Apart from automatic rib fracture detection and segmentation, we are also developing datasets and models to automatically classify the fracture types. We will also introduce recent advances in 3D deep learning to improve the model performance.</p><p>In conclusion, our deep learning model collaborated with human experts could help to increase the diagnostic effectiveness and efficiency in the diagnosis of rib fractures, which implied the great potential of deep-learning-assisted diagnosis in clinical practice.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>(a) Flowchart of RibFrac Dataset setup, including human-in-the-loop labeling of rib fractures. (b) Illustration of manual rib fracture labeling. (c) Verification of manual labeling with axial images (top) and manually curve planar reformation images (bottom).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 .</head><label>2</label><figDesc>(a) The pipeline for detecting rib fractures from CT scans. A 3D convolutional neural network, named FracNet, was developed to segment the fractures in a sliding window fashion. Pseudo-color in the figure is used for better visualizing binary images of bones and segmentation results. (b) Neural network architecture of FracNet based on 3D UNet [21]. Our code in PyTorch [26] for model training and evaluation will be soon open source.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>)Fig. 3 .</head><label>3</label><figDesc>(a) FROC curves of FracNet detection performance on the RibFrac training, tuning and test cohorts. (b) Illustration of predicted segmentation on RibFrac test cohorts. (c) A comparison of segmentation metrics (IoU and Dice) for rounded and elongated shape. In (b) and(c), the pseudo-color in the 3D shape is only for visualization purpose.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1</head><label>1</label><figDesc>RibFrac Dataset Overview.</figDesc><table><row><cell>Cohorts</cell><cell>Availability</cell><cell>No. Patients / CT Scans</cell><cell>No. CT Slices</cell><cell>No. Fractures</cell></row><row><cell>Training</cell><cell>Total</cell><cell>720</cell><cell>265,302</cell><cell>6,156</cell></row><row><cell></cell><cell>Public</cell><cell>420</cell><cell>154,127</cell><cell>3,987</cell></row><row><cell></cell><cell>In-House</cell><cell>300</cell><cell>111,175</cell><cell>2,169</cell></row><row><cell>Tuning</cell><cell>Public</cell><cell>60</cell><cell>22,562</cell><cell>435</cell></row><row><cell>Test</cell><cell>Public</cell><cell>120</cell><cell>44,619</cell><cell>882</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 2</head><label>2</label><figDesc>FracNet performance on RibFrac training, tuning and test cohorts, in terms of detection and segmentation performance. FP: false positives per scan. IoU: Intersection-over-Union. Dice: Dice Coefficient.</figDesc><table><row><cell>Cohorts</cell><cell></cell><cell cols="4">Detection Sensitivities @ FP Levels</cell><cell></cell><cell cols="2">Detection</cell><cell cols="2">Segmentation</cell></row><row><cell></cell><cell>0 . 5</cell><cell>1</cell><cell>2</cell><cell>4</cell><cell>8</cell><cell>A v g</cell><cell>Sensitivity</cell><cell>Avg FP</cell><cell>IoU</cell><cell>Dice</cell></row><row><cell>Training</cell><cell>60.3%</cell><cell>69.3%</cell><cell>78.3%</cell><cell>90.0%</cell><cell>91.9%</cell><cell>77.9%</cell><cell>91.9%</cell><cell>4.41</cell><cell>77.5%</cell><cell>87.3%</cell></row><row><cell>Tuning</cell><cell>55.6%</cell><cell>67.8%</cell><cell>78.9%</cell><cell>89.7%</cell><cell>92.2%</cell><cell>76.8%</cell><cell>92.2%</cell><cell>4.85</cell><cell>58.7%</cell><cell>74.0%</cell></row><row><cell>Test</cell><cell>66.0%</cell><cell>75.0%</cell><cell>81.7%</cell><cell>90.5%</cell><cell>92.9%</cell><cell>81.2%</cell><cell>92.9%</cell><cell>5.27</cell><cell>55.6%</cell><cell>71.5%</cell></row><row><cell>Table 3</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="11">A comparison of detection and segmentation performance on RibFrac Test Set, of FracNet, two deep neural network counter-</cell></row><row><cell cols="8">parts (3D FCN and 3D DeepLab), two radiologists (R1 and R2) and their union.</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Methods</cell><cell></cell><cell cols="4">Detection Sensitivities @ FP Levels</cell><cell></cell><cell cols="2">Detection</cell><cell cols="2">Segmentation</cell></row><row><cell></cell><cell>0.5</cell><cell></cell><cell>2</cell><cell>4</cell><cell>8</cell><cell>Avg</cell><cell>Sensitivity</cell><cell>Avg FP</cell><cell>IoU</cell><cell>Dice</cell></row><row><cell>FracNet</cell><cell>66.0%</cell><cell>75.0%</cell><cell>81.7%</cell><cell>90.5%</cell><cell>92.9%</cell><cell>81.2%</cell><cell>92.9%</cell><cell>5.27</cell><cell>55.6%</cell><cell>71.5%</cell></row><row><cell>3D FCN</cell><cell>59.9%</cell><cell>69.7%</cell><cell>76.1%</cell><cell>84.4%</cell><cell>87.8%</cell><cell>75.6%</cell><cell>87.8%</cell><cell>7.02</cell><cell>49.1%</cell><cell>66.2%</cell></row><row><cell>3D DeepLab</cell><cell>63.7%</cell><cell>72.5%</cell><cell>79.2%</cell><cell>88.2%</cell><cell>91.3%</cell><cell>79.0%</cell><cell>91.3%</cell><cell>6.11</cell><cell>50.3%</cell><cell>68.7%</cell></row><row><cell>R1</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>79.1%</cell><cell>1.34</cell><cell>47.4%</cell><cell>64.3%</cell></row><row><cell>R2</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>75.9%</cell><cell>0.92</cell><cell>36.7%</cell><cell>53.1%</cell></row><row><cell>R1 [ R2</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>/</cell><cell>83.1%</cell><cell>1.80</cell><cell>47.8%</cell><cell>64.7%</cell></row><row><cell>FracNet [ R1</cell><cell>/</cell><cell>/</cell><cell>83.9%</cell><cell>90.4%</cell><cell>93.8%</cell><cell>82.6%</cell><cell>93.8%</cell><cell>5.99</cell><cell>54.9%</cell><cell>70.9%</cell></row><row><cell>FracNet [ R2</cell><cell>/</cell><cell>/</cell><cell>85.8%</cell><cell>92.6%</cell><cell>95.7%</cell><cell>84.4%</cell><cell>95.7%</cell><cell>5.83</cell><cell>52.5%</cell><cell>68.9%</cell></row></table><note></note></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Acknowledgments</head><p>This study has received funding from the Medical Imaging Key Program of Wise Information Technology of 120-Health Commission of Shanghai 2018ZHYL0103 (Ming Li), the National Natural Science Foundation of China 61976238 (Ming Li) and "Future Star" of famous doctors' training plan of Fudan University (Ming Li). This study has received funding from Shanghai Youth Medical Talents Training Funding Scheme AB83030002019004 (Liang Jin). This study was also supported by National Science Foundation of China 61976137, U1611461 (Bingbing Ni). The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication.</p></div>
+			</div>
+
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data sharing section</head><p>The data and code from Huadong Hospital affiliated to Fudan University used in this study are available at https://m3dv.github.io/Frac Net/ to users who agree with our data license (CC BY-NC 4.0) and code license (Apache-2.0 License).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Declaration of Competing interest</head><p>All authors declare that they have no conflict of interests. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Supplementary materials</head><p>Supplementary material associated with this article can be found, in the online version, at doi:10.1016/j.ebiom.2020.103106.</p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title level="m" type="main">Administrative, technical, or material support (i.e., reporting or organizing data, constructing databases</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Jin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><forename type="middle">Li</forename><surname>Development Of Methodology</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">:</forename><forename type="middle">L</forename><surname>Jin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Ni</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Li ; L. Jin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Li ; L. Jin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Kuang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Kang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Li</surname></persName>
+		</author>
+		<editor>L. Jin, K. Kuang, H. Kang, J. Chen, M. Li Study supervision: L. Jin, J. Yang, B. Ni, M. Li Algorithm and software development: J. Yang, K. Kuang, H. Kang, J. Chen</editor>
+		<imprint/>
+	</monogr>
+	<note>Acquisition of data (provided animals, acquired and managed patients, provided facilities. All authors read and approved the final version of the manuscript</note>
+	<note type="raw_reference">design: L. Jin, J. Yang, M. Li Development of methodology: L. Jin, J. Yang, Y. Sun, Y. Gao, B. Ni, M. Li Acquisition of data (provided animals, acquired and managed patients, provided facilities, etc.): L. Jin, J. Yang, Y. Sun, W. Ma, M. Tan, P. Gao, M. Li Analysis and interpretation of data (e.g., statistical analysis, computational analysis): L. Jin, J. Yang, Y. Sun, K. Kuang, H. Kang, J. Chen, M. Li Writing, review, and/or revision of the manuscript: L. Jin, J. Yang, Y. Sun, B. Ni, M. Li Administrative, technical, or material support (i.e., reporting or organizing data, constructing databases): L. Jin, K. Kuang, H. Kang, J. Chen, M. Li Study supervision: L. Jin, J. Yang, B. Ni, M. Li Algorithm and software development: J. Yang, K. Kuang, H. Kang, J. Chen All authors read and approved the final version of the manuscript.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Deep learning</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Lecun</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nature</title>
+		<imprint>
+			<biblScope unit="volume">521</biblScope>
+			<biblScope unit="issue">7553</biblScope>
+			<biblScope unit="page" from="436" to="480" />
+			<date type="published" when="2015" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">LeCun Y, Bengio Y, Hinton G. Deep learning. Nature 2015;521(7553):436-44.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">3D deep learning from CT scans predicts tumor invasiveness of subcentimeter pulmonary adenocarcinomas</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Sun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Cancer Res</title>
+		<imprint>
+			<biblScope unit="volume">78</biblScope>
+			<biblScope unit="issue">24</biblScope>
+			<biblScope unit="page" from="6881" to="6890" />
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhao W, Yang J, Sun Y, et al. 3D deep learning from CT scans predicts tumor inva- siveness of subcentimeter pulmonary adenocarcinomas. Cancer Res 2018;78 (24):6881-9.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Automated detection and quantification of COVID-19 pneumonia: CT imaging analysis by a deep learning-based software</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><forename type="middle">T</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">S</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><forename type="middle">H</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eur J Nucl Med Mol Imaging</title>
+		<imprint>
+			<biblScope unit="volume">47</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page" from="2525" to="2557" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang HT, Zhang JS, Zhang HH, et al. Automated detection and quantification of COVID-19 pneumonia: CT imaging analysis by a deep learning-based software. Eur J Nucl Med Mol Imaging 2020;47(11):2525-32.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Chest radiograph interpretation with deep learning models: assessment with radiologist-adjudicated reference standards and population-adjusted evaluation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Majkowska</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Mittal</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><forename type="middle">F</forename><surname>Steiner</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Radiology</title>
+		<imprint>
+			<biblScope unit="volume">294</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="421" to="452" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Majkowska A, Mittal S, Steiner DF, et al. Chest radiograph interpretation with deep learning models: assessment with radiologist-adjudicated reference stand- ards and population-adjusted evaluation. Radiology 2020;294(2):421-31.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Deep learning algorithms for detection of critical findings in head CT scans: a retrospective study</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Chilamkurthy</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Ghosh</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Tanamala</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Lancet</title>
+		<imprint>
+			<biblScope unit="volume">392</biblScope>
+			<biblScope unit="page" from="2388" to="96" />
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chilamkurthy S, Ghosh R, Tanamala S, et al. Deep learning algorithms for detec- tion of critical findings in head CT scans: a retrospective study. Lancet 2018;392 (10162):2388-96.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Deep neural network improves fracture detection by clinicians</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Lindsey</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Daluiski</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Chopra</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Proc Natl Acad Sci</title>
+		<imprint>
+			<biblScope unit="volume">115</biblScope>
+			<biblScope unit="issue">45</biblScope>
+			<biblScope unit="page" from="11591" to="11597" />
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lindsey R, Daluiski A, Chopra S, et al. Deep neural network improves fracture detection by clinicians. Proc Natl Acad Sci USA 2018;115(45):11591-6.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Multi-site fMRI analysis using privacy-preserving federated learning and domain adaptation: ABIDE results</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Gu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Dvornek</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><forename type="middle">H</forename><surname>Staib</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Ventola</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">S</forename><surname>Duncan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Med Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">65</biblScope>
+			<biblScope unit="page">101765</biblScope>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Li X, Gu Y, Dvornek N, Staib LH, Ventola P, Duncan JS. Multi-site fMRI analysis using privacy-preserving federated learning and domain adaptation: ABIDE results. Med Image Anal 2020;65:101765.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Deep-learning-assisted diagnosis for knee magnetic resonance imaging: development and retrospective validation of MRNet</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Bien</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Rajpurkar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><forename type="middle">L</forename><surname>Ball</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">PLoS Med</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page">1002699</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bien N, Rajpurkar P, Ball RL, et al. Deep-learning-assisted diagnosis for knee mag- netic resonance imaging: development and retrospective validation of MRNet. PLoS Med 2018;15(11):e1002699.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Efficient multiple organ localization in CT image using 3D region proposal network</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Fu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Bai</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans Med Imaging</title>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xu X, Zhou F, Liu B, Fu D, Bai X. Efficient multiple organ localization in CT image using 3D region proposal network. IEEE Trans Med Imaging 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Deep learning-based fully automated detection and segmentation of lymph nodes on multiparametric-mri for rectal cancer: a multicentre study</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Xie</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">EBioMedicine</title>
+		<imprint>
+			<biblScope unit="volume">56</biblScope>
+			<biblScope unit="page">102780</biblScope>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhao X, Xie P, Wang M, et al. Deep learning-based fully automated detection and segmentation of lymph nodes on multiparametric-mri for rectal cancer: a multi- centre study. EBioMedicine 2020;56:102780.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">High-performance medicine: the convergence of human and artificial intelligence</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><forename type="middle">J</forename><surname>Topol</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nat Med</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="44" to="56" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Topol EJ. High-performance medicine: the convergence of human and artificial intelligence. Nat Med 2019;25(1):44-56.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title level="m" type="main">Traumatic rib injury: patterns, imaging pitfalls, complications, and treatment. Radiographics</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><forename type="middle">S</forename><surname>Talbot</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Gange</forename><surname>Cp</surname><genName>Jr</genName></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Chaturvedi</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Klionsky</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><forename type="middle">K</forename><surname>Hobbs</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Chaturvedi</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017" />
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="page" from="628" to="51" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Talbot BS, Gange Jr. CP, Chaturvedi A, Klionsky N, Hobbs SK, Chaturvedi A. Trau- matic rib injury: patterns, imaging pitfalls, complications, and treatment. Radio- graphics 2017;37(2):628-51.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Automatic rib cage unfolding with CT cylindrical projection reformat in polytraumatized patients for rib fracture detection and characterization: Feasibility and clinical application</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Urbaneja</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">De</forename><surname>Verbizier</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Formery</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">S</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eur J Radiol</title>
+		<imprint>
+			<biblScope unit="volume">110</biblScope>
+			<biblScope unit="page" from="121" to="128" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Urbaneja A, De Verbizier J, Formery AS, et al. Automatic rib cage unfolding with CT cylindrical projection reformat in polytraumatized patients for rib fracture detec- tion and characterization: Feasibility and clinical application. Eur J Radiol 2019;110:121-7.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Low-dose CT examination for rib fracture evaluation: a pilot study</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Jin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Ge</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Lu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medicine (Baltimore)</title>
+		<imprint>
+			<biblScope unit="volume">97</biblScope>
+			<biblScope unit="issue">30</biblScope>
+			<biblScope unit="page">11624</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jin L, Ge X, Lu F, et al. Low-dose CT examination for rib fracture evaluation: a pilot study. Medicine (Baltimore) 2018;97(30):e11624.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Usefulness of low dose chest CT for initial evaluation of blunt chest trauma</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><forename type="middle">J</forename><surname>Kim</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">B</forename><surname>Bista</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><forename type="middle">G</forename><surname>Min</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medicine (Baltimore)</title>
+		<imprint>
+			<biblScope unit="volume">96</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page">5888</biblScope>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kim SJ, Bista AB, Min YG, et al. Usefulness of low dose chest CT for initial evalua- tion of blunt chest trauma. Medicine (Baltimore) 2017;96(2):e5888.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Automatic rib unfolding in postmortem computed tomography: diagnostic evaluation of the OpenRib software compared with the autopsy in the detection of rib fractures</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Kolopp</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Douis</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Urbaneja</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int J Legal Med</title>
+		<imprint>
+			<biblScope unit="volume">134</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="339" to="385" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kolopp M, Douis N, Urbaneja A, et al. Automatic rib unfolding in postmortem computed tomography: diagnostic evaluation of the OpenRib software compared with the autopsy in the detection of rib fractures. Int J Legal Med 2020;134 (1):339-46.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">New bone post-processing tools in forensic imaging: a multi-reader feasibility study to evaluate detection time and diagnostic accuracy in rib fracture assessment</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><forename type="middle">A</forename><surname>Glemser</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Pfleiderer</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Heger</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int J Legal Med</title>
+		<imprint>
+			<biblScope unit="volume">131</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="489" to="96" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Glemser PA, Pfleiderer M, Heger A, et al. New bone post-processing tools in foren- sic imaging: a multi-reader feasibility study to evaluate detection time and diag- nostic accuracy in rib fracture assessment. Int J Legal Med 2017;131(2):489-96.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">The ribs unfolded -a CT visualization algorithm for fast detection of rib fractures: effect on sensitivity and specificity in trauma patients</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Ringl</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Lazar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Topker</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eur Radiol</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="1865" to="74" />
+			<date type="published" when="2015" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ringl H, Lazar M, Topker M, et al. The ribs unfolded -a CT visualization algorithm for fast detection of rib fractures: effect on sensitivity and specificity in trauma patients. Eur Radiol 2015;25(7):1865-74.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Evaluation of Rib fractures on a single-in-plane image reformation of the rib cage in CT examinations</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Dankerl</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Seuss</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Ellmann</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Cavallaro</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Uder</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Hammon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Acad Radiol</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="153" to="162" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dankerl P, Seuss H, Ellmann S, Cavallaro A, Uder M, Hammon M. Evaluation of Rib fractures on a single-in-plane image reformation of the rib cage in CT examina- tions. Acad Radiol 2017;24(2):153-9.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Missed rib fractures on evaluation of initial chest CT for trauma patients: pattern analysis and diagnostic value of coronal multiplanar reconstruction images with multidetector row CT</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><forename type="middle">H</forename><surname>Cho</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><forename type="middle">M</forename><surname>Sung</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><forename type="middle">S</forename><surname>Kim</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Br J Radiol</title>
+		<imprint>
+			<biblScope unit="volume">85</biblScope>
+			<biblScope unit="page" from="845" to="50" />
+			<date type="published" when="1018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cho SH, Sung YM, Kim MS. Missed rib fractures on evaluation of initial chest CT for trauma patients: pattern analysis and diagnostic value of coronal multiplanar reconstruction images with multidetector row CT. Br J Radiol 2012;85(1018): e845-50.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">U-Net: deep learning for cell counting, detection, and morphometry</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Falk</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Mai</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Bensch</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nat Methods</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="67" to="70" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Falk T, Mai D, Bensch R, et al. U-Net: deep learning for cell counting, detection, and morphometry. Nat Methods 2019;16(1):67-70.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Fully Convolutional Networks for Semantic Segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><surname>Shelhamer</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Long</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Darrell</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans Pattern Anal Mach Intell</title>
+		<imprint>
+			<biblScope unit="volume">39</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="640" to="51" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Shelhamer E, Long J, Darrell T. Fully Convolutional Networks for Semantic Seg- mentation. IEEE Trans Pattern Anal Mach Intell 2017;39(4):640-51.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title level="m" type="main">Encoder-decoder with atrous separable convolution for semantic image segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L-C</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Papandreou</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Schroff</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Adam</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018" />
+			<publisher>ECCV</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen L-C, Zhu Y, Papandreou G, Schroff F, Adam H. Encoder-decoder with atrous separable convolution for semantic image segmentation. ECCV; 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<title level="m" type="main">Can spatiotemporal 3d cnns retrace the history of 2d cnns and imagenet? CVPR</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Hara</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Kataoka</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Satoh</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hara K, Kataoka H, Satoh Y. Can spatiotemporal 3d cnns retrace the history of 2d cnns and imagenet? CVPR; 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title level="m" type="main">Deep residual learning for image recognition</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Sun</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He K, Zhang X, Ren S, Sun J. Deep residual learning for image recognition. CVPR 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<title level="m" type="main">PyTorch: an imperative style, high-performance deep learning library. NeurIPS</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Paszke</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Gross</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Massa</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Paszke A, Gross S, Massa F, et al. PyTorch: an imperative style, high-performance deep learning library. NeurIPS; 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<title level="m" type="main">Deep learning based rib centerline extraction and labeling. MSKI@MICCAI</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Lenga</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Klinder</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>B€ Urger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">V</forename><surname>Berg</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Franz</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Lorenz</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lenga M, Klinder T, B€ urger C, Berg JV, Franz A, Lorenz C. Deep learning based rib centerline extraction and labeling. MSKI@MICCAI; 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<monogr>
+		<title level="m" type="main">Batch normalization: accelerating deep network training by reducing internal covariate shift</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Ioffe</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Szegedy</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ioffe S, Szegedy C. Batch normalization: accelerating deep network training by reducing internal covariate shift. ICML; 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<monogr>
+		<title level="m" type="main">Adam: a method for stochastic optimization</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><forename type="middle">P</forename><surname>Kingma</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Ba</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kingma DP, Ba J. Adam: a method for stochastic optimization. ICLR; 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Assessment of a deep learning algorithm for the detection of rib fractures on whole-body trauma computed tomography</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Weikert</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><forename type="middle">A</forename><surname>Noordtzij</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Bremerich</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Korean J Radiol</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="891" to="900" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Weikert T, Noordtzij LA, Bremerich J, et al. Assessment of a deep learning algo- rithm for the detection of rib fractures on whole-body trauma computed tomog- raphy. Korean J Radiol 2020;21(7):891-9.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Automatic detection and classification of rib fractures on thoracic CT using convolutional neural network: accuracy and feasibility</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Q</forename><forename type="middle">Q</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Tang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Korean J Radiol</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="869" to="79" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhou QQ, Wang J, Tang W, et al. Automatic detection and classification of rib frac- tures on thoracic CT using convolutional neural network: accuracy and feasibility. Korean J Radiol 2020;21(7):869-79.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Comparison of thick-and thinslice images in thoracoabdominal trauma CT: a retrospective analysis</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Guchlerner</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">L</forename><surname>Wichmann</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Tischendorf</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eur J Trauma Emerg Surg</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="187" to="95" />
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Guchlerner L, Wichmann JL, Tischendorf P, et al. Comparison of thick-and thin- slice images in thoracoabdominal trauma CT: a retrospective analysis. Eur J Trauma Emerg Surg 2020;46(1):187-95.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Automated detection of moderate and large pneumothorax on frontal chest X-rays using deep convolutional neural networks: a retrospective study</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">G</forename><surname>Taylor</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Mielke</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Mongan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">PLoS Med</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page">1002697</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Taylor AG, Mielke C, Mongan J. Automated detection of moderate and large pneu- mothorax on frontal chest X-rays using deep convolutional neural networks: a retrospective study. PLoS Med 2018;15(11):e1002697.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Deep learning for chest radiograph diagnosis: a retrospective comparison of the CheXNeXt algorithm to practicing radiologists</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Rajpurkar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Irvin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><forename type="middle">L</forename><surname>Ball</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">PLoS Med</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page">1002686</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rajpurkar P, Irvin J, Ball RL, et al. Deep learning for chest radiograph diagnosis: a retrospective comparison of the CheXNeXt algorithm to practicing radiologists. PLoS Med 2018;15(11):e1002686.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Development and validation of a deep learningbased automated detection algorithm for major thoracic diseases on chest radiographs</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><forename type="middle">J</forename><surname>Hwang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Park</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><forename type="middle">N</forename><surname>Jin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">JAMA Netw Open</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page">191095</biblScope>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hwang EJ, Park S, Jin KN, et al. Development and validation of a deep learning- based automated detection algorithm for major thoracic diseases on chest radio- graphs. JAMA Netw Open 2019;2(3):e191095.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Automated 3D rendering of ribs in 110 polytrauma patients: strengths and limitations</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Khung</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Masset</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Duhamel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Acad Radiol</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="146" to="52" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Khung S, Masset P, Duhamel A, et al. Automated 3D rendering of ribs in 110 poly- trauma patients: strengths and limitations. Acad Radiol 2017;24(2):146-52.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">3D-GIoU: 3D generalized intersection over union for object detection in point cloud</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Zhu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Sensors (Basel)</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xu J, Ma Y, He S, Zhu J. 3D-GIoU: 3D generalized intersection over union for object detection in point cloud. Sensors (Basel) 2019;19(19).</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<monogr>
+		<title level="m" type="main">Calibrated surrogate maximization of dice</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Nordstr€ Om</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Bao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>L€ Ofman</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Hult</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Maki</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Sugiyama</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>Miccai</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020" />
+			<publisher>Springer International Publishing</publisher>
+			<biblScope unit="page" from="269" to="78" />
+			<pubPlace>Cham</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nordstr€ om M, Bao H, L€ ofman F, Hult H, Maki A, Sugiyama M. MICCAI. Calibrated surrogate maximization of dice. Cham: Springer International Publishing; 2020. p. 269-78.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<title level="m" type="main">AlignShift: bridging the gap of imaging thickness in 3D anisotropic volumes</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Huang</surname></persName>
+		</author>
+		<imprint>
+			<biblScope unit="volume">2020</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yang J, He Y, Huang X, et al. AlignShift: bridging the gap of imaging thickness in 3D anisotropic volumes. MICCAI 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Ni</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Xu</surname></persName>
+		</author>
+		<idno>arXiv:191110477</idno>
+		<title level="m">Reinventing 2D Convolutions for 3D medical images</title>
+		<imprint/>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yang J, Huang X, Ni B, Xu J, Yang C, Xu G. Reinventing 2D Convolutions for 3D medical images. arXiv preprint arXiv:191110477.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

@@ -1,0 +1,1439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 /Users/alramalho/grobid-0.6.1/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+				<date type="published" when="2021-11-07">7 Nov 2021</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author role="corresp">
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Curtis</forename><forename type="middle">G</forename><surname>Northcutt</surname></persName>
+							<email>curtis@cleanlab.ai</email>
+							<affiliation key="aff0">
+								<orgName type="institution">Anish Athalye MIT</orgName>
+								<address>
+									<settlement>Cleanlab</settlement>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><roleName>MIT, Cleanlab</roleName><surname>Chipbrain</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Anish Athalye MIT</orgName>
+								<address>
+									<settlement>Cleanlab</settlement>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Jonas</forename><surname>Mueller</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Anish Athalye MIT</orgName>
+								<address>
+									<settlement>Cleanlab</settlement>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2021-11-07">7 Nov 2021</date>
+						</imprint>
+					</monogr>
+					<idno type="arXiv">arXiv:2103.14749v4[stat.ML]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.6.1" ident="GROBID" when="2023-01-06T16:30+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+				<p>We identify label errors in the test sets of 10 of the most commonly-used computer vision, natural language, and audio datasets, and subsequently study the potential for these label errors to affect benchmark results. Errors in test sets are numerous and widespread: we estimate an average of at least 3.3% errors across the 10 datasets, where for example label errors comprise at least 6% of the ImageNet validation set. Putative label errors are identified using confident learning algorithms and then human-validated via crowdsourcing (51% of the algorithmically-flagged candidates are indeed erroneously labeled, on average across the datasets). Traditionally, machine learning practitioners choose which model to deploy based on test accuracy-our findings advise caution here, proposing that judging models over correctly labeled test sets may be more useful, especially for noisy real-world datasets. Surprisingly, we find that lower capacity models may be practically more useful than higher capacity models in real-world datasets with high proportions of erroneously labeled data. For example, on Ima-geNet with corrected labels: ResNet-18 outperforms ResNet-50 if the prevalence of originally mislabeled test examples increases by just 6%. On CIFAR-10 with corrected labels: VGG-11 outperforms VGG-19 if the prevalence of originally mislabeled test examples increases by just 5%.</p>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>Large labeled datasets have been critical to the success of supervised machine learning across the board in domains such as image classification, sentiment analysis, and audio classification. Yet, the processes used to construct datasets often involve some degree of automatic labeling or crowd-sourcing, techniques which are inherently error-prone <ref type="bibr" target="#b38">[39]</ref>. Even with controls for error correction <ref type="bibr" target="#b19">[20,</ref><ref type="bibr" target="#b48">49]</ref>, errors can slip through. Prior work has considered the consequences of noisy labels, usually in the context of learning with noisy labels, and usually focused on noise in the train set. Some past research has concluded that label noise is not a major concern, because of techniques to learn with noisy labels <ref type="bibr" target="#b30">[31,</ref><ref type="bibr" target="#b34">35]</ref>, and also because deep learning is believed to be naturally robust to label noise <ref type="bibr" target="#b16">[17,</ref><ref type="bibr" target="#b27">28,</ref><ref type="bibr" target="#b37">38,</ref><ref type="bibr" target="#b42">43]</ref>.</p><p>However, label errors in test sets are less-studied and have a different set of potential consequences. Whereas train set labels in a small number of machine learning datasets, e.g. in the ImageNet dataset, are well-known to contain errors <ref type="bibr" target="#b15">[16,</ref><ref type="bibr" target="#b32">33,</ref><ref type="bibr" target="#b39">40]</ref>, labeled data in test sets is often considered "correct" as long as it is drawn from the same distribution as the train set. This is a fallacy: machine learning test sets can, and do, contain errors, and these errors can destabilize ML benchmarks.  given labels, human-validated corrected labels, also the second label for multi-class data points, and CL-guessed alternatives. A gallery of label errors across all 10 datasets, including text and audio datasets, is available at https://labelerrors.com.</p><p>Researchers rely on benchmark test datasets to evaluate and measure progress in the state-of-theart and to validate theoretical findings. If label errors occurred profusely, they could potentially undermine the framework by which we measure progress in machine learning. Practitioners rely on their own real-world datasets which are often more noisy than carefully-curated benchmark datasets. Label errors in these test sets could potentially lead practitioners to incorrect conclusions about which models actually perform best in the real world.</p><p>We present the first study that systematically characterizes label errors across 10 datasets commonly used for benchmarking models in computer vision, natural language processing, and audio processing. Unlike prior work on noisy labels, we do not experiment with synthetic noise but with naturallyoccurring errors. Rather than exploring a novel methodology for dealing with label errors, which has been extensively studied in the literature <ref type="bibr" target="#b3">[4]</ref>, this paper aims to characterize the prevalence of label errors in the test data of popular benchmarks used to measure ML progress and subsequently analyze practical consequences of these errors, and in particular, their effects on model selection. Using confident learning <ref type="bibr" target="#b32">[33]</ref>, we algorithmically identify putative label errors in test sets at scale, and we validate these label errors through human evaluation, estimating a lower-bound of 3.3% errors on average across the 10 datasets. We identify, for example, 2916 (6%) errors in the ImageNet validation set (which is commonly used as a test set), and estimate over 5 million (10%) errors in QuickDraw. <ref type="figure" target="#fig_1">Figure 1</ref> shows examples of validated label errors for the image datasets in our study.</p><p>We use ImageNet and CIFAR-10 as case studies to understand the consequences of test set label errors on benchmark stability. While there are numerous erroneous labels in these benchmarks' test data, we find that relative rankings of models in benchmarks are unaffected after removing or correcting these label errors. However, we find that these benchmark results are unstable: higher-capacity models (like NASNet) undesirably reflect the distribution of systematic label errors in their predictions to a greater degree than models with fewer parameters (like , and this effect increases with the prevalence of mislabeled test data. This is not traditional overfitting. Larger models are able to generalize better to the given noisy labels in the test data, but this is problematic because these models produce worse predictions than their lower-capacity counterparts when evaluated on the corrected labels for originally-mislabeled test examples.</p><p>In real-world settings with high proportions of erroneously labeled data, lower capacity models may thus be practically more useful than their higher capacity counterparts. For example, it may appear NASNet is superior to ResNet-18 based on the test accuracy over originally given labels, but NASNet is in fact worse than ResNet-18 based on the test accuracy over corrected labels. Since the latter form of accuracy is what matters in practice, ResNet-18 should actually be deployed instead of NASNet here -but this is unknowable without correcting the test data labels.</p><p>To evaluate how benchmarks of popular pre-trained models change, we incrementally increase the noise prevalence by controlling for the proportion of correctable (but originally mislabeled) data within the test dataset. This procedure allows us to determine, for a particular dataset, at what noise prevalence benchmark rankings change. For example, on ImageNet with corrected labels: ResNet-18 outperforms ResNet-50 if the prevalence of originally mislabeled test examples increases by just 6%.</p><p>In summary, our contributions include:</p><p>1. The discovery of pervasive label errors in test sets of 10 standard ML benchmarks 2. Open-sourced resources to clean and correct each test set, in which a large fraction of the label errors have been corrected by humans 3. An analysis of the implications of test set label errors on benchmarks, and the finding that higher-capacity models perform better on the subset of incorrectly-labeled test data in terms of their accuracy on the original labels (i.e., what one traditionally measures), but perform worse on this subset in terms of their accuracy on corrected labels (i.e., what one cares about in practice, but cannot measure without the corrected test data we provide) 4. The discovery that merely slight increases in the test label error prevalence would cause model selection to favor the wrong model based on standard test accuracy benchmarks</p><p>Our findings imply ML practitioners might benefit from correcting test set labels to benchmark how their models will perform in real-world deployment, and by using simpler/smaller models in applications where labels for their datasets tend to be noisier than the labels in gold-standard benchmark datasets. One way to ascertain whether a dataset is noisy enough to suffer from this effect is to correct at least the test set labels, e.g. using our straightforward approach.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Background and related work</head><p>Experiments in learning with noisy labels <ref type="bibr" target="#b18">[19,</ref><ref type="bibr" target="#b30">31,</ref><ref type="bibr" target="#b33">34,</ref><ref type="bibr" target="#b41">42,</ref><ref type="bibr" target="#b44">45]</ref> suffer a double-edged sword: either synthetic noise must be added to clean training data to measure performance on a clean test set (at the expense of modeling actual real-world label noise <ref type="bibr" target="#b17">[18]</ref>), or a naturally noisy dataset is used and accuracy is measured on a noisy test set. In the noisy WebVision dataset <ref type="bibr" target="#b23">[24]</ref>, accuracy on the ImageNet validation data is often reported as a "clean" test set, but several studies <ref type="bibr" target="#b15">[16,</ref><ref type="bibr" target="#b32">33,</ref><ref type="bibr" target="#b36">37,</ref><ref type="bibr" target="#b43">44]</ref> have shown the existence of label issues in ImageNet. Unlike these works, we focus exclusively on existence and implications of label errors in the test set, and we extend our analysis to many types of datasets. Although extensive prior work deals with label errors in the training set <ref type="bibr" target="#b3">[4,</ref><ref type="bibr" target="#b6">7]</ref>, much less work has been done to understand the implications of label errors in the test set.</p><p>Crowd-sourced curation of labels via multiple human workers <ref type="bibr" target="#b4">[5,</ref><ref type="bibr" target="#b35">36,</ref><ref type="bibr" target="#b48">49</ref>] is a common method for validating/correcting label issues in datasets, but it can be exorbitantly expensive for large datasets.</p><p>To circumvent this issue, we only validate subsets of datasets by first estimating which examples are most likely to be mislabeled. To achieve this, we lean on a number of contributions in uncertainty quantification for finding label errors based on prediction/label agreement via confusion matrices <ref type="bibr" target="#b2">[3,</ref><ref type="bibr" target="#b14">15,</ref><ref type="bibr" target="#b24">25,</ref><ref type="bibr" target="#b47">48]</ref>; however, these approaches lack either robustness to class imbalance or theoretical support for realistic settings with asymmetric, non-uniform noise (for instance, an image of a dog might be more likely to be mislabeled a coyote than a car). For robustness to class imbalance and theoretical support for exact uncertainty quantification, we use a model-agnostic framework, confident learning (CL) <ref type="bibr" target="#b32">[33]</ref>, to estimate which labels are erroneous across diverse datasets. We choose the CL framework for finding putative label errors because it was empirically found to outperform several recent alternative label error identification methods <ref type="bibr" target="#b22">[23,</ref><ref type="bibr" target="#b32">33,</ref><ref type="bibr" target="#b45">46]</ref>. Unlike prior work that only models symmetric label noise <ref type="bibr" target="#b44">[45]</ref>, we quantify class-conditional label noise with CL, validating the correctable nature of the label errors via crowdsourced workers. Human validation confirms the noise in common benchmark datasets is indeed primarily systematic mislabeling, not just random noise or lack of signal (e.g. images with fingers blocking the camera).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Identifying label errors in benchmark datasets</head><p>Here we summarize our algorithmic label error identification performed prior to crowd-sourced human verification. An overview of each dataset and any modifications is detailed in Appendix A.</p><p>Step-bystep instructions to obtain each dataset and reproduce the label errors for each dataset are provided at https://github.com/cleanlab/label-errors. Our code relies on the implementation of confident learning open-sourced at https://github.com/cleanlab/cleanlab. The primary contribution of this section is not in the methodology, which is covered extensively in Northcutt et al. <ref type="bibr" target="#b32">[33]</ref>, but in its utilization as a filtering process to significantly (often as much as 90%) reduce the number of examples requiring human validation in the next step.</p><p>To identify label errors in a test dataset with n examples and m classes, we first characterize label noise in the dataset using the confident learning (CL) framework <ref type="bibr" target="#b32">[33]</ref>   <ref type="bibr" target="#b46">[47]</ref>. <ref type="table" target="#tab_1">Table 1</ref> shows the number of CL-guessed label errors for each test set in our study. CL estimation of Qỹ ,y * is summarized in Appendix C.</p><p>Computing out-of-sample predicted probabilities Estimating Qỹ ,y * for CL noise characterization requires two inputs for each dataset: (1) out-of-sample predicted probabilitiesP k,i (n×m matrix) and</p><p>(2) the test set labelsỹ k . We observe the best results computingP k,i by pre-training on the train set, then fine-tuning (all layers) on the test set using cross-validation to ensureP k,i is out-of-sample. If pre-trained models are open-sourced (e.g. ImageNet), we use them instead of pre-training ourselves. If the dataset did not have an explicit test set (e.g. QuickDraw and Amazon Reviews), we skip pre-training and computeP k,i using cross-validation on the entire dataset. For all datasets, we try common models that achieve reasonable accuracy with minimal hyper-parameter tuning and use the model yielding the highest cross-validation accuracy, reported in <ref type="table" target="#tab_1">Table 1</ref>.</p><p>Using this approach allows us to find label errors without manually checking the entire test set, because CL identifies potential label errors automatically.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Validating label errors with Mechanical Turk</head><p>We validated the algorithmically identified label errors with a Mechanical Turk (MTurk) study. For two large datasets with a large number of errors (QuickDraw and Amazon Reviews), we checked a random sample; for the rest, we checked all identified errors.</p><p>We presented workers with hypothesized errors and asked them whether they saw the (1) given label, (2) the top CL-predicted label, (3) both labels, or (4) neither label in the example. To aid the worker, the interface included high-confidence examples of the given class and the CL-predicted class. <ref type="figure" target="#fig_1">Figure S1</ref> in Appendix B shows a screenshot of the MTurk worker interface.</p><p>Each CL-flagged label error was independently presented to five workers. We consider the example validated (an "error") if fewer than three of the workers agree that the data point has the given label (agreement threshold = 3 of 5) , otherwise we consider it to be a "non-error" (i.e. the original label was correct). We further categorize the label errors, breaking them down into (1) "correctable", where a majority agree on the CL-predicted label; (2) "multi-label", where a majority agree on both labels appearing; (3) "neither", where a majority agree on neither label appearing; and (4) "non-agreement", a catch-all category for when there is no majority. <ref type="table">Table summarizes</ref> the results, and <ref type="figure" target="#fig_1">Figure 1</ref> shows examples of validated label errors from image datasets. <ref type="figure">Figure 2</ref>: Difficult examples from various datasets where confident learning finds a potential label error but human validation shows that there actually is no error. Example (a) is a cropped image of part of an antiquated sewing machine; (b) is a viewpoint from inside an airplane, looking out at the runway and grass with a partial view of the nose of the plane; (c) is an ambiguous shape which could be a potato; (d) is likely a badly drawn "5"; (e) is a male whose exact age cannot be determined; and (f) is a straw used as a pole within a miniature replica of a village.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Failure modes of confident learning</head><p>Confident learning sometimes flags data points that are not actually erroneous. By visually inspecting putative label errors, we identified certain previously unexamined failure modes of confident learning <ref type="bibr" target="#b32">[33]</ref>. Appendix D provides a mathematical description of the conditions under which these failure modes occur. <ref type="figure">Figure 2</ref> shows uniquely challenging examples, with excessively erroneousp(ỹ=j; x), where failure mode cases potentially occur. The sewing machine in <ref type="figure">Figure 2</ref>(a), for example, exhibits a "part versus whole" issue where the image has been cropped to only show a small portion of the object. The airplane in <ref type="figure">Figure 2</ref>(b) is an unusual example of the class, showing the plane from the perspective of the pilot looking out of the front cockpit window. <ref type="figure">Figure 2</ref> clarifies that our corrected test set labels are not 100% perfect. Even with a stringent 5 of 5 agreement threshold where all human reviewers agreed on a label correction, the "corrected" label is not always actually correct. Fortunately, these failure mode cases are rare. Inspection of https://labelerrors.com shows that the majority of the labels we corrected are reasonable. Our corrected test sets, while imperfect in these cases, are improved from the original test sets.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Implications of label errors in test data</head><p>Finally, we consider how pervasive test set label errors may affect ML practitioners in real-world applications. To clarify the discussion, we first introduce some useful terminology.</p><p>Definition 1 (original accuracy,Ã). The accuracy of a model's predicted labels over a given dataset, computed with respect to the original labels present in the dataset. MeasuringÃ over the test set is the standard way practitioners evaluate their models today. Definition 2 (corrected accuracy, A * ). The accuracy of a model's predicted labels, computed over a modified dataset in which previously identified erroneous labels have been corrected by humans to the true class when possible and removed when not. Measuring A * over the test set is preferable tõ A for evaluating models because A * better reflects performance in real-world applications.</p><p>The human labelers referenced throughout this section are the workers from our MTurk study in Section 4. In the following definitions, \ denotes a set difference and D denotes the full test dataset. These definitions imply B, C, U are disjoint with D = B ∪ C ∪ U and also P = B ∪ C. In subsequent experiments, we report corrected test accuracy over P after correcting all of the labels in C ⊂ P.</p><p>We ignore the unknown-label set U (and do not include those examples in our estimate of noise prevalence) because it is unclear how to measure corrected accuracy for examples whose true underlying label remains ambiguous. Thus the noise prevalence reported throughout this section differs from the fraction of label errors originally found in each of the test sets.</p><p>A major issue in ML today is that one only sees the original test accuracy in practice, whereas one would prefer to base modeling decisions on the corrected test accuracy instead. Our subsequent discussion highlights the potential implications of this mismatch. What are the consequences of test set label errors? <ref type="figure" target="#fig_3">Figure 3</ref> compares performance on the ImageNet validation set, commonly used in place of the test set, of 34 pre-trained models from the PyTorch and Keras repositories (throughout, we use provided checkpoints of models that have been fit to the original training set). <ref type="figure" target="#fig_3">Figure 3a</ref> confirms the observations of Recht et al. <ref type="bibr" target="#b36">[37]</ref>; benchmark conclusions are largely unchanged by using a corrected test set, i.e. in our case by removing errors.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Benchmarking on the correctable set</head><p>However, we find a surprising result upon closer examination of the models' performance on the correctable set C. When evaluating models only on these originally-mislabeled test data, models which perform best on the original (incorrect) labels perform the worst on the corrected labels.   <ref type="table" target="#tab_1">Table S1</ref> in the Appendix). We verified that the same trend occurs independently across pre-trained CIFAR-10 models ( <ref type="figure" target="#fig_3">Figure 3c</ref>), e.g. VGG-11 significantly outperforms VGG-19 <ref type="bibr" target="#b40">[41]</ref> in terms of corrected accuracy over C. Note that all numbers reported here are over subsets of the held-out test data, so this is not overfitting in the classical sense.</p><p>This phenomenon, depicted in <ref type="figure" target="#fig_3">Figures 3b and 3c</ref>, may indicate two key insights: (1) lower-capacity models provide unexpected regularization benefits and are more resistant to learning the asymmetric distribution of noisy labels, (2) over time, the more recent (larger) models have architecture/hyperparameter decisions that were made on the basis of the (original) test accuracy. Learning to capture systematic patterns of label error in their predictions allows these models to improve their original test accuracy, but this is not the sort of progress ML research should aim to achieve. Harutyunyan et al. <ref type="bibr" target="#b12">[13]</ref> and Arpit et al. <ref type="bibr" target="#b1">[2]</ref> have previously analyzed phenomena similar to (1), and here we demonstrate that this issue really does occur for the models/datasets widely used in current practice. (2) is an undesirable form of overfitting, albeit not in the classical sense (as the original test accuracy can further improve through better modeling of label errors), but rather overfitting to the specific benchmark (and quirks of the original label annotators) such that accuracy improvements for erroneous labels may not translate to superior performance in a deployed ML system. This phenomenon has important practical implications for real-world datasets with greater noise prevalence than the highly curated benchmark data studied here. In these relatively clean benchmark datasets, the noise prevalence is an underestimate as we could only verify a subset of our candidate label errors rather than all test labels, and thus the potential gap between original vs. corrected test accuracy over P is limited for these particular benchmarks. However, this gap increases proportionally for data with more (correctable) label errors in the test set, i.e. as N increases.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Benchmark instability</head><p>To investigate how benchmarks of popular models change with varying proportions of label errors in test sets, we randomly and incrementally remove correctly-labeled examples, one at a time, until only the original set of mislabeled test data (with corrected labels) is left. We create alternate versions (subsets) of the pruned benchmark test data P, in which we additionally randomly omit some fraction, x from 0 to 1, we can simulate any noise prevalence ranging from |C|/|P| to 1. We operationalize averaging over all choices of removal by linearly interpolating from accuracies over the corrected test set (P, with corrected labels for the subset C) to accuracies over the erroneously labeled subset (C, with corrected labels). Over these corrected test sets, we evaluate popular pre-trained models (again using provided checkpoints of models that have been fit to the original training set).   As our removal of test examples was random from the non-mislabeled set, we expect this reduced test data is representative of test sets that would be used in applications with a similarly greater prevalence of label errors. Note that we ignore non-correctable data with unknown labels (U) throughout this analysis, as it is unclear how to report a better version of the accuracy for such ill-specified examples.</p><p>Over alternative (reduced) test sets created by imposing increasing degrees of noise prevalence in ImageNet/CIFAR-10, Figures 4-5 depict the resulting original (erroneous) test set accuracy and corrected accuracy of the models, expected on each alternative test set. For a given test set (i.e. point along the x-axis of these plots), the vertical ordering of the lines indicates how models would be favored based on original accuracy or corrected accuracy over this test set. Unsurprisingly, we see that more flexible/recent architectures tend to be favored on the basis of original accuracy, regardless of which test set (of varying noise prevalence) is considered. This aligns with conventional expectations that powerful models like NASNet will outperform simpler models like ResNet-18. However, if we shift our focus to the corrected accuracy (i.e. what actually matters in practice), it is no longer the case that more powerful models are reliably better than their simpler counterparts: the performance strongly depends on the degree of noise prevalence in the test data. For datasets where label errors are common, a practitioner is more likely to select a model (based on original accuracy) that is not actually the best model (in terms of corrected accuracy) to deploy.</p><p>Finally, we note that this analysis only presents a loose lower bound on the magnitude of these issues due to unaccounted for label errors in the non-CL-flagged data (see Section 6). We only identified a subset of the actual correctable set as we are limited to human-verifiable label corrections for a subset of data candidates (algorithmically prioritized via confident learning). Because the actual correctable sets are likely larger, our noise prevalence estimates are optimistic in favor of higher capacity models. Thus, the true gap between corrected vs. original accuracy may be larger and of greater practical significance, even for the gold-standard benchmark datasets considered here. For many application-specific datasets collected by ML practitioners, the noise prevalence will be greater than the numbers presented here: thus, it is imperative to be cognizant of the distinction between corrected vs. original accuracy, and to utilize careful data curation practices, perhaps by allocating more of an annotation budget to ensure higher quality labels in the test data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Expert review of CL-flagged and non-CL-flagged label errors in ImageNet</head><p>Up to this point, we have only evaluated the subsets of the datasets flagged by CL: how do we know that CL-flagged examples are indeed more erroneous than a random subset of a dataset? How many label errors are missed in the non-CL-flagged data? And how reliable are MTurk workers in comparison to expert reviewers? In this section, we address these questions by conducting an additional expert review of both CL-flagged and non-CL-flagged examples in the ImageNet val set.</p><p>The expert review was conducted in two phases (details in Appendix G). In the first phase, experts reviewed 1 randomly-selected CL-flagged example and 1 randomly-selected non-CL-flagged example from each of the 1,000 ImageNet classes (66 classes had no CL-flagged example, i.e. 934 + 1,000 = 1934 images were evaluated in total). Given a similar interface as MTurk workers, the expert reviewers selected one choice from: (1) the given label, (2) the top-most predicted label that differs from the given label, (3) "both", and (4) "neither". Experts researched any unfamiliar classes by looking up related images and taxonomy information online, spending on average 13x more time per label than MTurk workers. Each image was reviewed by at least two experts, and experts agreed on decisions for 77% of the images. In the second phase, all experts jointly revisited the remaining 23% where there was disagreement and came to a consensus on a single choice. <ref type="table" target="#tab_5">Table 3</ref> reveals that the set of CL-flagged examples has significantly higher proportions of every type of label issue than the set of non-CL-flagged examples. An image flagged by CL was 2.6x as likely to be erroneously labeled than an non-CL-flagged image. Given a limited budget for human review, we thus recommend using CL to prioritize examples when verifying the labels in a large dataset.</p><p>Comparing CL (expert) to CL (MTurk) in <ref type="table" target="#tab_5">Table 3</ref> indicates that for CL-flagged examples, MTurk workers favored correcting labels in cases where experts agreed neither label was appropriate. For this analysis, we only consider the subset of MTurk reviewed images that overlaps with the 1,934 expert reviewed images. This may be attributed to experts knowing a better choice than the two label choices presented in the task (c.f. <ref type="figure">Figure S2</ref>). Nonetheless the MTurk results overall agree with those from our expert review. This validates our overall approach of using CL followed by MTurk to characterize label errors, and demonstrates that a well-designed interface ( <ref type="figure" target="#fig_1">Figure S1</ref>) suffices for non-expert workers to provide high-quality label verification of datasets. We further estimate that the analysis in previous sections missed around 14% of the label errors in ImageNet because 89% of images were not flagged by CL and <ref type="table">Table indicates</ref> around 16% of these were mislabeled. By including the additional 14% error found from the 9x larger set of non-CL-flagged examples, we can more accurately estimate that the ImageNet validation set contains closer to 20% label errors (up from the 6% reported in <ref type="table" target="#tab_1">Table 1</ref>). This roughly indicates how much more severe the issue of label errors actually is compared to what we reported in Sections 4 and 5.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7">Discussion</head><p>This paper demonstrates that label errors are ubiquitous in the test sets of many popular benchmarks used to gauge progress in machine learning. We hypothesize that this has not been previously discovered and publicized at such scale due to various challenges. Firstly, human verification of all labels can be quite costly, which we circumvented here by using CL algorithms to filter automatically for likely label errors prior to human verification. Secondly, working with 10 differently formatted datasets was nontrivial, with some exhibiting peculiar issues upon close inspection (despite being standard benchmarks). For example, IMDB, QuickDraw, and Caltech-256 lack a global index making it difficult to map model outputs to corrected test examples on different systems. We provide index files in our repository 1 to address this. Furthermore, Caltech-256 contains several duplicate images, of which which we found no previous mention. Lastly, ImageNet contains duplicate class labels, e.g. "maillot" (638 &amp; 639) and "crane" (134 &amp; 517) <ref type="bibr" target="#b32">[33,</ref><ref type="bibr" target="#b43">44]</ref>.</p><p>Traditionally, ML practitioners choose which model to deploy based on test accuracy -our findings advise caution here. Instead, judging models over correctly labeled test sets may be important, especially for real-world datasets that are likely noisier than these popular benchmarks. Small increases in the prevalence of mislabeled test data can destabilize ML benchmarks, indicating that lowcapacity models may actually outperform high-capacity models in noisy real-world applications, even if their measured performance on the original test data appears worse. We recommend considering the distinction between corrected vs. original test accuracy and curating datasets to maximize high-quality test labels, even if budget constraints only allow for lower-quality training labels. This paper shares new findings about pervasive label errors in test sets and their effects on benchmark stability, but it does not address whether the apparent overfitting of high-capacity models versus low-capacity models is due to overfitting to train set noise, overfitting to validation set noise during hyper-parameter tuning, or heightened sensitivity to train/test label distribution shift that occurs when test labels are corrected. An intuitive hypothesis is that high-capacity models more closely fit all statistical patterns present in the data, including those patterns related to systematic label errors that models with more limited capacity are less capable of closely approximating. A rigorous analysis to disambiguate and understand the contribution of each of these causes and their effects on benchmarking stability is a natural next step, which we leave for future work. How to best allocate a given human label verification budget between training and test data also remains an open question.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Appendix: Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks A Datasets</head><p>For our study, we select 10 of the most-cited, open-source datasets created in the last 20 years from the Wikipedia List of ML Research Datasets <ref type="bibr" target="#b25">[26]</ref>, with preference for diversity across computer vision, NLP, sentiment analysis, and audio modalities. Citation counts were obtained via the Microsoft Cognitive API. In total, we evaluate six visual datasets: MNIST, CIFAR-10, CIFAR-100, Caltech-256, ImageNet, and QuickDraw; three text datasets: 20news, IMDB, and Amazon Reviews; and one audio dataset: AudioSet.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A.1 Dataset details</head><p>For each of the datasets we investigate, we summarize the original data collection and labeling procedure as they pertain to potential label errors.</p><p>MNIST <ref type="bibr" target="#b21">[22]</ref>. MNIST is a database of binary images of handwritten digits. The dataset was constructed from Handwriting Sample Forms distributed to Census Bureau employees and high school students; the ground-truth labels were determined by matching digits to the instructions of the task to copy a particular set of digits <ref type="bibr" target="#b10">[11]</ref>. Label errors may arise from failure to follow instructions or from handwriting ambiguities.</p><p>CIFAR-10 / CIFAR-100 <ref type="bibr" target="#b20">[21]</ref>. The CIFAR-10 and CIFAR-100 datasets are collections of small 32 × 32 images and labels from a set of 10 or 100 classes, respectively. The images were collected by searching the internet for the class label. Human labelers were instructed to select images that matched their class label (query term) by filtering out mislabeled images. Images were intended to only have one prominent instance of the object, but could be partially occluded as long as it was identifiable to the labeler.</p><p>Caltech-256 <ref type="bibr" target="#b9">[10]</ref>. Caltech-256 is a database of images sorted into 256 classes, plus an extra class called "clutter". Images were scraped from image search engines. Four human labelers were instructed to rate the images into "good," "bad," and "not applicable," eliminating the images that were confusing, occluded, cluttered, artistic, or not an example of the object category from the dataset. Because no explicit test set is provided, we study label errors in the entire dataset to ensure coverage of any test set split used by practitioners. Modifications: In our study, we ignore data with the ambiguous "clutter" label (class 257) and consider only the images labeled class 1 to class 256.</p><p>ImageNet <ref type="bibr" target="#b5">[6]</ref>. ImageNet is a database of images belonging to one of 1,000 classes. Images were scraped by querying words from WordNet "synonym sets" (synsets) on several image search engines. The images were labeled by Amazon Mechanical Turk workers who were asked whether each image contains objects of a particular given synset. Workers were instructed to select images that contain objects of a given subset regardless of occlusions, number of objects, and clutter to "ensure diversity" in the dataset's images.</p><p>QuickDraw <ref type="bibr" target="#b11">[12]</ref>. The Quick, Draw! dataset contains more than 1 billion doodles collected from users of an experimental game to benchmark image classification models. Users were instructed to draw pictures corresponding to a given label, but the drawings may be "incomplete or may not match the label." Because no explicit test set is provided, we study label errors in the entire dataset to ensure coverage of any test set split used by practitioners.</p><p>20news <ref type="bibr" target="#b29">[30]</ref>. The 20 Newsgroups dataset is a collection of articles posted to Usenet newsgroups used to benchmark text classification and clustering models. The label for each example is the newsgroup it was originally posted in (e.g. "misc.forsale"), so it is obtained during the overall data collection procedure.</p><p>IMDB <ref type="bibr" target="#b26">[27]</ref>. The IMDB Large Movie Review Dataset is a collection of movie reviews to benchmark binary sentiment classification. The labels were determined by the user's review: a score ≤ 4 out of 10 is considered negative; ≥ 7 out of 10 is considered positive.</p><p>Amazon Reviews <ref type="bibr" target="#b28">[29]</ref>. The Amazon Reviews dataset is a collection of textual reviews and 5-star ratings from Amazon customers used to benchmark sentiment analysis models. We use the 5-core (9.9 GB) variant of the dataset. Modifications: In our study, 2-star and 4-star reviews are removed due to ambiguity with 1-star and 5-star reviews, respectively. If these reviews were left in the dataset, they could inflate error counts. Because no explicit test set is provided, we study label errors in the entire dataset to ensure coverage of any test set split used by practitioners.</p><p>AudioSet <ref type="bibr" target="#b7">[8]</ref>. AudioSet is a collection of 10-second sound clips drawn from YouTube videos and multiple labels describing the sounds that are present in the clip. Three human labelers independently rated the presence of one or more labels (as "present," "not present," and "unsure"), and majority agreement was required to assign a label. The authors note that spot checking revealed some label errors due to "confusing labels, human error, and difference in detection of faint/non-salient audio events."</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B Mechanical Turk details</head><p>Mechanical Turk budget Mechanical Turk workers were paid an hourly rate of $7.20 (based on an estimated evaluation time of 5 seconds per image). In total, we spent $1623.29 on human verification experiments on Mechanical Turk. Results would likely improve with a larger budget. <ref type="figure" target="#fig_1">Figure S1</ref>: Mechanical Turk worker interface showing an example from ImageNet (with given label "southern black window"). For each data point algorithmically identified as a potential label error, the interface presents the data point, along with examples belonging to the given class. The interface also shows data points belonging to the confidently predicted class (in this case, "scorpion"). Either the given label is shown as option (a) and the predicted label is shown as option (b), or vice versa (chosen randomly). The worker is asked whether the image belongs to class (a), (b), both, or neither. <ref type="figure">Figure S2</ref>: An example from https://labelerrors.com that Mechanical Turk workers got wrong. The image clearly doesn't match the ImageNet given label "tick," but upon close inspection, it does not match the predicted label "scorpion" either. The insect shown is in fact an arachnid of the order Solifugae, commonly known as camel spiders or wind scorpions. Despite the common name, this animal is not a true scorpion.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C Details of confident learning (CL) for finding label errors</head><p>Here we summarize CL joint estimation and how it is used to algorithmically flag candidates with likely label errors for subsequent human review. An unnormalized representation of the joint distribution between observed and true label, called the confident joint and denoted Cỹ ,y * , is estimated by counting all the examples with noisy labelỹ = i, with high probability of actually belonging to label y * = j. This binning can be expressed as:</p><formula xml:id="formula_0">Cỹ ,y * = |{x ∈ Xỹ =i :p(ỹ = j; x, θ) ≥ t j }|</formula><p>where x is a data example (e.g. an image), Xỹ =i is the set of examples with noisy labelỹ = i, p(ỹ = j; x, θ) is the out-of-sample predicted probability that example x actually belongs to noisy classỹ = j (even though its given labelỹ = i) for a given model θ. Finally, t j is a per-class threshold that, in comparison to other confusion matrix approaches, provides robustness to heterogeneity in class distributions and class distributions, defined as:</p><formula xml:id="formula_1">t j = 1 |Xỹ =j | x∈Xỹ=jp (ỹ = j; x, θ)<label>(1)</label></formula><p>A caveat occurs when an example is confidently counted into more than one bin. When this occurs, the example is only counted in the arg max l∈[m]p (ỹ = l; x, θ) bin.</p><p>Qỹ ,y * is estimated by normalizing Cỹ ,y * , as follows:</p><formula xml:id="formula_2">Qỹ =i,y * =j = Cỹ =i,y * =j j∈[m] Cỹ =i,y * =j • |Xỹ =i | i∈[m],j∈[m] Cỹ =i,y * =j j∈[m] Cỹ =i,y * =j • |Xỹ =i |<label>(2)</label></formula><p>The numerator calibrates jQỹ =i,y * =j = |X i |/ i∈[m] |X i |, ∀i∈[m] so that row-sums match the observed prior over noisy labels. The denominator makes the distribution sum to 1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D Failure modes of confident learning</head><p>Confident learning can fail to exactly estimate Xỹ =i,y * =j (the set of examples with noisy label i and actual label j) when either:</p><p>• Case 1:p(ỹ=j; x, θ) &lt; t j −→ x ∈Xỹ =i,y * =j , or</p><p>• Case 2:p(ỹ=k; x, θ) ≥ t k −→ x ∈Xỹ =i,y * =k , for some k = j where t j is the per-class average threshold (Eqn. 1 above, in Appendix C). In the real-world datasets we study, the predicted probabilities are noisy such thatp x,ỹ=j = p * x,ỹ=j + x,ỹ=j , wherep x,ỹ=j is shorthand forp(ỹ=j; x, θ); p *</p><p>x,ỹ=j is the ideal/non-noisy predicted probability; and x,ỹ=j ∈ R is the error/deviation from ideal. Unlike learning with perfect labels, p *</p><p>x,ỹ=j is not always 0 or 1 because in our setting some classes are mislabeled as other classes some fraction of the time. Expressing the two failure cases in terms of error, we have:</p><formula xml:id="formula_3">• Case 1: x,ỹ=j &lt; t j − p * x,ỹ=j −→ x ∈Xỹ =i,y * =j , or • Case 2: x,ỹ=k ≥ t k − p *</formula><p>x,ỹ=k −→ x ∈Xỹ =i,y * =k , for some k = j Case 1 bounds the error ofp(ỹ=j; x, θ) (in the limit to −∞) and Case bound the error of p(ỹ=j; x, θ) (in the limit to ∞) such that when either occurs,</p><formula xml:id="formula_4">∃(i, j)∈[m]×[m], s.t.Xỹ =i,y * =j = Xỹ =i,y * =j , i.</formula><p>e., we imperfectly estimate the label errors prior to human validation. <ref type="figure">Figure shows</ref> uniquely challenging examples (with excessively erroneousp(ỹ=j; x, θ)) when these failure mode cases potentially occur.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E Reproducibility and computational requirements</head><p>For all 10 datasets, label errors were found using a Linux 18.04 LTS server comprising 128GB of memory, an Intel Core i9-9820X Skylake X 10-Core 3.3GHz, and one RTX 2080 TI GPU. We open-source a single script to reproduce the label errors for every dataset at https://github.com/cleanlab/label-errors/blob/main/examples/Tutorial% 20-%20How%20To%20Find%20Label%20Errors%20With%20CleanLab.ipynb. Reproducing the label errors for all 10 datasets using this tutorial takes about 5 minutes on a modern consumer-grade laptop (e.g., a 2021 Apple M1 MacBook Air).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>F Additional findings on implications of label errors in test data</head><p>Here we provide some additional details/results to complement Section from the main text. <ref type="figure" target="#fig_3">Figure  3</ref> depicts how the benchmarking rankings on the correctable subset of ImageNet examples change significantly for an agreement threshold = 5, meaning 5 of 5 human raters need to independently select the same alternative label for that data point and a new label to be included in the accuracy evaluation. To ascertain that the results of this figure are not due to the setting of the agreement threshold, the results for all three settings of the agreement threshold are shown in Sub-figure S3b. Observe the negative correlation (for top-1 accuracy) occurs in all three settings. Furthermore, observe that this negative correlation no longer holds when top-5 accuracy is used (shown in S3a), likely because many of these models use a loss which maximizes (and overfits to noise) based on top-1 accuracy, not top-5 accuracy. Regardless of whether top-1 or top-5 accuracy is used, model benchmark rankings change significantly on the correctable set in comparison to the original test set (see <ref type="table" target="#tab_1">Table S1</ref>).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>5% 12% 20%</head><p>Top    The dramatic changes in ranking shown in <ref type="table" target="#tab_1">Table S1</ref> may be explained by overfitting to the validation set when these models are trained, which can occur inadvertently during hyper-parameter tuning, or by overfitting to the noise in the training set. These results also suggest that keeping some correct labels on a secret correctable set of label errors may provide a useful framework for detecting overfitting on test sets toward a more reliable approach for benchmarking generalization accuracy across ML models. <ref type="table" target="#tab_1">Table S1</ref>: Individual accuracy scores for Sub-figure 3b with agreement threshold = 3 of 5. Acc@1 stands for the (top-1 validation) original accuracy on the correctable set, in terms of original ImageNet examples and labels. cAcc@1 stands for the (top-1 validation) corrected accuracy on the correctable set of ImageNet examples with correct labels. To be corrected, at least 3 of 5 Mechanical Turk raters had to independently agree on a new label, proposed by us using the class with the arg max probability for the example.</p><p>Platform Model Acc@1 cAcc@1 Acc@5 cAcc@5 Rank@1 cRank@1 Rank@5 cRank@5 The benchmarking experiment was replicated on CIFAR-10 in addition to ImageNet. The individual accuracies for CIFAR-10 are reported in <ref type="table" target="#tab_2">Table S2</ref>. Similar to ImageNet, lower capacity models tend to outperform higher capacity models when benchmarked using corrected labels (instead of the original, erroneous labels).</p><p>Whereas traditional notions of benchmarking generalization accuracy assume the train and test distributions are the same, this is nonsensical in the case of noisy training data -the test dataset should never contain noise because in real-world applications, we want a trained model to predict the error-free outputs on unseen examples, and benchmarking should measure as such. In two independent experiments in ImageNet and CIFAR-10, we observe that models, pre-trained on the original (noisy) datasets, with less expressibility (e.g., ResNet-18) tend to outperform higher capacity models (e.g., NASNet) on the corrected test set labels. <ref type="table" target="#tab_2">Table S2</ref>: Individual CIFAR-10 accuracy scores for Sub-figure 3c with agreement threshold = 3 of 5. Acc@1 stands for the top-1 validation accuracy on the correctable set (n = 18) of original CIFAR-10 examples and labels. See <ref type="table" target="#tab_1">Table S1</ref> caption for more details. Discretization of accuracies occurs due to the limited number of corrected examples on the CIFAR-10 test set.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Platform Model</head><p>Acc@1 cAcc@1 Acc@5 cAcc@5 Rank@1 cRank@1 Rank@5 cRank@5 </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 1 :</head><label>1</label><figDesc>An example label error from each category (Section 4) for image datasets. The figure shows</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>Definition 3 (benign set, B). The subset of benign test examples, comprising data that CL did not flag as likely label errors and data that was flagged but for which human reviewers agreed that the original label should be kept. (B ⊂ D) Definition 4 (unknown-label set, U). The subset of CL-flagged test examples for which human labelers could not agree on a single correct label. This includes examples where human reviewers agreed that multiple classes or none of the classes are appropriate. (U ⊂ D\B) Definition 5 (pruned set, P). The remaining test data after removing U from D. (P = D\U) Definition 6 (correctable set, C). The subset of CL-flagged examples for which human-validation reached consensus on a different label than the originally given label. (C = P\B) Definition 7 (noise prevalence, N ). The percentage of the pruned set comprised of the correctable set, i.e. what fraction of data received the wrong label in the original benchmark when a clear alternative ground-truth label should have been assigned (disregarding any data for which humans failed to find a clear alternative). Here we operationalize noise prevalence as N = |C| |P| .</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 3 :</head><label>3</label><figDesc>Benchmark ranking comparison of 34 pre-trained ImageNet models and 13 pre-trained CIFAR-10 models (details in Tables S2 and S1 and Figure S3 in the Appendix). Benchmarks are unchanged by removing label errors (a), but change drastically (b) on the Correctable set with original (erroneous) labels versus corrected labels, e.g. NASNet: 1/34 → 29/34, ResNet-18: 34/34 → 1/34. over C, despite exhibiting far worse original test accuracy. The change in ranking can be dramatic: NASNet-large drops from ranking 1/34 → 29/34, Xception drops from ranking 2/34 → 24/34, ResNet-18 increases from ranking 34/34 → 1/34, and ResNet-50 increases from ranking 20/24 → 2/24 (see</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head></head><label></label><figDesc>x, of B (the non-CL-flagged test examples). This effectively increases the proportion of the resulting test dataset comprised of the correctable set C, and reflects how test sets function in applications with greater prevalence of label errors. If we remove a fraction x of benign test examples (in B) from P, we estimate the noise prevalence in the new (reduced) test dataset to be N = |C| |P|−x|B| . By varying</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Figure 4 :*</head><label>4</label><figDesc>ImageNet top-1 original accuracy (top) and corrected accuracy (bottom) vs noise prevalence (agreement threshold = 3). Vertical lines indicate noise levels at which the ranking of two models changes (in terms of original/corrected accuracy). The left-most point (N = 2.9%) on the x-axis is |C|/|P|, i.e. the (rounded) estimated noise prevalence of the pruned set, P. The leftmost vertical dotted line in the bottom panel is read, "The ResNet-50 and ResNet-18 benchmarks cross at noise prevalence N = 9%," implying ResNet-18 outperforms ResNet-50 when N increases by around 6% relative to the original pruned test data (N = 2.9% originally, c.f.Table 2). Noise prevalance of 50% indicates the correctable set comprises half of the test set.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Figure 5 :</head><label>5</label><figDesc>CIFAR-10 top-1 original accuracy (top panel) and corrected accuracy (bottom panel) vs Noise Prevalence (agreement threshold = 3). For additional details, see the caption ofFigure 4.For a given model M, its resulting accuracy (as a function of x) over the reduced test data is given by A(x; M) = A C (M)•|C|+(1−x)•A B (M)•|B| |C|+(1−x)•|B|, where A C (M) and A B (M) denote the (original or corrected) accuracy over the correctable set and benign set, respectively (accuracy before removing any examples). Here A B = A * B =Ã B because no erroneous labels were identified in B. The expectation is taken over which fraction x of examples are randomly removed from B to produce the reduced test set: the resulting expected accuracy, A(x; M), is depicted on the y-axis of </figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>- 1</head><label>1</label><figDesc>Acc on Correctable Set (original labels)</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head>Figure S3 :</head><label>S3</label><figDesc>Benchmark ranking comparison of 34 pre-trained models on the ImageNet val set (used as test data here) for various settings of the agreement threshold. Top-5 benchmarks are unchanged by removing label errors (a), but change drastically on the correctable subset with original (erroneous) labels versus corrected labels. Corrected test set sizes: 1428 ( ), 960 (•), 468 ( ).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>Figure S4 :</head><label>S4</label><figDesc>ImageNet top-1 original accuracy (top panel) and top-1 corrected accuracy (bottom panel) vs Noise Prevalence with agreement threshold = 5 (instead of threshold = 3, c.f.,Figure 4).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head></head><label></label><figDesc>tiger is more likely to be mislabeled cheetah than CD player.The diagonal entryp(ỹ=i, y * =i) of matrix Qỹ ,y * is the probability that examples in class i are correctly labeled. If the dataset is error-free, then i∈[m]p (ỹ=i, y * =i) = 1. The fraction of label errors is ρ = 1 − i∈[m]p (ỹ=i, y * =i) and the number of label errors is ρ • n. To find label errors, we choose the top ρ • n examples ordered by the normalized margin:p(ỹ=i; x) − max j =ip (ỹ=j; x)</figDesc><table><row><cell>to estimate Qỹ ,y  *  , the m × m discrete joint distribution of observed, noisy labels,ỹ, and unknown, true labels, y  *  . Inherent in</cell></row><row><cell>Qỹ ,y  *  is the assumption that noise is class-conditional [1], depending only on the latent true class,</cell></row><row><cell>not the data. This assumption is commonly used [9, 32, 42] because it is reasonable. For example, in</cell></row><row><cell>ImageNet, a</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 1 :</head><label>1</label><figDesc>Test set errors are prominent across common benchmark datasets. We observe that error rates vary across datasets, from 0.15% (MNIST) to 10.12% (QuickDraw); unsurprisingly, simpler datasets, datasets with more carefully designed labeling methodologies, and datasets with more careful human curation generally had less error than datasets that used more automated data collection procedures.</figDesc><table><row><cell>Dataset</cell><cell>Modality</cell><cell>Size</cell><cell>Model</cell><cell cols="5">Test Set Errors CL guessed MTurk checked validated estimated % error</cell></row><row><cell>MNIST</cell><cell>image</cell><cell cols="2">10,000 2-conv CNN</cell><cell>100</cell><cell>100 (100%)</cell><cell>15</cell><cell>-</cell><cell>0.15</cell></row><row><cell>CIFAR-10</cell><cell>image</cell><cell>10,000 VGG</cell><cell></cell><cell>275</cell><cell>275 (100%)</cell><cell>54</cell><cell>-</cell><cell>0.54</cell></row><row><cell>CIFAR-100</cell><cell>image</cell><cell>10,000 VGG</cell><cell></cell><cell>2,235</cell><cell>2,235 (100%)</cell><cell>585</cell><cell>-</cell><cell>5.85</cell></row><row><cell>Caltech-256  †</cell><cell>image</cell><cell cols="2">29,780 Wide ResNet-50-2</cell><cell>2,360</cell><cell>2,360 (100%)</cell><cell>458</cell><cell>-</cell><cell>1.54</cell></row><row><cell>ImageNet *</cell><cell>image</cell><cell cols="2">50,000 ResNet-50</cell><cell>5,440</cell><cell>5,440 (100%)</cell><cell>2,916</cell><cell>-</cell><cell>5.83</cell></row><row><cell>QuickDraw  †</cell><cell>image</cell><cell>50,426,266 VGG</cell><cell></cell><cell>6,825,383</cell><cell>2,500 (0.04%)</cell><cell cols="2">1870 5,105,386</cell><cell>10.12</cell></row><row><cell>20news</cell><cell>text</cell><cell cols="2">7,532 TFIDF + SGD</cell><cell>93</cell><cell>93 (100%)</cell><cell>82</cell><cell>-</cell><cell>1.09</cell></row><row><cell>IMDB</cell><cell>text</cell><cell cols="2">25,000 FastText</cell><cell>1,310</cell><cell>1,310 (100%)</cell><cell>725</cell><cell>-</cell><cell>2.90</cell></row><row><cell cols="2">Amazon Reviews  † text</cell><cell cols="2">9,996,437 FastText</cell><cell>533,249</cell><cell>1,000 (0.2%)</cell><cell>732</cell><cell>390,338</cell><cell>3.90</cell></row><row><cell>AudioSet</cell><cell>audio</cell><cell>20,371 VGG</cell><cell></cell><cell>307</cell><cell>307 (100%)</cell><cell>275</cell><cell>-</cell><cell>1.35</cell></row></table><note>* Because the ImageNet test set labels are not publicly available, the ILSVRC 2012 validation set is used.† Because no explicit test set is provided, we study the entire dataset to ensure coverage of any train/test split.</note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 2 :</head><label>2</label><figDesc>Mechanical Turk validation of CL-flagged errors and categorization of label issues.</figDesc><table><row><cell>Dataset</cell><cell cols="6">Test Set Errors Categorization non-errors errors non-agreement correctable multi-label neither</cell></row><row><cell>MNIST</cell><cell>85</cell><cell>15</cell><cell>2</cell><cell>10</cell><cell>-</cell><cell>3</cell></row><row><cell>CIFAR-10</cell><cell>221</cell><cell></cell><cell>32</cell><cell>18</cell><cell>0</cell><cell>4</cell></row><row><cell>CIFAR-100</cell><cell cols="2">1650 585</cell><cell>210</cell><cell>318</cell><cell>20</cell><cell>37</cell></row><row><cell>Caltech-256</cell><cell cols="2">1902 458</cell><cell>99</cell><cell>221</cell><cell>115</cell><cell>23</cell></row><row><cell>ImageNet</cell><cell cols="2">2524 2916</cell><cell>598</cell><cell>1428</cell><cell>597</cell><cell>293</cell></row><row><cell>QuickDraw</cell><cell cols="2">630 1870</cell><cell>563</cell><cell>1047</cell><cell>20</cell><cell></cell></row><row><cell>20news</cell><cell>11</cell><cell>82</cell><cell>43</cell><cell>22</cell><cell>12</cell><cell>5</cell></row><row><cell>IMDB</cell><cell cols="2">585 725</cell><cell>552</cell><cell>173</cell><cell>-</cell><cell>-</cell></row><row><cell>Amazon Reviews</cell><cell cols="2">268 732</cell><cell>430</cell><cell>302</cell><cell>-</cell><cell>-</cell></row><row><cell>AudioSet</cell><cell cols="2">32 275</cell><cell>-</cell><cell>-</cell><cell>-</cell><cell>-</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 3 :</head><label>3</label><figDesc>Percentages of label errors identified by experts vs. MTurk workers in CL-flagged examples and random non-CL-flagged examples from ImageNet. Only experts reviewed non-CL examples. The first two rows are computed over the same subset of images. The last column lists average time spent reviewing each image. Percentages are row-normalized, with raw counts provided inTable S3.non-errors errors correctable multi-label neither Avg. time spent</figDesc><table><row><cell>CL (MTurk)</cell><cell>57.9% 42.2%</cell><cell>24.7%</cell><cell>11.1%</cell><cell>6.4%</cell><cell>seconds</cell></row><row><cell>CL (expert)</cell><cell>58.7% 41.4%</cell><cell>17.7%</cell><cell cols="2">13.1% 10.6%</cell><cell>67 seconds</cell></row><row><cell>non-CL (expert)</cell><cell>84.0% 16.0%</cell><cell>3.2%</cell><cell>9.1%</cell><cell>3.7%</cell><cell>67 seconds</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head></head><label></label><figDesc>Noise prevalance of 50% indicates the correctable set comprises half of the test set.</figDesc><table><row><cell>Imagenet Top-1 Test Accuracy Imagenet Top-1 Test Accuracy</cell><cell>(original labels) labels) (corrected</cell><cell>40% 60% 80% 60% 70% 80%</cell><cell>1.0% 1.0%</cell><cell>8%</cell><cell>22%</cell><cell>25.0% 25.0%</cell><cell>42%</cell><cell>45%</cell><cell>48%</cell><cell>50.0% 50.0%</cell><cell>Platform &amp; Model --------Keras 2.2.4 densenet169 Keras 2.2.4 nasnetlarge Keras 2.2.4 resnet50 PyTorch 1.0 alexnet PyTorch 1.0 resnet18 PyTorch 1.0 resnet50 PyTorch 1.0 vgg11</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="4">Noise Prevalence (% of test set with correctable labels)</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>*</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table><note></note></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Acknowledgments</head><p>This work was supported in part by funding from the MIT-IBM Watson AI Lab. We thank Jessy Lin for her contributions to early stages of this research, and we thank Wei Jing Lok for his contributions to the ImageNet expert labeling experiments.</p><p>https://github.com/cleanlab/label-errors#how-to-download-prepare-and-index-the-datasets</p></div>
+			</div>
+
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>G Expert label review details</head><p>To mitigate possible bias in our expert reviewing process, we did not show reviewers whether a particular image was CL-flagged or not, and we randomized whether a CL-flagged or non CL-flagged image was shown first for each ImageNet class. We also randomized whether the given or predicted label was the first or second choice offered to the reviewer. We did not however randomize the class order as reviewing was much more efficient when the classes were presented in order (required less drastic context switching) and helped reviewers to learn while reviewing, especially for taxonomies with many related classes (e.g., dog breeds). The three authors of this paper, aided by an experienced data labeler, served as these expert reviewers, spending around 67 seconds in total on average to review each image label (14x more time than MTurk workers) and around 109 seconds on average to review the images where a second phase was required for the expert reviewers to come to consensus due to disagreement (28x more time than MTurk workers).</p><p>There were 66 ImageNet classes (out of the 1000) that had no CL-flagged image in the validation set. For these classes, the experts could not review a CL-flagged image, but experts still reviewed a non CL-flagged image. Thus, 1934 images were reviewed by experts (934 CL-flagged and 1000 non-CL flagged). These images were assigned into 3 non-disjoint evenly-sized partitions (one for each expert to review) such that each image was reviewed by at least 2 experts. Expert reviewer 1 was assigned images from classes 1-666. Expert reviewer 2 was assigned classes 1-333 and 667-1000. Expert reviewer 3 was assigned classes 334-1000. After independently reviewing the images (spending 54 seconds per image, on average), experts disagreed on 438 images. The experts subsequently discussed each of these images to reach a consensus decision (spending 55 seconds on average in discussions to come to consensus on a choice for each label). <ref type="table">Table S3</ref> counts the different types of label issues identified by experts in the CL-flagged and non-CL flagged images, from which we computed the percentages reported in <ref type="table">Table 3</ref>.</p><p>The time spent for expert review in Table is computed as: (1934 / 1934 ) * 54 seconds + (438 / 1934) * 55 seconds = 67 seconds (i.e., time spent on average for all 1934 images for independent expert review + additional time spent on the 438 images requiring experts to discuss their choices and come to agreement).</p><p>In some cases, experts agreed that neither the given nor the predicted label was appropriate, but Mechanical Turk workers chose the predicted label. These were tricky cases which often required careful scrutiny to identify the true class of the given image. <ref type="figure">Figure S2</ref> shows an example of such a case, where the image clearly doesn't match the ImageNet given label, and upon close inspection, doesn't match the predicted label either. <ref type="table">Table S3</ref>: Counts of various types of label issues identified by experts in CL-flagged examples vs non-CL flagged examples from ImageNet (see Section 6). Here, count(errors) = count(correctable) + count(multi-label) + count(neither) + count(non-agreement). Also, count(total) = count(non-errors) + count(errors). After independently making decisions about each label, experts were subsequently required to resolve any non-agreement by reaching a consensus via group deliberation. There were ImageNet classes which did not have a CL-flagged error, thus only 934 CL-flagged examples were reviewed instead of (1 example for every class </p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Learning from noisy examples</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Angluin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Laird</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Machine Learning</title>
+		<imprint>
+			<date type="published" when="1988" />
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="343" to="370" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Angluin and P. Laird. Learning from noisy examples. Machine Learning, 2(4):343-370, 1988.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">A closer look at memorization in deep networks</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Arpit</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Jastrzębski</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Ballas</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Krueger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><surname>Bengio</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><forename type="middle">S</forename><surname>Kanwal</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Maharaj</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Fischer</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Courville</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2017" />
+			<biblScope unit="page" from="233" to="242" />
+		</imprint>
+	</monogr>
+	<note>Proceedings of Machine Learning Research</note>
+	<note type="raw_reference">D. Arpit, S. Jastrzębski, N. Ballas, D. Krueger, E. Bengio, M. S. Kanwal, T. Maharaj, A. Fischer, A. Courville, Y. Bengio, et al. A closer look at memorization in deep networks. In International Conference on Machine Learning, pages 233-242. Proceedings of Machine Learning Research (PMLR), 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Understanding and utilizing deep neural networks trained with noisy labels</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><forename type="middle">B</forename><surname>Liao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Chen, B. B. Liao, G. Chen, and S. Zhang. Understanding and utilizing deep neural networks trained with noisy labels. In International Conference on Machine Learning (ICML), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">A survey on deep learning with noisy labels: How to train your model when you cannot trust on the annotations?</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><forename type="middle">R</forename><surname>Cordeiro</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Carneiro</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Graphics, Patterns and Images (SIBGRAPI)</title>
+		<imprint>
+			<date type="published" when="2020" />
+			<biblScope unit="page" from="9" to="16" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">F. R. Cordeiro and G. Carneiro. A survey on deep learning with noisy labels: How to train your model when you cannot trust on the annotations? In Conference on Graphics, Patterns and Images (SIBGRAPI), pages 9-16, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Maximum likelihood estimation of observer error-rates using the em algorithm</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">P</forename><surname>Dawid</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">M</forename><surname>Skene</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of the Royal Statistical Society: Series C (Applied Statistics)</title>
+		<imprint>
+			<biblScope unit="volume">28</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="20" to="28" />
+			<date type="published" when="1979" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. P. Dawid and A. M. Skene. Maximum likelihood estimation of observer error-rates using the em algorithm. Journal of the Royal Statistical Society: Series C (Applied Statistics), 28(1): 20-28, 1979.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">ImageNet: A Large-Scale Hierarchical Image Database</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Deng</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Dong</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Socher</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L.-J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Fei-Fei</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Computer Vision and Pattern Recognition (CVPR)</title>
+		<imprint>
+			<date type="published" when="2009" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei. ImageNet: A Large-Scale Hierarchical Image Database. In Conference on Computer Vision and Pattern Recognition (CVPR), 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Classification in the presence of label noise: A survey</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Frénay</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Verleysen</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TNNLS.2013.2292894</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks and Learning Systems</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="845" to="869" />
+			<date type="published" when="2014" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Frénay and M. Verleysen. Classification in the presence of label noise: A survey. IEEE Transactions on Neural Networks and Learning Systems, 25(5):845-869, 2014. ISSN 21622388. doi: 10.1109/TNNLS.2013.2292894.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Audio set: An ontology and human-labeled dataset for audio events</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">F</forename><surname>Gemmeke</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><forename type="middle">P W</forename><surname>Ellis</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Freedman</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Lawrence</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><forename type="middle">C</forename><surname>Moore</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Plakal</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Ritter</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</title>
+		<meeting><address><addrLine>New Orleans, LA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. F. Gemmeke, D. P. W. Ellis, D. Freedman, A. Jansen, W. Lawrence, R. C. Moore, M. Plakal, and M. Ritter. Audio set: An ontology and human-labeled dataset for audio events. In IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP), New Orleans, LA, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Training deep neural-networks using a noise adaptation layer</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Goldberger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><surname>Ben-Reuven</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations (ICLR</title>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Goldberger and E. Ben-Reuven. Training deep neural-networks using a noise adaptation layer. In International Conference on Learning Representations (ICLR), 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title level="m" type="main">Caltech-256 object category dataset</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Griffin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Holub</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Perona</surname></persName>
+		</author>
+		<idno>7694</idno>
+		<ptr target="http://authors.library.caltech.edu/7694" />
+		<imprint>
+			<date type="published" when="2007" />
+		</imprint>
+		<respStmt>
+			<orgName>California Institute of Technology</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Technical Report</note>
+	<note type="raw_reference">G. Griffin, A. Holub, and P. Perona. Caltech-256 object category dataset. Technical Report 7694, California Institute of Technology, 2007. URL http://authors.library.caltech.edu/7694.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title level="m" type="main">Nist special database 19 handprinted forms and characters database</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><forename type="middle">J</forename><surname>Grother</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1995" />
+		</imprint>
+		<respStmt>
+			<orgName>National Institute of Standards and Technology</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">P. J. Grother. Nist special database 19 handprinted forms and characters database. National Institute of Standards and Technology, 1995.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Ha</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Eck</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1704.03477</idno>
+		<title level="m">A neural representation of sketch drawings</title>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">D. Ha and D. Eck. A neural representation of sketch drawings. arXiv preprint arXiv:1704.03477, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Improving generalization by controlling label-noise information in neural network weights</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Harutyunyan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Reing</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Ver</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Steeg</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>Galstyan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<biblScope unit="page">2020</biblScope>
+		</imprint>
+	</monogr>
+	<note>Proceedings of Machine Learning Research</note>
+	<note type="raw_reference">H. Harutyunyan, K. Reing, G. Ver Steeg, and A. Galstyan. Improving generalization by controlling label-noise information in neural network weights. In International Conference on Machine Learning (ICML), pages 4071-4081. Proceedings of Machine Learning Research (PMLR), 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Deep residual learning for image recognition</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Sun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Computer Vision and Pattern Recognition (CVPR)</title>
+		<imprint>
+			<date type="published" when="2016" />
+			<biblScope unit="page" from="770" to="778" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning for image recognition. In Conference on Computer Vision and Pattern Recognition (CVPR), pages 770-778, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Using trusted data to train deep networks on labels corrupted by severe noise</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Hendrycks</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Mazeika</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Wilson</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Gimpel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Neural Information Processing Systems (NeurIPS)</title>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Hendrycks, M. Mazeika, D. Wilson, and K. Gimpel. Using trusted data to train deep networks on labels corrupted by severe noise. In Conference on Neural Information Processing Systems (NeurIPS), 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Selective brain damage: Measuring the disparate impact of model pruning</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Hooker</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Courville</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Dauphin</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Frome</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1911.05248</idno>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">S. Hooker, A. Courville, Y. Dauphin, and A. Frome. Selective brain damage: Measuring the disparate impact of model pruning. arXiv preprint arXiv:1911.05248, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><forename type="middle">R</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Z</forename><surname>Emam</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Goldblum</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Fowl</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">K</forename><surname>Terry</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Goldstein</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1906.03291</idno>
+		<title level="m">Understanding generalization through visualizations</title>
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">W. R. Huang, Z. Emam, M. Goldblum, L. Fowl, J. K. Terry, F. Huang, and T. Goldstein. Understanding generalization through visualizations. arXiv preprint arXiv:1906.03291, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Beyond synthetic noise: Deep learning on controlled noisy labels</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Yang</surname></persName>
+		</author>
+		<ptr target="http://proceedings.mlr.press/v119/jiang20c.html" />
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<date type="published" when="2020-07" />
+			<biblScope unit="volume">119</biblScope>
+			<biblScope unit="page" from="13" to="18" />
+		</imprint>
+	</monogr>
+	<note>Proceedings of Machine Learning Research (PMLR)</note>
+	<note type="raw_reference">L. Jiang, D. Huang, M. Liu, and W. Yang. Beyond synthetic noise: Deep learning on controlled noisy labels. In International Conference on Machine Learning (ICML), volume 119 of Proceedings of Machine Learning Research (PMLR), pages 4804-4815. Proceedings of Machine Learning Research (PMLR), 13-18 Jul 2020. URL http://proceedings.mlr.press/v119/ jiang20c.html.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Learning deep networks from noisy labels with dropout regularization</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><surname>Jindal</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Nokleby</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Chen</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICDM.2016.0121</idno>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Data Mining (ICDM)</title>
+		<imprint>
+			<date type="published" when="2016-12" />
+			<biblScope unit="page" from="967" to="972" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Jindal, M. Nokleby, and X. Chen. Learning deep networks from noisy labels with dropout regularization. In International Conference on Data Mining (ICDM), pages 967-972, Dec. 2016. doi: 10.1109/ICDM.2016.0121.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Robust active label correction</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Kremer</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Sha</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Igel</surname></persName>
+		</author>
+		<idno>PMLR</idno>
+		<ptr target="http://proceedings.mlr.press/v84/kremer18a.html" />
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of Machine Learning Research</title>
+		<meeting>Machine Learning Research<address><addrLine>Playa Blanca, Lanzarote, Canary Islands</addrLine></address></meeting>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2018-04" />
+			<biblScope unit="volume">84</biblScope>
+			<biblScope unit="page" from="9" to="11" />
+		</imprint>
+	</monogr>
+	<note>Proceedings of Machine Learning Research</note>
+	<note type="raw_reference">J. Kremer, F. Sha, and C. Igel. Robust active label correction. In Proceedings of Machine Learning Research (PMLR), volume 84 of Proceedings of Machine Learning Research, pages 308-316, Playa Blanca, Lanzarote, Canary Islands, 09-11 Apr 2018. Proceedings of Machine Learning Research (PMLR). URL http://proceedings.mlr.press/v84/kremer18a.html.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<title level="m" type="main">Learning multiple layers of features from tiny images</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Krizhevsky</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Hinton</surname></persName>
+		</author>
+		<ptr target="http://www.cs.toronto.edu/~kriz/cifar.html" />
+		<imprint>
+			<date type="published" when="2009" />
+		</imprint>
+		<respStmt>
+			<orgName>Department of Computer Science, University of Toronto</orgName>
+		</respStmt>
+	</monogr>
+	<note>Master&apos;s thesis</note>
+	<note type="raw_reference">A. Krizhevsky and G. Hinton. Learning multiple layers of features from tiny images. Master&apos;s thesis, Department of Computer Science, University of Toronto, 2009. URL http://www.cs. toronto.edu/~kriz/cifar.html.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Gradient-based learning applied to document recognition</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Lecun</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Bottou</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Haffner</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE</title>
+		<meeting>the IEEE</meeting>
+		<imprint>
+			<date type="published" when="1998" />
+			<biblScope unit="page" from="2278" to="2324" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Lecun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-based learning applied to document recognition. In Proceedings of the IEEE, pages 2278-2324, 1998.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">CleanML: a study for evaluating the impact of data cleaning on ml classification tasks</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Rao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Blase</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Chu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Conference on Data Engineering</title>
+		<imprint>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Li, X. Rao, J. Blase, Y. Zhang, X. Chu, and C. Zhang. CleanML: a study for evaluating the impact of data cleaning on ml classification tasks. In IEEE International Conference on Data Engineering, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">E</forename><surname>Agustsson</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Van Gool</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1708.02862</idno>
+		<title level="m">Webvision database: Visual learning and understanding from web data</title>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">W. Li, L. Wang, W. Li, E. Agustsson, and L. Van Gool. Webvision database: Visual learning and understanding from web data. arXiv preprint arXiv:1708.02862, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Detecting and correcting for label shift with black box predictors</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Z</forename><surname>Lipton</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y.-X</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Smola</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z. Lipton, Y.-X. Wang, and A. Smola. Detecting and correcting for label shift with black box predictors. In International Conference on Machine Learning (ICML), 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title level="m" type="main">List of datasets for machine learning research -Wikipedia, the free encyclopedia</title>
+		<ptr target="https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research" />
+		<imprint>
+			<date type="published" when="2018-10" />
+		</imprint>
+		<respStmt>
+			<orgName>List of Datasets for Machine Learning Research</orgName>
+		</respStmt>
+	</monogr>
+	<note>Online; accessed 22</note>
+	<note type="raw_reference">List of Datasets for Machine Learning Research. List of datasets for machine learning research -Wikipedia, the free encyclopedia. https://en.wikipedia.org/wiki/List_of_datasets_ for_machine-learning_research, 2018. [Online; accessed 22-October-2018].</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Learning word vectors for sentiment analysis</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">L</forename><surname>Maas</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><forename type="middle">E</forename><surname>Daly</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><forename type="middle">T</forename><surname>Pham</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">Y</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Potts</surname></persName>
+		</author>
+		<ptr target="http://www.aclweb.org/anthology/P11-1015" />
+	</analytic>
+	<monogr>
+		<title level="m">Annual Conference of the Association for Computational Linguistics (ACL)</title>
+		<meeting><address><addrLine>Portland, Oregon, USA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2011-06" />
+			<biblScope unit="page" from="142" to="150" />
+		</imprint>
+	</monogr>
+	<note>Annual Conference of the Association for Computational Linguistics (ACL</note>
+	<note type="raw_reference">A. L. Maas, R. E. Daly, P. T. Pham, D. Huang, A. Y. Ng, and C. Potts. Learning word vectors for sentiment analysis. In Annual Conference of the Association for Computational Linguistics (ACL), pages 142-150, Portland, Oregon, USA, June 2011. Annual Conference of the Association for Computational Linguistics (ACL). URL http://www.aclweb.org/anthology/ P11-1015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Exploring the limits of weakly supervised pretraining</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Mahajan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Girshick</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">V</forename><surname>Ramanathan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Paluri</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Bharambe</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Van Der Maaten</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">European Conference on Computer Vision (ECCV)</title>
+		<imprint>
+			<date type="published" when="2018" />
+			<biblScope unit="page" from="181" to="196" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Mahajan, R. Girshick, V. Ramanathan, K. He, M. Paluri, Y. Li, A. Bharambe, and L. Van Der Maaten. Exploring the limits of weakly supervised pretraining. European Conference on Computer Vision (ECCV), pages 181-196, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Image-based recommendations on styles and substitutes</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Mcauley</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Targett</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Q</forename><surname>Shi</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Van Den</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><surname>Hengel</surname></persName>
+		</author>
+		<idno type="DOI">http://doi.acm.org/10.1145/2766462.2767755</idno>
+		<ptr target="http://doi.acm.org/10.1145/2766462.2767755" />
+	</analytic>
+	<monogr>
+		<title level="m">Special Interest Group on Information Retrieval (SIGIR)</title>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2015" />
+			<biblScope unit="page" from="43" to="52" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. McAuley, C. Targett, Q. Shi, and A. van den Hengel. Image-based recommendations on styles and substitutes. In Special Interest Group on Information Retrieval (SIGIR), pages 43-52. ACM, 2015. ISBN 978-1-4503-3621-5. doi: 10.1145/2766462.2767755. URL http: //doi.acm.org/10.1145/2766462.2767755.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Mitchell</surname></persName>
+		</author>
+		<ptr target="https://archive.ics.uci.edu/ml/datasets/Twenty+Newsgroups" />
+		<title level="m">Twenty newsgroups dataset</title>
+		<imprint>
+			<date type="published" when="1999" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Mitchell. Twenty newsgroups dataset. https://archive.ics.uci.edu/ml/datasets/ Twenty+Newsgroups, 1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Learning with noisy labels</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Natarajan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><forename type="middle">S</forename><surname>Dhillon</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><forename type="middle">K</forename><surname>Ravikumar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Tewari</surname></persName>
+		</author>
+		<ptr target="http://papers.nips.cc/paper/5073-learning-with-noisy-labels.pdf" />
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Neural Information Processing Systems (NeurIPS)</title>
+		<imprint>
+			<date type="published" when="2013" />
+			<biblScope unit="page" from="1196" to="1204" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Natarajan, I. S. Dhillon, P. K. Ravikumar, and A. Tewari. Learning with noisy labels. In Conference on Neural Information Processing Systems (NeurIPS), pages 1196-1204, 2013. URL http://papers.nips.cc/paper/5073-learning-with-noisy-labels.pdf.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Learning with confident examples: Rank pruning for robust classification with noisy labels</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><forename type="middle">G</forename><surname>Northcutt</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><forename type="middle">L</forename><surname>Chuang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Uncertainty in Artificial Intelligence (UAI)</title>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. G. Northcutt, T. Wu, and I. L. Chuang. Learning with confident examples: Rank pruning for robust classification with noisy labels. In Conference on Uncertainty in Artificial Intelligence (UAI), 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Confident learning: Estimating uncertainty in dataset labels</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><forename type="middle">G</forename><surname>Northcutt</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><surname>Chuang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">70</biblScope>
+			<biblScope unit="page" from="1373" to="1411" />
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. G. Northcutt, L. Jiang, and I. Chuang. Confident learning: Estimating uncertainty in dataset labels. Journal of Artificial Intelligence Research, 70:1373-1411, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Loss factorization, weakly supervised learning and label noise robustness</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Patrini</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Nielsen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Nock</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Carioni</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<date type="published" when="2016" />
+			<biblScope unit="page" from="708" to="717" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Patrini, F. Nielsen, R. Nock, and M. Carioni. Loss factorization, weakly supervised learning and label noise robustness. In International Conference on Machine Learning (ICML), pages 708-717, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Making deep neural networks robust to label noise: A loss correction approach</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><surname>Patrini</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Rozza</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Menon</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Nock</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Qu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Computer Vision and Pattern Recognition (CVPR)</title>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Patrini, A. Rozza, A. Krishna Menon, R. Nock, and L. Qu. Making deep neural networks robust to label noise: A loss correction approach. In Conference on Computer Vision and Pattern Recognition (CVPR), 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Data programming: Creating large training sets, quickly</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">J</forename><surname>Ratner</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><forename type="middle">M</forename><surname>De Sa</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Selsam</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Ré</surname></persName>
+		</author>
+		<ptr target="http://papers.nips.cc/paper/6523-data-programming-creating-large-training-sets-quickly.pdf" />
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Neural Information Processing Systems (NeurIPS)</title>
+		<imprint>
+			<date type="published" when="2016" />
+			<biblScope unit="page" from="3567" to="3575" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. J. Ratner, C. M. De Sa, S. Wu, D. Selsam, and C. Ré. Data programming: Creating large training sets, quickly. In Conference on Neural Information Process- ing Systems (NeurIPS), pages 3567-3575, 2016. URL http://papers.nips.cc/paper/ 6523-data-programming-creating-large-training-sets-quickly.pdf.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Do imagenet classifiers generalize to imagenet</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Recht</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Roelofs</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Schmidt</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">V</forename><surname>Shankar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<date type="published" when="2019" />
+			<biblScope unit="page" from="5389" to="5400" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Recht, R. Roelofs, L. Schmidt, and V. Shankar. Do imagenet classifiers generalize to imagenet? In International Conference on Machine Learning (ICML), pages 5389-5400, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Rolnick</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Veit</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Belongie</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Shavit</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1705.10694</idno>
+		<title level="m">Deep learning is robust to massive label noise</title>
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">D. Rolnick, A. Veit, S. Belongie, and N. Shavit. Deep learning is robust to massive label noise. arXiv preprint arXiv:1705.10694, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Everyone wants to do the model work, not the data work&quot;: Data cascades in high-stakes ai</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Sambasivan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Kapania</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Highfill</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Akrong</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Paritosh</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><forename type="middle">M</forename><surname>Aroyo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Human Factors in Computing Systems (CHI)</title>
+		<imprint>
+			<biblScope unit="page">2021</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Sambasivan, S. Kapania, H. Highfill, D. Akrong, P. Paritosh, and L. M. Aroyo. &quot;Everyone wants to do the model work, not the data work&quot;: Data cascades in high-stakes ai. In Human Factors in Computing Systems (CHI), 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Evaluating machine accuracy on ImageNet</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">V</forename><surname>Shankar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Roelofs</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Mania</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Fang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Recht</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Schmidt</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2020-07" />
+			<biblScope unit="volume">119</biblScope>
+			<biblScope unit="page" from="13" to="18" />
+		</imprint>
+	</monogr>
+	<note>Proceedings of Machine Learning Research</note>
+	<note type="raw_reference">V. Shankar, R. Roelofs, H. Mania, A. Fang, B. Recht, and L. Schmidt. Evaluating machine accuracy on ImageNet. In International Conference on Machine Learning (ICML), volume 119 of Proceedings of Machine Learning Research, pages 8634-8644. Proceedings of Machine Learning Research (PMLR), 13-18 Jul 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<monogr>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">K</forename><surname>Simonyan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Zisserman</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1409.1556</idno>
+		<title level="m">Very deep convolutional networks for large-scale image recognition</title>
+		<imprint>
+			<date type="published" when="2014" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">K. Simonyan and A. Zisserman. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Training convolutional networks with noisy labels</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Sukhbaatar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Bruna</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Paluri</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Bourdev</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><surname>Fergus</surname></persName>
+		</author>
+		<idno type="DOI">10.1051/0004-6361/201527329</idno>
+		<ptr target="http://arxiv.org/abs/1406.2080" />
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations (ICLR)</title>
+		<imprint>
+			<date type="published" when="2015" />
+			<biblScope unit="page" from="1" to="11" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Sukhbaatar, J. Bruna, M. Paluri, L. Bourdev, and R. Fergus. Training convolutional networks with noisy labels. In International Conference on Learning Representations (ICLR), pages 1-11, 2015. ISBN 9781611970685. doi: 10.1051/0004-6361/201527329. URL http://arxiv. org/abs/1406.2080.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Revisiting unreasonable effectiveness of data in deep learning era</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Shrivastava</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Gupta</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Computer Vision (ICCV)</title>
+		<imprint>
+			<date type="published" when="2017-10" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Sun, A. Shrivastava, S. Singh, and A. Gupta. Revisiting unreasonable effectiveness of data in deep learning era. In International Conference on Computer Vision (ICCV), Oct 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">From imagenet to image classification: Contextualizing progress on benchmarks</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Tsipras</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Santurkar</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Engstrom</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Ilyas</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Madry</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<biblScope unit="page">2020</biblScope>
+		</imprint>
+	</monogr>
+	<note>Proceedings of Machine Learning Research</note>
+	<note type="raw_reference">D. Tsipras, S. Santurkar, L. Engstrom, A. Ilyas, and A. Madry. From imagenet to image classi- fication: Contextualizing progress on benchmarks. In International Conference on Machine Learning, pages 9625-9635. Proceedings of Machine Learning Research (PMLR), 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Learning with symmetric label noise: The importance of being unhinged</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Van Rooyen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Menon</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">R</forename><forename type="middle">C</forename><surname>Williamson</surname></persName>
+		</author>
+		<ptr target="http://papers.nips.cc/paper/5941-learning-with-symmetric-label-noise-the-importance-of-being-unhinged" />
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Neural Information Processing Systems (NeurIPS)</title>
+		<imprint>
+			<date type="published" when="2015" />
+			<biblScope unit="page" from="10" to="18" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Van Rooyen, A. Menon, and R. C. Williamson. Learning with symmetric label noise: The importance of being unhinged. In Conference on Neural Information Pro- cessing Systems (NeurIPS), pages 10-18, 2015. URL http://papers.nips.cc/paper/ 5941-learning-with-symmetric-label-noise-the-importance-of-being-unhinged.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Fair classification with group-dependent label noise</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Levy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the ACM Conference on Fairness, Accountability, and Transparency</title>
+		<meeting>the ACM Conference on Fairness, Accountability, and Transparency</meeting>
+		<imprint>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Wang, Y. Liu, and C. Levy. Fair classification with group-dependent label noise. In Proceed- ings of the ACM Conference on Fairness, Accountability, and Transparency, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">On the margin theory of feedforward neural networks</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">C</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><forename type="middle">D</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Q</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Ma</surname></persName>
+		</author>
+		<ptr target="http://arxiv.org/abs/1810.05369" />
+	</analytic>
+	<monogr>
+		<title level="j">Computing Research Repository (CoRR)</title>
+		<imprint>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Wei, J. D. Lee, Q. Liu, and T. Ma. On the margin theory of feedforward neural networks. Computing Research Repository (CoRR), 2018. URL http://arxiv.org/abs/1810.05369.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">L_dmi: A novel information-theoretic loss function for training deep nets robust to label noise</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Kong</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Neural Information Processing Systems (NeurIPS)</title>
+		<imprint>
+			<date type="published" when="2019" />
+			<biblScope unit="page" from="6225" to="6236" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Xu, P. Cao, Y. Kong, and Y. Wang. L_dmi: A novel information-theoretic loss function for training deep nets robust to label noise. In Conference on Neural Information Processing Systems (NeurIPS), pages 6225-6236, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Improving crowdsourced label quality using noise correction</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">V</forename><forename type="middle">S</forename><surname>Sheng</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">X</forename><surname>Wu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks and Learning Systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="1675" to="1688" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Zhang, V. S. Sheng, T. Li, and X. Wu. Improving crowdsourced label quality using noise correction. IEEE Transactions on Neural Networks and Learning Systems, 29(5):1675-1688, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">Learning transferable architectures for scalable image recognition</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">B</forename><surname>Zoph</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">V</forename><surname>Vasudevan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Shlens</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Q</forename><forename type="middle">V</forename><surname>Le</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Computer Vision and Pattern Recognition (CVPR)</title>
+		<imprint>
+			<date type="published" when="2018" />
+			<biblScope unit="page" from="8697" to="8710" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Zoph, V. Vasudevan, J. Shlens, and Q. V. Le. Learning transferable architectures for scalable image recognition. In Conference on Computer Vision and Pattern Recognition (CVPR), pages 8697-8710, 2018.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

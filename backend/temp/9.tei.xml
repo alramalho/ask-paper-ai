@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 /Users/alramalho/grobid-0.6.1/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Heidelberg colorectal data set for surgical data science in the sensor operating room</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author role="corresp">
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Lena</forename><surname>Maier-Hein</surname></persName>
+							<email>l.maier-hein@dkfz.de</email>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Martin</forename><surname>Wagner</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Tobias</forename><surname>Ross</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Annika</forename><surname>Reinke</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Sebastian</forename><surname>Bodenstedt</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Peter</forename><forename type="middle">M</forename><surname>Full</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Division of Medical image computing (Mic)</orgName>
+								<address>
+									<addrLine>im Neuenheimer Feld 223</addrLine>
+									<postCode>69120</postCode>
+									<settlement>Heidelberg</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Hellena</forename><surname>Hempe</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Diana</forename><surname>Mindroc-Filimon</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Patrick</forename><surname>Scholz</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="department" key="dep1">HIDSS4Health -Helmholtz Information and Data Science School for Health</orgName>
+								<orgName type="department" key="dep2">Department of Mathematics and computer Science</orgName>
+								<orgName type="institution">University of Calabria</orgName>
+								<address>
+									<addrLine>Im Neuenheimer Feld 223, Via Pietro Bucci</addrLine>
+									<postCode>69120, 87036</postCode>
+									<settlement>Heidelberg, Arcavacata, Rende</settlement>
+									<region>CS</region>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff5">
+								<orgName type="department">International Max Planck Research School for Intelligent Systems Tuebingen</orgName>
+								<orgName type="institution">Italy. understandAI GmbH</orgName>
+								<address>
+									<addrLine>An der RaumFabrik 34</addrLine>
+									<postCode>76227</postCode>
+									<settlement>Karlsruhe</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff6">
+								<orgName type="institution" key="instit1">University of Tuebingen</orgName>
+								<orgName type="institution" key="instit2">Geschwister-Scholl-Platz</orgName>
+								<address>
+									<postCode>72074</postCode>
+									<settlement>Tübingen</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Thuy</forename><surname>Nuong Tran</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Pierangela</forename><surname>Bruno</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Anna</forename><surname>Kisilenko</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Benjamin</forename><surname>Müller</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Tornike</forename><surname>Davitashvili</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Manuela</forename><surname>Capek</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Minu</forename><forename type="middle">D</forename><surname>Tizabi</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Matthias</forename><surname>Eisenmann</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Tim</forename><forename type="middle">J</forename><surname>Adler</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Janek</forename><surname>Gröhl</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Melanie</forename><surname>Schellenberg</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Silvia</forename><surname>Seidlitz</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="department" key="dep1">HIDSS4Health -Helmholtz Information and Data Science School for Health</orgName>
+								<orgName type="department" key="dep2">Department of Mathematics and computer Science</orgName>
+								<orgName type="institution">University of Calabria</orgName>
+								<address>
+									<addrLine>Im Neuenheimer Feld 223, Via Pietro Bucci</addrLine>
+									<postCode>69120, 87036</postCode>
+									<settlement>Heidelberg, Arcavacata, Rende</settlement>
+									<region>CS</region>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff5">
+								<orgName type="department">International Max Planck Research School for Intelligent Systems Tuebingen</orgName>
+								<orgName type="institution">Italy. understandAI GmbH</orgName>
+								<address>
+									<addrLine>An der RaumFabrik 34</addrLine>
+									<postCode>76227</postCode>
+									<settlement>Karlsruhe</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff6">
+								<orgName type="institution" key="instit1">University of Tuebingen</orgName>
+								<orgName type="institution" key="instit2">Geschwister-Scholl-Platz</orgName>
+								<address>
+									<postCode>72074</postCode>
+									<settlement>Tübingen</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><forename type="middle">Y Emmy</forename><surname>Lai</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Division of Medical image computing (Mic)</orgName>
+								<address>
+									<addrLine>im Neuenheimer Feld 223</addrLine>
+									<postCode>69120</postCode>
+									<settlement>Heidelberg</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Bünyamin</forename><surname>Pekdemir</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Veith</forename><surname>Roethlingshoefer</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Fabian</forename><surname>Both</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Sebastian</forename><surname>Bittel</surname></persName>
+							<affiliation key="aff7">
+								<orgName type="institution">BMW Group</orgName>
+								<address>
+									<addrLine>Heidemannstraße 164</addrLine>
+									<postCode>80939</postCode>
+									<settlement>Munich</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Marc</forename><surname>Mengler</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Lars</forename><surname>Mündermann</surname></persName>
+							<affiliation key="aff8">
+								<orgName type="institution">Corporate Research &amp; Technology</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Martin</forename><surname>Apitz</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Annette</forename><surname>Kopp- Schneider</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Stefanie</forename><surname>Speidel</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Felix</forename><surname>Nickel</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Pascal</forename><surname>Probst</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><roleName>Beat P. Müller-Stich.</roleName><forename type="first">Hannes</forename><forename type="middle">G</forename><surname>Kenngott</surname></persName>
+						</author>
+						<author>
+							<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Müller-Stich</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="department">Department for General, Visceral and Transplantation Surgery</orgName>
+								<orgName type="institution">Heidelberg University Hospital</orgName>
+								<address>
+									<addrLine>Im Neuenheimer Feld 420</addrLine>
+									<postCode>69120</postCode>
+									<settlement>Heidelberg</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="department">Division of Translational Surgical Oncology</orgName>
+								<orgName type="institution">Heidelberg University</orgName>
+								<address>
+									<addrLine>Seminarstraße 2</addrLine>
+									<postCode>69117</postCode>
+									<settlement>Heidelberg</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff2">
+								<orgName type="institution">National Center for Tumor Diseases</orgName>
+								<address>
+									<addrLine>Partner Site Dresden, Fetscherstraße 74</addrLine>
+									<postCode>01307</postCode>
+									<settlement>Dresden</settlement>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Heidelberg colorectal data set for surgical data science in the sensor operating room</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="DOI">10.1038/s41597-021-00882-2</idno>
+					<note type="submission">Received: 8 June 2020; Accepted: 24 February 2021;</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.6.1" ident="GROBID" when="2023-01-07T22:07+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+				<p>Image-based tracking of medical instruments is an integral part of surgical data science applications. Previous research has addressed the tasks of detecting, segmenting and tracking medical instruments based on laparoscopic video data. However, the proposed methods still tend to fail when applied to challenging images and do not generalize well to data they have not been trained on. This paper introduces the Heidelberg Colorectal (HeiCo) data set-the first publicly available data set enabling comprehensive benchmarking of medical instrument detection and segmentation algorithms with a specific emphasis on method robustness and generalization capabilities. Our data set comprises 30 laparoscopic videos and corresponding sensor data from medical devices in the operating room for three different types of laparoscopic surgery. Annotations include surgical phase labels for all video frames as well as information on instrument presence and corresponding instance-wise segmentation masks for surgical instruments (if any) in more than 10,000 individual frames. The data has successfully been used to organize international competitions within the Endoscopic Vision Challenges 2017 and 2019. Background &amp; Summary Surgical data science was recently defined as an interdisciplinary research field which aims &quot;to improve the quality of interventional healthcare and its value through the capture, organization, analysis and modelling of data&quot; 1. The vision is to derive data science-based methodology to provide physicians with the right assistance at the right time. One active field of research consists in analyzing laparoscopic video data to provide context-aware Division of computer Assisted Medical interventions (cAMi), German cancer Research center (DKfZ), im neuenheimer Feld 223, 69120, Heidelberg, Germany.</p>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>intraoperative assistance to the surgical team during minimally-invasive surgery. Accurate tracking of surgical instruments is a fundamental prerequisite for many assistance tasks ranging from surgical navigation 2 to skill analysis <ref type="bibr" target="#b2">3</ref> and complication prediction. While encouraging results for detecting, segmenting and tracking medical devices in relatively controlled settings have been achieved , the proposed methods still tend to fail when applied to challenging images (e.g. in the presence of blood, smoke or motion artifacts) and do not generalize well (e.g. to other interventions or hospitals) . As of now, no large (with respect to the number of images), diverse (with respect to different procedures and levels of image quality), and extensively annotated data set (sensor data, surgical phase data, segmentations) has been made publicly available, which impedes the development of robust methodology.</p><p>This paper introduces a new annotated laparoscopic data set to address this bottleneck. This data set comprises 30 surgical procedures from three different types of surgery, namely from proctocolectomy (surgery to remove the entire colon and rectum), rectal resection (surgery to remove all or a part of the rectum), and sigmoid resection (surgery to remove the sigmoid colon). Annotations include surgical phase information and information on the status of medical devices for all frames as well as detailed segmentation maps for the surgical instruments in more than 10,000 frames ( <ref type="figure">Fig. 1</ref>). As illustrated in <ref type="figure" target="#fig_1">Figs. 1 and 2</ref>, the data set is well-suited to both developing methods for instrument detection and binary or multi-instance segmentation. It features various levels of difficulty including motion artifacts, occlusion, inhomogeneous lighting, small or crossing instruments and smoke or blood in the field of view (see <ref type="figure" target="#fig_3">Fig. 3</ref> for some challenging examples).</p><p>In this paper, we shall use the terminology for biomedical image analysis challenges that was introduced in a recent international guideline paper <ref type="bibr" target="#b5">6</ref> . We define a biomedical image analysis challenge as an open competition on a specific scientific problem in the field of biomedical image analysis. A challenge may encompass multiple competitions related to multiple tasks, for which separate results and rankings (if any) are generated. The data set presented in this paper served as a basis for the Robust Medical Instrument Segmentation (ROBUST-MIS) challenge <ref type="bibr" target="#b6">7</ref> organized as part of the Endoscopic Vision (EndoVis) challenge (https://endovis.grand-challenge.org/) at the International Conference on Medical Image Computing and Computer Assisted Interventions (MICCAI) 2019. ROBUST-MIS comprised three tasks, each requiring participating algorithms to annotate endoscopic image frames <ref type="figure" target="#fig_1">(Fig. 2)</ref>. For the binary segmentation task, participants had to provide precise contours of instruments, represented by binary masks, with '1' indicating the presence of a surgical instrument in a given pixel and '0' representing the absence thereof. Analogously, for the multi-instance segmentation task, participants had to provide image masks with numbers '1' , '2' , etc. which represented different instances of medical instruments. In contrast, Instruments per frame: 0-5</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Sigmoid resection</head><p>Number of videos: 10</p><p>Median duration: 2h 32'</p><p>Instruments per frame: 0-7</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Rectal resection</head><p>Number of videos: 10</p><p>Median duration: 3h 36'</p><p>Instruments per frame: 0-5</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Fig. 1</head><p>Overview of the Heidelberg Colorectal (HeiCo) data set. Raw data comprises anonymized, downsampled laparoscopic video data from three different types of colorectal surgery along with corresponding streams from medical devices in the operating room. Annotations include surgical phase information for the entire video sequences as well as information on instrument presence and corresponding instance-wise segmentation masks of medical instruments (if any) for more than 10,000 frames.</p><p>the multi-instance detection task merely required participants to detect and roughly locate instrument instances in video frames. The location could be represented by arbitrary forms, such as bounding boxes. Information on the activity of medical devices and the surgical phase was also provided as context information for each frame in the 30 videos. This information was obtained from the annotations generated as part of the MICCAI EndoVis Surgical workflow analysis in the sensor operating room 2017 challenge (https://endoviss-ub2017-workflow.grand-challenge.org/). </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Methods</head><p>The data set was generated using the following multi-stage process: recording of surgical data. Data acquisition took place during daily routine procedures in the integrated operating room KARL STORZ OR1 FUSION ® (KARL STORZ SE &amp; Co KG, Tuttlingen, Germany) at Heidelberg University Hospital, Department of Surgery, a certified center of excellence for minimally invasive surgery. Videos from 30 surgical procedures in three different types of surgery served as a basis for this data set: 10 proctocolectomy procedures, 10 rectal resection procedures, and 10 sigmoid resection procedures. While previous research on surgical skill and workflow analysis and corresponding publicly released data have focused on ex vivo training scenarios <ref type="bibr" target="#b7">8</ref> and comparatively simple procedures, such as cholecystectomy <ref type="bibr" target="#b8">9</ref> , we placed emphasis on colorectal surgery. As these procedures are more complex, more variations occur in surgical strategy (e.g. length or order of phases) and phases may occur repeatedly.</p><formula xml:id="formula_0">I</formula><p>All video data were recorded with a laparoscopic camera from KARL STORZ Image 1, with a forward-oblique telescope 30°. The KARL STORZ Xenon 300 was used as a cold light source. To comply with ethical standards and the general data protection regulation of the European Union, data were anonymized. To this end, frames corresponding to parts of the surgery performed outside of the abdomen were manually identified and subsequently replaced by blue images. Image resolution was scaled down from 1920 × pixels (high definition (HD)) in the primary video to 960 × in our data set. In addition, KARL STORZ OR1 FUSION ® was used to record additional data streams from medical devices in the room, namely Insufflator Thermoflator, OR lights, cold light fountain Xenon 300, and Camera Image 1. A complete list of all parameters and the corresponding descriptions can be found in <ref type="table" target="#tab_1">Table 1</ref>.</p><p>It is worth noting that all three surgery types contained in this work included an extra-abdominal phase (bowel anastomosis; the connection of two parts of bowel) that was executed extra-abdominally without use of  www.nature.com/scientificdata www.nature.com/scientificdata/ the laparoscope. As all three types of surgical procedure take place in the same anatomical region, many phases occur in two or all three of the procedures, as shown in Online-only <ref type="table" target="#tab_1">Table 1</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Annotation of videos.</head><p>We use the following terminology throughout the remainder of this manuscript based on the definitions provided by . Phases represent the highest level of hierarchy in surgical workflow analysis and consist of several steps. Steps are composed of surgical activities that aim to reach a specific goal. Activities represent the lowest level of hierarchy as "a physical task" or "well-defined surgical motion unit" such as dissecting, dividing or suturing.</p><p>In our data set, phases were modelled by surgical experts by first dividing the surgical procedure by dominant surgical activity, namely orientation (in the abdomen), mobilization (of colon), division (of vessels), (retroperitoneal) dissection (of rectum), and reconstruction with anastomosis. Subsequently, these parts were subdivided into phases by anatomical region. For example, the mobilization of colon was divided into phases for the sigmoid and descending colon, transverse colon, ascending colon and splenic flexure. Each phase received a unique ID, as shown in Online-only <ref type="table" target="#tab_1">Table 1</ref>. Furthermore, during the annotation process, aberrations from the defined standard phase definitions occurred that had not been modelled beforehand. Examples include an additional cholecystectomy or a bladder injury. These phases were subsumed as "exceptional phases" (ID 13; see Online-only <ref type="table" target="#tab_1">Table 1</ref>).</p><p>The annotator (surgical resident) had access to the endoscopic video sequence of the surgical procedure. The result of the annotation was a list of predefined phases for each video (represented by the IDs provided in Online-only <ref type="table" target="#tab_1">Table 1</ref>) with corresponding timestamps denoting their starting points. The labeling was performed according to the following protocol:</p><p>1. Definition of the start of a phase a. A phase starts when the instrument related to the first activity relevant for this phase enters the screen. Example: a grasper providing tissue tension for dissection of the sigmoid mesocolon in order to identify and dissect the inferior mesenteric artery. b. If a change of the anatomical region (such as change from mobilization of ascending colon to mobilization of transverse colon) results in the transition to a new phase, the camera movement towards the new region marks the start of the phase. c. If the camera leaves the body or is pulled back into the trocar between two phases, the new phase starts with the first frame that does not show the trocar in which the camera is located. 2. Definition of the end of a phase: a. A phase is defined by its starting point. The end of a phase thus occurs when the next phase starts.</p><p>This implies that idle time is assigned to the preceding phase. Note that while phases in other surgeries, such as cholecystectomy, follow a rigid process, this is not the case for more complex surgeries, such as the ones subject to this data set. In other words, each phase can occur multiple times. Moreover, colorectal surgery comes with possible technical variations between centers, surgeons and procedures. For example, in sigmoid resection, some surgeons may choose a tubular resection of the mesentery over a central dissection of vessels and lymph nodes en bloc for benign disease, which results in completely omitting the respective phase.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Selection of frames.</head><p>From the 30 surgical procedures described above, a total of 10,040 frames were extracted for instrument segmentation. In the first step, a video frame was extracted every 60 seconds. In this www.nature.com/scientificdata www.nature.com/scientificdata/ process, blue frames included due to video anonymization (see Recording of data) were ignored. This resulted in a total of 4,456 frames (corresponding to the extracted IDs) for annotation. To reach the goal of annotating more than 10,000 video frames in total, it was decided to place a particular focus on interesting snippets of the video. Surgical workflow analysis is currently a very active field of research. For an accurate segmentation of a video into surgical phases, it requires the detection of the transition from one surgical phase to the next. For this reason, frames corresponding to surgical phase transitions were obtained in seven of the 30 videos (three from rectal resection, two from the other two types of surgery). More specifically, frames within 25 seconds of the phase transition (before and after) were sampled every second (again, excluding blue frames). This led to a doubling of the number of annotated frames. Statistics of the number of frames selected for the different procedures are provided in <ref type="table" target="#tab_2">Table 2</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Annotation of frames.</head><p>An initial segmentation of the instruments in the selected frames was performed by the company understand.ai (https://understand.ai/). To this end, a U-Net style neural network architecture <ref type="bibr" target="#b10">11</ref> was trained on a small manually labeled subset of the data set. This network was then used to label the rest of the data set in a semi-automated way; based on pixel-wise segmentation proposals, a manual refinement was performed, following previous data annotation policies <ref type="bibr" target="#b3">4</ref> . Based on this initial segmentation, a comprehensive quality and consistency analysis was performed and a detailed annotation protocol was developed, which is provided in the Supplementary Methods. Based on this protocol, the initial annotations were refined/completed by an annotation team of four medical students and 14 engineers. In ambiguous or unclear cases, a team of two engineers and one medical student generated a consensus annotation. For quality control, two medical experts went through all of the segmentation masks and reported potential errors which were then corrected by members of the annotation team. Final agreement on each label was generated by a team comprising a medical expert and an engineer. Examples of annotated frames are provided in <ref type="figure" target="#fig_1">Figs. 2 and 3</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Generation of challenge data set.</head><p>Typically, a challenge has a training phase. At the beginning of the training phase, the challenge organizers release training cases with the relevant reference annotations <ref type="bibr" target="#b5">6</ref> . These help the participating teams in developing their method (e.g. by training a machine learning algorithm). In the test phase, the participating teams either upload their algorithm, or they receive access to the test cases without the reference annotations and submit the results that their algorithm has achieved for the test cases to the challenge organizers. To enable comparative benchmarking to be executed for this challenge paradigm, our data set was split into a training set and a test set. Our data set was arranged such that it allows for validation of detection/ binary segmentation/multi-instance segmentation algorithms in three test stages:</p><p>• Stage 1: The test data are taken from the procedures (patients) from which the training data were extracted.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>• Stage 2:</head><p>The test data are taken from the exact same type of surgery as the training data but from procedures (patients) that were not included in the training data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>• Stage 3:</head><p>The test data are taken from a different but similar type of surgery (and different patients) compared to the training data.</p><p>Following this concept, the data set was split into training and test data as follows:</p><p>• The data from all 10 sigmoid resection surgery procedures were reserved for testing in stage 3. We picked sigmoid resection for stage 3 as it comprised the lowest number of annotated frames and we aimed to come as close as possible to the recommended 80%/20% split of training and test data. • Of the 20 remaining videos corresponding to proctocolectomy and rectal resection procedures, 80% were reserved for training and 20% (i.e. two procedures of each type) were reserved for testing in stage 2. More specifically, the two patients with the lowest number of annotated frames were taken as test data for stage 2 (for both rectal resection and proctocolectomy). Again, the reason for this choice was to increase the size of the training data set compared to the test set. • For stage 1, every 10th annotated frame from the remaining 2*(10-2) = 16 procedures was used.</p><p>In summary, this amounted to a total of 10,040 frames, distributed as follows:</p><p>• Training data: 5,983 frames in total (2,943 frames from proctocolectomy surgery and 3,040 frames from rectal resection surgery) • Test data (4,057 frames in total):  As suggested in <ref type="bibr" target="#b5">6</ref> , we use the term case to refer to a data set for which the algorithm(s) participating in a specific challenge task produce one result (e.g. a segmentation map). To enable instrument detection/segmentation algorithms to take temporal context into account, we define a case as a 10 second video snippet comprising 250 endoscopic image frames (not annotated) and an annotation mask for the last frame <ref type="figure" target="#fig_5">(Fig. 4)</ref>. In the mask, a '0' indicates the absence of a medical instrument and numbers '1' , '2' , … represent different instances of medical instruments.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data Records</head><p>The primary data set of this paper corresponds to the ROBUST-MIS 2019 challenge and features 30 surgical videos along with frame-based instrument annotations for more than 10,000 frames. The annotations for this data set underwent a rigorous multi-stage quality control process. This data set is complemented by surgical phase annotations for the 30 videos which were used in the Surgical Workflow Analysis in the sensorOR challenge organized in 2017.</p><p>The data can be accessed in two primary ways: (1) As a complete data set that contains videos and medical device data along with corresponding annotations (surgical workflow and instrument segmentations) following the folder structure shown in <ref type="figure" target="#fig_1">Fig. 4 or (2)</ref> as ROBUST-MIS challenge data sets that represent the split of the data into training and test sets as used in the ROBUST-MIS challenge 2019 <ref type="figure" target="#fig_6">(Fig. 5)</ref>.</p><p>Complete data set. To access the complete data sets (without a split in training and test data), users are  www.nature.com/scientificdata www.nature.com/scientificdata/ rOBUST-MIS challenge data set. The segmentation data is additionally provided in the way it was avail-</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Technical Validation</head><p>Validation of segmentations. The verification of the annotations was part of the data annotation procedure, as detailed above. To estimate the inter-rater reliability, five of the annotators that had curated the data set segmented (the same) 20 randomly selected images from the data set, where each image was drawn from a different surgery and contained up to three instrument instances. As we were interested in the inter-rater reliability for instrument instances rather than for whole images, we evaluated all 34 visible instrument instances of these 20 images individually. The Sørensen Dice Similarity Coefficient (DSC) <ref type="bibr" target="#b14">15</ref> and the Haussdorf distance (HD) <ref type="bibr" target="#b15">16</ref> were used as metric for contour agreement as they are the most widely used metrics for assessing segmentation quality <ref type="bibr" target="#b16">17</ref> . For each instrument instance, we determined the DSC/HD for all combinations of two different raters. This yielded a median DSC of 0.96 (mean: 0.88, 25-quantile: 0.91, 75-quantile: 0.98) and a median HD of 12.8 (mean: 89.3, 25-quantile: 7.6, 25-quantile: 7.6, 75-quantile: 36.1) determined over all tuples of annotations and instrument instances. Manual analysis showed that outliers mainly occurred primarily if one or multiple of the raters did not detect a specific instance. It should be noted that an agreement of around 0.95 is extremely high given previous studies on inter-rater variability <ref type="bibr" target="#b17">18</ref> .</p><p>The recorded data and the corresponding segmentations/workflow annotations were used as basis for the ROBUST-MIS challenge 2019 (https://phabricator.mitk.org/source/rmis2019/). According to the challenge results <ref type="bibr" target="#b6">7</ref> , the performance of algorithms decreases as the domain gap between training and test data increases. In fact, the performance dropped by 3% and 5% for the binary and multi-instance segmentation respectively (comparison of stage 1 with stage 3). This confirms our initial hypothesis that splitting the data set as suggested is useful for developing and validating algorithms with a specific focus on their generalization capabilities.</p><p>Validation of surgical phase annotations. The phase annotations primarily serve as context information, which is why we did not put a focus on their validation. However, the following study was conducted to approximate intra-rater and inter-rater agreement for phases.</p><p>To assess the quality of the phase annotations, we randomly selected 10 time points in each of the procedures resulting in n = 300 video frames. Then, we extracted a video snippet comprising 30 seconds before and 30 seconds after the respective frame from the video. The frames were independently categorized by five expert surgeons with at least 6 years of surgical experience, including the surgeon who performed the phase definition www.nature.com/scientificdata www.nature.com/scientificdata/ for our dataset in the first place, into the corresponding surgical phases according to our definition in Online-only <ref type="table" target="#tab_1">Table 1</ref>. If the video snippet did not provide enough context to determine the phase, the surgeons reviewed the whole video.</p><p>For the statistical analysis, we compared the original annotation to the new annotation of the original rater (intra-rater agreement) and to the new annotation of the other surgeons (inter-rater agreement). Agreement between ground truth and raters was calculated as Cohen's kappa which quantifies agreement between two raters adjusted for agreement expected by chance alone. Calculation of unweighted kappa (for nominal ratings) with a 95% confidence interval (CI) was made by SAS Version 9.4 (SAS Inc., Cary, North Carolina, USA). To assess agreement between all five raters Fleiss' kappa for nominal ratings was performed with the function confIntKappa from the R package biostatUZH with 1,000 bootstraps (R Version 4.0.2, https://www.R-project.org). Values of kappa between 0.81 and 1.00 can be considered almost perfect. Intra-rater agreement between ground truth and new annotation by the original rater was 0.834 (CI 0.789-0.879) and inter-rater agreement between reference and each of the four other raters ranged from 0.682 (CI 0.626-0.739) to 0.793 (0.744-0.842). Accordingly, inter-rater agreement between reference and raters was at least substantial. Intra-rater agreement was almost perfect. Fleiss' kappa for agreement of all 5 raters was 0.712 (bootstrap 95% CI 0.673-0.747).</p><p>The recorded data and the corresponding segmentations/workflow annotations were used as the basis for the Surgical Workflow Analysis in the sensorOR 2017 challenge (https://endovissub2017-workflow.grand-challenge.org/).</p><p>The following data set characteristics have been computed based on the video and frame annotations. Eight of the 13 phases occurred in all three surgical procedures. The median (min;max) number of surgical phase transitions for proctocolectomy, rectal resection and sigmoid resection was 19 (15;25), 20 (10;31) and 14 (9;30) respectively. The median duration of the phases is summarized in <ref type="table" target="#tab_5">Table 3</ref>. As shown in <ref type="table" target="#tab_6">Table 4</ref>, the number of instruments per frame ranges from 0-7, thus reflecting the wide range of scenarios that can occur in clinical practice. Most frames (&gt;70% for all three procedures) contain only one or two instruments.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Limitations of the data set.</head><p>A limitation of our data set could be seen in the fact that the phase annotations were performed by only a single expert surgeon. It should be noted, however, that the phase annotations merely served as context information while the segmentations, which were generated with a highly quality-controlled process, are in the focus of this work. Furthermore, we acquired data from only one hospital. This implies limited variability with respect to the acquisition conditions as only one specific endoscope and light source were used. Still, to our knowledge, the HeiCo data set is the only publicly available data set (1) based on multiple different surgeries and (2) comprising not only annotated video data but also sensor data from medical devices in the operating room.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Usage Notes</head><p>The data set was published under a Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA) license, which means that it will be publicly available for non-commercial usage. Should you wish to use or refer to this data set, you must cite this paper. The licensing of new creations must use the exact same terms as in the current version of the data set.</p><p>For benchmarking instrument segmentation algorithms, we recommend using the scripts provided for the ROBUST-MIS challenge (https://phabricator.mitk.org/source/rmis2019/). They include Python files for downloading the data from the Synapse platform and evaluation scripts for the performance measures used in the challenge. For benchmarking surgical workflow analysis algorithms, we recommend using the script provided on Synapse <ref type="bibr" target="#b18">19</ref> for the surgical workflow challenges.   </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2</head><label>2</label><figDesc>Laparoscopic images representing various levels of difficulty for the tasks of medical instrument detection, binary segmentation and multi-instance segmentation. Raw input frames (a) and corresponding reference segmentation masks (b) computed from the reference contours.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>. Recording of surgical data II. Annotation of videos (surgical phases) III. Selection of frames for surgical instrument segmentation IV. Annotation of frames (surgical instruments) A. Generation of protocol for instrument segmentation B. Segmentation of instruments C. Verification of annotations V. Generation of challenge data set Details are provided in the following paragraphs.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 3</head><label>3</label><figDesc>Examples of challenging frames overlaid with reference multi-instance segmentations created by surgical data science experts.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 4</head><label>4</label><figDesc>Folder structure for the complete data set. It comprises five levels corresponding to (1) surgery type, (2) procedure number, (3) procedural data (video and device data along with phase annotations), (4) frame number and (5) frame-based data. (2021) 8:101 | https://doi.org/10.1038/s41597-021-00882-2</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Fig. 5</head><label>5</label><figDesc>Folder structure for the ROBUST-MIS challenge data set. It comprises five levels corresponding to (1) data type (training/test), (2) surgery type, (3) procedure number, (4) frame number and (5) case data. (2021) 8:101 | https://doi.org/10.1038/s41597-021-00882-2</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Medical device name Medical device description Sensor stream namesTable 1 .</head><label>1</label><figDesc>Insufflator Thermoflator (KARL STORZ SE &amp; Co. KG, Tuttlingen, Germany) Device used to insufflate the abdomen with carbon dioxide in order to create space for the minimally invasive surgery. Medical devices of the operating room and corresponding sensor streams provided by KARL STORZ OR1 FUSION ® (KARL STORZ SE &amp; Co KG, Tuttlingen, Germany).</figDesc><table><row><cell></cell><cell></cell><cell>Flow Actual</cell></row><row><cell></cell><cell></cell><cell>Flow Target</cell></row><row><cell></cell><cell></cell><cell>Pressure Actual</cell></row><row><cell></cell><cell></cell><cell>Pressure Target</cell></row><row><cell></cell><cell></cell><cell>Gas Volume</cell></row><row><cell></cell><cell></cell><cell>Supply Pressure</cell></row><row><cell></cell><cell></cell><cell>Light1 On</cell></row><row><cell>OR lights LED2 (Dr. Mach GmBH &amp; Co KG,</cell><cell>Light mounted onto movable arms on the ceiling. Used to</cell><cell>Light1 Intensity Actual</cell></row><row><cell>Germany)</cell><cell>illuminate the patient's abdomen during open surgery.</cell><cell>Light2 On</cell></row><row><cell></cell><cell></cell><cell>Light2 Intensity Actual</cell></row><row><cell>Coldlight fountain Xenon 300 (KARL</cell><cell>Light source that illuminates the abdomen via a light cable</cell><cell>Intensity Actual</cell></row><row><cell>STORZ SE &amp; Co KG, Tuttlingen, Germany)</cell><cell>mounted onto the laparoscopic camera.</cell><cell>Standby</cell></row><row><cell></cell><cell></cell><cell>White Balance</cell></row><row><cell>Camera Image 1 (KARL STORZ SE &amp; Co.</cell><cell>Endoscopic camera control unit for use with both single and</cell><cell>Shutter Speed</cell></row><row><cell>KG, Tuttlingen, Germany)</cell><cell>three-chip camera heads.</cell><cell>Brightness</cell></row><row><cell></cell><cell></cell><cell>Enhancement</cell></row></table><note>(2021) 8:101 | https://doi.org/10.1038/s41597-021-00882-2</note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 2 .</head><label>2</label><figDesc>Number of frames selected from the different procedures.</figDesc><table><row><cell>www.nature.com/scientificdata</cell></row></table><note>(2021) 8:101 | https://doi.org/10.1038/s41597-021-00882-2</note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 3 .</head><label>3</label><figDesc>Median duration of phases[min]. IDs are introduced in Online-onlyTable 1. *Phase 4 (mobilization of sigmoid colon and descending colon) is shorter for proctocolectomy because no oncological but tubular resection is performed. **Phase 8 (dissection and resection of the rectum) is shorter for sigmoid resection because only the proximal part of the rectum, but not the middle and distal part of the rectum are subject to removal.</figDesc><table><row><cell></cell><cell cols="3">Number of frames with n instruments</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Surgery type</cell><cell>n = 0</cell><cell>n = 1</cell><cell>n = 2</cell><cell>n = 3</cell><cell>n = 4</cell><cell>n = 5</cell><cell>n = 6</cell><cell>n = 7</cell></row><row><cell>Proctocolectomy</cell><cell>(12.9%)</cell><cell>1,697 (48.6%)</cell><cell>1,063 (30.4%)</cell><cell>227 (6.5%)</cell><cell>54 (1.5%)</cell><cell>2 (0.1%)</cell><cell>0 (0.0%)</cell><cell>0 (0.0%)</cell></row><row><cell>Rectal surgery</cell><cell>(19.5%)</cell><cell>1,850 (50.4%)</cell><cell>917 (25.0%)</cell><cell>158 (4.3%)</cell><cell>21 (0.6%)</cell><cell>7 (0.2%)</cell><cell>0 (0.0%)</cell><cell>0 (0.0%)</cell></row><row><cell>Sigmoid surgery</cell><cell>(22.6%)</cell><cell>1,198 (41.6%)</cell><cell>827 (28.7%)</cell><cell>178 (6.2%)</cell><cell>24 (0.8%)</cell><cell>2 (0.1%)</cell><cell>0 (0.0%)</cell><cell>1 (0.0%)</cell></row></table><note></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Table 4 .</head><label>4</label><figDesc>Number of instruments in annotated frames. Most frames (&gt;70% for all three procedures) contain one or two instruments.</figDesc><table /><note></note></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Acknowledgements</head><p>This project has been funded by the Surgical Oncology Program of the National Center for Tumor Diseases (NCT) Heidelberg and the project "OP4.1, " funded by the German Federal Ministry of Economic Affairs and Energy (grant number BMWI 01MT17001C). In addition, the project has been funded by "InnOPlan", funded by the German Federal Ministry of Economic Affairs and Energy (grant number BMWI 01MD15002E). </p></div>
+			</div>
+
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Code availability</head><p>The data set can be used without any further code. As stated in the usage notes, we recommend using the scripts provided for the ROBUST-MIS and surgical workflow challenges (https://phabricator.mitk.org/source/ rmis2019/ and <ref type="bibr" target="#b18">19</ref> ) as well as the challengeR package (https://github.com/wiesenfa/challengeR) for comparative benchmarking of algorithms. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Competing interests</head></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Surgical data science for next-generation interventions</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Maier-Hein</surname></persName>
+		</author>
+		<idno type="DOI">10.1038/s41551-017-0132-7</idno>
+		<idno>s41551-017-0132-7</idno>
+		<ptr target="https://doi.org/10.1038/" />
+	</analytic>
+	<monogr>
+		<title level="j">Nat. Biomed. Eng</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="691" to="696" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maier-Hein, L. et al. Surgical data science for next-generation interventions. Nat. Biomed. Eng. 1, 691-696, https://doi.org/10.1038/ s41551-017-0132-7 (2017).</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Learning where to look while tracking instruments in robot-assisted surgery</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Islam</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">H</forename><surname>Ren</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Image Comput. Comput. Assist. Interv</title>
+		<imprint>
+			<biblScope unit="page" from="412" to="420" />
+			<date type="published" when="2019" />
+			<publisher>Springer</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Islam, M., Li, Y. &amp; Ren, H. Learning where to look while tracking instruments in robot-assisted surgery. in Med. Image Comput. Comput. Assist. Interv., 412-420 (Springer, 2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Video-based surgical skill assessment using 3D convolutional neural networks</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><surname>Funke</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><forename type="middle">T</forename><surname>Mees</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Weitz</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Speidel</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s11548-019-01995-1</idno>
+		<ptr target="https://doi.org/10.1007/s11548-019-01995-1" />
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Comput. Assist. Radiol. Surg</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="page" from="1217" to="1225" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Funke, I., Mees, S. T., Weitz, J. &amp; Speidel, S. Video-based surgical skill assessment using 3D convolutional neural networks. Int. J. Comput. Assist. Radiol. Surg. 14, 1217-1225, https://doi.org/10.1007/s11548-019-01995-1 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">Robotic instrument segmentation challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Allan</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/1902.06426" />
+		<imprint>
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="report_type">Preprint at</note>
+	<note type="raw_reference">Allan, M. et al. 2017 Robotic instrument segmentation challenge. Preprint at https://arxiv.org/abs/1902.06426 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Exploiting the potential of unlabeled endoscopic video data with self-supervised learning</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Ross</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s11548-018-1772-0</idno>
+		<ptr target="https://doi.org/10.1007/s11548-018-1772-0" />
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Comput. Assist. Radiol. Surg</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="page" from="925" to="933" />
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ross, T. et al. Exploiting the potential of unlabeled endoscopic video data with self-supervised learning. Int. J. Comput. Assist. Radiol. Surg. 13, 925-933, https://doi.org/10.1007/s11548-018-1772-0 (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">BIAS: Transparent reporting of biomedical image analysis challenges</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Maier-Hein</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.media.2020.101796</idno>
+		<ptr target="https://doi.org/10.1016/j.media.2020.101796" />
+	</analytic>
+	<monogr>
+		<title level="j">Med. Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">66</biblScope>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maier-Hein, L. et al. BIAS: Transparent reporting of biomedical image analysis challenges. Med. Image Anal. 66, 101796, https://doi. org/10.1016/j.media.2020.101796 (2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Comparative validation of multi-instance instrument segmentation in endoscopy: results of the ROBUST-MIS 2019 challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Ross</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.media.2020.101920</idno>
+		<ptr target="https://doi.org/10.1016/j.media.2020.101920" />
+	</analytic>
+	<monogr>
+		<title level="j">Med. Image Anal</title>
+		<imprint>
+			<biblScope unit="volume">101920</biblScope>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ross, T. et al. Comparative validation of multi-instance instrument segmentation in endoscopy: results of the ROBUST-MIS 2019 challenge. Med. Image Anal. 101920, https://doi.org/10.1016/j.media.2020.101920 (2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">A dataset and benchmarks for segmentation and recognition of gestures in robotic surgery</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Ahmidi</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TBME.2016.2647680</idno>
+		<ptr target="https://doi.org/10.1109/TBME.2016.2647680" />
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Biomed. Eng</title>
+		<imprint>
+			<biblScope unit="volume">64</biblScope>
+			<biblScope unit="page" from="2025" to="2041" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ahmidi, N. et al. A dataset and benchmarks for segmentation and recognition of gestures in robotic surgery. IEEE Trans. Biomed. Eng. 64, 2025-2041, https://doi.org/10.1109/TBME.2016.2647680 (2017).</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">EndoNet: a deep architecture for recognition tasks on laparoscopic videos</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><forename type="middle">P</forename><surname>Twinanda</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TMI.2016.2593957</idno>
+		<ptr target="https://doi.org/10.1109/TMI.2016.2593957" />
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Med. Imaging</title>
+		<imprint>
+			<biblScope unit="volume">36</biblScope>
+			<biblScope unit="page" from="86" to="97" />
+			<date type="published" when="2017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Twinanda, A. P. et al. EndoNet: a deep architecture for recognition tasks on laparoscopic videos. IEEE Trans. Med. Imaging 36, 86-97, https://doi.org/10.1109/TMI.2016.2593957 (2017).</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Surgical process modelling: a review</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">F</forename><surname>Lalys</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Jannin</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s11548-013-0940-5</idno>
+		<ptr target="https://doi.org/10.1007/s11548-013-0940-5" />
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. CARS</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="page" from="495" to="511" />
+			<date type="published" when="2014" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lalys, F. &amp; Jannin, P. Surgical process modelling: a review. Int. J. CARS 9, 495-511, https://doi.org/10.1007/s11548-013-0940-5 (2014).</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">U-net: convolutional networks for biomedical image segmentation</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">O</forename><surname>Ronneberger</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">P</forename><surname>Fischer</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Brox</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Med</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2015" />
+			<biblScope unit="page" from="234" to="241" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ronneberger, O., Fischer, P. &amp; Brox, T. U-net: convolutional networks for biomedical image segmentation. In Med. Image Comput. Comput. Assist. Interv., 234-241 (Springer, 2015).</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">Deep learning</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">A</forename><surname>Courville</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016" />
+			<publisher>The MIT Press</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Goodfellow, I., Bengio, Y. &amp; Courville, A. Deep learning. (The MIT Press, 2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title level="m" type="main">Heidelberg Colorectal (HeiCo) Data Set for Surgical Data Science in the Sensor Operating Room</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Ross</surname></persName>
+		</author>
+		<idno type="DOI">10.7303/syn21903917</idno>
+		<ptr target="https://doi.org/10.7303/syn21903917" />
+		<imprint>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ross, T. et al. Heidelberg Colorectal (HeiCo) Data Set for Surgical Data Science in the Sensor Operating Room. Synapse https://doi. org/10.7303/syn21903917 (2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Endoscopic Vision Challenge, Sub-Challenge -Robust Medical Instrument Segmentation (ROBUST-MIS) Challenge</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">T</forename><surname>Ross</surname></persName>
+		</author>
+		<idno type="DOI">10.7303/syn18779624</idno>
+		<ptr target="https://doi.org/10.7303/syn18779624" />
+		<imprint>
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ross, T. et al. Endoscopic Vision Challenge, Sub-Challenge -Robust Medical Instrument Segmentation (ROBUST-MIS) Challenge 2019. Synapse https://doi.org/10.7303/syn18779624 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Measures of the amount of ecologic association between species</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><forename type="middle">R</forename><surname>Dice</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Ecology</title>
+		<imprint>
+			<biblScope unit="volume">26</biblScope>
+			<biblScope unit="page" from="297" to="302" />
+			<date type="published" when="1945" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dice, L. R. Measures of the amount of ecologic association between species. Ecology 26, 297-302 (1945).</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Comparing images using the Hausdorff distance</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><forename type="middle">P</forename><surname>Huttenlocher</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">G</forename><forename type="middle">A</forename><surname>Klanderman</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">W</forename><forename type="middle">J</forename><surname>Rucklidge</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Pattern Anal. Mach. Intell</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="page" from="850" to="863" />
+			<date type="published" when="1993" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Huttenlocher, D. P., Klanderman, G. A. &amp; Rucklidge, W. J. Comparing images using the Hausdorff distance. IEEE Trans. Pattern Anal. Mach. Intell. 15, 850-863 (1993).</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Why rankings of biomedical image analysis competitions should be interpreted with care</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Maier-Hein</surname></persName>
+		</author>
+		<idno type="DOI">10.1038/s41467-018-07619-7</idno>
+		<ptr target="https://doi.org/10.1038/s41467-018-07619-7" />
+	</analytic>
+	<monogr>
+		<title level="j">Nat. Commun</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<date type="published" when="2018" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maier-Hein, L. et al. Why rankings of biomedical image analysis competitions should be interpreted with care. Nat. Commun. 9, 5217, https://doi.org/10.1038/s41467-018-07619-7 (2018).</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Inter-observer variability of manual contour delineation of structures in CT</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">L</forename><surname>Joskowicz</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">D</forename><surname>Cohen</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">N</forename><surname>Caplan</surname></persName>
+		</author>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">J</forename><surname>Sosna</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s00330-018-5695-5</idno>
+		<ptr target="https://doi.org/10.1007/s00330-018-5695-5" />
+	</analytic>
+	<monogr>
+		<title level="j">Eur. Radiol</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="page" from="1391" to="1399" />
+			<date type="published" when="2019" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Joskowicz, L., Cohen, D., Caplan, N. &amp; Sosna, J. Inter-observer variability of manual contour delineation of structures in CT. Eur. Radiol. 29, 1391-1399, https://doi.org/10.1007/s00330-018-5695-5 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Heidelberg Colorectal (HeiCo) Data Set</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">S</forename><surname>Bodenstedt</surname></persName>
+		</author>
+		<idno type="DOI">10.7303/syn21898456</idno>
+		<ptr target="https://doi.org/10.7303/syn21898456" />
+		<imprint>
+			<date type="published" when="2020" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bodenstedt, S. Heidelberg Colorectal (HeiCo) Data Set. Synapse https://doi.org/10.7303/syn21898456 (2020).</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Methods and open-source toolkit for analyzing and visualizing challenge results</title>
+		<author>
+			<persName xmlns="http://www.tei-c.org/ns/1.0"><forename type="first">M</forename><surname>Wiesenfarth</surname></persName>
+		</author>
+		<idno type="DOI">10.1038/s41598-021-82017-6</idno>
+		<ptr target="https://doi.org/10.1038/s41598-021-82017-6" />
+	</analytic>
+	<monogr>
+		<title level="j">Sci. Rep</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<date type="published" when="2021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wiesenfarth, M. et al. Methods and open-source toolkit for analyzing and visualizing challenge results. Sci. Rep. 11, 2369, https:// doi.org/10.1038/s41598-021-82017-6 (2021).</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<title level="m" type="main">segmentations as a medical expert. L.M. preprocessed, structured and analyzed the medical device data. A.K.-S. coordinated and implemented the statistical analyses. M.T. analyzed the data and contributed to the writing and proofreading of the manuscript. S.Sp. and S.B. co-organized the surgical workflow analysis in the sensorOR challenge, developed the concept for the phase annotations, analyzed the surgical phase annotations and the medical device data, and contributed to the writing and proofreading of the manuscript</title>
+		<idno type="DOI">10.1038/s41597-021-00882-2</idno>
+		<ptr target="https://doi.org/10.1038/s41597-021-00882-2www.nature.com/scientificdatawww.nature.com/scientificdata/instrument" />
+		<editor>F.N., H.G.K. and P.P.</editor>
+		<imprint/>
+	</monogr>
+	<note>performed the phase validation. and B.M. acquired the data, developed the concept for the phase annotations, (co-) organized the surgical workflow analysis in the sensorOR challenge and the ROBUST-MIS challenge, and proofread the manuscript</note>
+	<note type="raw_reference">8:101 | https://doi.org/10.1038/s41597-021-00882-2 www.nature.com/scientificdata www.nature.com/scientificdata/ instrument segmentations as a medical expert. L.M. preprocessed, structured and analyzed the medical device data. A.K.-S. coordinated and implemented the statistical analyses. M.T. analyzed the data and contributed to the writing and proofreading of the manuscript. S.Sp. and S.B. co-organized the surgical workflow analysis in the sensorOR challenge, developed the concept for the phase annotations, analyzed the surgical phase annotations and the medical device data, and contributed to the writing and proofreading of the manuscript. F.N., H.G.K. and P.P. performed the phase validation. H.G.K. and B.M. acquired the data, developed the concept for the phase annotations, (co-) organized the surgical workflow analysis in the sensorOR challenge and the ROBUST-MIS challenge, and proofread the manuscript.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

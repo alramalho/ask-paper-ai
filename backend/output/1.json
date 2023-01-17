@@ -1,0 +1,2631 @@
+{
+    "paper_id": "1",
+    "header": {
+        "generated_with": "S2ORC 1.0.0",
+        "date_generated": "2023-01-17T12:43:56.372324Z"
+    },
+    "title": "Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet",
+    "authors": [
+        {
+            "first": "Jin",
+            "middle": [],
+            "last": "Liang",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Jiancheng",
+            "middle": [],
+            "last": "Yang",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Shanghai Jiao Tong University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "P.R. China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Kaiming",
+            "middle": [],
+            "last": "Kuang",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Bingbing",
+            "middle": [],
+            "last": "Ni",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Shanghai Jiao Tong University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "P.R. China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Yiyi",
+            "middle": [],
+            "last": "Gao",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Yingli",
+            "middle": [],
+            "last": "Sun",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Pan",
+            "middle": [],
+            "last": "Gao",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Weiling",
+            "middle": [],
+            "last": "Ma",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Mingyu",
+            "middle": [],
+            "last": "Tan",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Hui",
+            "middle": [],
+            "last": "Kang",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        },
+        {
+            "first": "Jiajun",
+            "middle": [],
+            "last": "Chen",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ming",
+            "middle": [],
+            "last": "Li",
+            "suffix": "",
+            "affiliation": {
+                "laboratory": "",
+                "institution": "Fudan University",
+                "location": {
+                    "settlement": "Shanghai",
+                    "country": "China"
+                }
+            },
+            "email": ""
+        }
+    ],
+    "year": "",
+    "venue": null,
+    "identifiers": {},
+    "abstract": "Background: Diagnosis of rib fractures plays an important role in identifying trauma severity. However, quickly and precisely identifying the rib fractures in a large number of CT images with increasing number of patients is a tough task, which is also subject to the qualification of radiologist. We aim at a clinically applicable automatic system for rib fracture detection and segmentation from CT scans. Methods: A total of 7,473 annotated traumatic rib fractures from 900 patients in a single center were enrolled into our dataset, named RibFrac Dataset, which were annotated with a human-in-the-loop labeling procedure. We developed a deep learning model, named FracNet, to detect and segment rib fractures. 720, 60 and 120 patients were randomly split as training cohort, tuning cohort and test cohort, respectively. Free-Response ROC (FROC) analysis was used to evaluate the sensitivity and false positives of the detection performance, and Intersection-over-Union (IoU) and Dice Coefficient (Dice) were used to evaluate the segmentation performance of predicted rib fractures. Observer studies, including independent human-only study and human-collaboration study, were used to benchmark the FracNet with human performance and evaluate its clinical applicability. A annotated subset of RibFrac Dataset, including 420 for training, 60 for tuning and 120 for test, as well as our code for model training and evaluation, was open to research community to facilitate both clinical and engineering research. Findings: Our method achieved a detection sensitivity of 92.9% with 5.27 false positives per scan and a segmentation Dice of 71.5%on the test cohort. Human experts achieved much lower false positives per scan, while underperforming the deep neural networks in terms of detection sensitivities with longer time in diagnosis. With human-computer collobration, human experts achieved higher detection sensitivities than human-only or computer-only diagnosis. Interpretation: The proposed FracNet provided increasing detection sensitivity of rib fractures with significantly decreased clinical time consumed, which established a clinically applicable method to assist the radiologist in clinical practice. Funding: A full list of funding bodies that contributed to this study can be found in the Acknowledgements section. The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication .",
+    "pdf_parse": {
+        "paper_id": "1",
+        "_pdf_hash": "",
+        "abstract": [
+            {
+                "text": "Background: Diagnosis of rib fractures plays an important role in identifying trauma severity. However, quickly and precisely identifying the rib fractures in a large number of CT images with increasing number of patients is a tough task, which is also subject to the qualification of radiologist. We aim at a clinically applicable automatic system for rib fracture detection and segmentation from CT scans. Methods: A total of 7,473 annotated traumatic rib fractures from 900 patients in a single center were enrolled into our dataset, named RibFrac Dataset, which were annotated with a human-in-the-loop labeling procedure. We developed a deep learning model, named FracNet, to detect and segment rib fractures. 720, 60 and 120 patients were randomly split as training cohort, tuning cohort and test cohort, respectively. Free-Response ROC (FROC) analysis was used to evaluate the sensitivity and false positives of the detection performance, and Intersection-over-Union (IoU) and Dice Coefficient (Dice) were used to evaluate the segmentation performance of predicted rib fractures. Observer studies, including independent human-only study and human-collaboration study, were used to benchmark the FracNet with human performance and evaluate its clinical applicability. A annotated subset of RibFrac Dataset, including 420 for training, 60 for tuning and 120 for test, as well as our code for model training and evaluation, was open to research community to facilitate both clinical and engineering research. Findings: Our method achieved a detection sensitivity of 92.9% with 5.27 false positives per scan and a segmentation Dice of 71.5%on the test cohort. Human experts achieved much lower false positives per scan, while underperforming the deep neural networks in terms of detection sensitivities with longer time in diagnosis. With human-computer collobration, human experts achieved higher detection sensitivities than human-only or computer-only diagnosis. Interpretation: The proposed FracNet provided increasing detection sensitivity of rib fractures with significantly decreased clinical time consumed, which established a clinically applicable method to assist the radiologist in clinical practice. Funding: A full list of funding bodies that contributed to this study can be found in the Acknowledgements section. The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication .",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Abstract",
+                "sec_num": null
+            }
+        ],
+        "body_text": [
+            {
+                "text": "Recent advances in artificial intelligence and computer vision lead to a rapid development of deep learning technology [1] in medical image analysis and digital medicine [2\u00c07] . With end-to-end learning of deep representation, deep supervised learning, as a unified methodology, achieved remarkable success in numerous 2D and 3D medical image tasks, e.g., classification [8] , detection [9] , segmentation [10] . With the rise of deep learning, infrastructures, algorithms and data (with annotations) are known to be the keys to its success. Computer-aided diagnosis with a high-performance deep learning is expected to save human labor, improve diagnosis consistency and accuracy, personalize patient treatment, and improve patient\u00c0doctor relationship. [11] Rib fracture represents an important indicator of trauma severity; the number of fractured ribs increases morbidity and mortality [12] . Multidetector computed tomography (CT) provides a more accurate assessment to evaluate for the presence of rib fractures when standard posteroanterior (PA) chest radiograph is specific but insensitive [12\u00c015] . Definite diagnosis (counting) of the number of rib fractures is also an important indicator in forensic examination for degree of disability [14, 16, 17] . However, the identification of rib fracture in CT images using conventional axial thin (1\u00c01.5 mm) images is a difficult and labor-intensive task. Each rib has a complex shape with a diagonal course across numerous CT sections [18] , which leads to missing rib fracture diagnosis (detection) in clinical practice. For instance, buckle fractures are the most frequently missing type of fracture reported in 2012 [19, 20] , due to the confusing appearance; nondisplaced rib fractures could be missing when parallel to the scan plane of the CT images. Besides, diagnosing subtle fractures is tedious and time-consuming for a large number of CT slices, which must be evaluated sequentially, rib-by-rib and side-by-side [18] .",
+                "cite_spans": [
+                    {
+                        "start": 119,
+                        "end": 122,
+                        "text": "[1]",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 170,
+                        "end": 175,
+                        "text": "[2\u00c07]",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 371,
+                        "end": 374,
+                        "text": "[8]",
+                        "ref_id": "BIBREF8"
+                    },
+                    {
+                        "start": 387,
+                        "end": 390,
+                        "text": "[9]",
+                        "ref_id": "BIBREF9"
+                    },
+                    {
+                        "start": 406,
+                        "end": 410,
+                        "text": "[10]",
+                        "ref_id": "BIBREF10"
+                    },
+                    {
+                        "start": 754,
+                        "end": 758,
+                        "text": "[11]",
+                        "ref_id": "BIBREF11"
+                    },
+                    {
+                        "start": 889,
+                        "end": 893,
+                        "text": "[12]",
+                        "ref_id": "BIBREF12"
+                    },
+                    {
+                        "start": 1097,
+                        "end": 1104,
+                        "text": "[12\u00c015]",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1248,
+                        "end": 1252,
+                        "text": "[14,",
+                        "ref_id": "BIBREF14"
+                    },
+                    {
+                        "start": 1253,
+                        "end": 1256,
+                        "text": "16,",
+                        "ref_id": "BIBREF16"
+                    },
+                    {
+                        "start": 1257,
+                        "end": 1260,
+                        "text": "17]",
+                        "ref_id": "BIBREF17"
+                    },
+                    {
+                        "start": 1489,
+                        "end": 1493,
+                        "text": "[18]",
+                        "ref_id": "BIBREF18"
+                    },
+                    {
+                        "start": 1673,
+                        "end": 1677,
+                        "text": "[19,",
+                        "ref_id": "BIBREF19"
+                    },
+                    {
+                        "start": 1678,
+                        "end": 1681,
+                        "text": "20]",
+                        "ref_id": "BIBREF20"
+                    },
+                    {
+                        "start": 1977,
+                        "end": 1981,
+                        "text": "[18]",
+                        "ref_id": "BIBREF18"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1."
+            },
+            {
+                "text": "In this study, we aim at a clinically applicable automatic system for rib fracture detection and segmentation from CT scans. Few prior studies explore the development and validation of deep learning algorithms in this application. We proposed an automatic system named FracNet based on 3D UNet [21] , trained and evaluated with a large-scale dataset, named RibFrac Dataset, consisting of 7,473 voxellevel rib fracture segmentation from 900 chest-abdomen CT scans (332,483 CT slices). The annotation of RibFrac Dataset followed a human-in-the-loop labeling procedure, which ensures a high standard of annotation quality. On RibFrac test cohort, the proposed Frac-Net system achieved a detection sensitivity of 92.9% (with 5.27 false positives per scan) and a segmentation Dice Coefficient of 71.5%, which outperformed counterpart methods based on 3D variants of FCN [22] and DeepLab v3+ [23] with a 3D ResNet-18 backbone [24, 25] . Furthermore, observer studies with two experienced radiologists, including independent human-only study and humancollobration study, were designed to validate the clinical value of the proposed system. Our system achieved higher detection sensitivities than human experts. Importantly, human-computer collaboration significantly improved detection sensitivities over computer-only and human-only diagnosis, with reduced clinical time compared to human-only diagnosis.",
+                "cite_spans": [
+                    {
+                        "start": 294,
+                        "end": 298,
+                        "text": "[21]",
+                        "ref_id": "BIBREF21"
+                    },
+                    {
+                        "start": 865,
+                        "end": 869,
+                        "text": "[22]",
+                        "ref_id": "BIBREF22"
+                    },
+                    {
+                        "start": 886,
+                        "end": 890,
+                        "text": "[23]",
+                        "ref_id": "BIBREF23"
+                    },
+                    {
+                        "start": 920,
+                        "end": 924,
+                        "text": "[24,",
+                        "ref_id": "BIBREF24"
+                    },
+                    {
+                        "start": 925,
+                        "end": 928,
+                        "text": "25]",
+                        "ref_id": "BIBREF25"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1."
+            },
+            {
+                "text": "As the first open research in this application, a subset of the annotated RibFrac Dataset (600 CT scans, 221,308 CT slices) and our code for model training and evaluation will be open-source. We believe this large-scale dataset could facilitate both clinical research for automatic rib fracture diagnosis and engineering research for 3D computer vision.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Introduction",
+                "sec_num": "1."
+            },
+            {
+                "text": "This retrospective study was approved by the ethics committee of Huadong Hospital affiliated to Fudan University (NO.2019K146), which waived the requirement for informed consent.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "RibFrac dataset 2.1.1. Ethics",
+                "sec_num": "2.1."
+            },
+            {
+                "text": "From January 2017 to December 2018, a search of the electronic medical records and the radiology information systems of the hospital for patients with traumatic rib fractures identified on chest-abdomen CT scans (1\u00c01.25 mm) was performed by one author. A total of 7,473 traumatic rib fractures from 900 patients [mean age, 55.1 years 11.82 (standard deviation); range, 21\u00c094 years] were enrolled in the study. There were 580 men [63.8%] and 329 women [36.2%] . Traumatic abdomen-thorax CT was performed by using the following two CT scanners: 16 cm wide coverage detector CT (Revolution CT, GE Healthcare, WI, USA); second-generation dual-source CT scanner (Somatom Definition Flash, Siemens Healthcare, Forchheim, Germany) with following parameters: 120 kVp; 100\u00c0200 mAs; pitch, 0.75\u00c01.5; and collimation, 1\u00c01.25 mm, respectively. All imaging data were reconstructed by using a bone or medium sharp reconstruction algorithm with a thickness of 1\u00c01.25 mm.",
+                "cite_spans": [
+                    {
+                        "start": 451,
+                        "end": 458,
+                        "text": "[36.2%]",
+                        "ref_id": null
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Inclusion Criteria",
+                "sec_num": "2.1.2."
+            },
+            {
+                "text": "As detailed in Fig. 1 (a) , the inclusion criteria are as follows: (1) Traumatic patients with thin-slice chest-abdomen CT images (1\u00c01.25 mm) containing all ribs, and (2) Thin-slice CT images without breathing artifact debasing diagnostic accuracy.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 15,
+                        "end": 25,
+                        "text": "Fig. 1 (a)",
+                        "ref_id": "FIGREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Inclusion Criteria",
+                "sec_num": "2.1.2."
+            },
+            {
+                "text": "In the whole labeling procedure, there were 5 radiologists involved: A (3-5 years), B (10-20 years), C (5 years), D (5 years), E (20 years); numbers in the brackets denote the years of experience in chest CT interpretation.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Human-in-the-loop labeling of rib fractures",
+                "sec_num": "2.1.3."
+            },
+            {
+                "text": "All enrolled CT scans were first randomly diagnosed by two radiologists A and B in radiology department after the CT examinations in 48 hours, who did not participate in this study. Two junior radiologists C and D manually delineated the volume of interest (VOI) of the traumatic rib fractures with diagnosed CT reports at voxel level on axial CT images with the help of the diagnosis reports (by the radiologists A or B) and a medical image processing and navigation software 3D Slicer (version 4.8.1, Brigham and Women's Hospital). The broken ends of fractured bone were included as much as possible for the volume of the fractures as Fig. 1 (b) ; Besides, as illustrated in Fig. 1 (c) , axial images combining manually curve planar reformation images were used together to insure the accuracy of labeling the real fractures [14] , as rib fractures can be variable and inconspicuous if the fracture line is not present or parallels the detection plane [18] . After labeling by C and D, the VOIs were then confirmed by another senior radiologist E.",
+                "cite_spans": [
+                    {
+                        "start": 827,
+                        "end": 831,
+                        "text": "[14]",
+                        "ref_id": "BIBREF14"
+                    },
+                    {
+                        "start": 954,
+                        "end": 958,
+                        "text": "[18]",
+                        "ref_id": "BIBREF18"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 637,
+                        "end": 647,
+                        "text": "Fig. 1 (b)",
+                        "ref_id": "FIGREF0"
+                    },
+                    {
+                        "start": 677,
+                        "end": 687,
+                        "text": "Fig. 1 (c)",
+                        "ref_id": "FIGREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Human-in-the-loop labeling of rib fractures",
+                "sec_num": "2.1.3."
+            },
+            {
+                "text": "Evidence before this study Quickly and precisely identifying the rib fractures in a large number of CT images is a tough and important task, which plays an important role in identifying trauma severity. Deep leanring has achieved a great success in medical image analysis. In this study, we aimed at a clinically applicable deep learning system to automatically detect and segment rib fractures.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Research in context",
+                "sec_num": null
+            },
+            {
+                "text": "We present a deep learning system, named FracNet, for automatic detection and segmentation of the rib fractures. The proposed FracNet achieved high detection sensitivity, acceptable false positive per scan and segmentation overlap, which was proven to improve the human detection sensitivity with reduced clinical time comsued in our observer study. Besides, a subset of our dataset was open-source to research community, which is the first open large-scale dataset in this application.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Added value of this study",
+                "sec_num": null
+            },
+            {
+                "text": "The proposed FracNet could help the radiologists in the diagnosis of rib fractures, to increase the efficiency of the clinical workflow, without decreasing the diagnostic accuracy at the same time.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Implications of all the available evidence",
+                "sec_num": null
+            },
+            {
+                "text": "An initial deep learning model following a same pipeline as Frac-Net (Section 2.2) was developed on the RibFrac training cohort (Section 2.1.3). The initial system was used to predict fractures on the RibFrac training, tuning and test cohorts. We excluded all predicted fractures with high overlap between any initial label; all remaining predictions were feedback to the radiologist E to verify (reduce false positives). This procedure was assisted by an interactive visual tool (see Supplementary Materials). Around 20% annotations were missing from initial labeling and added with the human-in-the-loop labeling. The verified annotations were used for the development and validation of the deep learning system. Please note that there was no data leakage issue in the human-in-the-loop labeling procedure and the following development and validation, since our deep learning system was only trained on the training cohort.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Implications of all the available evidence",
+                "sec_num": null
+            },
+            {
+                "text": "The chest-abdomen CT DICOM (Digital Imaging and Communications in Medicine) format images were imported into the software for delineating, and the images with VOI information were then extracted with NII or NIFTI (Neuroimaging Informatics Technology Initiative) format for next-step analysis.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Dataset pretreatment",
+                "sec_num": "2.1.4."
+            },
+            {
+                "text": "As depicted in Table 1 , we randomly split the whole RibFrac Dataset (900 cases, 332,483 CT slices in total) into 3 cohorts: training (720 cases, to train the deep learning system), tuning (60 cases, to tune hyper-parameters of the deep learning system) and test (120 cases, to evaluate the model and human performance). In standard machine learning terminology, tuning is regarded as \"validation\"; in standard medical terminology, test in regarded as \"validation\".",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 15,
+                        "end": 22,
+                        "text": "Table 1",
+                        "ref_id": "TABREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Dataset pretreatment",
+                "sec_num": "2.1.4."
+            },
+            {
+                "text": "Considering several practical issues, we open source a subset of 600 cases (221,308 CT slices in total), with 420 cases for training, 60 cases for tuning and 120 for test. To our knowledge, it is the first open research dataset in this application. On the open-source subset of RibFrac Dataset, a deep learning system with same architecture of FracNet could be developed and validated with an acceptable performance. Please refer to Supplementary Materials for details. Our algorithm follows a data-driven approach: it relies on the human annotations of rib fractures and learns to directly predict the voxel-level segmentation of fractures. Notably, the proposed FracNet does not rely on the extraction of rib centerlines in typical rib analysis algorithms [27] . As illustrated in Fig. 2 (a) , our model pipeline consists of three stages: (a) pre-processing, (b) sliding-window prediction, and (c) post-processing.",
+                "cite_spans": [
+                    {
+                        "start": 758,
+                        "end": 762,
+                        "text": "[27]",
+                        "ref_id": "BIBREF27"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 783,
+                        "end": 793,
+                        "text": "Fig. 2 (a)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Dataset pretreatment",
+                "sec_num": "2.1.4."
+            },
+            {
+                "text": "(a) Pre-processing: To speed up the detection, we extracted the bone areas through a series of morphological operations (e.g., thresholding and filtering). The original spacing was preserved since only thin-section CT scans were included in our dataset. The intensity of input voxels was clipped to the bone window (level=450, width=1100) and normalized to [-1,1].",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Dataset pretreatment",
+                "sec_num": "2.1.4."
+            },
+            {
+                "text": "(b) Sliding-window prediction: Considering the elongated shape of rib fractures, standard labeling with bounding boxes could be missing much details. Therefore, we formulated the rib fracture detection as a 3D segmentation task. A customized 3D UNet, named FracNet (Section 2.2.2.), was developed to perform segmentation in a sliding-window fashion. Since a whole-volume CT scan could be too large to fit in a regular GPU memory, we cropped 64 \u00c2 64 \u00c2 64patches in a sliding-window fashion with a stride of 48 and feed them to our network. A raw segmentation was obtained by assembling patches of prediction. Maximum values were kept in the overlapping regions of multiple predictions.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Dataset pretreatment",
+                "sec_num": "2.1.4."
+            },
+            {
+                "text": "(c) Post-processing: To efficiently reduce the false positive in our predictions, predictions of small sizes (smaller than 200 voxels) were filtered out. We also removed the spine regions according to their coordinates on the raw segmentation. To generate detection proposal, we first binarized the post-processed segmentation results with a low threshold of 0.1, and then computed connected components on the binary segmentation. Each connected component was regarded as a detection proposal, with a probability calculated by averaging raw segmentation scores over all voxels within the connected component.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Dataset pretreatment",
+                "sec_num": "2.1.4."
+            },
+            {
+                "text": "To capture both local and global contexts, we proposed a customized 3D UNet [21] architecture, named FracNet, following an encoder-decoder architecture in Fig. 2 (b) . The encoder was a series of down-sampling stage, each of which is composed of 3D convolution, batch-normalization [28] , non-linearity and max pooling. The resolution of feature maps was halved after each down-sampling stage, while the number of channels was doubled. In the decoder, the feature map resolution was gradually restored through a series of transposed convolution. Features from the encoder were reused through feature concatenation from the same levels of the encoder and decoder. After the feature maps were recovered to the original size, we used a 1 \u00c2 1 \u00c2 1convolution layer to shrink the output channel to 1. Activated with a sigmoid function, the output denoted back-ground=0 and lesions=1.",
+                "cite_spans": [
+                    {
+                        "start": 76,
+                        "end": 80,
+                        "text": "[21]",
+                        "ref_id": "BIBREF21"
+                    },
+                    {
+                        "start": 282,
+                        "end": 286,
+                        "text": "[28]",
+                        "ref_id": "BIBREF28"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 155,
+                        "end": 165,
+                        "text": "Fig. 2 (b)",
+                        "ref_id": "FIGREF1"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Network architecture of FracNet and counterparts",
+                "sec_num": "2.2.2."
+            },
+            {
+                "text": "To benchmark our method, we also designed 3D variants of FCN and DeepLab v3+ 3 for 3D segmentation. In both models, we used a 3D backbone, named 3D ResNet18-HR based on ResNet [2] to encode the 3D representation. Compared to standard ResNet achitecture (3D ResNet18-LR), the initial convolution layer with a stride of 2 followed by a down-sampling max pooling was modified into a single convolution layer with a stride of 1, thus the resolution of initial feature map from 3D ResNet18-HR is 4 times large as that of 3D ResNet18-LR. For 3D DeepLab, we added a 3D variant of atrous spatial pyramid pooling (ASPP) [3] between the encoder and decoder of 3D FCN to refine the output features. The neural network architectures of 3D FCN and 3D DeepLab is illustrated in Supplementary Materials.",
+                "cite_spans": [
+                    {
+                        "start": 176,
+                        "end": 179,
+                        "text": "[2]",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 611,
+                        "end": 614,
+                        "text": "[3]",
+                        "ref_id": "BIBREF3"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Network architecture of FracNet and counterparts",
+                "sec_num": "2.2.2."
+            },
+            {
+                "text": "Since rib fracture annotations were very sparse in whole CT volumes, during model training, we adopted a sampling strategy to alleviate the imbalance between positive and negative samples. Positive samples of size 64 \u00a3 64 \u00a3 were randomly cropped from a 96 \u00a3 96 \u00a3 96 region centered at the rib fracture, while negative samples were extracted within bone regions without fractures. During training, each batch consisted of 12 positive and 12 negative samples. Data augmentation of random plane flipping was applied. We used a combination of soft Dice loss and binary cross-entropy (BCE) to train our network: where y 1 ; y 2 denote the ground truth and prediction of rib fracture segmentation, respectively, and ndenotes the batch size. We trained the network using Adam optimizer [29] with a warm-up training strategy. The learning rate linearly increased from 0.00001 to 0.1 during the first epoch, and then linearly decreased to 0.001 in 100 epochs. The RibFrac tuning cohort was used for tuning the hyperparameters, including choosing the best model snapshot to be evaluated on the test cohort.",
+                "cite_spans": [
+                    {
+                        "start": 779,
+                        "end": 783,
+                        "text": "[29]",
+                        "ref_id": "BIBREF29"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Model training",
+                "sec_num": "2.2.3."
+            },
+            {
+                "text": "EQUATION",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [
+                    {
+                        "start": 0,
+                        "end": 8,
+                        "text": "EQUATION",
+                        "ref_id": "EQREF",
+                        "raw_str": "loss y 1 ; y 2",
+                        "eq_num": "\u00f0"
+                    }
+                ],
+                "section": "Model training",
+                "sec_num": "2.2.3."
+            },
+            {
+                "text": "2.3.1. Metrics Our method followed a segmentation methodology to perform a detection task, therefore both segmentation and detection metrics were critical to evaluate the model performance. For segmentation, we reported Dice Coefficient (Dice) and Intersection-over-Union (IoU),",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Model evaluation and statistical analysis",
+                "sec_num": "2.3."
+            },
+            {
+                "text": "IoU y 1 ; y 2 \u00f0 \u00de\u00bc P y 1 \u00a2 y 2 P y 1 \u00fe P y 2 \u00c0 P y 1 \u00a2 y 2 :",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Model evaluation and statistical analysis",
+                "sec_num": "2.3."
+            },
+            {
+                "text": "Note that both Dice and IoU are positively correlated, where Dice is the most popular metric for medical image segmentation.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Model evaluation and statistical analysis",
+                "sec_num": "2.3."
+            },
+            {
+                "text": "The evaluation of detection performance was based on Free-Response Receiver Operating Characteristic (FROC) analysis, an evaluation approach balancing both sensitivity and false positives. The FROC analysis was reported with sensitivities at various false positive (FP) levels, typically FP\u00bc 0:5; 1; 2; 4; 8. We also reported their average as the overview metric for FROC analysis. Besides the FROC analysis, the overall detection sensitivity and average false positives per scan were also reported, which denoted the maximum sensitivity at maximum FP level in FROC analysis.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Model evaluation and statistical analysis",
+                "sec_num": "2.3."
+            },
+            {
+                "text": "For each detection proposal, it was regarded as a hit when overlapped with IoU > 0:2 between any rib fracture annotation. Please note that for objects with elongated shape, the IoU tended to vary, which was the reason why we chose IoU > 0:2 as the detection hit criterion. See Section 3.1 for more explanation on this issue.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Model evaluation and statistical analysis",
+                "sec_num": "2.3."
+            },
+            {
+                "text": "To benchmark the proposed deep learning system with human experts, two radiologists R1 (a junior radiologist with more than 3 years of experience in chest CT interpretation) and R2 (a senior radiologist with 10 years of experience in chest CT interpretation) were required to participate in an independent human-only observer study. R1 and R2 were shown the RibFrac test cohort with randomized order to independently detect and segment each rib fracture, blinded to the fracture results and patient information. We then computed the detection and segmentation metrics with the ground truth labels with a human-in-the-loop annotation procedure (Section 2.1.2). The standard of reference for the diagnosis of rib fractures was the accurate location of the fractured rib and positive rib fracture [14] .",
+                "cite_spans": [
+                    {
+                        "start": 794,
+                        "end": 798,
+                        "text": "[14]",
+                        "ref_id": "BIBREF14"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Observer study",
+                "sec_num": "2.3.2."
+            },
+            {
+                "text": "Besides the independent observer study, a human-computer collaboration study was conducted to simulate the real clinical scenario.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Observer study",
+                "sec_num": "2.3.2."
+            },
+            {
+                "text": "The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Role of funding source",
+                "sec_num": "2.4."
+            },
+            {
+                "text": "We first reported the performance of the proposed FracNet on our RibFrac training, tuning and test cohorts. As illustrated in Fig 3 (a and Table 2 , our method achieved detection sensitivities of around 92%with average false positives per scan 6on the three cohorts consistently. Besides, our method achieved an acceptable segmentation performance, Dice\u00bc 87:3%; 74:0%; 71:5%on the training, tuning and test cohorts, respectively. Illustration of the predicted segmentation by FracNet was depicted in Fig. 3 (b) . There was overfitting observed in the segmentation tasks, as segmentation was the proxy task for training the FracNet system; however, no overfitting was observed on the detection task. Please note that numbers of lesions in the rib fracture task were associated with elongated shapes, while object segmentation with elongated shape tended to be associated with low segmentation metrics (IoU and Dice). In Fig. 3 (c) , we demonstrated 2 cases with rounded and elongated shape. Both cases were predicted with visually similarly segmentation to ground truth, while the segmentation metrics (IoU and Dice) of elongated shape were dramatically lower than those of rounded shape. It also explained why we choosed IoU > 0:2 as the detection hit criterion.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 126,
+                        "end": 134,
+                        "text": "Fig 3 (a",
+                        "ref_id": "FIGREF2"
+                    },
+                    {
+                        "start": 139,
+                        "end": 146,
+                        "text": "Table 2",
+                        "ref_id": "TABREF2"
+                    },
+                    {
+                        "start": 500,
+                        "end": 510,
+                        "text": "Fig. 3 (b)",
+                        "ref_id": "FIGREF2"
+                    },
+                    {
+                        "start": 919,
+                        "end": 929,
+                        "text": "Fig. 3 (c)",
+                        "ref_id": "FIGREF2"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "FracNet performs consistently on RibFrac cohorts",
+                "sec_num": "3.1."
+            },
+            {
+                "text": "To validate the effectiveness of the proposed FracNet system, we compared the model performance with several deep neural network counterparts and human experts in Table 3 . As demonstrated, the FracNet outperformed 3D FCN and 3D DeepLab by large margins, which verified the effectiveness of network design in the proposed FracNet. Please note that the model size of FracNet was smaller than these of 3D FCN and 3D DeepLab. Moreover, we conducted observer studies with two radiologists (R1 and R2, details in Section 2.3.2). Remarkably, though human experts achieved much lower false positives per scan, they underperformed the deep neural networks in terms of detection sensitivities. As for segmentation performance, FracNet underperformed R1 while outperformed R2. We also evaluated the performance of human collaboration with a simple union of human annotations (R1 [ R2) ; the union improved detection sensitivities with a cost of additional false positives introduced.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 163,
+                        "end": 170,
+                        "text": "Table 3",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 865,
+                        "end": 874,
+                        "text": "(R1 [ R2)",
+                        "ref_id": "FIGREF0"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Benchmarking FracNet with counterparts and experts",
+                "sec_num": "3.2."
+            },
+            {
+                "text": "We further evaluate the performance of human-computer unions (FracNet [ R1 and FracNet [ R2). The detection probabilities of human were set to 1, therefore sensitivities with low FP level 0.5 and 1 were missing. Excitingly, dramatical improvement in detection sensitivities was observed, which was the foundation of human-computer collaboration (Section 3.3).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Benchmarking FracNet with counterparts and experts",
+                "sec_num": "3.2."
+            },
+            {
+                "text": "In this section, we validated the human-computer collaboration performance (Section 2.3.3) in Table 4 and Fig. 4 . Average clinical time for detecting and segmenting all rib fractures was also reported. The average model time was measured with an implementation of PyTorch 1.3.1 and Python 3.7, on a machine with a single NVIDIA GTX 1080Ti with Intel Xeon E5-2650 and 128 G memory. The human-only diagnosis outperformed FracNet with given false positive levels. However, the human-computer collaboration could further improve their performance with reduced clinical time. Basically, the humancomputer collaboration followed the workflow of the FracNet system in clinical scenario: (a) model prediction (Model), (b) manual false positive reduction and verification (FPR), and (c) missing lesion detection and segmentation (Segmentation). Compared to conventional manual diagnosis by human experts (R1 and R2), the humancomputer collaboration significantly improved the detection sensitivities by large margins, with a sight cost in increasing false positives. Nevertheless, the computer-aided diagnosis with FracNet reduced the clinical time for rib fracture detection and segmentation. In real clinical practice, the clinicians are not asked to segmentation the rib fractures, where only diagnosis time should be counted. Even in such cases, human-computer collaboration could reduce clinical time with even better diagnosis performance. ",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 94,
+                        "end": 101,
+                        "text": "Table 4",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 106,
+                        "end": 112,
+                        "text": "Fig. 4",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Human-computer collaboration",
+                "sec_num": "3.3."
+            },
+            {
+                "text": "This study proposed a deep learning system, named FracNet, to detect and segment the rib fractures from CT scans. In rib fracture detection, our model performed high sensitivity (92.9%) and average FPs (5.27); as a comparison, human experts achieve 79.1%, 1.34 and 75.9%, 0.92. Besides, our deep learning system showed acceptable performance on rib fracture segmentation (IoU: 55.6%; Dice: 71.5%), which had never been reported in prior studies . Collaborated with the deep learning system, sensitivity of rib fractures increased (up to 94.4%) with acceptable false positives and reduced clinical time consuming (approximate 86% clinical time decreased).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "4."
+            },
+            {
+                "text": "Through the observer study, the junior radiologist had higher sensitivity (79.1%) of rib fractures detection with increased FPs (1.34) than the senior radiologist (75.9%, 0.9), indicating that the radiologists have their own interpretation in rib fractures. Although the junior radiologist achieved 3.2% higher sensitivity of rib fractures, the FPs also increased about 31%. The human-computer collaboration improved both the sensitivity and FPs compared with human-only or computer-only diagnosis, indicating the existence of model-detected rib fractures that were missed by radiologists, and vice versa. The inspiring results achieved by human-computer collaboration were consistent with a pervious study [4] in chest radiograph interpretation. When collaborated with human experts, FracNet achieved higher sensitivities with significantly reduced false positives. Moreover, deep-learning-assisted diagnosis significantly decreased about 86.3% and 85.6% clinical time with comparable or even better diagnostic accuracy (higher sensitivities and FPs).",
+                "cite_spans": [
+                    {
+                        "start": 707,
+                        "end": 710,
+                        "text": "[4]",
+                        "ref_id": "BIBREF4"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "4."
+            },
+            {
+                "text": "Before our study, there were two related recent studies using deep learning to detect the rib fractures from CT images [30, 31] . Both studies formalized the task as 2D detection, however our study formalized it as 3D segmentation. As discussed in Section 3.1, the rib fractures were generally associated with elongated shapes; The formalization with segmentation masks in our study was expected to be more accurate than that with detection bounding boxes in these related studies. To our knowledge, it is the first study for rib fracture segmentation. Besides, the data and annotation were of higher standard in our study. High-quality thin-slice CT scans with thickness of 1\u00c01.25 mm were used in our study, compared to 1.5 mm [30] and partially 5 mm [679 of 974 patients (about 69.7%)] [31] . It was reported that thin-slice images could be helpful for the diagnosis of bone fractures and incidental findings [32] . On the other hand, we adapted a human-in-the-loop labeling procedure (Section 2.1.2), five radiologists were envovled to ensure the high quality of our annotations, which could help to reduce the risk of overestimating model performance [4,33\u00c035] . For these reasons, our model achieved a significantly higher detection sensitivity with less time-comsuing as time is crucial for trauma patients in the emergency setting throughout the whole diagnostic and therapeutic management process [36] . The model performance was consistent on our external training, tuning and test cohorts. More importantly, we open source the first large scale dataset for rib fracture detection and segmentaiton with voxellevel annotations, to improve research reproducibility and facilitate further research.",
+                "cite_spans": [
+                    {
+                        "start": 119,
+                        "end": 123,
+                        "text": "[30,",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 124,
+                        "end": 127,
+                        "text": "31]",
+                        "ref_id": "BIBREF31"
+                    },
+                    {
+                        "start": 728,
+                        "end": 732,
+                        "text": "[30]",
+                        "ref_id": "BIBREF30"
+                    },
+                    {
+                        "start": 788,
+                        "end": 792,
+                        "text": "[31]",
+                        "ref_id": "BIBREF31"
+                    },
+                    {
+                        "start": 911,
+                        "end": 915,
+                        "text": "[32]",
+                        "ref_id": "BIBREF32"
+                    },
+                    {
+                        "start": 1155,
+                        "end": 1164,
+                        "text": "[4,33\u00c035]",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1405,
+                        "end": 1409,
+                        "text": "[36]",
+                        "ref_id": "BIBREF36"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "4."
+            },
+            {
+                "text": "There are limitations in this study. Although developed and validated on a large-scale dataset, this is a single-center study. In our site, the performance of diagnostic performance between junior and senior human experts was similar, this may benefit from the expertise of our radiologists in rib fracture diagnosis. However, in our experience, the diagnostic performance of radiologists with different expertise from different sites may vary significantl. Besides, even the annotations were verified with a human-in-the-loop labeling procedure, there could still be false positive or false negative annotation. Moreover, the landscape of deep neural networks was not fully explored. In further studies, we are investigating model generalization of our method on multi-center datasets, with more rounds of human-in-the-loop labeling procedure. It is also interesting to explore segmentation loss for elongated objects [37, 38] or leverage the pretraining from natural / medical images [39, 40] . Apart from automatic rib fracture detection and segmentation, we are also developing datasets and models to automatically classify the fracture types. We will also introduce recent advances in 3D deep learning to improve the model performance.",
+                "cite_spans": [
+                    {
+                        "start": 919,
+                        "end": 923,
+                        "text": "[37,",
+                        "ref_id": "BIBREF37"
+                    },
+                    {
+                        "start": 924,
+                        "end": 927,
+                        "text": "38]",
+                        "ref_id": "BIBREF38"
+                    },
+                    {
+                        "start": 986,
+                        "end": 990,
+                        "text": "[39,",
+                        "ref_id": "BIBREF39"
+                    },
+                    {
+                        "start": 991,
+                        "end": 994,
+                        "text": "40]",
+                        "ref_id": "BIBREF40"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "4."
+            },
+            {
+                "text": "In conclusion, our deep learning model collaborated with human experts could help to increase the diagnostic effectiveness and efficiency in the diagnosis of rib fractures, which implied the great potential of deep-learning-assisted diagnosis in clinical practice.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": "4."
+            }
+        ],
+        "back_matter": [
+            {
+                "text": "This study has received funding from the Medical Imaging Key Program of Wise Information Technology of 120-Health Commission of Shanghai 2018ZHYL0103 (Ming Li), the National Natural Science Foundation of China 61976238 (Ming Li) and \"Future Star\" of famous doctors' training plan of Fudan University (Ming Li). This study has received funding from Shanghai Youth Medical Talents Training Funding Scheme AB83030002019004 (Liang Jin). This study was also supported by National Science Foundation of China 61976137, U1611461 (Bingbing Ni). The funding sources played no role in the study design; collection, analysis, and interpretation of data; writing of the report; or decision to submit the article for publication.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Acknowledgments",
+                "sec_num": null
+            },
+            {
+                "text": "The data and code from Huadong Hospital affiliated to Fudan University used in this study are available at https://m3dv.github.io/Frac Net/ to users who agree with our data license (CC BY-NC 4.0) and code license (Apache-2.0 License).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Data sharing section",
+                "sec_num": null
+            },
+            {
+                "text": "All authors declare that they have no conflict of interests. ",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Declaration of Competing interest",
+                "sec_num": null
+            },
+            {
+                "text": "Supplementary material associated with this article can be found, in the online version, at doi:10.1016/j.ebiom.2020.103106.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Supplementary materials",
+                "sec_num": null
+            }
+        ],
+        "bib_entries": {
+            "BIBREF0": {
+                "ref_id": "b0",
+                "title": "Administrative, technical, or material support (i.e., reporting or organizing data, constructing databases",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Jin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [
+                            "Li"
+                        ],
+                        "last": "Development Of Methodology",
+                        "suffix": ""
+                    },
+                    {
+                        "first": ":",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Jin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Gao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Ni",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Li ; L. Jin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Ma",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Tan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Gao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Li ; L. Jin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Kuang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Kang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "design: L. Jin, J. Yang, M. Li Development of methodology: L. Jin, J. Yang, Y. Sun, Y. Gao, B. Ni, M. Li Acquisition of data (provided animals, acquired and managed patients, provided facilities, etc.): L. Jin, J. Yang, Y. Sun, W. Ma, M. Tan, P. Gao, M. Li Analysis and interpretation of data (e.g., statistical analysis, computational analysis): L. Jin, J. Yang, Y. Sun, K. Kuang, H. Kang, J. Chen, M. Li Writing, review, and/or revision of the manuscript: L. Jin, J. Yang, Y. Sun, B. Ni, M. Li Administrative, technical, or material support (i.e., reporting or organizing data, constructing databases): L. Jin, K. Kuang, H. Kang, J. Chen, M. Li Study supervision: L. Jin, J. Yang, B. Ni, M. Li Algorithm and software development: J. Yang, K. Kuang, H. Kang, J. Chen All authors read and approved the final version of the manuscript.",
+                "links": null
+            },
+            "BIBREF1": {
+                "ref_id": "b1",
+                "title": "Deep learning",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Lecun",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Bengio",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Hinton",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Nature",
+                "volume": "521",
+                "issue": "7553",
+                "pages": "436--480",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "LeCun Y, Bengio Y, Hinton G. Deep learning. Nature 2015;521(7553):436-44.",
+                "links": null
+            },
+            "BIBREF2": {
+                "ref_id": "b2",
+                "title": "3D deep learning from CT scans predicts tumor invasiveness of subcentimeter pulmonary adenocarcinomas",
+                "authors": [
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Zhao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Cancer Res",
+                "volume": "78",
+                "issue": "24",
+                "pages": "6881--6890",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Zhao W, Yang J, Sun Y, et al. 3D deep learning from CT scans predicts tumor inva- siveness of subcentimeter pulmonary adenocarcinomas. Cancer Res 2018;78 (24):6881-9.",
+                "links": null
+            },
+            "BIBREF3": {
+                "ref_id": "b3",
+                "title": "Automated detection and quantification of COVID-19 pneumonia: CT imaging analysis by a deep learning-based software",
+                "authors": [
+                    {
+                        "first": "H",
+                        "middle": [
+                            "T"
+                        ],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Zhang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Eur J Nucl Med Mol Imaging",
+                "volume": "47",
+                "issue": "11",
+                "pages": "2525--2557",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Zhang HT, Zhang JS, Zhang HH, et al. Automated detection and quantification of COVID-19 pneumonia: CT imaging analysis by a deep learning-based software. Eur J Nucl Med Mol Imaging 2020;47(11):2525-32.",
+                "links": null
+            },
+            "BIBREF4": {
+                "ref_id": "b4",
+                "title": "Chest radiograph interpretation with deep learning models: assessment with radiologist-adjudicated reference standards and population-adjusted evaluation",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Majkowska",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Mittal",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "Steiner",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Radiology",
+                "volume": "294",
+                "issue": "2",
+                "pages": "421--452",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Majkowska A, Mittal S, Steiner DF, et al. Chest radiograph interpretation with deep learning models: assessment with radiologist-adjudicated reference stand- ards and population-adjusted evaluation. Radiology 2020;294(2):421-31.",
+                "links": null
+            },
+            "BIBREF5": {
+                "ref_id": "b5",
+                "title": "Deep learning algorithms for detection of critical findings in head CT scans: a retrospective study",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Chilamkurthy",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Ghosh",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Tanamala",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Lancet",
+                "volume": "392",
+                "issue": "",
+                "pages": "2388--96",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Chilamkurthy S, Ghosh R, Tanamala S, et al. Deep learning algorithms for detec- tion of critical findings in head CT scans: a retrospective study. Lancet 2018;392 (10162):2388-96.",
+                "links": null
+            },
+            "BIBREF6": {
+                "ref_id": "b6",
+                "title": "Deep neural network improves fracture detection by clinicians",
+                "authors": [
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Lindsey",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Daluiski",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Chopra",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Proc Natl Acad Sci",
+                "volume": "115",
+                "issue": "45",
+                "pages": "11591--11597",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Lindsey R, Daluiski A, Chopra S, et al. Deep neural network improves fracture detection by clinicians. Proc Natl Acad Sci USA 2018;115(45):11591-6.",
+                "links": null
+            },
+            "BIBREF7": {
+                "ref_id": "b7",
+                "title": "Multi-site fMRI analysis using privacy-preserving federated learning and domain adaptation: ABIDE results",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Li",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Gu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Dvornek",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Staib",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Ventola",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Duncan",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Med Image Anal",
+                "volume": "65",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Li X, Gu Y, Dvornek N, Staib LH, Ventola P, Duncan JS. Multi-site fMRI analysis using privacy-preserving federated learning and domain adaptation: ABIDE results. Med Image Anal 2020;65:101765.",
+                "links": null
+            },
+            "BIBREF8": {
+                "ref_id": "b8",
+                "title": "Deep-learning-assisted diagnosis for knee magnetic resonance imaging: development and retrospective validation of MRNet",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Bien",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Rajpurkar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Ball",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "PLoS Med",
+                "volume": "15",
+                "issue": "11",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bien N, Rajpurkar P, Ball RL, et al. Deep-learning-assisted diagnosis for knee mag- netic resonance imaging: development and retrospective validation of MRNet. PLoS Med 2018;15(11):e1002699.",
+                "links": null
+            },
+            "BIBREF9": {
+                "ref_id": "b9",
+                "title": "Efficient multiple organ localization in CT image using 3D region proposal network",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Xu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Zhou",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Liu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Fu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Bai",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "IEEE Trans Med Imaging",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Xu X, Zhou F, Liu B, Fu D, Bai X. Efficient multiple organ localization in CT image using 3D region proposal network. IEEE Trans Med Imaging 2019.",
+                "links": null
+            },
+            "BIBREF10": {
+                "ref_id": "b10",
+                "title": "Deep learning-based fully automated detection and segmentation of lymph nodes on multiparametric-mri for rectal cancer: a multicentre study",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Zhao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Xie",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Wang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "EBioMedicine",
+                "volume": "56",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Zhao X, Xie P, Wang M, et al. Deep learning-based fully automated detection and segmentation of lymph nodes on multiparametric-mri for rectal cancer: a multi- centre study. EBioMedicine 2020;56:102780.",
+                "links": null
+            },
+            "BIBREF11": {
+                "ref_id": "b11",
+                "title": "High-performance medicine: the convergence of human and artificial intelligence",
+                "authors": [
+                    {
+                        "first": "E",
+                        "middle": [
+                            "J"
+                        ],
+                        "last": "Topol",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Nat Med",
+                "volume": "25",
+                "issue": "1",
+                "pages": "44--56",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Topol EJ. High-performance medicine: the convergence of human and artificial intelligence. Nat Med 2019;25(1):44-56.",
+                "links": null
+            },
+            "BIBREF12": {
+                "ref_id": "b12",
+                "title": "Traumatic rib injury: patterns, imaging pitfalls, complications, and treatment. Radiographics",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Talbot",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Gange",
+                        "middle": [],
+                        "last": "Cp",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Chaturvedi",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Klionsky",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [
+                            "K"
+                        ],
+                        "last": "Hobbs",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Chaturvedi",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "",
+                "volume": "37",
+                "issue": "",
+                "pages": "628--51",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Talbot BS, Gange Jr. CP, Chaturvedi A, Klionsky N, Hobbs SK, Chaturvedi A. Trau- matic rib injury: patterns, imaging pitfalls, complications, and treatment. Radio- graphics 2017;37(2):628-51.",
+                "links": null
+            },
+            "BIBREF13": {
+                "ref_id": "b13",
+                "title": "Automatic rib cage unfolding with CT cylindrical projection reformat in polytraumatized patients for rib fracture detection and characterization: Feasibility and clinical application",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Urbaneja",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "De",
+                        "middle": [],
+                        "last": "Verbizier",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Formery",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Eur J Radiol",
+                "volume": "110",
+                "issue": "",
+                "pages": "121--128",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Urbaneja A, De Verbizier J, Formery AS, et al. Automatic rib cage unfolding with CT cylindrical projection reformat in polytraumatized patients for rib fracture detec- tion and characterization: Feasibility and clinical application. Eur J Radiol 2019;110:121-7.",
+                "links": null
+            },
+            "BIBREF14": {
+                "ref_id": "b14",
+                "title": "Low-dose CT examination for rib fracture evaluation: a pilot study",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Jin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Ge",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Lu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Medicine (Baltimore)",
+                "volume": "97",
+                "issue": "30",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Jin L, Ge X, Lu F, et al. Low-dose CT examination for rib fracture evaluation: a pilot study. Medicine (Baltimore) 2018;97(30):e11624.",
+                "links": null
+            },
+            "BIBREF15": {
+                "ref_id": "b15",
+                "title": "Usefulness of low dose chest CT for initial evaluation of blunt chest trauma",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [
+                            "J"
+                        ],
+                        "last": "Kim",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [
+                            "B"
+                        ],
+                        "last": "Bista",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Min",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Medicine (Baltimore)",
+                "volume": "96",
+                "issue": "2",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Kim SJ, Bista AB, Min YG, et al. Usefulness of low dose chest CT for initial evalua- tion of blunt chest trauma. Medicine (Baltimore) 2017;96(2):e5888.",
+                "links": null
+            },
+            "BIBREF16": {
+                "ref_id": "b16",
+                "title": "Automatic rib unfolding in postmortem computed tomography: diagnostic evaluation of the OpenRib software compared with the autopsy in the detection of rib fractures",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Kolopp",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Douis",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Urbaneja",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Int J Legal Med",
+                "volume": "134",
+                "issue": "1",
+                "pages": "339--385",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Kolopp M, Douis N, Urbaneja A, et al. Automatic rib unfolding in postmortem computed tomography: diagnostic evaluation of the OpenRib software compared with the autopsy in the detection of rib fractures. Int J Legal Med 2020;134 (1):339-46.",
+                "links": null
+            },
+            "BIBREF17": {
+                "ref_id": "b17",
+                "title": "New bone post-processing tools in forensic imaging: a multi-reader feasibility study to evaluate detection time and diagnostic accuracy in rib fracture assessment",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Glemser",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Pfleiderer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Heger",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Int J Legal Med",
+                "volume": "131",
+                "issue": "2",
+                "pages": "489--96",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Glemser PA, Pfleiderer M, Heger A, et al. New bone post-processing tools in foren- sic imaging: a multi-reader feasibility study to evaluate detection time and diag- nostic accuracy in rib fracture assessment. Int J Legal Med 2017;131(2):489-96.",
+                "links": null
+            },
+            "BIBREF18": {
+                "ref_id": "b18",
+                "title": "The ribs unfolded -a CT visualization algorithm for fast detection of rib fractures: effect on sensitivity and specificity in trauma patients",
+                "authors": [
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Ringl",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Lazar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Topker",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Eur Radiol",
+                "volume": "25",
+                "issue": "7",
+                "pages": "1865--74",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Ringl H, Lazar M, Topker M, et al. The ribs unfolded -a CT visualization algorithm for fast detection of rib fractures: effect on sensitivity and specificity in trauma patients. Eur Radiol 2015;25(7):1865-74.",
+                "links": null
+            },
+            "BIBREF19": {
+                "ref_id": "b19",
+                "title": "Evaluation of Rib fractures on a single-in-plane image reformation of the rib cage in CT examinations",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Dankerl",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Seuss",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Ellmann",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Cavallaro",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Uder",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Hammon",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Acad Radiol",
+                "volume": "24",
+                "issue": "2",
+                "pages": "153--162",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Dankerl P, Seuss H, Ellmann S, Cavallaro A, Uder M, Hammon M. Evaluation of Rib fractures on a single-in-plane image reformation of the rib cage in CT examina- tions. Acad Radiol 2017;24(2):153-9.",
+                "links": null
+            },
+            "BIBREF20": {
+                "ref_id": "b20",
+                "title": "Missed rib fractures on evaluation of initial chest CT for trauma patients: pattern analysis and diagnostic value of coronal multiplanar reconstruction images with multidetector row CT",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Cho",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Sung",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [
+                            "S"
+                        ],
+                        "last": "Kim",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Br J Radiol",
+                "volume": "85",
+                "issue": "",
+                "pages": "845--50",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Cho SH, Sung YM, Kim MS. Missed rib fractures on evaluation of initial chest CT for trauma patients: pattern analysis and diagnostic value of coronal multiplanar reconstruction images with multidetector row CT. Br J Radiol 2012;85(1018): e845-50.",
+                "links": null
+            },
+            "BIBREF21": {
+                "ref_id": "b21",
+                "title": "U-Net: deep learning for cell counting, detection, and morphometry",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Falk",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Mai",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Bensch",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Nat Methods",
+                "volume": "16",
+                "issue": "1",
+                "pages": "67--70",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Falk T, Mai D, Bensch R, et al. U-Net: deep learning for cell counting, detection, and morphometry. Nat Methods 2019;16(1):67-70.",
+                "links": null
+            },
+            "BIBREF22": {
+                "ref_id": "b22",
+                "title": "Fully Convolutional Networks for Semantic Segmentation",
+                "authors": [
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Shelhamer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Long",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Darrell",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "IEEE Trans Pattern Anal Mach Intell",
+                "volume": "39",
+                "issue": "4",
+                "pages": "640--51",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Shelhamer E, Long J, Darrell T. Fully Convolutional Networks for Semantic Seg- mentation. IEEE Trans Pattern Anal Mach Intell 2017;39(4):640-51.",
+                "links": null
+            },
+            "BIBREF23": {
+                "ref_id": "b23",
+                "title": "Encoder-decoder with atrous separable convolution for semantic image segmentation",
+                "authors": [
+                    {
+                        "first": "L-C",
+                        "middle": [],
+                        "last": "Chen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Zhu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Papandreou",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Schroff",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Adam",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Chen L-C, Zhu Y, Papandreou G, Schroff F, Adam H. Encoder-decoder with atrous separable convolution for semantic image segmentation. ECCV; 2018.",
+                "links": null
+            },
+            "BIBREF24": {
+                "ref_id": "b24",
+                "title": "Can spatiotemporal 3d cnns retrace the history of 2d cnns and imagenet? CVPR",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Hara",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Kataoka",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Satoh",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Hara K, Kataoka H, Satoh Y. Can spatiotemporal 3d cnns retrace the history of 2d cnns and imagenet? CVPR; 2018.",
+                "links": null
+            },
+            "BIBREF25": {
+                "ref_id": "b25",
+                "title": "Deep residual learning for image recognition",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Ren",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "He K, Zhang X, Ren S, Sun J. Deep residual learning for image recognition. CVPR 2016.",
+                "links": null
+            },
+            "BIBREF26": {
+                "ref_id": "b26",
+                "title": "PyTorch: an imperative style, high-performance deep learning library. NeurIPS",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Paszke",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Gross",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Massa",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Paszke A, Gross S, Massa F, et al. PyTorch: an imperative style, high-performance deep learning library. NeurIPS; 2019.",
+                "links": null
+            },
+            "BIBREF27": {
+                "ref_id": "b27",
+                "title": "Deep learning based rib centerline extraction and labeling. MSKI@MICCAI",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Lenga",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Klinder",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "B\u20ac Urger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "V"
+                        ],
+                        "last": "Berg",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Franz",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Lorenz",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Lenga M, Klinder T, B\u20ac urger C, Berg JV, Franz A, Lorenz C. Deep learning based rib centerline extraction and labeling. MSKI@MICCAI; 2018.",
+                "links": null
+            },
+            "BIBREF28": {
+                "ref_id": "b28",
+                "title": "Batch normalization: accelerating deep network training by reducing internal covariate shift",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Ioffe",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Szegedy",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Ioffe S, Szegedy C. Batch normalization: accelerating deep network training by reducing internal covariate shift. ICML; 2015.",
+                "links": null
+            },
+            "BIBREF29": {
+                "ref_id": "b29",
+                "title": "Adam: a method for stochastic optimization",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [
+                            "P"
+                        ],
+                        "last": "Kingma",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Ba",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Kingma DP, Ba J. Adam: a method for stochastic optimization. ICLR; 2015.",
+                "links": null
+            },
+            "BIBREF30": {
+                "ref_id": "b30",
+                "title": "Assessment of a deep learning algorithm for the detection of rib fractures on whole-body trauma computed tomography",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Weikert",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "L",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Noordtzij",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Bremerich",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Korean J Radiol",
+                "volume": "21",
+                "issue": "7",
+                "pages": "891--900",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Weikert T, Noordtzij LA, Bremerich J, et al. Assessment of a deep learning algo- rithm for the detection of rib fractures on whole-body trauma computed tomog- raphy. Korean J Radiol 2020;21(7):891-9.",
+                "links": null
+            },
+            "BIBREF31": {
+                "ref_id": "b31",
+                "title": "Automatic detection and classification of rib fractures on thoracic CT using convolutional neural network: accuracy and feasibility",
+                "authors": [
+                    {
+                        "first": "Q",
+                        "middle": [
+                            "Q"
+                        ],
+                        "last": "Zhou",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Wang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "W",
+                        "middle": [],
+                        "last": "Tang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Korean J Radiol",
+                "volume": "21",
+                "issue": "7",
+                "pages": "869--79",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Zhou QQ, Wang J, Tang W, et al. Automatic detection and classification of rib frac- tures on thoracic CT using convolutional neural network: accuracy and feasibility. Korean J Radiol 2020;21(7):869-79.",
+                "links": null
+            },
+            "BIBREF32": {
+                "ref_id": "b32",
+                "title": "Comparison of thick-and thinslice images in thoracoabdominal trauma CT: a retrospective analysis",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Guchlerner",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Wichmann",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Tischendorf",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Eur J Trauma Emerg Surg",
+                "volume": "46",
+                "issue": "1",
+                "pages": "187--95",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Guchlerner L, Wichmann JL, Tischendorf P, et al. Comparison of thick-and thin- slice images in thoracoabdominal trauma CT: a retrospective analysis. Eur J Trauma Emerg Surg 2020;46(1):187-95.",
+                "links": null
+            },
+            "BIBREF33": {
+                "ref_id": "b33",
+                "title": "Automated detection of moderate and large pneumothorax on frontal chest X-rays using deep convolutional neural networks: a retrospective study",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Taylor",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Mielke",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Mongan",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "PLoS Med",
+                "volume": "15",
+                "issue": "11",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Taylor AG, Mielke C, Mongan J. Automated detection of moderate and large pneu- mothorax on frontal chest X-rays using deep convolutional neural networks: a retrospective study. PLoS Med 2018;15(11):e1002697.",
+                "links": null
+            },
+            "BIBREF34": {
+                "ref_id": "b34",
+                "title": "Deep learning for chest radiograph diagnosis: a retrospective comparison of the CheXNeXt algorithm to practicing radiologists",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Rajpurkar",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Irvin",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "R",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Ball",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "PLoS Med",
+                "volume": "15",
+                "issue": "11",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Rajpurkar P, Irvin J, Ball RL, et al. Deep learning for chest radiograph diagnosis: a retrospective comparison of the CheXNeXt algorithm to practicing radiologists. PLoS Med 2018;15(11):e1002686.",
+                "links": null
+            },
+            "BIBREF35": {
+                "ref_id": "b35",
+                "title": "Development and validation of a deep learningbased automated detection algorithm for major thoracic diseases on chest radiographs",
+                "authors": [
+                    {
+                        "first": "E",
+                        "middle": [
+                            "J"
+                        ],
+                        "last": "Hwang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Park",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [
+                            "N"
+                        ],
+                        "last": "Jin",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "JAMA Netw Open",
+                "volume": "2",
+                "issue": "3",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Hwang EJ, Park S, Jin KN, et al. Development and validation of a deep learning- based automated detection algorithm for major thoracic diseases on chest radio- graphs. JAMA Netw Open 2019;2(3):e191095.",
+                "links": null
+            },
+            "BIBREF36": {
+                "ref_id": "b36",
+                "title": "Automated 3D rendering of ribs in 110 polytrauma patients: strengths and limitations",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Khung",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Masset",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Duhamel",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Acad Radiol",
+                "volume": "24",
+                "issue": "2",
+                "pages": "146--52",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Khung S, Masset P, Duhamel A, et al. Automated 3D rendering of ribs in 110 poly- trauma patients: strengths and limitations. Acad Radiol 2017;24(2):146-52.",
+                "links": null
+            },
+            "BIBREF37": {
+                "ref_id": "b37",
+                "title": "3D-GIoU: 3D generalized intersection over union for object detection in point cloud",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Xu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Ma",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Zhu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Sensors (Basel)",
+                "volume": "19",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Xu J, Ma Y, He S, Zhu J. 3D-GIoU: 3D generalized intersection over union for object detection in point cloud. Sensors (Basel) 2019;19(19).",
+                "links": null
+            },
+            "BIBREF38": {
+                "ref_id": "b38",
+                "title": "Calibrated surrogate maximization of dice",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Nordstr\u20ac Om",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Bao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "L\u20ac Ofman",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Hult",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Maki",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Sugiyama",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Miccai",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "269--78",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Nordstr\u20ac om M, Bao H, L\u20ac ofman F, Hult H, Maki A, Sugiyama M. MICCAI. Calibrated surrogate maximization of dice. Cham: Springer International Publishing; 2020. p. 269-78.",
+                "links": null
+            },
+            "BIBREF39": {
+                "ref_id": "b39",
+                "title": "AlignShift: bridging the gap of imaging thickness in 3D anisotropic volumes",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "2020",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Yang J, He Y, Huang X, et al. AlignShift: bridging the gap of imaging thickness in 3D anisotropic volumes. MICCAI 2020.",
+                "links": null
+            },
+            "BIBREF40": {
+                "ref_id": "b40",
+                "title": "Reinventing 2D Convolutions for 3D medical images",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Huang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "B",
+                        "middle": [],
+                        "last": "Ni",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Xu",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Xu",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Yang J, Huang X, Ni B, Xu J, Yang C, Xu G. Reinventing 2D Convolutions for 3D medical images. arXiv preprint arXiv:191110477.",
+                "links": null
+            }
+        },
+        "ref_entries": {
+            "FIGREF0": {
+                "text": "(a) Flowchart of RibFrac Dataset setup, including human-in-the-loop labeling of rib fractures. (b) Illustration of manual rib fracture labeling. (c) Verification of manual labeling with axial images (top) and manually curve planar reformation images (bottom).",
+                "fig_num": "1",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF1": {
+                "text": "(a) The pipeline for detecting rib fractures from CT scans. A 3D convolutional neural network, named FracNet, was developed to segment the fractures in a sliding window fashion. Pseudo-color in the figure is used for better visualizing binary images of bones and segmentation results. (b) Neural network architecture of FracNet based on 3D UNet [21]. Our code in PyTorch [26] for model training and evaluation will be soon open source.",
+                "fig_num": "2",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "FIGREF2": {
+                "text": "(a) FROC curves of FracNet detection performance on the RibFrac training, tuning and test cohorts. (b) Illustration of predicted segmentation on RibFrac test cohorts. (c) A comparison of segmentation metrics (IoU and Dice) for rounded and elongated shape. In (b) and(c), the pseudo-color in the 3D shape is only for visualization purpose.",
+                "fig_num": "3",
+                "uris": null,
+                "type_str": "figure",
+                "num": null
+            },
+            "TABREF0": {
+                "text": "RibFrac Dataset Overview.",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table><tr><td>Cohorts</td><td>Availability</td><td>No. Patients / CT Scans</td><td>No. CT Slices</td><td>No. Fractures</td></tr><tr><td>Training</td><td>Total</td><td>720</td><td>265,302</td><td>6,156</td></tr><tr><td/><td>Public</td><td>420</td><td>154,127</td><td>3,987</td></tr><tr><td/><td>In-House</td><td>300</td><td>111,175</td><td>2,169</td></tr><tr><td>Tuning</td><td>Public</td><td>60</td><td>22,562</td><td>435</td></tr><tr><td>Test</td><td>Public</td><td>120</td><td>44,619</td><td>882</td></tr></table>"
+            },
+            "TABREF2": {
+                "text": "FracNet performance on RibFrac training, tuning and test cohorts, in terms of detection and segmentation performance. FP: false positives per scan. IoU: Intersection-over-Union. Dice: Dice Coefficient.",
+                "html": null,
+                "type_str": "table",
+                "num": null,
+                "content": "<table><tr><td>Cohorts</td><td/><td colspan=\"4\">Detection Sensitivities @ FP Levels</td><td/><td colspan=\"2\">Detection</td><td colspan=\"2\">Segmentation</td></tr><tr><td/><td>0 . 5</td><td>1</td><td>2</td><td>4</td><td>8</td><td>A v g</td><td>Sensitivity</td><td>Avg FP</td><td>IoU</td><td>Dice</td></tr><tr><td>Training</td><td>60.3%</td><td>69.3%</td><td>78.3%</td><td>90.0%</td><td>91.9%</td><td>77.9%</td><td>91.9%</td><td>4.41</td><td>77.5%</td><td>87.3%</td></tr><tr><td>Tuning</td><td>55.6%</td><td>67.8%</td><td>78.9%</td><td>89.7%</td><td>92.2%</td><td>76.8%</td><td>92.2%</td><td>4.85</td><td>58.7%</td><td>74.0%</td></tr><tr><td>Test</td><td>66.0%</td><td>75.0%</td><td>81.7%</td><td>90.5%</td><td>92.9%</td><td>81.2%</td><td>92.9%</td><td>5.27</td><td>55.6%</td><td>71.5%</td></tr><tr><td>Table 3</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></tr><tr><td colspan=\"11\">A comparison of detection and segmentation performance on RibFrac Test Set, of FracNet, two deep neural network counter-</td></tr><tr><td colspan=\"8\">parts (3D FCN and 3D DeepLab), two radiologists (R1 and R2) and their union.</td><td/><td/><td/></tr><tr><td>Methods</td><td/><td colspan=\"4\">Detection Sensitivities @ FP Levels</td><td/><td colspan=\"2\">Detection</td><td colspan=\"2\">Segmentation</td></tr><tr><td/><td>0.5</td><td/><td>2</td><td>4</td><td>8</td><td>Avg</td><td>Sensitivity</td><td>Avg FP</td><td>IoU</td><td>Dice</td></tr><tr><td>FracNet</td><td>66.0%</td><td>75.0%</td><td>81.7%</td><td>90.5%</td><td>92.9%</td><td>81.2%</td><td>92.9%</td><td>5.27</td><td>55.6%</td><td>71.5%</td></tr><tr><td>3D FCN</td><td>59.9%</td><td>69.7%</td><td>76.1%</td><td>84.4%</td><td>87.8%</td><td>75.6%</td><td>87.8%</td><td>7.02</td><td>49.1%</td><td>66.2%</td></tr><tr><td>3D DeepLab</td><td>63.7%</td><td>72.5%</td><td>79.2%</td><td>88.2%</td><td>91.3%</td><td>79.0%</td><td>91.3%</td><td>6.11</td><td>50.3%</td><td>68.7%</td></tr><tr><td>R1</td><td>/</td><td>/</td><td>/</td><td>/</td><td>/</td><td>/</td><td>79.1%</td><td>1.34</td><td>47.4%</td><td>64.3%</td></tr><tr><td>R2</td><td>/</td><td>/</td><td>/</td><td>/</td><td>/</td><td>/</td><td>75.9%</td><td>0.92</td><td>36.7%</td><td>53.1%</td></tr><tr><td>R1 [ R2</td><td>/</td><td>/</td><td>/</td><td>/</td><td>/</td><td>/</td><td>83.1%</td><td>1.80</td><td>47.8%</td><td>64.7%</td></tr><tr><td>FracNet [ R1</td><td>/</td><td>/</td><td>83.9%</td><td>90.4%</td><td>93.8%</td><td>82.6%</td><td>93.8%</td><td>5.99</td><td>54.9%</td><td>70.9%</td></tr><tr><td>FracNet [ R2</td><td>/</td><td>/</td><td>85.8%</td><td>92.6%</td><td>95.7%</td><td>84.4%</td><td>95.7%</td><td>5.83</td><td>52.5%</td><td>68.9%</td></tr></table>"
+            }
+        }
+    }
+}

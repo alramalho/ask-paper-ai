@@ -1,0 +1,2779 @@
+{
+    "paper_id": "8",
+    "header": {
+        "generated_with": "S2ORC 1.0.0",
+        "date_generated": "2023-01-13T18:00:59.106978Z"
+    },
+    "title": "The Medical Segmentation Decathlon",
+    "authors": [
+        {
+            "first": "Michela",
+            "middle": [],
+            "last": "Antonelli",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Annika",
+            "middle": [],
+            "last": "Reinke",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Spyridon",
+            "middle": [],
+            "last": "Bakas",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Keyvan",
+            "middle": [],
+            "last": "Farahani",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Annette",
+            "middle": [],
+            "last": "Kopp-Schneider",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Bennett",
+            "middle": [
+                "A"
+            ],
+            "last": "Landman",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Geert",
+            "middle": [],
+            "last": "Litjens",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Bjoern",
+            "middle": [],
+            "last": "Menze",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Olaf",
+            "middle": [],
+            "last": "Ronneberger",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ronald",
+            "middle": [
+                "M"
+            ],
+            "last": "Summers",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Bram",
+            "middle": [],
+            "last": "Van Ginneken",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Michel",
+            "middle": [],
+            "last": "Bilello",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Patrick",
+            "middle": [],
+            "last": "Bilic",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Patrick",
+            "middle": [
+                "F"
+            ],
+            "last": "Christ",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Richard",
+            "middle": [
+                "K G"
+            ],
+            "last": "Do",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Marc",
+            "middle": [
+                "J"
+            ],
+            "last": "Gollub",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Stephan",
+            "middle": [
+                "H"
+            ],
+            "last": "Heckers",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Henkjan",
+            "middle": [],
+            "last": "Huisman",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "William",
+            "middle": [
+                "R"
+            ],
+            "last": "Jarnagin",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Maureen",
+            "middle": [
+                "K"
+            ],
+            "last": "Mchugo",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Sandy",
+            "middle": [],
+            "last": "Napel",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Jennifer",
+            "middle": [
+                "S"
+            ],
+            "last": "Golia Pernicka",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Kawal",
+            "middle": [],
+            "last": "Rhode",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Catalina",
+            "middle": [],
+            "last": "Tobon-Gomez",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Eugene",
+            "middle": [],
+            "last": "Vorontsov",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "James",
+            "middle": [
+                "A"
+            ],
+            "last": "Meakin",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Sebastien",
+            "middle": [],
+            "last": "Ourselin",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Manuel",
+            "middle": [],
+            "last": "Wiesenfarth",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Pablo",
+            "middle": [],
+            "last": "Arbel\u00e1ez",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Byeonguk",
+            "middle": [],
+            "last": "Bae",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Sihong",
+            "middle": [],
+            "last": "Chen",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Laura",
+            "middle": [],
+            "last": "Daza",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Jianjiang",
+            "middle": [],
+            "last": "Feng",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Baochun",
+            "middle": [],
+            "last": "He",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Fabian",
+            "middle": [],
+            "last": "Isensee",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Yuanfeng",
+            "middle": [],
+            "last": "Ji",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Fucang",
+            "middle": [],
+            "last": "Jia",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ildoo",
+            "middle": [],
+            "last": "Kim",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Klaus",
+            "middle": [],
+            "last": "Maier-Hein",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Dorit",
+            "middle": [],
+            "last": "Merhof",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Akshay",
+            "middle": [],
+            "last": "Pai",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Beomhee",
+            "middle": [],
+            "last": "Park",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Mathias",
+            "middle": [],
+            "last": "Perslev",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ramin",
+            "middle": [],
+            "last": "Rezaiifar",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Oliver",
+            "middle": [],
+            "last": "Rippel",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Ignacio",
+            "middle": [],
+            "last": "Sarasua",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Wei",
+            "middle": [],
+            "last": "Shen",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Jaemin",
+            "middle": [],
+            "last": "Son",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Christian",
+            "middle": [],
+            "last": "Wachinger",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Liansheng",
+            "middle": [],
+            "last": "Wang",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Yan",
+            "middle": [],
+            "last": "Wang",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Yingda",
+            "middle": [],
+            "last": "Xia",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Daguang",
+            "middle": [],
+            "last": "Xu",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Zhanwei",
+            "middle": [],
+            "last": "Xu",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Yefeng",
+            "middle": [],
+            "last": "Zheng",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Amber",
+            "middle": [
+                "L"
+            ],
+            "last": "Simpson",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "Lena",
+            "middle": [],
+            "last": "Maier-Hein",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        },
+        {
+            "first": "&",
+            "middle": [
+                "M Jorge"
+            ],
+            "last": "Cardoso",
+            "suffix": "",
+            "affiliation": {},
+            "email": ""
+        }
+    ],
+    "year": "",
+    "venue": null,
+    "identifiers": {},
+    "abstract": "International challenges have become the de facto standard for comparative assessment of image analysis algorithms. Although segmentation is the most widely investigated medical image processing task, the various challenges have been organized to focus only on specific clinical tasks. We organized the Medical Segmentation Decathlon (MSD)-a biomedical image analysis challenge, in which algorithms compete in a multitude of both tasks and modalities to investigate the hypothesis that a method capable of performing well on multiple tasks will generalize well to a previously unseen task and potentially outperform a customdesigned solution. MSD results confirmed this hypothesis, moreover, MSD winner continued generalizing well to a wide range of other clinical problems for the next two years. Three main conclusions can be drawn from this study: (1) state-of-the-art image segmentation algorithms generalize well when retrained on unseen tasks; (2) consistent algorithmic performance across multiple tasks is a strong surrogate of algorithmic generalizability; (3) the training of accurate AI segmentation models is now commoditized to scientists that are not versed in AI model training.",
+    "pdf_parse": {
+        "paper_id": "8",
+        "_pdf_hash": "",
+        "abstract": [
+            {
+                "text": "International challenges have become the de facto standard for comparative assessment of image analysis algorithms. Although segmentation is the most widely investigated medical image processing task, the various challenges have been organized to focus only on specific clinical tasks. We organized the Medical Segmentation Decathlon (MSD)-a biomedical image analysis challenge, in which algorithms compete in a multitude of both tasks and modalities to investigate the hypothesis that a method capable of performing well on multiple tasks will generalize well to a previously unseen task and potentially outperform a customdesigned solution. MSD results confirmed this hypothesis, moreover, MSD winner continued generalizing well to a wide range of other clinical problems for the next two years. Three main conclusions can be drawn from this study: (1) state-of-the-art image segmentation algorithms generalize well when retrained on unseen tasks; (2) consistent algorithmic performance across multiple tasks is a strong surrogate of algorithmic generalizability; (3) the training of accurate AI segmentation models is now commoditized to scientists that are not versed in AI model training.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Abstract",
+                "sec_num": null
+            }
+        ],
+        "body_text": [
+            {
+                "text": "achine learning is beginning to revolutionize many fields of medicine, with success stories ranging from the accurate diagnosis and staging of diseases 1 , to the early prediction of adverse events 2 and the automatic discovery of antibiotics 3 . In this context, a large amount of literature has been dedicated to the automatic analysis of medical images 4 . Semantic segmentation refers to the process of transforming raw medical images into clinically relevant, spatially structured information, such as outlining tumor boundaries, and is an essential prerequisite for a number of clinical applications, such as radiotherapy planning 5 and treatment response monitoring 6 . It is so far the most widely investigated medical image processing task, with about 70% of all biomedical image analysis challenges dedicated to it 7 . With thousands of algorithms published in the field of biomedical image segmentation per year 8 , however, it has become challenging to decide on a baseline architecture as starting point when designing an algorithm for a new given clinical problem.",
+                "cite_spans": [
+                    {
+                        "start": 152,
+                        "end": 153,
+                        "text": "1",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 243,
+                        "end": 244,
+                        "text": "3",
+                        "ref_id": "BIBREF2"
+                    },
+                    {
+                        "start": 356,
+                        "end": 357,
+                        "text": "4",
+                        "ref_id": "BIBREF3"
+                    },
+                    {
+                        "start": 637,
+                        "end": 638,
+                        "text": "5",
+                        "ref_id": "BIBREF4"
+                    },
+                    {
+                        "start": 673,
+                        "end": 674,
+                        "text": "6",
+                        "ref_id": "BIBREF5"
+                    },
+                    {
+                        "start": 825,
+                        "end": 826,
+                        "text": "7",
+                        "ref_id": "BIBREF6"
+                    },
+                    {
+                        "start": 923,
+                        "end": 924,
+                        "text": "8",
+                        "ref_id": "BIBREF7"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "M",
+                "sec_num": null
+            },
+            {
+                "text": "International challenges have become the de facto standard for comparative assessment of image analysis algorithms given a specific task 7 . Yet, a deep learning architecture well-suitable for a certain clinical problem (e.g., segmentation of brain tumors) may not necessarily generalize well to different, unseen tasks (e.g., vessel segmentation in the liver). Such a \"generalizable learner\", which in this setting would represent a fullyautomated method that can learn any segmentation task given some training data and without the need for human intervention, would provide the missing technical scalability to allow many new applications in computer-aided diagnosis, biomarker extraction, surgical intervention planning, disease prognosis, etc. To address this gap in the literature, we proposed the concept of the Medical Segmentation Decathlon (MSD), an international challenge dedicated to identifying a generalpurpose algorithm for medical image segmentation. The competition comprised ten different data sets with various challenging characteristics, as shown in Fig. 1 . Two subsequent phases were presented to participants, first the development phase serving for model development and including seven open training data sets. Then, the mystery phase, aiming to investigate whether algorithms were able to generalize to three unseen segmentation tasks. During the mystery phase, participants were allowed to submit only one solution, able to solve all problems without changing the architecture or hyperparameters.",
+                "cite_spans": [
+                    {
+                        "start": 137,
+                        "end": 138,
+                        "text": "7",
+                        "ref_id": "BIBREF6"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1072,
+                        "end": 1078,
+                        "text": "Fig. 1",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "M",
+                "sec_num": null
+            },
+            {
+                "text": "The contribution of this paper is threefold: (1) We are the first to organize a biomedical image analysis challenge in which algorithms compete in a multitude of both tasks and modalities. More specifically, the underlying data set has been designed to feature some of the representative difficulties typically encountered when dealing with medical images, such as small data sets, unbalanced labels, multi-site data and small objects.",
+                "cite_spans": [
+                    {
+                        "start": 45,
+                        "end": 48,
+                        "text": "(1)",
+                        "ref_id": null
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "M",
+                "sec_num": null
+            },
+            {
+                "text": "(2) Based on the MSD, we released the first open framework for benchmarking medical segmentation algorithms with a specific focus on generalizability. (3) By monitoring the winning algorithm, we show that generalization across various clinical applications is possible with one single framework.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "M",
+                "sec_num": null
+            },
+            {
+                "text": "In the following, we will show the MSD results in \"Results\", in which we present the submitted methods and rankings based on the Dice Similarity Coefficient (DSC) 9 and the Normalized Surface Dice (NSD) 10 metrics as well as the results for the live challenge. We conclude with a discussion in \"Discussion\". The challenge design, including the mission, challenge data sets and assessment method, can be found in the \"Methods\". Further details including the overall challenge organization, detailed participating method descriptions and further results are presented in the Supplementary Information.",
+                "cite_spans": [
+                    {
+                        "start": 163,
+                        "end": 164,
+                        "text": "9",
+                        "ref_id": "BIBREF8"
+                    },
+                    {
+                        "start": 203,
+                        "end": 205,
+                        "text": "10",
+                        "ref_id": "BIBREF9"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "M",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge submissions. In total, 180 teams registered for the challenge, from which 31 submitted fully-valid and complete results for the development phase. From these, a subset of 19 teams submitted final and valid results for the mystery phase. Among the methods that fulfilled all the criteria to move to the mystery phase, all methods were based on convolutional neural networks, with the U-Net 11 being the most frequently used base architecture-employed by more than half of the teams (64%). The most commonly used loss function was the DSC loss (29%), followed by the cross entropy loss (21%). Figure 2 provides a complete list of both network architectures and loss functions used in the challenge. 61% of the teams used the adaptive moment estimation (Adam) optimizer 12 , while the stochastic gradient descent (SGD) 13 was used by 33% of the teams.",
+                "cite_spans": [
+                    {
+                        "start": 777,
+                        "end": 779,
+                        "text": "12",
+                        "ref_id": "BIBREF11"
+                    },
+                    {
+                        "start": 826,
+                        "end": 828,
+                        "text": "13",
+                        "ref_id": "BIBREF12"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 601,
+                        "end": 609,
+                        "text": "Figure 2",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Results",
+                "sec_num": null
+            },
+            {
+                "text": "Method description of top three algorithms. In the following, the top three methods are briefly described while the remaining participating methods are described in the Supplementary Methods 2. Supplementary Table 1 further provides an overview over all methods that were submitted for the mystery phase and who provided full algorithmic information (n = 14 teams), including links to public repositories (when available).",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 194,
+                        "end": 215,
+                        "text": "Supplementary Table 1",
+                        "ref_id": "TABREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Results",
+                "sec_num": null
+            },
+            {
+                "text": "The key idea of nnU-Net's method was to use a fully-automated dynamic adaptation of the segmentation pipeline, done independently for each task in the MSD, based on an analysis of the respective training data set. Image pre-processing, network topologies and post-processing were determined fully automatically and considered more important than the actual architecture 8 . nnU-Net was based on the U-Net architecture with the following modifications: the use of leaky ReLU, instance normalization and strided convolutions for downsampling 8 . It further applied a combination of augmentation strategies, namely affine transformation, non-linear deformation, intensity transformation (similar to gamma correction), mirroring along all axes and random crop. The sum of the DSC and cross entropy loss was used, while utilizing the Adam optimizer. The method applied a purposely defined ensembling strategy in which four different architectures were used. The selection of the task-specific optimal combination was found automatically via cross-validation on the training set.",
+                "cite_spans": [
+                    {
+                        "start": 540,
+                        "end": 541,
+                        "text": "8",
+                        "ref_id": "BIBREF7"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Results",
+                "sec_num": null
+            },
+            {
+                "text": "The key idea of NVDLMED's method was to use a fullysupervised uncertainty-aware multi-view co-training strategy 14 . They achieved robustness and generalization by initializing the model from 2D pre-trained models and using three views of networks to gain more 3D information through the multi-view co-training process. They further used a resampling strategy to cope with the differences among the ten tasks. The NVDLMED team utilized a 3D version of the ResNet with anisotropic 3D kernels 14 . The team further applied a combination of augmentation strategies, namely affine transformation, geometric left-right flip and random crop. The DSC loss and the SGD optimizer were employed. NVDLMED ensembled three models, each trained on a different view (coronal, saggital and axial).",
+                "cite_spans": [
+                    {
+                        "start": 112,
+                        "end": 114,
+                        "text": "14",
+                        "ref_id": "BIBREF13"
+                    },
+                    {
+                        "start": 491,
+                        "end": 493,
+                        "text": "14",
+                        "ref_id": "BIBREF13"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Results",
+                "sec_num": null
+            },
+            {
+                "text": "The key idea of K.A.V.athlon's method was a generalization strategy in the spirit of AutoML 16 . The process was designed to train and predict automatically using given image data and description without any parameter change or intervention by a human. K.A.V.athlon's method was based on a combination of the V-Net and U-Net architectures with the addition of a Squeeze-and-Excitation (SE) block and a residual block. The team further applied different types of augmentation, namely affine transformation, noise application, geometric left-right flip, random crop, and blurring. The DSC loss with a thresholded ReLU (threshold 0.5) and the Adam optimizer were employed. No ensembling strategy was used. Fig. 1 Overview of the ten different tasks of the Medical Segmentation Decathlon (MSD). The challenge comprised different target regions, modalities and challenging characteristics and was separated into seven known tasks (blue; the development phase: brain, heart, hippocampus, liver, lung, pancreas, prostate) and three mystery tasks (gray; the mystery phase: colon, hepatic vessels, spleen). MRI magnetic resonance imaging, mp-MRI multiparametricmagnetic resonance imaging, CT computed tomography. Table 5 ) and spleen segmentations (the mystery phase), cf. Supplementary Table 11 ). The full list of values are provided in the Supplementary Tables 2-11 .",
+                "cite_spans": [
+                    {
+                        "start": 92,
+                        "end": 94,
+                        "text": "16",
+                        "ref_id": "BIBREF15"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 703,
+                        "end": 709,
+                        "text": "Fig. 1",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1204,
+                        "end": 1211,
+                        "text": "Table 5",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1264,
+                        "end": 1286,
+                        "text": "Supplementary Table 11",
+                        "ref_id": "TABREF3"
+                    },
+                    {
+                        "start": 1334,
+                        "end": 1359,
+                        "text": "Supplementary Tables 2-11",
+                        "ref_id": "TABREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Results",
+                "sec_num": null
+            },
+            {
+                "text": "The rankings for the challenge are shown in Table 1 . The winning method (nnU-Net) was extremely robust with respect to the different tasks and target regions for both phases (cf. ranks was achieved for team nnU-Net (minimum rank: 1, maximum rank: 4; the development phase) and the largest rank difference of sixteen ranks is obtained for team Whale (minimum rank: 2, maximum rank: 18; the development phase).",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 44,
+                        "end": 51,
+                        "text": "Table 1",
+                        "ref_id": "TABREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Mystery tasks",
+                "sec_num": null
+            },
+            {
+                "text": "To investigate ranking robustness, line plots 17 are provided in the Supplementary Figs. 3-12 for all individual target regions, indicating how ranks change for different ranking schemes. Furthermore, a comparison of the achieved ranks of algorithms for 1000 bootstrapped samples is provided in the form of a stacked frequency plot 17 in Supplementary Fig. 13 . For each participant, the frequency of the achieved ranks is provided for every task individually. It can be easily seen from both uncertainty analyses that team nnU-Net implemented an extremely successful method that was at rank 1 for nearly every tasks and bootstrap set.",
+                "cite_spans": [
+                    {
+                        "start": 46,
+                        "end": 48,
+                        "text": "17",
+                        "ref_id": "BIBREF16"
+                    },
+                    {
+                        "start": 332,
+                        "end": 334,
+                        "text": "17",
+                        "ref_id": "BIBREF16"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 69,
+                        "end": 88,
+                        "text": "Supplementary Figs.",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 338,
+                        "end": 359,
+                        "text": "Supplementary Fig. 13",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Mystery tasks",
+                "sec_num": null
+            },
+            {
+                "text": "The variability of the original rankings computed for the development phase and the mystery phase and the ranking lists based on the individual bootstrap samples was determined via Kendall's \u03c4 18 . The median (interquartile range (IQR)) Kendall's \u03c4 was 0.94 (0.91, 0.95) for the colon task, 0.99 (0.98, 0.99) for the hepatic-vessel task and 0.92 (0.89, 0.94) for the spleen task. This shows that the rankings for the mystery phase were stable against small perturbations.",
+                "cite_spans": [
+                    {
+                        "start": 193,
+                        "end": 195,
+                        "text": "18",
+                        "ref_id": "BIBREF17"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Mystery tasks",
+                "sec_num": null
+            },
+            {
+                "text": "Impact of the challenge winner. In the 2 years after the challenge, the winning algorithm, nnU-Net (with sometimes minor modification) competed in a total of 53 further segmentation tasks. The method won 33 out of tasks with a median rank of 1 The ranking was computed as described in \"Assessment of competing teams\". (interquartile range (IQR) of (1;2)) in the 53 tasks , for example being the winning method of the famous BraTS challenge in 2020 (Team Name: MIC_DKFZ, https://www.med.upenn.edu/cbica/ brats2020/rankings.html). This confirmed our hypothesis that a method capable of performing well on multiple tasks will generalize well to a previously unseen task and potentially outperform a custom-designed solution. The method further became the new state-of-the-art method and was used in several segmentation challenges by other researchers. For instance, eight nnU-Net derivatives were ranked in the top 15 algorithms of the 2019 Kidney and Kidney Tumor Segmentation Challenge (KiTShttps://kits19.grand-challenge.org/) 8 , the MICCAI challenge with the most participants in the year 2019. Nine out of the top ten algorithms in the COVID-19 Lung CT Lesion Segmentation Challenge 2020 (COVID-19-20 https://covid-segmentation. grand-challenge.org/) built their solutions on top of nnU-Net (98 participants in total). As demonstrated in , nine out of ten challenge winners in 2020 built solutions on top of nnU-Net.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Mystery tasks",
+                "sec_num": null
+            },
+            {
+                "text": "We organized the first biomedical image segmentation challenge, in which algorithms competed in ten different disciplines. We showed that it is indeed possible that one single algorithm can generalize over various different applications without humanbased adjustments. This was further demonstrated by monitoring the winning method for 2 years to show the continuation of the generalizability to other segmentation tasks. In the following sections, we will discuss specific aspects of the MSD challenge, namely the challenge infrastructure, data set, assessment method and outcome.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge infrastructure. The participating teams were asked to submit their results in the form of a compressed archive to the grand-challenge.org platform. For the development phase, a fullyautomated validation script was run for each submission and the leaderboard was updated accordingly. Each team was allowed to submit one solution per day. In contrast, for the mystery phase, only one valid submission per algorithm could be submitted to prevent overfitting.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Despite the above-mentioned policies, there were attempts to create multiple accounts so that a team could test their method beyond the allowed limit, a problem which was found due to result's similarity between certain accounts. Teams who were found to be evading the rules were disqualified. Identity verification and fraud detection tooling has now been added to grand-challenge.org to help organizers mitigate this problem in the future.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Possibly, a better way of controlling overfitting, or possible forms of cheating (e.g., manual refinement of submitted results 20 ) would have been to containerize the algorithms using Docker containers and for inference to be run by the organizers. This approach was unfortunately not possible at the time of the organization of MSD due to the lack of computational resources to run inference on all data for all participants. Thanks to a partnership with Amazon Web Services (AWS), the grandchallenge.org platform now offers the possibility to upload Docker container images that can participate in challenges and made available to researchers for processing new scans. With the recent announcement of a partnership between NVIDIA and the MICCAI 2020 and 2021 conferences, and the increased standardization of containers, such a solution should be adopted for further iterations of the MSD challenge.",
+                "cite_spans": [
+                    {
+                        "start": 127,
+                        "end": 131,
+                        "text": "20 )",
+                        "ref_id": "BIBREF19"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge data set. In the MSD, we presented a unique data set, including ten heterogeneous tasks from various body parts and regions of interest, numerous modalities and challenging characteristics. MSD is the largest and most comprehensive medical image segmentation data set available to date. The MSD data set has been downloaded more than 2000 times in its first year alone, via the main challenge website (http://medicaldecathlon.com/). The data set has recently been accepted into the AWS Open-Data registry, (https://registry.opendata.aws/msd/) allowing for unlimited download and availability. The data set is also publicly available under a Creative Commons license CC-BY-SA4.0, allowing broad (including commercial) use. Due to data set heterogeneity, and usage in generalizability and domain adaptation research, it is likely to be very valuable for the biomedical image analysis community in the long term.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Regarding limitations, the MSD data set was gathered from retrospectively acquired and labeled data from many different sources, resulting in heterogeneous imaging protocols, differences in annotation procedures, and limiting the annotations to a single human rater. While the introduction of additional annotators would have benefited the challenge by allowing inter-rater reliability estimates and possibly improve the reliability of annotations, this was not possible due to restricted resources and the scale of the data. As shown in , several annotators are often necessary to overcome issues related to inter-observer variability. Furthermore, the data set only consists of radiological data, we can therefore only draw conclusions for this application. Other areas like dermatology, pathology or ophthalmology were not covered. Finally, one specific region from one task (the vessel annotations of liver data set) was found to be non-optimal from a segmentation point of view after the data release, we opted to follow the best practice recommendations on challenges 7, 20, 22 and not change the challenge design after it was released to participants. Note, however, that the message of this challenge would not change if the vessel data set was omited from the competition.",
+                "cite_spans": [
+                    {
+                        "start": 1074,
+                        "end": 1076,
+                        "text": "7,",
+                        "ref_id": "BIBREF6"
+                    },
+                    {
+                        "start": 1077,
+                        "end": 1080,
+                        "text": "20,",
+                        "ref_id": "BIBREF19"
+                    },
+                    {
+                        "start": 1081,
+                        "end": 1083,
+                        "text": "22",
+                        "ref_id": "BIBREF21"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge assessment. Two common segmentation metrics have been used to evaluate the participant's methods, namely the DSC, an overlap measure, and the NSD, a distance-based metric. The choice of the right metrics was heavily discussed, as it is extremely important for the challenge outcome and interpretation. Some metrics are more suitable for specific clinical use-cases than others 23 . For instance, the DSC metric is a good proxy for comparing large structures but should not be used intensively for very small objects, as single-pixel differences may already lead to substantial changes in the metric scores. However, to ensure that the results are comparable across all ten tasks, a decision was taken to focus on the two above-mentioned metrics, rather than using clinically-driven task-specific metrics.",
+                "cite_spans": [
+                    {
+                        "start": 387,
+                        "end": 389,
+                        "text": "23",
+                        "ref_id": "BIBREF22"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Comparability was another issue for the ranking as the number of samples varied heavily across all tasks and target ROIs, which made a statistical comparison difficult. We therefore decided to use a ranking approach similar to the evaluation of the popular BraTS challenge, (http://braintumorsegmentation.org/) which was based on a Wilcoxon-signed-rank pairwise statistical test between algorithms. The rank of each algorithm was determined (independently per task and ROI) by counting the number of competing algorithms with a significantly worse performance. This strategy avoided the need of similar sample sizes for all tasks and reduced the need for task-specific weighting and score normalization.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Identifying an appropriate ranking scheme is a non-trivial challenge. It is important to note that each task of the MSD data set comprised one to three different target ROIs, introducing a hierarchical structure within the data set. Starting from a significance ranking for each target ROI, we considered two different aggregation schemes: (1) averaging the significance ranks across all target ROIs; (2) averaging the significance ranks per task (data set) and averaging those per-task ranks for the final rank. The drawback of (1) is that a possible bias between tasks might be introduced, as tasks with multiple target ROIs (e.g., the brain task with three target ROIs) would be over-weighted. We therefore chose ranking scheme (2) to avoid this issue. This decision was made prior to the start of the challenge, as per the challenge statistical analysis protocol. A post-challenge analysis was performed to test this decision, and results found that overall ranking structure remained unchanged. The first three ranks were preserved, only minor changes (1 to 2 ranks) were seen in a couple of examples at the middle and end of the rank list. As shown in Supplementary Figs. 3-12 , changing the ranking scheme will typically lead to different rankings in the end, but we observed the first three ranks to be robust across various ranking variations. More complex ranking schemes were discussed among organizers, such as modeling the variations across tasks and target ROIs with a linear mixed model 24 . As explainability and a clear articulation of the ranking procedure was found to be important, it was ultimately decided to use significance ranking.",
+                "cite_spans": [
+                    {
+                        "start": 731,
+                        "end": 734,
+                        "text": "(2)",
+                        "ref_id": "BIBREF1"
+                    },
+                    {
+                        "start": 1502,
+                        "end": 1504,
+                        "text": "24",
+                        "ref_id": "BIBREF23"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1158,
+                        "end": 1182,
+                        "text": "Supplementary Figs. 3-12",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge outcome. A total of 180 teams registered for the MSD challenge, of which only 31 teams submitted valid results for the development and 19 teams for the mystery phase. Having a high number of registrations but only a fraction of final participants is a typical phenomenon happening for biomedical image analysis challenges (e.g., the Skin lesion analysis toward melanoma detection 2017 challenge with 46/593 submissions 25 , the Robust Medical Instrument Segmentation (RobustMIS) challenge 2019 with 12/75 submissions 26 or the Multi-Center, Multi-Vendor, and Multi-Disease Cardiac Segmentation (M&Ms) challenge 2020 with 16/80 submissions 27 ). Many challenge participants usually register to get data access. However, teams are often not able to submit their methods within the deadline due to other commitments. Furthermore, participants may be dissatisfied with their training and validation performance and step back from the final submission. The performance of the submitted algorithms varied dramatically across the different tasks, as shown in Figs. 3, 4 and Supplementary Tables 2-11 . For the development phase, the median algorithmic performance, defined as the median of the mean DSC, changed widely across tasks, with lowest being the tumor mass segmentation of the pancreas data set (0.21, Supplementary Table 7 ) and the highest median for the liver segmentation (0.94, Supplementary Table 5 ). The performance drop was much more modest for the best performing method nnU-Net (0.52 and 0.93 median DSC for the pancreas mass and liver ROI, respectively), demonstrating that methods have varying degrees of learning resiliency to the challenges posed by each task. The largest difference within one task was also obtained for the pancreas data set, with a median of the mean DSC of 0.69 for the pancreas ROI, and 0.21 for the pancreas tumor mass, which is likely explained by the very small relative intensity difference between the pancreas and its tumor mass.",
+                "cite_spans": [
+                    {
+                        "start": 429,
+                        "end": 431,
+                        "text": "25",
+                        "ref_id": "BIBREF24"
+                    },
+                    {
+                        "start": 527,
+                        "end": 529,
+                        "text": "26",
+                        "ref_id": "BIBREF25"
+                    },
+                    {
+                        "start": 649,
+                        "end": 651,
+                        "text": "27",
+                        "ref_id": null
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1062,
+                        "end": 1072,
+                        "text": "Figs. 3, 4",
+                        "ref_id": "FIGREF3"
+                    },
+                    {
+                        "start": 1077,
+                        "end": 1102,
+                        "text": "Supplementary Tables 2-11",
+                        "ref_id": "TABREF3"
+                    },
+                    {
+                        "start": 1328,
+                        "end": 1335,
+                        "text": "Table 7",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1409,
+                        "end": 1416,
+                        "text": "Table 5",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "In the mystery phase, colon cancer segmentation received the lowest median DSC (0.16, Supplementary Table 9 ), and the spleen segmentation the highest median DSC (0.94, Supplementary Table 11 ). Similarly to the development phase, a much smaller drop in performance (0.56 and 0.96 for colon and spleen respectively) was observed in the top ranking method. Most of the observed task-specific performances reflect the natural difficulty and expected inter-rater variability of the tasks: Liver and spleen are large organs that are easy to detect and outline , whereas pancreas and colon cancers are much harder to segment as annotation experts themselves often do not agree on the correct outlines 29, 30 . We also observed that the challenging characteristics of each task (presented in Fig. 1 ) had some non-trivial effect on algorithmic performance, a problem which was exacerbated in lower-ranking methods. For example, some methods struggled to segment regions such as the lung cancer mass, pancreas mass, and colon cancer primaries, achieving a mean DSC below 0.1. These regions, characterized by small, non-obvious and heterogeneous masses, appear to represent a particularly challenging axis of algorithmic learning complexity. The number of subjects in the training data set (only 30 subjects for the heart task), the size and resolution of the images (large liver images and small hippocampus images), and complex region shapes (e.g., brain tumors) were not found to introduce significant inter-team performance differences. As summarized in Supplementary Fig. 13 , nnU-Net was ranked first on both the development and mystery phases. Under the proposed definition of a \"generalizable learner\", the winning method was found to be the most generalizable approach across all MSD tasks given the comparison methodology, with a significant performance margin. The K.A.V.athlon and NVDLMED teams were ranked second and third during the development phase, respectively; their ranks were swapped (third and second, respectively) during the mystery phase. We observed small changes in team rankings between the development and mystery phases for top ranking teams; within the top 8 teams, no team changed their ranking by more than 2 positions from the development to the mystery phase. This correlation between development and mystery rankings suggest limited amount of methodological overfitting to the development phase, and that the proposed ranking approach is a good surrogate of expected task performance. We observed some algorithmic commonalities between top methods, such the use of ensembles, intensity and spatial normalization augmentation, the use of Dice loss, the use of Adam as an optimizer, and some degree of post-processing (e.g., region removal). While none of these findings are surprising, they provide evidence towards a reasonable choice of initial parameters for new methodological developments. We also observed that the most commonly applied architecture across participants was the U-Net, used by 64% of teams. Some evidence was found that architectural adjustments to the baseline U-Net approach are less important than other relevant algorithmic design decisions, such as data augmentation and data set split/ cross-validation methodology, as demonstrated by the winning methodology. Note that similar findings, albeit in a different context and applied to ResNet, have been recently observed 31 .",
+                "cite_spans": [
+                    {
+                        "start": 696,
+                        "end": 699,
+                        "text": "29,",
+                        "ref_id": "BIBREF28"
+                    },
+                    {
+                        "start": 700,
+                        "end": 702,
+                        "text": "30",
+                        "ref_id": "BIBREF29"
+                    },
+                    {
+                        "start": 3424,
+                        "end": 3426,
+                        "text": "31",
+                        "ref_id": "BIBREF30"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 86,
+                        "end": 107,
+                        "text": "Supplementary Table 9",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 183,
+                        "end": 191,
+                        "text": "Table 11",
+                        "ref_id": "TABREF3"
+                    },
+                    {
+                        "start": 786,
+                        "end": 792,
+                        "text": "Fig. 1",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 1550,
+                        "end": 1571,
+                        "text": "Supplementary Fig. 13",
+                        "ref_id": "FIGREF3"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "The years after the challenge. Following the challenge event at MICCAI 2018, the competition was opened again for rolling submissions. This time participants were asked to submit results for all ten data sets (https://decathlon-10.grand-challenge.org/) in a single phase. In total, 742 users signed up. To restrict the exploitation of the submission system for other purposes, only submissions with per-task metric values different from zero were accepted as valid, resulting in only 17 complete and valid submissions. In order to avoid overfit but still allow for some degree of methodological development, each team was allowed submit their results 15 times. The winner of the 2018 MSD challenge (nnU-Net, denoted as Isensee on the live challenge), submitted to the live challenge leaderboard on the 6th of December 2019, and held the first position for almost 1 year, until the 30th of October 2020.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Since for the live challenge teams were allowed to tune their method on all ten data sets, the minimum value of the data set specific median DSC improved quite substantially from the 2018 MSD challenge, as shown in Supplementary Fig. 14 . The two hardest tasks during the 2018 MSD challenge were the segmentation of the tumor inside the pancreas, with an overall median of the mean DSC of 0.21 over all participants (0.37 for the top five teams) and the segmentation of the colon cancer primaries, with an overall median of the mean DSC of 0.16 over all participants (0.41 for the top five teams). The worst task for the rolling challenge was the segmentation of the non-enhancing tumor segmentation inside the brain, with a median DSC of 0.47.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 215,
+                        "end": 236,
+                        "text": "Supplementary Fig. 14",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "At the other end of the spectrum was the spleen segmentation task, where the median task DSC over all participants was 0.94 during the 2018 challenge, and improved to 0.97 for the rolling challenge. These observations suggest that the ability for multiple methods to solve the task has improved, with methods performing slightly better on harder tasks and significantly better on easy tasks.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "In 2019 and 2020, the rolling challenges have resulted in three methods that superseded the winning results of the 2018 MSD challenge. Within these two follow-up years, two main trends were observed: the first major trend is the continuous and gradual improvement of \"well performing\" algorithms, such as the heuristics and task fingerprinting of the nnU-Net method; the second major trend that was observed was the rise of Neural Architecture Search (NAS) 32 among the top teams. More specifically, both the third and the current (as of April 2021) leader of the rolling challenge used this approach. NAS optimizes the network architecture itself to each task in a fully-automated manner. Such an approach uses a network-configuration fitness function that is optimized independently for each task, thus providing an empirical approach for network architectural optimization. When compared to heuristic methods (e.g., nnU-Net), NAS appears to result in improved algorithmic performance at the expense of increased computational cost.",
+                "cite_spans": [
+                    {
+                        "start": 457,
+                        "end": 459,
+                        "text": "32",
+                        "ref_id": "BIBREF31"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Discussion",
+                "sec_num": null
+            },
+            {
+                "text": "Machine learning based semantic segmentation algorithms are becoming increasingly general purpose and accurate, but have historically required significant field-specific expertise to use. The MSD challenge was set up to investigate how accurate fully-automated image segmentation learning methods can be on a plethora of tasks with different types of task complexity. Results from the MSD challenge have demonstrated that fully-automated methods can now achieve state-of-the-art performance without the need for manual parameter optimization, even when applied to previously unseen tasks. A central hypothesis of the MSD challenge-that an algorithm which works well and automatically on several tasks should also work well on other unseen tasks-has been validated among the challenge participants and across tasks. This hypothesis was further corroborated by monitoring the generalizability of the winning method in the 2 years following the challenge, where we found that nnU-Net achieved state-of-the-art performance on many tasks including against task-optimized networks. While it is important to note that many classic semantic segmentation problems (e.g., domain shift and label accuracy) remain, and that methodological progress (e.g., NAS and better heuristics) will continue pushing the boundaries of algorithmic performance and generalizability, the MSD challenge has demonstrated that the training of accurate semantic segmentation networks can now be fully automated. This commoditization of semantic segmentation methods allows computationally-versed scientists that lack AIspecific knowledge to use these techniques without any knowledge on how the models work or how to tune the hyperparameters. However, in order to make the tools easier to use by clinicians and other scientists, the current platforms would need to be wrapped around a graphical user interface and the installation processes need to be made simpler.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Conclusion.",
+                "sec_num": null
+            },
+            {
+                "text": "This section is organized according to the EQUATOR (https://www.equatornetwork.org) guideline BIAS (Biomedical Image Analysis ChallengeS) , a recently published guideline specifically designed for the reporting of biomedical image analysis challenges. It comprises information on challenge organization and mission, as well as the data sets and assessment methods used to evaluate the submitted results.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge organization. The Decathlon challenge was organized at the International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI) 2018, held in Granada, Spain. After the main challenge event at MICCAI, a live challenge was opened for submissions which is still open and regularly receives new submissions (more than 500 as of May 15th 2021).",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "The MSD challenge aimed to test the ability of machine-learning algorithms to accurately segment a large collection of prescribed regions of interest, as defined by ten different data sets, each corresponding to a different anatomical structure (see Fig. 1 ) and to at least one medical-imaging task . The challenge itself consisted of two phases:",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 250,
+                        "end": 256,
+                        "text": "Fig. 1",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "In the first phase, named the development phase, the training cases (comprising images and labels) for seven data sets were released, namely for brain, liver, heart, hippocampus, prostate, lung, and pancreas. Participants were expected to download the data, develop a general-purpose learning algorithm, train the algorithm on each task's training data independently and without human interaction (no task-specific manual parameter settings), run the learned model on each task's test data, and submit the segmentation results. Each team was only allowed to make one submission per day to avoid model overfit, and the results were presented in form of a live leaderboard on the challenge website (http:// medicaldecathlon.com/), visible to the public. Note that participants were only able to see the average performance obtained by their algorithm on the test data of the seven development tasks.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "The purpose of the second phase of the challenge, named the mystery phase, was to investigate whether algorithms were able to generalize to unseen segmentation tasks. Teams that submitted to the first phase and completed all necessary steps were invited to download three more data sets (images and labels), i.e., hepatic vessels, colon, and spleen. They were allowed to train their previously developed algorithm on the new data, without any modifications to the method itself. Segmentation results of the mystery phase could only be submitted once. A detailed description of the challenge organization is summarized in is summarized in Appendix A of Supplementary Material, following the form introduced in ref. 22 .",
+                "cite_spans": [
+                    {
+                        "start": 714,
+                        "end": 716,
+                        "text": "22",
+                        "ref_id": "BIBREF21"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "The Decathlon mission. Medical image segmentation, i.e., the act of labeling or contouring structures of interest in medical-imaging data, is a task of crucial importance, both clinically and scientifically, as it allows the quantitative characterization of regions of interest. When performed by human raters, image segmentation is very time-consuming, thus limiting its clinical usage. Algorithms can be used to automate this segmentation process, but, classically, a different algorithm had to be developed for each segmentation task. The goal of the MSD challenge was finding a single algorithm, or learning system, that would be able to generalize and work accurately across multiple different medical segmentation tasks, without the need for any human interaction.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "The tasks of the Decathlon challenge were chosen as a representative sample of real-world applications, so as to test for algorithmic generalizability to these. Different axes of complexity were explicitly explored: the type and number of input modalities, the number of regions of interest, their shape and size, and the complexity of the surrounding tissue environment (see Fig. 1 ). Detailed information of each data set is provided in \"Challenge data sets\" and Table 2 .",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 376,
+                        "end": 382,
+                        "text": "Fig. 1",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 465,
+                        "end": 472,
+                        "text": "Table 2",
+                        "ref_id": "TABREF4"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge data sets. The Decathlon challenge made ten data sets available online 35 , where each data set had between one and three region-of-interest (ROI) targets (17 targets in total). Importantly, all data sets have been released with a permissive copyright-license (CC-BY-SA 4.0), thus allowing for data sharing, redistribution, and commercial usage, and subsequently promoting the data set as a standard test-bed for all users. The images (2,633 in total) were acquired across multiple institutions, anatomies and modalities during real-world clinical applications. All images were de-identified and reformatted to the Neuroimaging Informatics Technology Initiative (NIfTI) format https://nifti.nimh.nih.gov. All images were transposed (without resampling) to the most approximate rightanterior-superior coordinate frame, ensuring the data matrix x-y-z direction was consistent (using fslreorient2std) and converted to the NIFTI radiological standard. This data transformation was performed to minimize medical-imaging specific data loading issues for non-expert participants. Lastly, non-quantitative modalities (e.g., MRI) were robust min-max scaled to the same range. For each segmentation task, a pixel-level label annotation was provided depending on the definition of each specific task. Information on how the data sets were annotated is provided in 35 . For 8 out of 10 data sets, two thirds of the data were released as training sets (images and labels) and one third as test set (images without labels). As the remaining two tasks (brain tumor and liver) consisted of data from two wellknown challenges, the original training/test split was preserved. Note that interrater reliability estimates are not available for the MSD tasks due to the complexity of double-labeling the data, limiting comparisons to human (or super-human) level performance. Table 2 presents a summary of the ten data sets, including the modality, image series, ROI targets and data set size. A brief description of each data set is provided below.",
+                "cite_spans": [
+                    {
+                        "start": 81,
+                        "end": 83,
+                        "text": "35",
+                        "ref_id": "BIBREF34"
+                    },
+                    {
+                        "start": 1363,
+                        "end": 1365,
+                        "text": "35",
+                        "ref_id": "BIBREF34"
+                    }
+                ],
+                "ref_spans": [
+                    {
+                        "start": 1864,
+                        "end": 1871,
+                        "text": "Table 2",
+                        "ref_id": "TABREF4"
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "\u2022 Development Phase (1st) contained seven data sets with thirteen target regions of interest in total: 1. Brain: The data set consists of 750 multiparametric-magnetic resonance images (mp-MRI) from patients diagnosed with either glioblastoma or lower-grade glioma. The sequences used were native T1-weighted (T1), post-Gadolinium (Gd) contrast T1-weighted (T1-Gd), native T2weighted (T2), and T2 Fluid-Attenuated Inversion Recovery (FLAIR). The corresponding target ROIs were the three tumor sub-regions, namely edema, enhancing, and non-enhancing tumor. This data set was selected due to the challenge of locating these complex and heterogeneously-located targets. The Brain data set contains the same cases as the 2016 and 2017 Brain Tumor Segmentation (BraTS) challenges [36] [37] [38] . The filenames were changed to avoid participants mapping cases between the two challenges. 2. Heart: The data set consists of 30 mono-modal MRI scans of the entire heart acquired during a single cardiac phase (free breathing with respiratory and electrocardiogram (ECG) gating). The corresponding target ROI was the left atrium. This data set was selected due to the combination of a small training data set with large anatomical variability. The data was acquired as part of the 2013 Left Atrial Segmentation Challenge (LASC) 39 . 3. Hippocampus: The data set consists of 195 MRI images acquired from 90 healthy adults and 105 adults with a non-affective psychotic disorder. T1-weighted MPRAGE was used as the imaging sequence. The corresponding target ROIs were the anterior and posterior of the hippocampus, defined as the hippocampus proper and parts of the subiculum. This data set was selected due to the precision needed to segment such a small object in the presence of a complex surrounding environment. The data was acquired at the Vanderbilt University Medical Center, Nashville, US. 4. Liver: The data set consists of 201 contrast-enhanced CT images from patients with primary cancers and metastatic liver disease, as a consequence of colorectal, breast, and lung primary cancers. The corresponding target ROIs were the segmentation of the liver and tumors inside the liver. This data set was selected due to the challenging nature of having significant label unbalance between large (liver) and small (tumor) target region of interests (ROIs). The data was acquired in the IRCAD H\u00f4pitaux Universitaires, Strasbourg, France and contained a subset of patients from the 2017 Liver Tumor Segmentation (LiTS) challenge 40 . 5. Lung: The data set consists of preoperative thin-section CT scans from 96 patients with non-small cell lung cancer. The corresponding target ROI was the tumors within the lung. This data set was selected due to the challenge of segmenting small regions (tumor) in an image with a large field-of-view. Data was acquired via the Cancer Imaging.Archive (https://www.cancerimagingarchive.net/). 6. Prostate: The data set consists of 48 prostate multiparametric MRI (mp-MRI) studies comprising T2-weighted, Diffusion-weighted and T1-weighted contrast-enhanced series. A subset of two series, transverse T2-weighted and the apparent diffusion coefficient (ADC) was selected.",
+                "cite_spans": [
+                    {
+                        "start": 774,
+                        "end": 778,
+                        "text": "[36]",
+                        "ref_id": "BIBREF35"
+                    },
+                    {
+                        "start": 779,
+                        "end": 783,
+                        "text": "[37]",
+                        "ref_id": null
+                    },
+                    {
+                        "start": 784,
+                        "end": 788,
+                        "text": "[38]",
+                        "ref_id": "BIBREF37"
+                    },
+                    {
+                        "start": 1318,
+                        "end": 1320,
+                        "text": "39",
+                        "ref_id": "BIBREF38"
+                    },
+                    {
+                        "start": 2518,
+                        "end": 2520,
+                        "text": "40",
+                        "ref_id": "BIBREF39"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "The corresponding target ROIs were the prostate peripheral zone (PZ) and the transition zone (TZ). This data set was selected due to the challenge of segmenting two adjoined regions with very large intersubject variability. The data was acquired at Radboud University Medical Center, Nijmegen Medical Center, Nijmegen, The Netherlands. 7. Pancreas: The data set consists of 420 portal-venous phase CT scans of patients undergoing resection of pancreatic masses. The corresponding target ROIs were the pancreatic parenchyma and pancreatic mass (cyst or tumor). This data set was selected due to label unbalance between large (background), medium (pancreas) and small (tumor) structures. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "\u2022 Mystery Phase (2nd) contained three (hidden) data sets with four target regions of interest in total:",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "1. Colon: The data set consists of 190 portal-venous phase CT scans of patients undergoing resection of primary colon cancer. The corresponding target ROI was colon cancer primaries. This data set was selected due to the challenge of the heterogeneous appearance, and the annotation difficulties. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US. 2. Hepatic Vessels: The data set consists of 443 portal-venous phase CT scans obtained from patients with a variety of primary and metastatic liver tumors. The corresponding target ROIs were the vessels and tumors within the liver. This data set was selected due to the tubular and connected nature of hepatic vessels neighboring heterogeneous tumors. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US. 3. Spleen: The data set consists of 61 portal-venous phase CT scans from patients undergoing chemotherapy treatment for liver metastases. The corresponding target ROI was the spleen. This data set was selected due to the large variations in the field-of-view. The data was acquired in the Memorial Sloan Kettering Cancer Center, New York, US.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Methods",
+                "sec_num": null
+            },
+            {
+                "text": "Assessment of competing teams. Two widely known semantic segmentation metrics were used to evaluate the submitted approaches, namely the DSC and the Normalized Surface Distance (NSD) 10 , both computed on 3D volumes. The implementation of both metrics can be downloaded in the form of a Jupyter notebook from the challenge website, (http://www.medicaldecathlon.com section Assessment Criteria). A more memory-efficient recently implementation of the NSD metric, which has been recently made available, can be obtained by computing the distance transform map using (https://evalutils.readthedocs.io/en/latest/modules.html# evalutils.stats.distance_transform_edt_float32) rather than scipy.ndimage. morphology.distance_transform_edt. The metrics DSC and NSD were chosen due to their popularity, rank stability 34 , and smooth, well-understood and well-defined behavior when ROIs do not overlap. Having simple and rank-stable metrics also allows the statistical comparison between methods. For the NSD,tolerance values were based on clinical feedback and consensus, and were chosen by the clinicians segmenting each organ. NSD was defined at task level and was the same for all the targets of each task. The value represented what they would consider an acceptable error for the segmentation they were performing. The following values have been mp-MRI multiparametric-magnetic resonance imaging, FLAIR fluid-attenuated inversion recovery, T1w T1-weighted image, T1\\w Gd post-Gadolinium (Gd) contrast T1-weighted image, T2w T2-weighted image, CT computed tomography, PZ peripheral zone, TZ transition zone.",
+                "cite_spans": [
+                    {
+                        "start": 183,
+                        "end": 185,
+                        "text": "10",
+                        "ref_id": "BIBREF9"
+                    },
+                    {
+                        "start": 808,
+                        "end": 810,
+                        "text": "34",
+                        "ref_id": "BIBREF33"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Assessment method",
+                "sec_num": null
+            },
+            {
+                "text": "NATURE COMMUNICATIONS | (2022) 13:4128 | https://doi.org/10.1038/s41467-022-30695-9 | www.nature.com/naturecommunications",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "",
+                "sec_num": null
+            }
+        ],
+        "back_matter": [
+            {
+                "text": "boration with Silvana Castillo, from Universidad de los Andes. We would like to thank Minu D. Tizabi for proof-reading the paper.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Acknowledgements",
+                "sec_num": null
+            },
+            {
+                "text": "chosen for the individual tasks (in mm): Brain-5; Heart-4; Hippocampus-1; Liver-7; Lung-2; Prostate-4; Pancreas-5; Colon-4; Hepatic vessel-3; Spleen -3. It is important to note that the proposed metrics are not task-specific nor taskoptimal, and thus, they do not fulfill the necessary criteria for clinical algorithmic validation of each task, as discussed in \"Challenge assessment\".A so-called significance score was determined for each algorithm a, separately for each task/target ROI c i and metric m j \u2208 {DSC, NSD} and referred to as s i,j (a). Similarly to what was used to infer the ranking across the different BRATS tasks , the significance score was computed according to the following four-step process:1. Performance assessment per case: Determine performance m j (a l , t ik ) of all algorithms a l , with l = {1, \u2026, N A }, for all test cases t ik , with k = {1, \u2026, N i }, where N A is the number of competing algorithms and N i is the number of test cases in competition c i . Set m j (a l , t ik ) to 0 if its value is undefined. 2. Statistical tests: Perform a Wilcoxon signed-rank pairwise statistical test between algorithms \u00f0a l ; a l 0 \u00de, with values m j \u00f0a l ; t ik \u00de \u00c0 m j \u00f0a l 0 ; t ik \u00de, 8k = {1, . . . , N i }. 3. Significance scoring: s i,j (a l ) then equals the number of algorithms performing significantly worse than a l , according to the statistical test (per comparison \u03b1 = 0.05, not adjusted for multiplicity). 4. Significance ranking: The ranking is computed from the scores s i,j (a l ), with the highest score (rank 1) corresponding to the best algorithm. Note that shared scores/ranks are possible. If a task has multiple target ROI, the ranking scheme is applied to each ROI separately, and the final ranking per task is computed as the mean significance rank. The final score for each algorithm over all tasks of the development phase (the seven development tasks) and over all tasks of the mystery phase (the three mystery tasks) was computed as the average of the respective task's significance ranks. The full validation algorithm was defined and released prior to the start of the challenge, and available on the decathlon website (http://medicaldecathlon.com/files/MSD-Ranking-scheme.pdf).To investigate ranking uncertainty and stability, bootstrapping methods were applied with 1000 bootstrap samples as described in 34 . The statistical analysis was performed using the open-source R toolkit challengeR (https://phabricator.mitk. org/source/challenger/), version 1.0.2 17 , for analyzing and visualizing challenge results. The original rankings computed for the development and mystery phases were compared to the ranking lists based on the individual bootstrap samples. The correlation of pairwise rankings was determined via Kendall's \u03c4 18 , which provides values between \u22121 (for reverse ranking order) and 1 (for identical ranking order). The source code for generating the results presented in \"Results\" and the Appendix is publicly available (https://phabricator.mitk.org/source/msd_evaluation/).Monitoring of the challenge winner and algorithmic progress. To investigate our hypothesis that a method capable of performing well on multiple tasks will generalize its performance to an unseen task, and potentially even outperform a custom-designed task-specific solution, we monitored the winner of the challenge for a period of 2 years. Specifically, we reviewed the rank analysis and leaderboards presented in the corresponding article 8 , as well as the leaderboard of challenges from the grand-challenge.org website organized in 2020. We also reviewed further articles mentioning the new state-of-the-art method nnU-Net 19 . Finally, as the MSD challenge submission was reopened after the challenge event (denoted the \"MSD Live Challenge\"), we monitored submissions for new algorithmic approaches which achieve state-of-the-art performance, in order to probe new areas of scientific interest and development.Reporting summary. Further information on research design is available in the Nature Research Reporting Summary linked to this article.",
+                "cite_spans": [
+                    {
+                        "start": 2363,
+                        "end": 2365,
+                        "text": "34",
+                        "ref_id": "BIBREF33"
+                    },
+                    {
+                        "start": 2516,
+                        "end": 2518,
+                        "text": "17",
+                        "ref_id": "BIBREF16"
+                    },
+                    {
+                        "start": 2786,
+                        "end": 2788,
+                        "text": "18",
+                        "ref_id": "BIBREF17"
+                    },
+                    {
+                        "start": 3489,
+                        "end": 3490,
+                        "text": "8",
+                        "ref_id": "BIBREF7"
+                    },
+                    {
+                        "start": 3675,
+                        "end": 3677,
+                        "text": "19",
+                        "ref_id": "BIBREF18"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "annex",
+                "sec_num": null
+            },
+            {
+                "text": "Challenge data set. The MSD data set is publicly available under a Creative Commons license CC-BY-SA4.0, allowing broad (including commercial) use. The training data used in this study is available at http://medicaldecathlon.com/. The test data of the challenge cannot be released since the live challenge is still open and users are able to submit their results anytime; we currently have no intentions of closing the challenge.Challenge assessment data. The raw challenge assessment data used to calculate the challenge rankings cannot be made publicly available due to privacy reasons. It contains the DSC and NSD values for every participating team for every task and target region. However, the aggregated results can be found in Table 1 and Supplementary Tables 2-11 . Furthermore, they can be found here: https://phabricator.mitk.org/source/msd_ evaluation/ in the folders descriptive-statistics, mean-values-persubtask and rankings-per-subtask.",
+                "cite_spans": [],
+                "ref_spans": [
+                    {
+                        "start": 735,
+                        "end": 772,
+                        "text": "Table 1 and Supplementary Tables 2-11",
+                        "ref_id": null
+                    }
+                ],
+                "eq_spans": [],
+                "section": "Data availability",
+                "sec_num": null
+            },
+            {
+                "text": "The implementation of the metrics used in the challenge, namely the DSC and NSD, were provided as a Python Notebook 42 . The significance rankings have been computed with the R package challengeR, version 1.0.2, which is publicly available: https:// phabricator.mitk.org/source/challenger/. Finally, the code to compute the final rankings and all tables and figures of this paper can be found here: https://phabricator.mitk.org/ source/msd_evaluation/.",
+                "cite_spans": [
+                    {
+                        "start": 116,
+                        "end": 118,
+                        "text": "42",
+                        "ref_id": "BIBREF41"
+                    }
+                ],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Code availability",
+                "sec_num": null
+            },
+            {
+                "text": "M.A. worked on the conceptual design and data preparation of the challenge, gave challenge day-to-day support as co-organizer, coordinated the work, validated the participating methods and wrote the document. A.R. worked on the conceptual design of the challenge, coordinated the work, performed the statistical analysis of participating methods, designed the figures and wrote the document. S.B. donated the brain tumor data set and co-organized the challenge. K.F. donated the lung tumors data set and co-organized the challenge. A.K.S. worked on the conceptual design of the challenge, led the statistical analysis committee and co-organized the challenge. B.A.L. worked on the conceptual design, was a member of the metrics committee, coorganized the challenge and donated the hippocampus data set. G.L. donated the prostate data set and co-organized the challenge. B.M. donated the brain and liver tumors data sets for the challenge, was a member of the statistics and metrics committee and co-organized the challenge. O.R. worked on the conceptual design of the challenge, was a member of the metrics committee and co-organized the challenge. ",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Author contributions",
+                "sec_num": null
+            },
+            {
+                "text": "No funding contributed explicitly to the organization and running of the challenge. The challenge award has been kindly provided by NVIDIA. However, NVIDIA did not influence the design or running of the challenge as they were not part of the organizing committee. R.M.S. received royalties from iCAD, Philips, ScanMed, Translation Holdings, and PingAn. Individually funding sourcing unrelated to the challenge has been listed in the Acknowledgments section. The remaining authors declare no competing interests.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Competing interests",
+                "sec_num": null
+            },
+            {
+                "text": "Supplementary information The online version contains supplementary material available at https://doi.org/10.1038/s41467-022-30695-9.Correspondence and requests for materials should be addressed to Michela Antonelli.Peer review information Nature Communications thanks Elena Casiraghi and the other, anonymous, reviewer(s) for their contribution to the peer review of this work. Peer reviewer reports are available.Reprints and permission information is available at http://www.nature.com/reprints Publisher's note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.",
+                "cite_spans": [],
+                "ref_spans": [],
+                "eq_spans": [],
+                "section": "Additional information",
+                "sec_num": null
+            }
+        ],
+        "bib_entries": {
+            "BIBREF0": {
+                "ref_id": "b0",
+                "title": "Deep learning as a tool for increased accuracy and efficiency of histopathological diagnosis",
+                "authors": [
+                    {
+                        "first": "G",
+                        "middle": [],
+                        "last": "Litjens",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Sci. Rep",
+                "volume": "6",
+                "issue": "",
+                "pages": "1--11",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Litjens, G. et al. Deep learning as a tool for increased accuracy and efficiency of histopathological diagnosis. Sci. Rep. 6, 1-11 (2016).",
+                "links": null
+            },
+            "BIBREF1": {
+                "ref_id": "b1",
+                "title": "Prediction of cardiovascular risk factors from retinal fundus photographs via deep learning",
+                "authors": [
+                    {
+                        "first": "R",
+                        "middle": [],
+                        "last": "Poplin",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Nat. Biomed. Eng",
+                "volume": "2",
+                "issue": "",
+                "pages": "158--164",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Poplin, R. et al. Prediction of cardiovascular risk factors from retinal fundus photographs via deep learning. Nat. Biomed. Eng. 2, 158-164 (2018).",
+                "links": null
+            },
+            "BIBREF2": {
+                "ref_id": "b2",
+                "title": "A deep learning approach to antibiotic discovery",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Stokes",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Cell",
+                "volume": "180",
+                "issue": "",
+                "pages": "688--702",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Stokes, J. M. et al. A deep learning approach to antibiotic discovery. Cell 180, 688-702 (2020).",
+                "links": null
+            },
+            "BIBREF3": {
+                "ref_id": "b3",
+                "title": "20th anniversary of the medical image analysis journal (media)",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Ayache",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Duncan",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Med. Image Anal",
+                "volume": "33",
+                "issue": "",
+                "pages": "1--3",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Ayache, N. & Duncan, J. 20th anniversary of the medical image analysis journal (media). Med. Image Anal. 33, 1-3 (2016).",
+                "links": null
+            },
+            "BIBREF4": {
+                "ref_id": "b4",
+                "title": "Deep-learning-based detection and segmentation of organs at risk in nasopharyngeal carcinoma computed tomographic images for radiotherapy planning",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Liang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1961,
+                "venue": "Eur. Radiol",
+                "volume": "29",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Liang, S. et al. Deep-learning-based detection and segmentation of organs at risk in nasopharyngeal carcinoma computed tomographic images for radiotherapy planning. Eur. Radiol. 29, 1961-1967 (2019).",
+                "links": null
+            },
+            "BIBREF5": {
+                "ref_id": "b5",
+                "title": "Robust texture features for response monitoring of glioblastoma multiforme on-weighted and-flair mr images: A preliminary investigation in terms of identification and segmentation",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Assefa",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2010,
+                "venue": "Med. Phys",
+                "volume": "37",
+                "issue": "",
+                "pages": "1722--1736",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Assefa, D. et al. Robust texture features for response monitoring of glioblastoma multiforme on-weighted and-flair mr images: A preliminary investigation in terms of identification and segmentation. Med. Phys. 37, 1722-1736 (2010).",
+                "links": null
+            },
+            "BIBREF6": {
+                "ref_id": "b6",
+                "title": "Why rankings of biomedical image analysis competitions should be interpreted with care",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Nat. Commun",
+                "volume": "9",
+                "issue": "",
+                "pages": "",
+                "other_ids": {
+                    "DOI": [
+                        "10.1038/s41467-018-07619-7"
+                    ]
+                },
+                "num": null,
+                "urls": [],
+                "raw_text": "Maier-Hein, L et al. Why rankings of biomedical image analysis competitions should be interpreted with care. Nat. Commun. 9. https://doi.org/10.1038/ s41467-018-07619-7 (2018).",
+                "links": null
+            },
+            "BIBREF7": {
+                "ref_id": "b7",
+                "title": "nnu-net: a self-configuring method for deep learning-based biomedical image segmentation",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Isensee",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [
+                            "F"
+                        ],
+                        "last": "Jaeger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [
+                            "A"
+                        ],
+                        "last": "Kohl",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Petersen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Nat. Commun",
+                "volume": "18",
+                "issue": "",
+                "pages": "203--211",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J. & Maier-Hein, K. H. nnu-net: a self-configuring method for deep learning-based biomedical image segmentation. Nat. Commun. 18, 203-211 (2021).",
+                "links": null
+            },
+            "BIBREF8": {
+                "ref_id": "b8",
+                "title": "Measures of the amount of ecologic association between species",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [
+                            "R"
+                        ],
+                        "last": "Dice",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1945,
+                "venue": "Ecology",
+                "volume": "26",
+                "issue": "",
+                "pages": "297--302",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Dice, L. R. Measures of the amount of ecologic association between species. Ecology 26, 297-302 (1945).",
+                "links": null
+            },
+            "BIBREF9": {
+                "ref_id": "b9",
+                "title": "Clinically Applicable Segmentation of Head and Neck Anatomy for Radiotherapy: Deep Learning Algorithm Development and Validation Study",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Nikolov",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "J Med Internet Res",
+                "volume": "23",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Nikolov, S. et al. Clinically Applicable Segmentation of Head and Neck Anatomy for Radiotherapy: Deep Learning Algorithm Development and Validation Study. J Med Internet Res. 23, e26151 (2021).",
+                "links": null
+            },
+            "BIBREF10": {
+                "ref_id": "b10",
+                "title": "U-net: Convolutional networks for biomedical image segmentation",
+                "authors": [
+                    {
+                        "first": "O",
+                        "middle": [],
+                        "last": "Ronneberger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Fischer",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Brox",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention",
+                "volume": "",
+                "issue": "",
+                "pages": "234--241",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Ronneberger, O., Fischer, P. & Brox, T. U-net: Convolutional networks for biomedical image segmentation, In Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention, 234-241 (Springer, 2015).",
+                "links": null
+            },
+            "BIBREF11": {
+                "ref_id": "b11",
+                "title": "A method for stochastic optimization",
+                "authors": [
+                    {
+                        "first": "D",
+                        "middle": [
+                            "P"
+                        ],
+                        "last": "Kingma",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Ba",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Adam",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2014,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Kingma, D. P. & Ba, J. Adam: A method for stochastic optimization. arXiv Preprint at https://arxiv.org/abs/1412.6980 (2014).",
+                "links": null
+            },
+            "BIBREF12": {
+                "ref_id": "b12",
+                "title": "Solving large scale linear prediction problems using stochastic gradient descent algorithms",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2004,
+                "venue": "Proc. Twenty-First International Conference on Machine Learning",
+                "volume": "116",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Zhang, T. Solving large scale linear prediction problems using stochastic gradient descent algorithms, In Proc. Twenty-First International Conference on Machine Learning. 116 (Association for Computing Machinery, 2004).",
+                "links": null
+            },
+            "BIBREF13": {
+                "ref_id": "b13",
+                "title": "3d semi-supervised learning with uncertainty-aware multi-view co-training",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "Xia",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Proc. IEEE Winter Conference on Applications of Computer Vision",
+                "volume": "",
+                "issue": "",
+                "pages": "3646--3655",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Xia, Y. et al. 3d semi-supervised learning with uncertainty-aware multi-view co-training, In Proc. IEEE Winter Conference on Applications of Computer Vision, 3646-3655 (IEEE Computer Society, 2020).",
+                "links": null
+            },
+            "BIBREF14": {
+                "ref_id": "b14",
+                "title": "Deep residual learning for image recognition",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Zhang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Ren",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Sun",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Proc. IEEE Conference on Computer Vision and Pattern Recognition",
+                "volume": "",
+                "issue": "",
+                "pages": "770--778",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "He, K., Zhang, X., Ren, S. & Sun, J. Deep residual learning for image recognition, In Proc. IEEE Conference on Computer Vision and Pattern Recognition. 770-778 (IEEE, 2016).",
+                "links": null
+            },
+            "BIBREF15": {
+                "ref_id": "b15",
+                "title": "Automl: a survey of the state-of-the-art",
+                "authors": [
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Zhao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "X",
+                        "middle": [],
+                        "last": "Chu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Knowl. Based Syst",
+                "volume": "212",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "He, X., Zhao, K. & Chu, X. Automl: a survey of the state-of-the-art. Knowl. Based Syst. 212, 106622 (2021).",
+                "links": null
+            },
+            "BIBREF16": {
+                "ref_id": "b16",
+                "title": "Methods and open-source toolkit for analyzing and visualizing challenge results",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "Wiesenfarth",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Sci. Rep",
+                "volume": "11",
+                "issue": "",
+                "pages": "1--15",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Wiesenfarth, M. et al. Methods and open-source toolkit for analyzing and visualizing challenge results. Sci. Rep. 11, 1-15 (2021).",
+                "links": null
+            },
+            "BIBREF17": {
+                "ref_id": "b17",
+                "title": "A new measure of rank correlation",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Kendall",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1938,
+                "venue": "Biometrika",
+                "volume": "30",
+                "issue": "",
+                "pages": "81--93",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Kendall, M. G. A new measure of rank correlation. Biometrika 30, 81-93 (1938).",
+                "links": null
+            },
+            "BIBREF18": {
+                "ref_id": "b18",
+                "title": "Cutting-edge 3d medical image segmentation methods in 2020: Are happy families all alike?",
+                "authors": [
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Ma",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Ma, J. Cutting-edge 3d medical image segmentation methods in 2020: Are happy families all alike? arXiv Preprint at https://arxiv.org/abs/2101.00232 (2021).",
+                "links": null
+            },
+            "BIBREF19": {
+                "ref_id": "b19",
+                "title": "How to exploit weaknesses in biomedical challenge design and organization",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Reinke",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention",
+                "volume": "",
+                "issue": "",
+                "pages": "388--395",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Reinke, A. et al. How to exploit weaknesses in biomedical challenge design and organization, In Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention, 388-395 (Springer, 2018).",
+                "links": null
+            },
+            "BIBREF20": {
+                "ref_id": "b20",
+                "title": "Inter-observer variability ofmanual contour delineation of structures in ct",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Joskowicz",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Cohen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Caplan",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [],
+                        "last": "Sosna",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "Eur. Radiol",
+                "volume": "29",
+                "issue": "",
+                "pages": "1391--1399",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Joskowicz,L.,Cohen, D.,Caplan, N.& Sosna, J.Inter-observer variability ofmanual contour delineation of structures in ct. Eur. Radiol. 29, 1391-1399 (2019).",
+                "links": null
+            },
+            "BIBREF21": {
+                "ref_id": "b21",
+                "title": "Bias: transparent reporting of biomedical image analysis challenges",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2020,
+                "venue": "Med. Image Anal",
+                "volume": "66",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Maier-Hein, L. et al. Bias: transparent reporting of biomedical image analysis challenges. Med. Image Anal. 66, 101796 (2020).",
+                "links": null
+            },
+            "BIBREF22": {
+                "ref_id": "b22",
+                "title": "Common limitations of image processing metrics: A picture story",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Reinke",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Reinke, A. et al. Common limitations of image processing metrics: A picture story. arXiv Preprint at https://arxiv.org/abs/2104.05642 (2021).",
+                "links": null
+            },
+            "BIBREF23": {
+                "ref_id": "b23",
+                "title": "Approximate inference in generalized linear mixed models",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [
+                            "E"
+                        ],
+                        "last": "Breslow",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Clayton",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1993,
+                "venue": "J. Am. Stat. Assoc",
+                "volume": "88",
+                "issue": "",
+                "pages": "9--25",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Breslow, N. E. & Clayton, D. G. Approximate inference in generalized linear mixed models. J. Am. Stat. Assoc. 88, 9-25 (1993).",
+                "links": null
+            },
+            "BIBREF24": {
+                "ref_id": "b24",
+                "title": "Skin lesion analysis toward melanoma detection: a challenge at the 2017 international symposium on biomedical imaging (ISBN), hosted by the international skin imaging collaboration (ISIC)",
+                "authors": [
+                    {
+                        "first": "N",
+                        "middle": [
+                            "C"
+                        ],
+                        "last": "Codella",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Proc. IEEE 15th International Symposium on Biomedical Imaging",
+                "volume": "",
+                "issue": "",
+                "pages": "168--172",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Codella, N.C.F et al. Skin lesion analysis toward melanoma detection: a challenge at the 2017 international symposium on biomedical imaging (ISBN), hosted by the international skin imaging collaboration (ISIC). In Proc. IEEE 15th International Symposium on Biomedical Imaging, 168-172 (ISBI 2018).",
+                "links": null
+            },
+            "BIBREF25": {
+                "ref_id": "b25",
+                "title": "Comparative validation of multi-instance instrument segmentation in endoscopy: results of the ROBUST-MIS 2019 challenge",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Ross",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "Med. Image Anal",
+                "volume": "70",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Ross, T. et al. Comparative validation of multi-instance instrument segmentation in endoscopy: results of the ROBUST-MIS 2019 challenge. Med. Image Anal. 70, 101920 (2021).",
+                "links": null
+            },
+            "BIBREF26": {
+                "ref_id": "b26",
+                "title": "Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation: The M&Ms Challenge",
+                "authors": [
+                    {
+                        "first": "V",
+                        "middle": [
+                            "M"
+                        ],
+                        "last": "Campello",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "IEEE Transactions on Medical Imaging",
+                "volume": "40",
+                "issue": "",
+                "pages": "3543--3554",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Campello, V. M. et al. Multi-Centre, Multi-Vendor and Multi-Disease Cardiac Segmentation: The M&Ms Challenge. IEEE Transactions on Medical Imaging. 40, 3543-3554 (IEEE, 2021).",
+                "links": null
+            },
+            "BIBREF27": {
+                "ref_id": "b27",
+                "title": "Liver segmentation from computed tomography scans: a survey and a new algorithm",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Campadelli",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "E",
+                        "middle": [],
+                        "last": "Casiraghi",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "A",
+                        "middle": [],
+                        "last": "Esposito",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2009,
+                "venue": "Artif. Intel. Med",
+                "volume": "45",
+                "issue": "",
+                "pages": "185--196",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Campadelli, P., Casiraghi, E. & Esposito, A. Liver segmentation from computed tomography scans: a survey and a new algorithm. Artif. Intel. Med. 45, 185-196 (2009).",
+                "links": null
+            },
+            "BIBREF28": {
+                "ref_id": "b28",
+                "title": "Gland segmentation in colon histology images: the glas challenge contest",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Sirinukunwattana",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Med. Image Anal",
+                "volume": "35",
+                "issue": "",
+                "pages": "489--502",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Sirinukunwattana, K. et al. Gland segmentation in colon histology images: the glas challenge contest. Med. Image Anal. 35, 489-502 (2017).",
+                "links": null
+            },
+            "BIBREF29": {
+                "ref_id": "b29",
+                "title": "Enhancing pancreatic adenocarcinoma delineation in diffusion derived intravoxel incoherent motion f-maps through automatic vessel and duct segmentation",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [
+                            "J"
+                        ],
+                        "last": "Re",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2011,
+                "venue": "Magn. Reson. Med",
+                "volume": "66",
+                "issue": "",
+                "pages": "1327--1332",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Re, T. J. et al. Enhancing pancreatic adenocarcinoma delineation in diffusion derived intravoxel incoherent motion f-maps through automatic vessel and duct segmentation. Magn. Reson. Med. 66, 1327-1332 (2011).",
+                "links": null
+            },
+            "BIBREF30": {
+                "ref_id": "b30",
+                "title": "Revisiting resnets: Improved training and scaling strategies",
+                "authors": [
+                    {
+                        "first": "I",
+                        "middle": [],
+                        "last": "Bello",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bello, I. et al. Revisiting resnets: Improved training and scaling strategies. arXiv Preprint at https://arxiv.org/abs/2103.07579 (2021).",
+                "links": null
+            },
+            "BIBREF31": {
+                "ref_id": "b31",
+                "title": "Neural architecture search: a survey",
+                "authors": [
+                    {
+                        "first": "T",
+                        "middle": [],
+                        "last": "Elsken",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "J",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Metzen",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Hutter",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "J. Mach. Learn. Res",
+                "volume": "20",
+                "issue": "",
+                "pages": "1--21",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Elsken, T., Metzen, J. H. & Hutter, F. et al. Neural architecture search: a survey. J. Mach. Learn. Res. 20, 1-21 (2019).",
+                "links": null
+            },
+            "BIBREF32": {
+                "ref_id": "b32",
+                "title": "Dints: differentiable neural network topology search for 3d medical image segmentation",
+                "authors": [
+                    {
+                        "first": "Y",
+                        "middle": [],
+                        "last": "He",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Yang",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "H",
+                        "middle": [],
+                        "last": "Roth",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Zhao",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "D",
+                        "middle": [],
+                        "last": "Xu",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2021,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "He, Y., Yang, D., Roth, H., Zhao, C. & Xu, D. Dints: differentiable neural network topology search for 3d medical image segmentation. CoRR abs/ 2103.15954. http://arxiv.org/abs/2103.15954 (2021).",
+                "links": null
+            },
+            "BIBREF33": {
+                "ref_id": "b33",
+                "title": "Why rankings of biomedical image analysis competitions should be interpreted with care",
+                "authors": [
+                    {
+                        "first": "L",
+                        "middle": [],
+                        "last": "Maier-Hein",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "Nat. Commun",
+                "volume": "9",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Maier-Hein, L. et al. Why rankings of biomedical image analysis competitions should be interpreted with care. Nat. Commun. 9, 5217 (2018).",
+                "links": null
+            },
+            "BIBREF34": {
+                "ref_id": "b34",
+                "title": "A large annotated medical image dataset for the development and evaluation of segmentation algorithms",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [
+                            "L"
+                        ],
+                        "last": "Simpson",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Simpson, A.L. et al. A large annotated medical image dataset for the development and evaluation of segmentation algorithms. arXiv e-prints http:// arxiv.org/abs/1902.09063 (2019).",
+                "links": null
+            },
+            "BIBREF35": {
+                "ref_id": "b35",
+                "title": "The multimodal brain tumor image segmentation benchmark (brats)",
+                "authors": [
+                    {
+                        "first": "B",
+                        "middle": [
+                            "H"
+                        ],
+                        "last": "Menze",
+                        "suffix": ""
+                    }
+                ],
+                "year": 1993,
+                "venue": "IEEE Trans. Med. Imag",
+                "volume": "34",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Menze, B. H. et al. The multimodal brain tumor image segmentation benchmark (brats). IEEE Trans. Med. Imag. 34, 1993-2024 (2015).",
+                "links": null
+            },
+            "BIBREF36": {
+                "ref_id": "b36",
+                "title": "Advancing the cancer genome atlas glioma mri collections with expert segmentation labels and radiomic features",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Bakas",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2017,
+                "venue": "Sci. Data",
+                "volume": "4",
+                "issue": "",
+                "pages": "1--13",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bakas, S. et al. Advancing the cancer genome atlas glioma mri collections with expert segmentation labels and radiomic features. Sci. Data 4, 1-13 (2017).",
+                "links": null
+            },
+            "BIBREF37": {
+                "ref_id": "b37",
+                "title": "Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the brats challenge",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Bakas",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bakas, S. et al. Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the brats challenge. arXiv Preprint at https://arxiv.org/abs/1811.02629 (2018b).",
+                "links": null
+            },
+            "BIBREF38": {
+                "ref_id": "b38",
+                "title": "Benchmark for algorithms segmenting the left atrium from 3d ct and mri datasets",
+                "authors": [
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Tobon-Gomez",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2015,
+                "venue": "IEEE Trans. Med. Imag",
+                "volume": "34",
+                "issue": "",
+                "pages": "1460--1473",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Tobon-Gomez, C. et al. Benchmark for algorithms segmenting the left atrium from 3d ct and mri datasets. IEEE Trans. Med. Imag. 34, 1460-1473 (2015).",
+                "links": null
+            },
+            "BIBREF39": {
+                "ref_id": "b39",
+                "title": "The Liver Tumor Segmentation Benchmark (LiTS)",
+                "authors": [
+                    {
+                        "first": "P",
+                        "middle": [],
+                        "last": "Bilic",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2019,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bilic, P. et al. The Liver Tumor Segmentation Benchmark (LiTS). arXiv e-prints http://arxiv.org/abs/1901.04056 (2019).",
+                "links": null
+            },
+            "BIBREF40": {
+                "ref_id": "b40",
+                "title": "Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the BRATS challenge",
+                "authors": [
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Bakas",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Bakas, S. et al. Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the BRATS challenge. CoRR abs/1811.02629. http://arxiv.org/abs/1811. 02629 (2018a).",
+                "links": null
+            },
+            "BIBREF41": {
+                "ref_id": "b41",
+                "title": "MSD metrics jupyter notebook",
+                "authors": [
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "The Msd Challenge",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Organisers",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "The MSD Challenge Organisers. MSD metrics jupyter notebook. http:// medicaldecathlon.com/files/Surface_distance_based_measures.ipynb (2018).",
+                "links": null
+            },
+            "BIBREF42": {
+                "ref_id": "b42",
+                "title": "V-net: Fully convolutional neural networks for volumetric medical image segmentation",
+                "authors": [
+                    {
+                        "first": "F",
+                        "middle": [],
+                        "last": "Milletari",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Navab",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S.-A",
+                        "middle": [],
+                        "last": "Ahmadi",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Proc. Fourth International Conference on 3D Vision (3DV)",
+                "volume": "",
+                "issue": "",
+                "pages": "565--571",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Milletari, F., Navab, N. & Ahmadi, S.-A. V-net: Fully convolutional neural networks for volumetric medical image segmentation, In Proc. Fourth International Conference on 3D Vision (3DV), 565-571. (IEEE, 2016).",
+                "links": null
+            },
+            "BIBREF43": {
+                "ref_id": "b43",
+                "title": "Segmenting MRI neuroanatomy in 20 seconds. CoRR",
+                "authors": [
+                    {
+                        "first": "A",
+                        "middle": [
+                            "G"
+                        ],
+                        "last": "Roy",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "S",
+                        "middle": [],
+                        "last": "Conjeti",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "N",
+                        "middle": [],
+                        "last": "Navab",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "C",
+                        "middle": [],
+                        "last": "Wachinger",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "",
+                        "middle": [],
+                        "last": "Quicknat",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2018,
+                "venue": "",
+                "volume": "",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Roy, A.G., Conjeti, S., Navab, N. & Wachinger, C. Quicknat: Segmenting MRI neuroanatomy in 20 seconds. CoRR abs/1801.04161. http://arxiv.org/abs/ 1801.04161 (2018).",
+                "links": null
+            },
+            "BIBREF44": {
+                "ref_id": "b44",
+                "title": "Deepmedic for brain tumor segmentation",
+                "authors": [
+                    {
+                        "first": "K",
+                        "middle": [],
+                        "last": "Kamnitsas",
+                        "suffix": ""
+                    }
+                ],
+                "year": 2016,
+                "venue": "Proc. International workshop on Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries",
+                "volume": "",
+                "issue": "",
+                "pages": "138--149",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Kamnitsas, K. et al. Deepmedic for brain tumor segmentation. In Proc. International workshop on Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries, 138-149 (Springer, 2016).",
+                "links": null
+            },
+            "BIBREF45": {
+                "ref_id": "b45",
+                "title": "HI Helmholtz Imaging",
+                "authors": [],
+                "year": null,
+                "venue": "Computer Assisted Medical Interventions",
+                "volume": "",
+                "issue": "3",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "School of Biomedical Engineering & Imaging Sciences, King's College London, London, UK. 2 Div. Computer Assisted Medical Interventions, German Cancer Research Center (DKFZ), Heidelberg, Germany. 3 HI Helmholtz Imaging, German Cancer Research Center (DKFZ),",
+                "links": null
+            },
+            "BIBREF46": {
+                "ref_id": "b46",
+                "title": "18 Department of Surgery, Memorial Sloan Kettering Cancer Center",
+                "authors": [
+                    {
+                        "first": "Germany",
+                        "middle": [],
+                        "last": "Heidelberg",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "for Biomedical Informatics and Information Technology",
+                "volume": "22",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Heidelberg, Germany. 4 Faculty of Mathematics and Computer Science, University of Heidelberg, Heidelberg, Germany. 5 Center for Biomedical Image Computing and Analytics (CBICA), University of Pennsylvania, Philadelphia, PA, USA. 6 Department of Radiology, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA, USA. 7 Department of Pathology and Laboratory Medicine, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA, USA. 8 Center for Biomedical Informatics and Information Technology, National Cancer Institute (NIH), Bethesda, MD, USA. 9 Div. Biostatistics, German Cancer Research Center (DKFZ), Heidelberg, Germany. Electrical Engineering and Computer Science, Vanderbilt University, Nashville, TN, USA. Radboud University Medical Center, Radboud Institute for Health Sciences, Nijmegen, The Netherlands. 12 Quantitative Biomedicine, University of Zurich, Zurich, Switzerland. DeepMind, London, UK. 14 Imaging Biomarkers and Computer-Aided Diagnosis Laboratory, Department of Radiology and Imaging Sciences, National Institutes of Health Clinical Center (NIH), Bethesda, MD, USA. 15 Department of Informatics, Technische Universit\u00e4t M\u00fcnchen, M\u00fcnchen, Germany. Department of Radiology, Memorial Sloan Kettering Cancer Center, New York, NY, USA. Department of Psychiatry & Behavioral Sciences, Vanderbilt University Medical Center, Nashville, TN, USA. 18 Department of Surgery, Memorial Sloan Kettering Cancer Center, New York, NY, USA. Department of Radiology, Stanford University, Stanford, CA, USA. 20 Department of Computer Science and Software Engineering, \u00c9cole Polytechnique de Montr\u00e9al, Montr\u00e9al, QC, Canada. 21 Universidad de los Andes, Bogota, Colombia. 22 VUNO Inc., Seoul, Korea. 23 Tencent Jarvis Lab, Shenzhen, China. 24 Department of Automation, Tsinghua University, Beijing, China. 25 Shenzhen Institute of Advanced Technology, Chinese Academy of Sciences, Shenzhen, China. 26",
+                "links": null
+            },
+            "BIBREF47": {
+                "ref_id": "b47",
+                "title": "35 Lab for Artificial Intelligence in Medical Imaging",
+                "authors": [],
+                "year": null,
+                "venue": "",
+                "volume": "34",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Department of Computer Science, Xiamen University, Xiamen, China. 28 Kakao Brain, Seongnam-si, Republic of Korea. 29 Cerebriu A/S, Copenhagen, Denmark. 30 Pattern Analysis and Learning Group, Department of Radiation Oncology, Heidelberg University Hospital, Heidelberg, Germany. 31 Institute of Imaging & Computer Vision, RWTH Aachen University, Aachen, Germany. Fraunhofer Institute for Digital Medicine MEVIS, Bremen, Germany. 33 Department of Computer Science, University of Copenhagen, Copenhagen, Denmark. 34 MaaDoTaa.com, San Diego, CA, USA. 35 Lab for Artificial Intelligence in Medical Imaging (AI-Med), Department of Child and Adolescent Psychiatry, University Hospital, LMU M\u00fcnchen, Germany. 36 MoE Key Lab of Artificial Intelligence, AI Institute, Shanghai Jiao Tong University, Shanghai, China.",
+                "links": null
+            },
+            "BIBREF48": {
+                "ref_id": "b48",
+                "title": "These authors contributed equally: Michela Antonelli, Annika Reinke. 43 These authors jointly supervised this work: Lena Maier-Hein",
+                "authors": [
+                    {
+                        "first": "M",
+                        "middle": [],
+                        "last": "",
+                        "suffix": ""
+                    },
+                    {
+                        "first": "Jorge",
+                        "middle": [],
+                        "last": "Cardoso",
+                        "suffix": ""
+                    }
+                ],
+                "year": null,
+                "venue": "Medical Faculty",
+                "volume": "39",
+                "issue": "",
+                "pages": "",
+                "other_ids": {},
+                "num": null,
+                "urls": [],
+                "raw_text": "Shanghai Key Laboratory of Multidimensional Information Processing, East China Normal University, Shanghai, China. 38 Johns Hopkins University, Baltimore, MD, USA. 39 NVIDIA, Santa Clara, CA, USA. School of Computing/Department of Biomedical and Molecular Sciences, Queen's University, Kingston, ON, Canada. Medical Faculty, University of Heidelberg, Heidelberg, Germany. These authors contributed equally: Michela Antonelli, Annika Reinke. 43 These authors jointly supervised this work: Lena Maier-Hein, M. Jorge Cardoso. \u2709 email: michela.antonelli@kcl.ac.uk",
+                "links": null
+            }
+        },
+        "ref_entries": {
+            "FIGREF1": {
+                "fig_num": null,
+                "type_str": "figure",
+                "num": null,
+                "text": "Figs. 3, 4). Ranks 2 and 3 switched places (K.A.V.athlon and NVDLMED) for both the development and mystery phase.",
+                "uris": null
+            },
+            "FIGREF2": {
+                "fig_num": null,
+                "type_str": "figure",
+                "num": null,
+                "text": "Figure furthershows the ranks of all algorithms for all thirteen target regions of the development phase (red) and all four target regions of the mystery phase in form of a box-plot. Many teams show a large variation in their ranks across target ROIs. The lowest rank difference of three",
+                "uris": null
+            },
+            "FIGREF3": {
+                "fig_num": "3",
+                "type_str": "figure",
+                "num": null,
+                "text": "Dot-and box-plots of the Dice Similarity Coefficient (DSC) values of all 19 participating algorithms for the seven tasks (brain, heart, hippocampus, liver, lung, pancreas, prostate) of the development phase, color-coded by the target regions (edema (red), non-enhancing tumor (purple), enhancing tumor (blue), left atrium (green), anterior (olive), posterior (light purple), liver (dark orange), liver tumor (orange), lung tumor (yellow), pancreas (dark yellow), tumor mass (light brown), prostate peripheral zone (PZ) (brown), prostate transition zone (TZ) (pink)). The boxplots represent descriptive statistics over all test cases. The median value is shown by the black horizontal line within the box, the first and third quartiles as the lower and upper border of the box, respectively, and the 1.5 interquartile range by the vertical black lines. Outliers are shown as black circles. The raw DSC values are provided as gray circles. ROI Region of Interest.",
+                "uris": null
+            },
+            "FIGREF4": {
+                "fig_num": null,
+                "type_str": "figure",
+                "num": null,
+                "text": "Dot-and box-plots of the Dice Similarity Coefficient (DSC) values of all 19 participating algorithms for the three tasks of the mystery phase (colon, hepatic vessel, spleen), color-coded by the target regions (colon cancer primaries (red), hepatic tumor (green), hepatic vessel (yellow), spleen (pink)). The box-plots represent descriptive statistics over all test cases. The median value is shown by the black horizontal line within the box, the first and third quartiles as the lower and upper border of the box, respectively, and the 1.5 interquartile range by the vertical black lines. Outliers are shown as black circles. The raw DSC values are provided as gray circles. ROI Region of Interest.",
+                "uris": null
+            },
+            "FIGREF5": {
+                "fig_num": "5",
+                "type_str": "figure",
+                "num": null,
+                "text": "Dot-and box-plots of ranks for all 19 participating algorithms over all seven tasks and thirteen target regions of the development phase (red) and all three tasks and four target regions of the mystery phase (blue). The median value is shown by the black vertical line within the box, the first and third quartiles as the lower and upper border of the box, respectively, and the 1.5 interquartile range by the horizontal black lines. Individual ranks are shown as gray circles.",
+                "uris": null
+            },
+            "TABREF2": {
+                "type_str": "table",
+                "content": "<table><tr><td>to 0.94 (liver (the development phase), cf. Supplemen-</td></tr><tr><td>tary</td></tr></table>",
+                "html": null,
+                "num": null,
+                "text": ""
+            },
+            "TABREF3": {
+                "type_str": "table",
+                "content": "<table><tr><td colspan=\"2\">The development phase</td><td/><td/><td colspan=\"2\">The mystery phase</td><td/><td/></tr><tr><td>Rank</td><td>Team ID</td><td>Median DSC</td><td>IQR DSC</td><td>Rank</td><td>Team ID</td><td>Median DSC</td><td>IQR DSC</td></tr><tr><td>1</td><td>nnU-Net</td><td>0.79</td><td>(0.61, 0.88)</td><td>1</td><td>nnU-Net</td><td>0.71</td><td>(0.58, 0.82)</td></tr><tr><td>2</td><td>K.A.V.athlon</td><td>0.77</td><td>(0.58, 0.87)</td><td>2</td><td>NVDLMED</td><td>0.69</td><td>(0.55, 0.79)</td></tr><tr><td>3</td><td>NVDLMED</td><td>0.78</td><td>(0.57, 0.87)</td><td>3</td><td>K.A.V.athlon</td><td>0.67</td><td>(0.49, 0.80)</td></tr><tr><td>4</td><td>Lupin</td><td>0.75</td><td>(0.52, 0.86)</td><td>4</td><td>LS Wang's Group</td><td>0.64</td><td>(0.46, 0.78)</td></tr><tr><td>5</td><td>CerebriuDIKU</td><td>0.76</td><td>(0.51, 0.88)</td><td>5</td><td>MIMI</td><td>0.65</td><td>(0.45, 0.75)</td></tr><tr><td/><td>LS Wang's Group</td><td>0.75</td><td>(0.51, 0.88)</td><td>6</td><td>CerebriuDIKU</td><td>0.56</td><td>(0.15, 0.71)</td></tr><tr><td>7</td><td>MIMI</td><td>0.73</td><td>(0.51, 0.86)</td><td>7</td><td>Whale</td><td>0.55</td><td>(0.20, 0.68)</td></tr><tr><td>8</td><td>Whale</td><td>0.65</td><td>(0.28, 0.83)</td><td>8</td><td>UBIlearn</td><td>0.55</td><td>(0.05, 0.69)</td></tr><tr><td>9</td><td>VST</td><td>0.69</td><td>(0.39, 0.84)</td><td>9</td><td>Jiafucang</td><td>0.48</td><td>(0.04, 0.67)</td></tr><tr><td>10</td><td>UBIlearn</td><td>0.72</td><td>(0.40, 0.85)</td><td>10</td><td>Lupin</td><td>0.57</td><td>(0.19, 0.69)</td></tr><tr><td/><td>A-REUMI01</td><td>0.70</td><td>(0.42, 0.85)</td><td>11</td><td>LfB</td><td>0.49</td><td>(0.16, 0.64)</td></tr><tr><td>12</td><td>BCVuniandes</td><td>0.70</td><td>(0.42, 0.86)</td><td>12</td><td>A-REUMI01</td><td>0.51</td><td>(0.14, 0.65)</td></tr><tr><td>13</td><td>BUT</td><td>0.72</td><td>(0.40, 0.84)</td><td>13</td><td>VST</td><td>0.41</td><td>(0.00, 0.64)</td></tr><tr><td>14</td><td>LfB</td><td>0.68</td><td>(0.43, 0.82)</td><td>14</td><td>AI-MED</td><td>0.33</td><td>(0.01, 0.52)</td></tr><tr><td>15</td><td>Jiafucang</td><td>0.49</td><td>(0.11, 0.81)</td><td>15.5</td><td>Lesswire1</td><td>0.40</td><td>(0.08, 0.52)</td></tr><tr><td>16</td><td>AI-Med</td><td>0.63</td><td>(0.30, 0.79)</td><td>15.5</td><td>BUT</td><td>0.38</td><td>(0.01, 0.60)</td></tr><tr><td>17</td><td>Lesswire1</td><td>0.65</td><td>(0.33, 0.79)</td><td>17</td><td>RegionTec</td><td>0.29</td><td>(0.00, 0.50)</td></tr><tr><td>18</td><td>EdwardMa12593</td><td>0.31</td><td>(0.01, 0.69)</td><td>18</td><td>BCVuniandes</td><td>0.10</td><td>(0.01, 0.38)</td></tr><tr><td>19</td><td>RegionTec</td><td>0.57</td><td>(0.19, 0.73)</td><td>19</td><td>EdwardMa12593</td><td>0.08</td><td>(0.01, 0.17)</td></tr></table>",
+                "html": null,
+                "num": null,
+                "text": "Rankings for the development phase and the mystery phase, median and interquartile range (IQR) of the Dice Similarity Coefficient (DSC) values of all 19 teams."
+            },
+            "TABREF4": {
+                "type_str": "table",
+                "content": "<table><tr><td>Phase</td><td>Task</td><td colspan=\"2\">Modality Protocol</td><td>Target</td><td># Cases (Train/Test)</td></tr><tr><td colspan=\"2\">Development phase Brain</td><td>mp-MRI</td><td>FLAIR, T1w, T1 \\w</td><td>Edema, enhancing and non-</td><td>750 4D volumes (484/</td></tr><tr><td/><td/><td/><td>Gd, T2w</td><td>enhancing tumor</td><td>266)</td></tr><tr><td/><td>Heart</td><td>MRI</td><td>-</td><td>Left atrium</td><td>30 3D volumes (20/10)</td></tr><tr><td/><td>Hippocampus</td><td>MRI</td><td>T1w</td><td colspan=\"2\">Anterior and posterior of hippocampus 394 3D volumes (263/</td></tr><tr><td/><td/><td/><td/><td/><td>131)</td></tr><tr><td/><td>Liver</td><td>CT</td><td>Portal-venous phase</td><td>Liver and liver tumor</td><td>210 3D volumes (131/70)</td></tr><tr><td/><td>Lung</td><td>CT</td><td>-</td><td>Lung and lung cancer</td><td>96 3D volumes (64/32)</td></tr><tr><td/><td>Pancreas</td><td>CT</td><td>Portal-venous phase</td><td>Pancreas and pancreatic tumor mass</td><td>420 3D volumes (282/</td></tr><tr><td/><td/><td/><td/><td/><td>139)</td></tr><tr><td/><td>Prostate</td><td>mp-MRI</td><td>T2, ADC</td><td>Prostate PZ and TZ</td><td>48 4D volumes (32/16)</td></tr><tr><td>Mystery phase</td><td>Colon</td><td>CT</td><td>Portal-venous phase</td><td>Colon cancer primaries</td><td>190 3D volumes (126/</td></tr><tr><td/><td/><td/><td/><td/><td>64)</td></tr><tr><td/><td colspan=\"2\">Hepatic Vessels CT</td><td>Portal-venous phase</td><td>Hepatic vessels and hepatic tumor</td><td>443 3D volumes (303/</td></tr><tr><td/><td/><td/><td/><td/><td>140)</td></tr><tr><td/><td>Spleen</td><td>CT</td><td>Portal-venous phase</td><td>Spleen</td><td>61 3D volumes (41/20)</td></tr></table>",
+                "html": null,
+                "num": null,
+                "text": "Summary of the ten data sets of the Medical Segmentation Decathlon."
+            }
+        }
+    }
+}
