@@ -9,3 +9,4 @@ pdf2json-api/output
 
 **/*.DS_Store
 **/*.pyc
+**/*.log
