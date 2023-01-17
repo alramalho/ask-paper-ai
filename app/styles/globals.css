@@ -1,31 +1,47 @@
 html,
 body {
-   padding: 0;
-   margin: 0;
-   font-family: 'Roboto', sans-serif;
-   text-align: center;
-   scroll-behavior: smooth;
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    scroll-behavior: smooth;
 }
 
 * {
-   box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 h1 {
-   font-size: 5rem;
+    font-size: 5rem;
 }
+
 h2 {
-   font-size: 3rem
+    font-size: 3rem
 }
+
 h3 {
-   font-size: 2rem;
+    font-size: 2rem;
 }
 
 ul {
-   list-style: unset;
-   padding: 0;
+    list-style: unset;
+    padding: 0;
 }
 table {
-   border: 1px solid gray,
-   
+    border-collapse: collapse;
+    background-color: #fafafa;
+    padding: 1rem;
+}
+thead {
+    background-color: whitesmoke;
+    color: #565656;
+}
+
+td, th {
+    padding: 0.5rem;
+    text-align: left;
+}
+
+thead th {
+   border-radius: 10px;
 }

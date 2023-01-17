@@ -30,11 +30,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# chatbot = Chatbot({
-#     "email": os.getenv("MICROSOFT_EMAIL"),
-#     "password": os.getenv("MICROSOFT_PASSWORD"),
-#     "isMicrosoftLogin": True
-# }, conversation_id=None, parent_id=None)
+chatbot = Chatbot({
+    "email": os.getenv("MICROSOFT_EMAIL"),
+    "password": os.getenv("MICROSOFT_PASSWORD"),
+    "isMicrosoftLogin": True
+}, conversation_id=None, parent_id=None)
 
 driver = None
 
@@ -80,7 +80,8 @@ async def ask(request: Request):
         time.sleep(0.5)  
         response = read_from_json_cache(text)
     else:
-        response = chatbot.ask(text, conversation_id=None, parent_id=None)["message"]
+        response = chatbot.ask(text, conversation_id=None, parent_id=None)
+        response = response["message"]
         write_to_json_cache(text, response)
         print(response)
     logging.critical('\n---\Answer: \n' + response)
@@ -98,7 +99,7 @@ async def search(request: Request):
 
         driver.get(f"https://datasetsearch.research.google.com/search?query={name}")
         driver.implicitly_wait(0.5)
-        a_element = driver.find_element("xpath", "(//a)[6]")
+        a_element = driver.find_element("xpath", "//div[contains(text(), \"Explore at:\")]//ul//li[1]//a")
 
         result = a_element.get_attribute("href")
         return {"result": result}

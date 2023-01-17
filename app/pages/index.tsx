@@ -89,7 +89,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <Layout css={{flexDirection: 'column'}}>
+    <Layout css={{flexDirection: 'row'}}>
       {papers
         ? <>
           <Radio.Group label="Options" onChange={setSelectedPaperName}>
@@ -143,7 +143,7 @@ async function toTable(text: string) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      text: `Based on the following text, denoted by "START OF TEXT" and "END OF TEXT", merge the mentioned dataset data characteristics into a markdown table. Please include at least "size", "data type", "demographic balance", "origin" and others that you might find relevant, just have in mind that it has to be related to the data itself. If there are entries with the same Dataset Name, merge them together. \n--- START OF TEXT\n${text}--- END OF TEXT`,
+      text: `Please summarize the following text, bounded by "START" and "END", on a markdown table. The text will contain possibly repeated information about the charactersitics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characterstics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for people thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information" and "Origin", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unkown/ not specified.\nSTART\N${text}\nEND`,
       // text: `Extract the datasets and their characteristics in a nested list manner from the following text: ${text}`,
     })
   }).then(response => response.json()).catch(console.error)).message;
@@ -162,6 +162,7 @@ async function searchDataset(dataset: string) {
 }
 
 async function updateMarkdownTableWithSourceURLs(tableString: string) {
+  tableString = tableString.split('\n\n')[0]
   let lines = tableString.split("\n");
   let headers = lines[0].split("|").map(s => s.trim());
   let dividers = lines[1].split("|").map(s => s.trim());
@@ -187,7 +188,7 @@ async function updateMarkdownTableWithSourceURLs(tableString: string) {
     if (datasetSource != null) {
       cells[fieldToAddIndex] = `<a href="${datasetSource}" target="_blank">${datasetSource}</a>`
     } else {
-      cells[fieldToAddIndex] = "couldn't find dataset"
+      cells[fieldToAddIndex] = `<span>couldn't find dataset link.</span>&nbsp;<a target="__blank" href='https://www.google.com/search?q=${cells[1]}'>search google instead</a>`
     }
     lines[i] = cells.join(" | ");
   }
