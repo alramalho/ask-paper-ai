@@ -1,0 +1,13 @@
+# Use an official Python runtime as the base image
+FROM python:3.9
+
+COPY . ./app
+WORKDIR /app
+
+# Install the necessary dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+# Expose the port for the app to run on
+
+EXPOSE 8000
