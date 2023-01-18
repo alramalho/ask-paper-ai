@@ -88,6 +88,7 @@ async def ask(request: Request):
     body = await request.json()
     text = body["text"]
     print(f"Asked text: \n{text}\n")
+    logging.critical('\n---\Asked text: \n' + text)
     if (read_from_json_cache(text) is not None):
         print("cache hit")
         time.sleep(0.5)
@@ -101,6 +102,7 @@ async def ask(request: Request):
             model="text-davinci-002",
         )["choices"][0]["text"].strip("\n")
         write_to_json_cache(text, response)
+        print("Response: \n" + response)
         
     logging.critical('\n---\Answer: \n' + response)
     return {"message": response}
