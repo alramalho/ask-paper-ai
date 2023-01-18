@@ -1,14 +1,14 @@
-import { Text, Button, Card, Spacer, Loading, Input, Textarea, useInput } from "@nextui-org/react";
+import { Text, Button, Card, Spacer, Loading, Textarea, useInput } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
-import UploadIcon from "../components/icons/upload-icon";
 import SendIcon from "../components/icons/send-icon";
 import { Box } from "../components/layout";
 import { Flex } from "../components/styles/flex";
-import PdfUploader from "../components/pdf-uploader";
+import PaperUploader from "../components/paper-uploader";
 
-type Paper = {
+export type Paper = {
     abstract: string
+    title: string
     pdf_parse: {
         body_text: {
             text: string
@@ -21,14 +21,13 @@ type Paper = {
     }
 }
 
-const Temp = () => {
+const Home = () => {
     const [LLMResponse, setLLMResponse] = useState<string | undefined>(undefined)
-    const [seconds, setSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState<boolean>(false)
     const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
-    const [selectedPaperName, setSelectedPaperName] = useState<string | undefined>(undefined)
+    const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
 
-    const [papers, setPapers] = useState<string[] | undefined>(undefined)
+    const [paperTemplates, setPaperTemplates] = useState<string[] | undefined>(undefined)
     const {
         value: questionValue,
         setValue: setQuestionValue,
@@ -38,22 +37,14 @@ const Temp = () => {
 
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/get-papers`).then(response => response.json()).then(
-            json => setPapers(json)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/get-paper-templates`).then(response => response.json()).then(
+            json => setPaperTemplates(json)
         )
     }, [])
 
-    async function getPaper(path: string) {
-        let paper: Paper = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/get-paper?path=${path}`).then(response => response.json());
-        return paper
-    }
-
-    const handleSubmit = async (paperName: string, question: string, sectionFilterer: (sectionName:string) => boolean = (sectionName:string) => true) => {
-        setSeconds(0)
+    const handleSubmit = async (paper: Paper, question: string, sectionFilterer: (sectionName:string) => boolean = (sectionName:string) => true) => {
         setIsRunning(true)
         setLoadingText("Reading paper...")
-        const paperPath = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/parse-paper?name=${paperName}`).then(response => response.json())
-        const paper = await getPaper(paperPath)
 
         const aggreggatedText = paper.abstract + paper.pdf_parse.body_text.concat(paper.pdf_parse.back_matter).filter(e => sectionFilterer(e.section)).map(bodyText => bodyText.text).join('\n')
 
@@ -64,21 +55,26 @@ const Temp = () => {
 
     return <Flex justify="center" align="center" css={{ minHeight: '100%' }} direction="column">
         <h2>Ask Paper</h2>
-        <PdfUploader/>
+        <PaperUploader onFinish={(pdfId) => setSelectedPaper(pdfId)}/>
         <Spacer y={3} />
         <h4>Or start with a template:</h4>
-        {papers && <Flex css={{ gap: "$2" }}> {papers.map(paper => <Card
+        {paperTemplates && <Flex css={{ gap: "$2" }}> {paperTemplates.map(paper => <Card
             isPressable
             isHoverable
-            css={{ mw: "150px", mh: "200px", border: selectedPaperName === paper ? "1px solid blue" : undefined }}
+            css={{ mw: "150px", mh: "200px", border: selectedPaper?.title == paper ? "1px solid blue" : undefined }}
             variant="bordered"
-            onPress={() => setSelectedPaperName(paper)}
+            onPress={async () => {
+                setSelectedPaper(await fetch(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/get-existing-paper`, {
+                    method: "POST",
+                    body: JSON.stringify({ name: paper })
+                }).then(response => response.json()))
+            }}
         >
             <Card.Body>
                 <Text>{paper}</Text>
             </Card.Body>
         </Card>)}</Flex>}
-        {selectedPaperName && <>
+        {selectedPaper && <>
             <Spacer y={3} />
             <h4>And ask your question</h4>
             <Flex css={{ gap: "$5" }}>
@@ -92,7 +88,7 @@ const Temp = () => {
                     css={{ width: "400px", }}
                 />
                 <Button iconRight={<SendIcon />} onPress={() => handleSubmit(
-                  selectedPaperName,
+                  selectedPaper,
                   questionValue,
                   (e) => {
                       e = e.toLowerCase()
@@ -106,7 +102,7 @@ const Temp = () => {
                 css={{backgroundColor: "$purple300", color: "black"}}
                 onPress={() => {
                     handleSubmit(
-                        selectedPaperName, 
+                        selectedPaper,
                         `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
                         (e) => e.toLowerCase().includes('data'))
                     }}
@@ -149,4 +145,4 @@ function makeLinksClickable(text: string) {
     return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
 }
 
-export default Temp;
+export default Home;

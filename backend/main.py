@@ -1,5 +1,5 @@
 import os.path
-from fastapi import FastAPI, Request, UploadFile
+from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import datetime
@@ -29,8 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-driver = None
-
 
 def write_to_json_cache(key, value):
     if not os.path.exists('cache.json'):
@@ -57,35 +55,49 @@ def read_from_json_cache(key):
             return None
 
 
-@app.get("/get-paper")
-async def get_paper(path: str):
-    print(f"Get paper {path}")
-    with open(path, "r") as f:
-        return json.load(f)
+def process_paper(pdf_file_name) -> dict:
+    pdf_file_name = pdf_file_name.replace('.pdf', '')
+    output_file = process_pdf_file(input_file=f'papers/{pdf_file_name}.pdf', temp_dir="temp", output_dir="output")
+    with open(os.path.abspath(output_file), 'r') as f:
+        f = json.load(f)
+        print(f['title'])
+        os.rename(f"papers/{pdf_file_name}.pdf", f"papers/{f['title'][:200]}.pdf")
+        os.rename(f"temp/{pdf_file_name}.tei.xml", f"temp/{f['title'][:200]}.tei.xml")
+        os.rename(f"output/{pdf_file_name}.json", f"output/{f['title'][:200]}.json")
+        return f
 
 
-@app.get("/get-papers")
-def get_papers():
+@app.post("/get-existing-paper")
+async def get_existing_paper(request: Request):
+    body = await request.json()
+    name = body["name"]
+    print(f"{name}.json")
+    print(os.listdir('output'))
+    if os.path.exists('output') and f"{name}.json" in os.listdir('output'):
+        print(f"Get paper. Paper exists. ({name})")
+        with open(os.path.join('output', f"{name}.json"), 'r') as f:
+            return json.load(f)
+    else:
+        raise HTTPException(status_code=404, detail="Paper not found")
+
+@app.get("/get-paper-templates")
+def get_paper_templates():
     print("Get all papers")
-    return os.listdir("papers")
+    return [x.replace('.json', '') for x in os.listdir("output")] if os.path.exists("output") else []
 
+@app.post("/upload-paper")
+async def upload_paper(pdf_file: UploadFile):
+    try:
+        pdf_file_name = pdf_file.filename
+        pdf_file_content = await pdf_file.read()
+        with open(f"papers/{pdf_file_name}", "wb") as f:
+            f.write(pdf_file_content)
+        json_paper = process_paper(pdf_file_name)
+        return json_paper
+    except Exception as e:
+        print(e)
+        return {"error": str(e)}
 
-@app.get("/parse-paper")
-def parse_paper(name: str):
-    print(f"Parse paper {name}")
-    temp_dir = "temp"
-    output_dir = "output"
-    output_file = process_pdf_file(input_file=f'papers/{name}', temp_dir=temp_dir, output_dir=output_dir)
-    abs_output_file = os.path.abspath(output_file)
-    return abs_output_file
-
-@app.post("/upload-pdf")
-async def upload_pdf(pdf_file: UploadFile):
-    pdf_file_name = pdf_file.filename
-    pdf_file_content = await pdf_file.read()
-    with open(f"papers/{pdf_file_name}", "wb") as f:
-        f.write(pdf_file_content)
-    return {"status": "success"}
 
 @app.post("/ask")
 async def ask(request: Request):
