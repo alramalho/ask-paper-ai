@@ -5,6 +5,7 @@ import UploadIcon from "../components/icons/upload-icon";
 import SendIcon from "../components/icons/send-icon";
 import { Box } from "../components/layout";
 import { Flex } from "../components/styles/flex";
+import PdfUploader from "../components/pdf-uploader";
 
 type Paper = {
     abstract: string
@@ -63,7 +64,7 @@ const Temp = () => {
 
     return <Flex justify="center" align="center" css={{ minHeight: '100%' }} direction="column">
         <h2>Ask Paper</h2>
-        <Button icon={<UploadIcon />}>Upload your paper</Button>
+        <PdfUploader/>
         <Spacer y={3} />
         <h4>Or start with a template:</h4>
         {papers && <Flex css={{ gap: "$2" }}> {papers.map(paper => <Card

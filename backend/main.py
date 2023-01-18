@@ -1,7 +1,5 @@
-import json
 import os.path
-from fastapi import FastAPI, Request
-import os
+from fastapi import FastAPI, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import datetime
@@ -75,13 +73,19 @@ def get_papers():
 @app.get("/parse-paper")
 def parse_paper(name: str):
     print(f"Parse paper {name}")
-    input_dir = "papers"
     temp_dir = "temp"
     output_dir = "output"
-    output_file = process_pdf_file(input_file=f'{input_dir}/{name}', temp_dir=temp_dir, output_dir=output_dir)
+    output_file = process_pdf_file(input_file=f'papers/{name}', temp_dir=temp_dir, output_dir=output_dir)
     abs_output_file = os.path.abspath(output_file)
     return abs_output_file
 
+@app.post("/upload-pdf")
+async def upload_pdf(pdf_file: UploadFile):
+    pdf_file_name = pdf_file.filename
+    pdf_file_content = await pdf_file.read()
+    with open(f"papers/{pdf_file_name}", "wb") as f:
+        f.write(pdf_file_content)
+    return {"status": "success"}
 
 @app.post("/ask")
 async def ask(request: Request):
