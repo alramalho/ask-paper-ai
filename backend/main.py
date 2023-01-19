@@ -115,7 +115,7 @@ async def ask(request: Request):
             # We use temperature of 0.0 because it gives the most predictable, factual answer.
             temperature=0,
             max_tokens=500,
-            model="text-davinci-002",
+            model="text-davinci-003",
         )["choices"][0]["text"].strip("\n")
         write_to_json_cache(text, response)
         print("Response: \n" + response)
