@@ -55,12 +55,13 @@ const Home = () => {
 
     return <Flex justify="center" align="center" css={{ minHeight: '100%' }} direction="column">
         <h2>Ask Paper</h2>
-        <PaperUploader onFinish={(pdfId) => setSelectedPaper(pdfId)}/>
+        <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
         <Spacer y={3} />
         <h4>Or start with a template:</h4>
         {paperTemplates && <Flex css={{ gap: "$2" }}> {paperTemplates.map(paper => <Card
             isPressable
             isHoverable
+            key={paper}
             css={{ mw: "150px", mh: "200px", border: selectedPaper?.title == paper ? "1px solid blue" : undefined }}
             variant="bordered"
             onPress={async () => {
