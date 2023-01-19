@@ -98,11 +98,17 @@ async def upload_paper(pdf_file: UploadFile):
         print(e)
         return {"error": str(e)}
 
+def num_tokens(text):
+    # tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+    # return len(tokenizer.encode(text))
+    return len(text.split(' ')) * (8/5)  # safe rule of thumb https://beta.openai.com/tokenizer
 
 @app.post("/ask")
 async def ask(request: Request):
     body = await request.json()
-    text = body["text"]
+    question = body["question"]
+    context = body["context"]
+    text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". \nRequest: {question}\nStart paper context\n{context}\nEnd paper context"
     print(f"Asked text: \n{text}\n")
     logging.critical('\n---\Asked text: \n' + text)
     if (read_from_json_cache(text) is not None):
@@ -110,6 +116,14 @@ async def ask(request: Request):
         time.sleep(0.5)
         response = read_from_json_cache(text)
     else:
+
+        if num_tokens(text) > 3500:
+            print("Text too long, was cut")
+            max_length = int(len(' '.join(text.split(' ')) * 3500) / num_tokens(text))
+            text = text[:max_length] + "\nEnd paper context"
+
+        print(f"Used text: \n{text}\n")
+
         response = openai.Completion.create(
             prompt=text,
             # We use temperature of 0.0 because it gives the most predictable, factual answer.
