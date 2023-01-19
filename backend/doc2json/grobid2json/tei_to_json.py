@@ -14,7 +14,6 @@ from doc2json.utils.citation_util import SINGLE_BRACKET_REGEX, BRACKET_REGEX, BR
 from doc2json.utils.citation_util import is_expansion_string, _clean_empty_and_duplicate_authors_from_grobid_parse
 from doc2json.utils.refspan_util import sub_spans_and_update_indices
 
-
 REPLACE_TABLE_TOKS = {
     "<row>": "<tr>",
     "<row/>": "<tr/>",
@@ -31,6 +30,7 @@ class UniqTokenGenerator:
     """
     Generate unique token
     """
+
     def __init__(self, tok_string):
         self.tok_string = tok_string
         self.ind = 0
@@ -252,6 +252,7 @@ def process_citations_in_paragraph(para_el: BeautifulSoup, sp: BeautifulSoup, bi
     :param bracket:
     :return:
     """
+
     # CHECK if range between two surface forms is appropriate for bracket style expansion
     def _get_surface_range(start_surface, end_surface):
         span1_match = SINGLE_BRACKET_REGEX.match(start_surface)
@@ -522,7 +523,8 @@ def extract_abstract_from_tei_xml(
                         for para in div.find_all('p'):
                             if para.text:
                                 abstract_text.append(
-                                    process_paragraph(sp, para, [(None, "Abstract")], bib_dict, ref_dict, cleanup_bracket)
+                                    process_paragraph(sp, para, [(None, "Abstract")], bib_dict, ref_dict,
+                                                      cleanup_bracket)
                                 )
                     else:
                         if div.text:
@@ -589,6 +591,18 @@ def extract_body_text_from_div(
                     ref_dict,
                     cleanup_bracket
                 )
+
+    # keep divs with no tags, like outer headings
+    if len(div.contents) == 1 and div.text == sections[-1][1]:
+        chunks.append({
+            'text': '',
+            'cite_spans': [],
+            'ref_spans': [],
+            'eq_spans': [],
+            'section': sections[-1][1],
+            'sec_num': sections[-1][0],
+        })
+
     # process tags individuals
     for tag in div:
         try:
@@ -682,7 +696,8 @@ def extract_back_matter_from_tei_xml(
                 if child_div.text:
                     if child_div.text:
                         back_text.append(
-                            process_paragraph(sp, child_div, [(section_num, section_title)], bib_dict, ref_dict, cleanup_bracket)
+                            process_paragraph(sp, child_div, [(section_num, section_title)], bib_dict, ref_dict,
+                                              cleanup_bracket)
                         )
         sp.back.decompose()
     return back_text
