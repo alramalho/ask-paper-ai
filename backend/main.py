@@ -3,7 +3,6 @@ from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import datetime
-import time
 import openai
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
@@ -28,32 +27,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-def write_to_json_cache(key, value):
-    if not os.path.exists('cache.json'):
-        with open('cache.json', 'w') as f:
-            json.dump({}, f)
-
-    with open('cache.json', 'r') as f:
-        data = json.load(f)
-
-        data[key] = value
-
-        with open('cache.json', 'w') as f:
-            json.dump(data, f)
-
-
-def read_from_json_cache(key):
-    if not os.path.exists('cache.json'):
-        return None
-    with open('cache.json', 'r') as f:
-        data = json.load(f)
-        if (key in data):
-            return data[key]
-        else:
-            return None
-
 
 def process_paper(pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.replace('.pdf', '')
@@ -111,28 +84,21 @@ async def ask(request: Request):
     text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". \nRequest: {question}\nStart paper context\n{context}\nEnd paper context"
     print(f"Asked text: \n{text}\n")
     logging.critical('\n---\Asked text: \n' + text)
-    if (read_from_json_cache(text) is not None):
-        print("cache hit")
-        time.sleep(0.5)
-        response = read_from_json_cache(text)
-    else:
+    if num_tokens(text) > 3500:
+        print("Text too long, was cut")
+        max_length = int(len(' '.join(text.split(' ')) * 3500) / num_tokens(text))
+        text = text[:max_length] + "\nEnd paper context"
 
-        if num_tokens(text) > 3500:
-            print("Text too long, was cut")
-            max_length = int(len(' '.join(text.split(' ')) * 3500) / num_tokens(text))
-            text = text[:max_length] + "\nEnd paper context"
+    print(f"Used text: \n{text}\n")
 
-        print(f"Used text: \n{text}\n")
-
-        response = openai.Completion.create(
-            prompt=text,
-            # We use temperature of 0.0 because it gives the most predictable, factual answer.
-            temperature=0,
-            max_tokens=500,
-            model="text-davinci-003",
-        )["choices"][0]["text"].strip("\n")
-        write_to_json_cache(text, response)
-        print("Response: \n" + response)
+    response = openai.Completion.create(
+        prompt=text,
+        # We use temperature of 0.0 because it gives the most predictable, factual answer.
+        temperature=0,
+        max_tokens=500,
+        model="text-davinci-003",
+    )["choices"][0]["text"].strip("\n")
+    print("Response: \n" + response)
         
     logging.critical('\n---\Answer: \n' + response)
     return {"message": response}
