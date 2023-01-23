@@ -96,7 +96,7 @@ async def upload_paper(pdf_file: UploadFile):
         return json_paper
     except Exception as e:
         print(e)
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 def num_tokens(text):
     # tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
