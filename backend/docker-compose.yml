@@ -5,7 +5,7 @@ services:
     ports:
         - "8070:8070"
 
-  uvicorn:
+  fastapi:
     build:
       context: .
       dockerfile: Dockerfile

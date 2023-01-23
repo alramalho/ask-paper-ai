@@ -1,0 +1,34 @@
+version: "3"
+# inspiration: https://aws.amazon.com/pt/blogs/containers/automated-software-delivery-using-docker-compose-and-amazon-ecs/
+# inspiration: https://aws.amazon.com/pt/blogs/containers/deploy-applications-on-amazon-ecs-using-docker-compose/
+services:
+  grobid:
+    image: grobid/grobid:0.6.2
+    ports:
+      - "8070:8070"
+    networks:
+      - backend
+
+  fastapi:
+    image: 854257060653.dkr.ecr.eu-central-1.amazonaws.com/hippo-repository:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - efs:/root
+    networks:
+      - backend
+#    environment:
+#      GROBID_HOST: grobid
+#      GROBID_PORT: 8070
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  efs:
+    driver_opts:
+      # Filesystem configuration
+      backup_policy: ENABLED
+      lifecycle_policy: AFTER_14_DAYS
+      throughput_mode: bursting

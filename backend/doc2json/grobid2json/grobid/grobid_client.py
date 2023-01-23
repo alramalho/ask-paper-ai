@@ -18,8 +18,8 @@ require something scalable too, which is not implemented for the moment.
 '''
 
 DEFAULT_GROBID_CONFIG = {
-    "grobid_server": "localhost",
-    "grobid_port": "8070",
+    "grobid_server": os.getenv("GROBID_HOST") if os.getenv("GROBID_HOST") else "cloud.science-miner.com/grobid",
+    "grobid_port": os.getenv("GROBID_PORT") if os.getenv("GROBID_PORT") else "None",
     "batch_size": 1000,
     "sleep_time": 5,
     "generateIDs": False,
@@ -76,7 +76,8 @@ class GrobidClient(ApiClient):
         }
 
         the_url = 'http://' + self.grobid_server
-        the_url += ":" + self.grobid_port
+        if self.grobid_port != "None":
+            the_url += ":" + self.grobid_port
         the_url += "/api/" + service
 
         # set the GROBID parameters
