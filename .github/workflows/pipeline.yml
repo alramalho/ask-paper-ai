@@ -54,10 +54,8 @@ jobs:
           cd backend/infrastructure
           yarn
           cdk bootstrap
-          yarn diff
-          yarn build-backend-zip
-          cd ..
-          ls -l
+          
+          yarn fast-deploy
 
       - name: Deploy-Frontend
         run: |
