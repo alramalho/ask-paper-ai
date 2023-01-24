@@ -56,10 +56,8 @@ jobs:
           cdk bootstrap
           yarn diff
           yarn build-backend-zip
-          yarn fast-deploy
-        with:
-          name: backend_zipped
-          path: backend/src.zip
+          cd ..
+          ls -l
 
       - name: Deploy-Frontend
         run: |
