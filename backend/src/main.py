@@ -27,7 +27,7 @@ FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 
 def process_paper(pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.replace('.pdf', '')
-    output_file = process_pdf_file(input_file=f'${FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf', temp_dir=f"{FILESYSTEM_BASE}/temp", output_dir=f"{FILESYSTEM_BASE}/output")
+    output_file = process_pdf_file(input_file=f'{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf', temp_dir=f"{FILESYSTEM_BASE}/temp", output_dir=f"{FILESYSTEM_BASE}/output")
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
         print(f['title'])
@@ -66,7 +66,6 @@ async def upload_paper(pdf_file: UploadFile):
             os.mkdir(output_location)
             print("created dir")
         with open(f"{output_location}/{pdf_file_name}", "wb") as f:
-            print("created file")
             f.write(pdf_file_content)
             print("created file")
         json_paper = process_paper(pdf_file_name)
