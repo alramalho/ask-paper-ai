@@ -52,7 +52,7 @@ jobs:
       - name: Deploy-Backend
         run: |
 
-          cd backend/infrastucture
+          cd backend/infrastructure
           yarn
           cdk bootstrap
           yarn diff
