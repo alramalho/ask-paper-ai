@@ -57,17 +57,18 @@ def get_paper_templates():
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
-    print("Upload paper")
-    output_location = f"{FILESYSTEM_BASE}/papers"
     try:
         pdf_file_name = pdf_file.filename
         pdf_file_content = await pdf_file.read()
+        print(f"Upload paper {pdf_file_name}")
+        output_location = f"{FILESYSTEM_BASE}/papers"
         if not os.path.exists(output_location):
             os.mkdir(output_location)
             print("created dir")
         with open(f"{output_location}/{pdf_file_name}", "wb") as f:
             print("created file")
             f.write(pdf_file_content)
+            print("created file")
         json_paper = process_paper(pdf_file_name)
         return json_paper
     except Exception as e:
