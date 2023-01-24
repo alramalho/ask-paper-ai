@@ -60,6 +60,8 @@ async def upload_paper(pdf_file: UploadFile):
     try:
         pdf_file_name = pdf_file.filename
         pdf_file_content = await pdf_file.read()
+        if not os.path.exists('papers'):
+            os.mkdir('papers')
         with open(f"papers/{pdf_file_name}", "wb") as f:
             f.write(pdf_file_content)
         json_paper = process_paper(pdf_file_name)

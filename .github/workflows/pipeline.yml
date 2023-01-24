@@ -55,6 +55,8 @@ jobs:
           yarn
           cdk bootstrap
           yarn diff
+          yarn build-backend-zip
+          pwd
           ls -l
           yarn fast-deploy
 
