@@ -16,6 +16,7 @@ export class MainStack extends cdk.Stack {
       runtime: lambda.Runtime.PYTHON_3_9,
       environment: {
         OPENAI_KEY: props.openaiApiKey,
+        FILESYSTEM_BASE: '/tmp',
         GROBID_URL: "https://cloud.science-miner.com/grobid", // todo use this only for PoC
       }
     });

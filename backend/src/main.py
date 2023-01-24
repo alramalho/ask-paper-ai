@@ -23,11 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 
 def process_paper(pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.replace('.pdf', '')
-    output_file = process_pdf_file(input_file=f'papers/{pdf_file_name}.pdf', temp_dir="../backend/temp", output_dir="../backend/output")
+    output_file = process_pdf_file(input_file=f'${FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf', temp_dir=f"{FILESYSTEM_BASE}temp", output_dir=f"{FILESYSTEM_BASE}output")
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
         print(f['title'])
@@ -58,12 +58,13 @@ def get_paper_templates():
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
     print("Upload paper")
+    output_location = f"{FILESYSTEM_BASE}/papers"
     try:
         pdf_file_name = pdf_file.filename
         pdf_file_content = await pdf_file.read()
-        if not os.path.exists('papers'):
-            os.mkdir('papers')
-        with open(f"papers/{pdf_file_name}", "wb") as f:
+        if not os.path.exists(output_location):
+            os.mkdir(output_location)
+        with open(f"{output_location}/{pdf_file_name}", "wb") as f:
             f.write(pdf_file_content)
         json_paper = process_paper(pdf_file_name)
         return json_paper
