@@ -53,6 +53,7 @@ jobs:
 
           cd backend/infrastructure
           yarn
+          yarn build-backend-zip
           cdk bootstrap
           
           yarn fast-deploy
