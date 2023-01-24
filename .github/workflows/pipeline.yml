@@ -1,0 +1,69 @@
+name: Github Pipeline
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  Deploy:
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: sandbox
+      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Environment setting
+        run: |
+          sudo apt install nodejs
+          node -v
+          sudo apt install npm
+          npm -v
+          npm install -g aws-cdk
+          cdk --version
+          sudo apt install jq
+          jq --version
+
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws -h
+
+          npm install netlify-cli --save-dev
+          netlify -v
+
+
+      - name: Configure AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region eu-central-1
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
+          aws configure set region eu-central-1  --profile hippo
+
+      - name: Deploy-Backend
+        run: |
+
+          cd backend/infrastucture
+          yarn
+          cdk bootstrap
+          yarn diff
+          yarn fast-deploy
+
+      - name: Deploy-Frontend
+        run: |
+          cd frontend
+          yarn
+
+          export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURL' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          yarn build
+          netlify deploy --auth $NETLIFY_AUTH_TOKEN --dir ./next

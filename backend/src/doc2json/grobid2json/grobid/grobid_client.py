@@ -18,8 +18,8 @@ require something scalable too, which is not implemented for the moment.
 '''
 
 DEFAULT_GROBID_CONFIG = {
-    "grobid_server": os.getenv("GROBID_HOST") if os.getenv("GROBID_HOST") else "cloud.science-miner.com/grobid",
-    "grobid_port": os.getenv("GROBID_PORT") if os.getenv("GROBID_PORT") else "None",
+    "grobid_url": os.getenv("GROBID_URL") if os.getenv("GROBID_URL") else "https://cloud.science-miner.com/grobid",
+    "grobid_protocol": os.getenv("GROBID_PROTOCOL") if os.getenv("GROBID_PROTOCOL") else "https",
     "batch_size": 1000,
     "sleep_time": 5,
     "generateIDs": False,
@@ -40,8 +40,7 @@ class GrobidClient(ApiClient):
         self.include_raw_citations = self.config["include_raw_citations"]
         self.include_raw_affiliations = self.config["include_raw_affiliations"]
         self.max_workers = self.config["max_workers"]
-        self.grobid_server = self.config["grobid_server"]
-        self.grobid_port = self.config["grobid_port"]
+        self.grobid_url = self.config["grobid_url"]
         self.sleep_time = self.config["sleep_time"]
 
     def process(self, input: str, output: str, service: str):
@@ -75,10 +74,7 @@ class GrobidClient(ApiClient):
             )
         }
 
-        the_url = 'http://' + self.grobid_server
-        if self.grobid_port != "None":
-            the_url += ":" + self.grobid_port
-        the_url += "/api/" + service
+        the_url = self.get_service_url(service)
 
         # set the GROBID parameters
         the_data = {}
@@ -125,6 +121,9 @@ class GrobidClient(ApiClient):
         else:
             return res.text
 
+    def get_service_url(self, service: str):
+        return self.grobid_url + "/api/" + service
+
     def process_pdf(self, pdf_file: str, output: str, service: str) -> None:
         # check if TEI file is already produced
         # we use ntpath here to be sure it will work on Windows too
@@ -149,9 +148,7 @@ class GrobidClient(ApiClient):
             'consolidateCitations': '0'
         }
 
-        the_url = 'http://' + self.grobid_server
-        the_url += ":" + self.grobid_port
-        the_url += "/api/processCitation"
+        the_url = self.get_service_url('processCitation')
 
         for _ in range(5):
             try:
@@ -178,10 +175,7 @@ class GrobidClient(ApiClient):
         the_data = {
             'names': header_string
         }
-
-        the_url = 'http://' + self.grobid_server
-        the_url += ":" + self.grobid_port
-        the_url += "/api/processHeaderNames"
+        the_url = self.get_service_url('processHeaderNames')
 
         res, status = self.post(
             url=the_url,
@@ -205,9 +199,7 @@ class GrobidClient(ApiClient):
             'affiliations': aff_string
         }
 
-        the_url = 'http://' + self.grobid_server
-        the_url += ":" + self.grobid_port
-        the_url += "/api/processAffiliations"
+        the_url = self.get_service_url('processAffiliations')
 
         res, status = self.post(
             url=the_url,
