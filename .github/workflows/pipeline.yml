@@ -9,7 +9,6 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     env:
-      ENVIRONMENT: sandbox
       OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -56,7 +55,7 @@ jobs:
           yarn
           cdk bootstrap
           yarn diff
-          yarn build-backend-zip
+          ls -l
           yarn fast-deploy
 
       - name: Deploy-Frontend
