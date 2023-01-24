@@ -31,9 +31,9 @@ def process_paper(pdf_file_name) -> dict:
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
         print(f['title'])
-        os.rename(f"papers/{pdf_file_name}.pdf", f"papers/{f['title'][:200]}.pdf")
-        os.rename(f"temp/{pdf_file_name}.tei.xml", f"temp/{f['title'][:200]}.tei.xml")
-        os.rename(f"output/{pdf_file_name}.json", f"output/{f['title'][:200]}.json")
+        os.rename(f"{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf", f"{FILESYSTEM_BASE}/papers/{f['title'][:200]}.pdf")
+        os.rename(f"{FILESYSTEM_BASE}/temp/{pdf_file_name}.tei.xml", f"{FILESYSTEM_BASE}/temp/{f['title'][:200]}.tei.xml")
+        os.rename(f"{FILESYSTEM_BASE}/output/{pdf_file_name}.json", f"{FILESYSTEM_BASE}/output/{f['title'][:200]}.json")
         return f
 
 
@@ -42,10 +42,10 @@ async def get_existing_paper(request: Request):
     body = await request.json()
     name = body["name"]
     print(f"{name}.json")
-    print(os.listdir('../backend/output'))
-    if os.path.exists('../backend/output') and f"{name}.json" in os.listdir('../backend/output'):
+    print(os.listdir(f'{FILESYSTEM_BASE}/output'))
+    if os.path.exists(f'{FILESYSTEM_BASE}/output') and f"{name}.json" in os.listdir(f'{FILESYSTEM_BASE}/output'):
         print(f"Get paper. Paper exists. ({name})")
-        with open(os.path.join('../backend/output', f"{name}.json"), 'r') as f:
+        with open(os.path.join(f'{FILESYSTEM_BASE}/output', f"{name}.json"), 'r') as f:
             return json.load(f)
     else:
         raise HTTPException(status_code=404, detail="Paper not found")
@@ -53,7 +53,7 @@ async def get_existing_paper(request: Request):
 @app.get("/get-paper-templates")
 def get_paper_templates():
     print("Get all papers")
-    return [x.replace('.json', '') for x in os.listdir("../backend/output")] if os.path.exists("../backend/output") else []
+    return [x.replace('.json', '') for x in os.listdir(f"{FILESYSTEM_BASE}/output")] if os.path.exists(f"{FILESYSTEM_BASE}/output") else []
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
