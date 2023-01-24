@@ -18,8 +18,7 @@ require something scalable too, which is not implemented for the moment.
 '''
 
 DEFAULT_GROBID_CONFIG = {
-    "grobid_url": os.getenv("GROBID_URL") if os.getenv("GROBID_URL") else "https://cloud.science-miner.com/grobid",
-    "grobid_protocol": os.getenv("GROBID_PROTOCOL") if os.getenv("GROBID_PROTOCOL") else "https",
+    "grobid_url": os.getenv("GROBID_URL", "https://cloud.science-miner.com/grobid"),
     "batch_size": 1000,
     "sleep_time": 5,
     "generateIDs": False,
