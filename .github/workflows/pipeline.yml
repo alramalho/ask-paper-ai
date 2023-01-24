@@ -56,6 +56,7 @@ jobs:
           yarn
           cdk bootstrap
           yarn diff
+          yarn build-backend-zip
           yarn fast-deploy
 
       - name: Deploy-Frontend
