@@ -3,6 +3,7 @@
 **/*.env
 **/*.next
 **/node_modules
+frontend/out
 
 pdf2json-api/temp
 pdf2json-api/output
@@ -10,3 +11,5 @@ pdf2json-api/output
 **/*.DS_Store
 **/*.pyc
 **/*.log
+# Local Netlify folder
+.netlify
