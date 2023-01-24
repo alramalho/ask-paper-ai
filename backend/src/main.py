@@ -57,6 +57,7 @@ def get_paper_templates():
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
+    print("Upload paper")
     try:
         pdf_file_name = pdf_file.filename
         pdf_file_content = await pdf_file.read()
