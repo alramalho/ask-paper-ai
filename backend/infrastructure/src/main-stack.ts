@@ -14,6 +14,7 @@ export class MainStack extends cdk.Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'src.zip')),
       handler: 'main.handler',
       runtime: lambda.Runtime.PYTHON_3_9,
+      timeout: cdk.Duration.seconds(90),
       environment: {
         OPENAI_KEY: props.openaiApiKey,
         FILESYSTEM_BASE: '/tmp',
