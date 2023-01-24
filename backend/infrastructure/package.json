@@ -11,7 +11,7 @@
     "cdk": "cdk",
     "diff": "cdk diff --profile hippo",
     "prebuild-backend-zip": "rm -rf ../src_dependencies && rm -rf ../src.zip",
-    "build-backend-zip": "cd .. && pip install -t src_dependencies -r requirements.txt && (cd src_dependencies; zip ../src.zip -r .) && (cd src; zip ../src.zip -u . -r) ",
+    "build-backend-zip": "(cd ..; pip install -t src_dependencies -r requirements.txt) && (cd ../src_dependencies; zip ../src.zip -r .) && (cd ../src; zip ../src.zip -u . -r) ",
     "presynth": "yarn build-backend-zip",
     "synth": "echo '\n️\\0033[43;1m ⚠ Consider running `yarn diff` to check differences ⚠\\0033[0m️\n️' &&  rm -rf cdk.out && cdk synth",
     "deploy": "cdk deploy --profile hippo",
