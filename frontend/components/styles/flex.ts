@@ -6,6 +6,7 @@ export const Flex = styled('div', {
   flexDirection: 'row',
   placeItems: 'center',
   justifyContent: 'center',
+  flexWrap: 'wrap',
 
   variants: {
     direction: {

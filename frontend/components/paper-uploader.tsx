@@ -6,6 +6,7 @@ import {Flex} from "./styles/flex";
 import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
 import {Paper} from "../pages";
+import {Box} from "./layout";
 
 const Label = styled('label')
 const Input = styled('input')
@@ -54,7 +55,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   }
 
   return (
-    <>
+    <Box css={{margin: '0 $3'}}>
       <Flex css={{gap: "$5"}}>
         <Input css={{display: 'none'}} id="paper-upload" type="file" onChange={handlePaperSubmit}
                accept="application/pdf"/>
@@ -73,7 +74,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       ? <Text>Selected "{uploadedPaper.title}"</Text>
           : <Text i>Couldn't properly read paper title. Results might be flawed.</Text>
       )}
-    </>
+    </Box>
   );
 }
 

@@ -32,7 +32,7 @@ const Home = () => {
     setValue: setQuestionValue,
     reset: resetQuestion,
     bindings,
-  } = useInput("Type your question here...");
+  } = useInput("");
 
 
   const handleSubmit = async (paper: Paper, question: string, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
@@ -46,7 +46,7 @@ const Home = () => {
     setIsRunning(false)
   }
 
-  return <Flex justify="center" align="center" css={{minHeight: '100%'}} direction="column">
+  return <Flex justify="center" align="center" css={{minHeight: '100%', maxWidth: '100vw'}} direction="column">
     <Image src="hippo.svg" css={{width: "100px"}}/>
     <h2>Ask Paper</h2>
     <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
@@ -62,7 +62,8 @@ const Home = () => {
               size="lg"
               minRows={4}
               maxRows={20}
-              css={{width: "400px",}}
+              placeholder="Type your question here..."
+              css={{width: "400px", maxWidth: "100%", margin: "$2"}}
             />
             <Button iconRight={<SendIcon/>} onPress={() => handleSubmit(
               selectedPaper,
