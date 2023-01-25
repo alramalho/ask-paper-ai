@@ -62,7 +62,7 @@ jobs:
           yarn build-backend-zip
           cdk bootstrap
           
-          yarn fast-deploy
+          yarn no-build-fast-deploy
 
       - name: Deploy-Frontend
         run: |
