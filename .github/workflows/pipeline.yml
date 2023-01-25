@@ -20,6 +20,8 @@ jobs:
 
       - name: Environment setting
         run: |
+          sudo apt update
+
           sudo apt install nodejs
           node -v
           sudo apt install npm
@@ -28,6 +30,8 @@ jobs:
           cdk --version
           sudo apt install jq
           jq --version
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
           sudo apt install python3.9
           python3.9 --version
 
