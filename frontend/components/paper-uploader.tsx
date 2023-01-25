@@ -69,7 +69,10 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
         {status == 'error' && <XIcon/>}
       </Flex>
       <Spacer y={1}/>
-      {uploadedPaper && <Text>Selected "{uploadedPaper.title}"</Text>}
+      {uploadedPaper && (uploadedPaper.title.length > 0
+      ? <Text>Selected "{uploadedPaper.title}"</Text>
+          : <Text i>Couldn't properly read paper title. Results might be flawed.</Text>
+      )}
     </>
   );
 }
