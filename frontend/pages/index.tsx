@@ -50,7 +50,7 @@ const Home = () => {
         if (error.response) {
           setLLMResponse("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
         } else {
-          setLLMResponse("Something went wrong...</br>Details: " + error.message)
+          setLLMResponse("Something went wrong...</br>Technical Details: " + error.message)
         }
         console.error(error)
       })

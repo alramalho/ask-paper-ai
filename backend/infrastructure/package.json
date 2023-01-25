@@ -10,7 +10,7 @@
     "test": "jest",
     "cdk": "cdk",
     "diff": "cdk diff --profile hippo",
-    "build-backend-zip": "(cd ../scripts; chmod +x ./build.sh; ./build.sh)",
+    "build-backend-zip": "(cd ../scripts; chmod +x ./build.sh; sh ./build.sh)",
     "presynth": "yarn build-backend-zip",
     "synth": "echo '\n️\\0033[43;1m ⚠ Consider running `yarn diff` to check differences ⚠\\0033[0m️\n️' &&  rm -rf cdk.out && cdk synth",
     "deploy": "cdk deploy --profile hippo",
