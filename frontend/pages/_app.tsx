@@ -10,6 +10,7 @@ export const lightTheme = createTheme({
       colors: {
          background: '#fcfcfc',
          discordColor: "#5865F2",
+         primary: "#ff6372",
          hippo1: "#ff6e9e",
          hippo1light: "#f598b7",
          hippo1dark: "#a1254e",

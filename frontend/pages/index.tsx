@@ -1,4 +1,4 @@
-import {Text, Button, Card, Spacer, Loading, Textarea, useInput} from "@nextui-org/react";
+import {Text, Button, Card, Spacer, Loading, Textarea, useInput, Image} from "@nextui-org/react";
 import {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -47,6 +47,7 @@ const Home = () => {
   }
 
   return <Flex justify="center" align="center" css={{minHeight: '100%'}} direction="column">
+    <Image src="hippo.svg" css={{width: "100px"}}/>
     <h2>Ask Paper</h2>
     <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
     <Spacer y={3}/>
@@ -79,7 +80,7 @@ const Home = () => {
         <Spacer y={2}/>
         <h4>Or start with predefined action:</h4>
         <Button
-            css={{backgroundColor: "$purple300", color: "black"}}
+            css={{backgroundColor: "$selection", color: "black"}}
             onPress={() => {
               handleSubmit(
                 selectedPaper,
