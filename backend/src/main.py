@@ -38,25 +38,6 @@ def process_paper(pdf_file_name) -> dict:
         os.rename(f"{FILESYSTEM_BASE}/output/{pdf_file_name}.json", f"{FILESYSTEM_BASE}/output/{f['title'][:200]}.json")
         return f
 
-
-@app.post("/get-existing-paper")
-async def get_existing_paper(request: Request):
-    body = await request.json()
-    name = body["name"]
-    print(f"{name}.json")
-    print(os.listdir(f'{FILESYSTEM_BASE}/output'))
-    if os.path.exists(f'{FILESYSTEM_BASE}/output') and f"{name}.json" in os.listdir(f'{FILESYSTEM_BASE}/output'):
-        print(f"Get paper. Paper exists. ({name})")
-        with open(os.path.join(f'{FILESYSTEM_BASE}/output', f"{name}.json"), 'r') as f:
-            return json.load(f)
-    else:
-        raise HTTPException(status_code=404, detail="Paper not found")
-
-@app.get("/get-paper-templates")
-def get_paper_templates():
-    print("Get all papers")
-    return [x.replace('.json', '') for x in os.listdir(f"{FILESYSTEM_BASE}/output")] if os.path.exists(f"{FILESYSTEM_BASE}/output") else []
-
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
     try:
