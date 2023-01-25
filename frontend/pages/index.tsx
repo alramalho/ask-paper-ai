@@ -5,6 +5,7 @@ import SendIcon from "../components/icons/send-icon";
 import {Box} from "../components/layout";
 import {Flex} from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
+import axios from "axios";
 
 export type Paper = {
   abstract: string
@@ -35,15 +36,27 @@ const Home = () => {
   } = useInput("");
 
 
-  const handleSubmit = async (paper: Paper, question: string, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
+  const handleSubmit = (paper: Paper, question: string, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
     setIsRunning(true)
     setLoadingText("Reading paper...")
 
     const aggreggatedText = paper.abstract + paper.pdf_parse.body_text.concat(paper.pdf_parse.back_matter).filter(e => sectionFilterer(e.section)).map(bodyText => bodyText.text).join('\n')
 
-    const datasetTable = await askPaper(question, aggreggatedText)
-    setLLMResponse(makeLinksClickable(datasetTable))
-    setIsRunning(false)
+    askPaper(question, aggreggatedText)
+      .then(res => {
+        setLLMResponse(makeLinksClickable(res.data.message))
+      })
+      .catch(error => {
+        if (error.response) {
+          setLLMResponse("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
+        } else {
+          setLLMResponse("Something went wrong...</br>Details: " + error.message)
+        }
+        console.error(error)
+      })
+      .finally(() => {
+        setIsRunning(false)
+      })
   }
 
   return <Flex justify="center" align="center" css={{minHeight: '100%', maxWidth: '100vw'}} direction="column">
@@ -112,14 +125,12 @@ const Home = () => {
   </Flex>;
 };
 
-async function askPaper(question: string, context: string) {
-  return (await fetch(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {
-    method: 'POST',
+function askPaper(question: string, context: string) {
+  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, { question, context }, {
     headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({question, context})
-  }).then(response => response.json()).catch(console.error)).message;
+    }
+  })
 }
 
 function makeLinksClickable(text: string) {

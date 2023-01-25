@@ -9,9 +9,8 @@ import os
 import json
 from dotenv import load_dotenv
 from mangum import Mangum
-load_dotenv(dotenv_path='../.env')
+load_dotenv()
 
-# remember to install autoenv -> from some reason python dotenv was not working 🤷‍♂️
 openai.api_key = os.getenv("OPENAI_KEY")
 
 app = FastAPI()
@@ -64,28 +63,32 @@ def num_tokens(text):
 
 @app.post("/ask")
 async def ask(request: Request):
-    body = await request.json()
-    question = body["question"]
-    context = body["context"]
-    text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". \nRequest: {question}\nStart paper context\n{context}\nEnd paper context"
-    print(f"Asked text: \n{text}\n")
-    if num_tokens(text) > 3500:
-        print("Text too long, was cut")
-        max_length = int(len(' '.join(text.split(' ')) * 3500) / num_tokens(text))
-        text = text[:max_length] + "\nEnd paper context"
+    try:
+        body = await request.json()
+        question = body["question"]
+        context = body["context"]
+        text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". \nRequest: {question}\nStart paper context\n{context}\nEnd paper context"
+        print(f"Asked text: \n{text}\n")
+        if num_tokens(text) > 3500:
+            print("Text too long, was cut")
+            max_length = int(len(' '.join(text.split(' ')) * 3500) / num_tokens(text))
+            text = text[:max_length] + "\nEnd paper context"
 
-    print(f"Used text: \n{text}\n")
+        print(f"Used text: \n{text}\n")
 
-    response = openai.Completion.create(
-        prompt=text,
-        # We use temperature of 0.0 because it gives the most predictable, factual answer.
-        temperature=0,
-        max_tokens=500,
-        model="text-davinci-003",
-    )["choices"][0]["text"].strip("\n")
-    print("Response: \n" + response)
-        
-    return {"message": response}
+        response = openai.Completion.create(
+            prompt=text,
+            # We use temperature of 0.0 because it gives the most predictable, factual answer.
+            temperature=0,
+            max_tokens=500,
+            model="text-davinci-003",
+        )["choices"][0]["text"].strip("\n")
+        print("Response: \n" + response)
+
+        return {"message": response}
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 if __name__ == "__main__":
