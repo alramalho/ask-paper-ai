@@ -1,4 +1,6 @@
 import os.path
+import traceback
+
 from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import openai
@@ -72,6 +74,7 @@ async def upload_paper(pdf_file: UploadFile):
         return json_paper
     except Exception as e:
         print(e)
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 def num_tokens(text):
