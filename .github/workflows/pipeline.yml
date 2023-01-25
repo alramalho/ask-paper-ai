@@ -28,6 +28,8 @@ jobs:
           cdk --version
           sudo apt install jq
           jq --version
+          sudo apt install python3.9
+          python3.9 --version
 
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
