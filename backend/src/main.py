@@ -71,6 +71,7 @@ async def upload_paper(pdf_file: UploadFile):
             f.write(pdf_file_content)
             print("created file")
         json_paper = process_paper(pdf_file_name)
+        print(f"Success! Returned json {json_paper}")
         return json_paper
     except Exception as e:
         print(e)

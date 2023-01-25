@@ -14,3 +14,5 @@ output
 temp
 *.zip
 src_dependencies
+build
+build.zip

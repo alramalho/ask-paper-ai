@@ -1,5 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
+import {Construct} from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 interface MainStackProps {
@@ -11,9 +11,9 @@ export class MainStack extends cdk.Stack {
     super(scope, id);
 
     const fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
-      code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'src.zip')),
+      code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'build.zip')),
       handler: 'main.handler',
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_8,
       timeout: cdk.Duration.seconds(90),
       environment: {
         OPENAI_KEY: props.openaiApiKey,
