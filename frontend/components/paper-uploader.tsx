@@ -7,6 +7,7 @@ import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
 import {Paper} from "../pages";
 import {Box} from "./layout";
+import {PressEvent} from "@react-types/shared";
 
 const Label = styled('label')
 const Input = styled('input')
@@ -16,6 +17,7 @@ interface PaperUploaderProps {
 }
 
 const PaperUploader = ({onFinish}: PaperUploaderProps) => {
+  const [underText, setUnderText] = useState<string | undefined>(undefined)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const labelEl = useRef(null)
@@ -37,6 +39,12 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       return;
     }
     if (!file) return;
+    console.log(file.size)
+    if (file.size > 6_000_000) {
+      setUnderText("Sorry! But currently we only support file up to 6MB. Please compress it before uploading it 🙏")
+      setStatus('error')
+      return
+    }
     const formData = new FormData();
     // notice that this 'name' must match the name of the field read in the backend
     formData.append('pdf_file', file);
@@ -44,6 +52,11 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL || 'http://localhost:8080'}/upload-paper`, formData, {
         headers: {'Content-Type': 'multipart/form-data'},
       });
+      if (res.data.title.length > 0) {
+        setUnderText(`Selected \"${res.data.title}\"`)
+      } else {
+        setUnderText(`There was a problem reading the paper title. Everything should still work though!`)
+      }
       setUploadedPaper(res.data as Paper)
       setStatus('uploaded')
       console.log(res);
@@ -60,7 +73,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
         <Input css={{display: 'none'}} id="paper-upload" type="file" onChange={handlePaperSubmit}
                accept="application/pdf"/>
         <Label htmlFor="paper-upload" ref={labelEl}>
-          <Button onPress={(e) => {
+          <Button onPress={(e: PressEvent) => {
             // @ts-ignore
             labelEl.current!.click()
           }} icon={<UploadIcon/>}>Upload your paper</Button>
@@ -70,10 +83,9 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
         {status == 'error' && <XIcon/>}
       </Flex>
       <Spacer y={1}/>
-      {uploadedPaper && (uploadedPaper.title.length > 0
-      ? <Text>Selected "{uploadedPaper.title}"</Text>
-          : <Text i>Couldn't properly read paper title. Results might be flawed.</Text>
-      )}
+      {underText &&
+          <Text>{underText}</Text>
+      }
     </Box>
   );
 }
