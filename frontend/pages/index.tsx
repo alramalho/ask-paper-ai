@@ -36,13 +36,13 @@ const Home = () => {
   } = useInput("");
 
 
-  const handleSubmit = (paper: Paper, question: string, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
+  const handleSubmit = (paper: Paper, question: string, quote: boolean = false, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
     setIsRunning(true)
     setLoadingText("Reading paper...")
 
     const aggreggatedText = paper.abstract + paper.pdf_parse.body_text.concat(paper.pdf_parse.back_matter).filter(e => sectionFilterer(e.section)).map(bodyText => bodyText.text).join('\n')
 
-    askPaper(question, aggreggatedText)
+    askPaper(question, aggreggatedText, quote)
       .then(res => {
         setLLMResponse(makeLinksClickable(res.data.message))
       })
@@ -81,6 +81,7 @@ const Home = () => {
             <Button iconRight={<SendIcon/>} onPress={() => handleSubmit(
               selectedPaper,
               questionValue,
+              true,
               (e) => ![
                 "reference",
                 "acknowledgement",
@@ -99,6 +100,7 @@ const Home = () => {
               handleSubmit(
                 selectedPaper,
                 `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
+                false,
                 (e) => e.toLowerCase().includes('data')
               )
             }}
@@ -125,8 +127,8 @@ const Home = () => {
   </Flex>;
 };
 
-function askPaper(question: string, context: string) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, { question, context }, {
+function askPaper(question: string, context: string, quote: boolean = false) {
+  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote}, {
     headers: {
       'Content-Type': 'application/json'
     }
