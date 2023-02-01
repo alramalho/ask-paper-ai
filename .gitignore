@@ -13,3 +13,4 @@ pdf2json-api/output
 **/*.log
 # Local Netlify folder
 .netlify
+.vercel
