@@ -1,5 +1,6 @@
 import {CSS, styled} from '@nextui-org/react';
 import {Flex} from "../styles/flex";
+import { useSession, signIn, signOut } from "next-auth/react"
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,8 +14,12 @@ export const Box = styled('div', {
 export const Layout = ({children, css}: LayoutProps) => {
   return (
     <Flex
+      justify="center"
+      align="center"
+      direction="column"
       css={{
-        maxW: '100%',
+        minHeight: '100%',
+        maxWidth: '100vw',
         background: '$background',
         ...css
       }}
