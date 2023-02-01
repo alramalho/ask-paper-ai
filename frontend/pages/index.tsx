@@ -7,6 +7,7 @@ import {Flex} from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import axios from "axios";
 import {DiscordSessionWrapper} from "../components/discord-session-wrapper";
+import Feedback from "../components/feedback";
 
 export type Paper = {
   abstract: string
@@ -117,12 +118,15 @@ const Home = () => {
             </>
         }
         {LLMResponse &&
-            <Box css={{textAlign: 'left', margin: '$6'}}>
-                <MarkdownView
-                    markdown={LLMResponse}
-                    options={{tables: true, emoji: true,}}
-                />
-            </Box>
+            <>
+                <Box css={{textAlign: 'left', margin: '$6'}}>
+                    <MarkdownView
+                        markdown={LLMResponse}
+                        options={{tables: true, emoji: true,}}
+                    />
+                </Box>
+                <Feedback/>
+            </>
         }
       </>}
     </ DiscordSessionWrapper>
