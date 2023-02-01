@@ -62,7 +62,6 @@ const Home = () => {
 
   return <Layout>
     <SessionProvider>
-      <Image src="hippo.svg" css={{width: "100px"}}/>
       <h2>Ask Paper</h2>
       <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
       <Spacer y={3}/>

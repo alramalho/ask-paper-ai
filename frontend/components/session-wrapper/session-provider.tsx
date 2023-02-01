@@ -1,9 +1,9 @@
-import {Avatar, Button, Link, Loading, styled, Text} from '@nextui-org/react';
+import {Avatar, Button, Link, Loading, Spacer, styled, Text} from '@nextui-org/react';
 import {Flex} from "../styles/flex";
 import {useSession, signIn} from "next-auth/react"
 import {useEffect, useState} from "react";
 import axios from "axios";
-import OneLogin from "next-auth/providers/onelogin";
+import DiscordIcon from "../icons/discord-icon";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -46,8 +46,9 @@ export const SessionProvider = ({children}: LayoutProps) => {
   }
   if (session == null && status == "unauthenticated") {
     return (<>
-      <Text>Not signed in</Text>
-      <Button onClick={() => signIn("discord")}>Sign in</Button>
+      <Text h4>You are not signed in!</Text>
+      <Spacer y={1}/>
+      <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>Sign in with Discord</Button>
     </>)
   }
   if (session != null && status == "authenticated") {
@@ -84,4 +85,5 @@ export const SessionProvider = ({children}: LayoutProps) => {
       )
     }
   }
+  return (<></>)
 };

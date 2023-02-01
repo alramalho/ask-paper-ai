@@ -1,4 +1,4 @@
-import {CSS, styled} from '@nextui-org/react';
+import {CSS, Image, styled} from '@nextui-org/react';
 import {Flex} from "../styles/flex";
 import { useSession, signIn, signOut } from "next-auth/react"
 
@@ -24,6 +24,7 @@ export const Layout = ({children, css}: LayoutProps) => {
         ...css
       }}
     >
+      <Image src="hippo.svg" css={{width: "100px"}}/>
       {children}
     </Flex>
   )
