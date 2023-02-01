@@ -1,5 +1,5 @@
 import {CSS, Image, styled} from '@nextui-org/react';
-import {Flex} from "../styles/flex";
+import {Flex} from "./styles/flex";
 import { useSession, signIn, signOut } from "next-auth/react"
 
 interface LayoutProps {

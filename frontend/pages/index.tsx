@@ -6,7 +6,7 @@ import {Box, Layout} from "../components/layout";
 import {Flex} from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import axios from "axios";
-import {SessionProvider} from "../components/session-wrapper/session-provider";
+import {DiscordSessionWrapper} from "../components/discord-session-wrapper";
 
 export type Paper = {
   abstract: string
@@ -61,7 +61,7 @@ const Home = () => {
   }
 
   return <Layout>
-    <SessionProvider>
+    <DiscordSessionWrapper>
       <h2>Ask Paper</h2>
       <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
       <Spacer y={3}/>
@@ -125,7 +125,7 @@ const Home = () => {
             </Box>
         }
       </>}
-    </ SessionProvider>
+    </ DiscordSessionWrapper>
   </Layout>
     ;
 };

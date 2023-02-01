@@ -1,9 +1,9 @@
 import {Avatar, Button, Link, Loading, Spacer, styled, Text} from '@nextui-org/react';
-import {Flex} from "../styles/flex";
+import {Flex} from "./styles/flex";
 import {useSession, signIn} from "next-auth/react"
 import {useEffect, useState} from "react";
 import axios from "axios";
-import DiscordIcon from "../icons/discord-icon";
+import DiscordIcon from "./icons/discord-icon";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
-export const SessionProvider = ({children}: LayoutProps) => {
+export const DiscordSessionWrapper = ({children}: LayoutProps) => {
   const [userInDiscord, setUserInDiscord] = useState<Boolean | undefined>(undefined);
   const {data: session, status} = useSession()
 
