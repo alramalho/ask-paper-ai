@@ -68,7 +68,7 @@ export const SessionProvider = ({children}: LayoutProps) => {
             <Text>{session.user!.name}</Text>
             <Avatar
               size="lg"
-              src={session.user!.image}
+              src={session.user!.image ?? undefined}
               color="warning"
               bordered
             />
