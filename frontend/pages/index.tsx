@@ -76,6 +76,7 @@ const Home = () => {
               minRows={4}
               maxRows={20}
               placeholder="Type your question here..."
+              // @ts-ignore
               css={{width: "400px", maxWidth: "100%", margin: "$2"}}
             />
             <Button iconRight={<SendIcon/>} onPress={() => handleSubmit(
