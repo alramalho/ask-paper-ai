@@ -23,8 +23,6 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const labelEl = useRef(null)
 
   useEffect(() => {
-    console.log("Uploaded paper changed to:")
-    console.log(uploadedPaper)
     if (uploadedPaper !== undefined && uploadedPaper !== null) {
       onFinish(uploadedPaper)
     }
@@ -39,7 +37,6 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       return;
     }
     if (!file) return;
-    console.log(file.size)
     if (file.size > 6_000_000) {
       setUnderText("Sorry! But currently we only support file up to 6MB. Please compress it before uploading it 🙏")
       setStatus('error')
@@ -59,7 +56,6 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       }
       setUploadedPaper(res.data as Paper)
       setStatus('uploaded')
-      console.log(res);
     } catch (error) {
       setUploadedPaper(null)
       setStatus('error')
