@@ -9,7 +9,10 @@ import os
 import json
 from dotenv import load_dotenv
 from mangum import Mangum
+from fastapi.responses import JSONResponse
+
 load_dotenv()
+import requests
 
 openai.api_key = os.getenv("OPENAI_KEY")
 
@@ -25,6 +28,33 @@ app.add_middleware(
 )
 
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
+
+@app.middleware("http")
+async def verify_discord_login(request: Request, call_next):
+    if request.method == 'OPTIONS':
+        return await call_next(request)
+
+    auth_header = request.headers.get('Authorization', None)
+    if auth_header is None:
+        return JSONResponse(status_code=401, content={"message": "Missing Authorization header"})
+
+    def verify_token(bearer_token):
+        try:
+            response = requests.get(
+                "https://discord.com/api/users/@me",
+                headers={'Authorization': bearer_token},
+                allow_redirects=True)
+            return response.status_code // 100 == 2
+        except Exception as e:
+            print(e)
+            return False
+
+    if not verify_token(auth_header):
+        print("Discord did not verify token")
+        return JSONResponse(status_code=401, content={"message": "Invalid Authorization header"})
+    else:
+        print("Discord successfully verified token")
+        return await call_next(request)
 
 def process_paper(pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.replace('.pdf', '')

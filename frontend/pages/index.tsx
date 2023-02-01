@@ -133,7 +133,9 @@ const Home = () => {
 function askPaper(question: string, context: string, quote: boolean = false) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote}, {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      // @ts-ignore
+      'Authorization': `Bearer ${session!.accessToken}`,
     }
   })
 }

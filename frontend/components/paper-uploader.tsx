@@ -8,6 +8,7 @@ import CheckIcon from "./icons/check-icon";
 import {Paper} from "../pages";
 import {Box} from "./layout";
 import {PressEvent} from "@react-types/shared";
+import {useSession} from "next-auth/react";
 
 const Label = styled('label')
 const Input = styled('input')
@@ -21,6 +22,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const labelEl = useRef(null)
+  const {data: session} = useSession()
 
   useEffect(() => {
     if (uploadedPaper !== undefined && uploadedPaper !== null) {
@@ -47,7 +49,11 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
     formData.append('pdf_file', file);
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL || 'http://localhost:8080'}/upload-paper`, formData, {
-        headers: {'Content-Type': 'multipart/form-data'},
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // @ts-ignore
+          'Authorization': `Bearer ${session!.accessToken}`,
+        },
       });
       if (res.data.title.length > 0) {
         setUnderText(`Selected \"${res.data.title}\"`)
