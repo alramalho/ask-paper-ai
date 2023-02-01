@@ -4,13 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@nextui-org/react": "1.0.0-beta.10",
-    "@vercel/analytics": "^0.1.8",
     "axios": "^1.2.2",
     "next": "12.3.0",
     "next-auth": "^4.19.1",

@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "next build",
-  "devCommand": "next dev",
-  "ignoreCommand": "exit 0"
-}

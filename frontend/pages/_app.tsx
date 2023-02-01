@@ -3,7 +3,6 @@ import type {AppProps} from 'next/app';
 import {Session} from "next-auth";
 import {createTheme, NextUIProvider} from '@nextui-org/react';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
-import {Analytics} from "@vercel/analytics/react";
 import {SessionProvider} from "next-auth/react";
 
 export const lightTheme = createTheme({
@@ -39,7 +38,6 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
           </NextUIProvider>
         </NextThemesProvider>
       </SessionProvider>
-      <Analytics/>
     </>
   );
 }
