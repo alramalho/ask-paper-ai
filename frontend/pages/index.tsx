@@ -61,7 +61,10 @@ const Home = () => {
       })
   }
 
-  return <Layout>
+  return <Layout seo={{
+    title: "Hippo Prototype",
+    description: "Accelerating medical research. Join us today."
+  }}>
     <DiscordSessionWrapper>
       <h2>Ask Paper</h2>
       <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
