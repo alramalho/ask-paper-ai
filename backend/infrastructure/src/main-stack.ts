@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
+import {DbStack} from "./db-stack";
 interface MainStackProps {
   openaiApiKey: string
 }
@@ -18,6 +19,7 @@ export class MainStack extends cdk.Stack {
       memorySize: 512,
       environment: {
         OPENAI_KEY: props.openaiApiKey,
+        DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
         FILESYSTEM_BASE: '/tmp',
         GROBID_URL: "https://cloud.science-miner.com/grobid", // todo use this only for PoC
       }
@@ -25,6 +27,11 @@ export class MainStack extends cdk.Stack {
     const lambdaUrl = fastApiLambda.addFunctionUrl({
       authType: lambda.FunctionUrlAuthType.NONE
     });
+
+    new DbStack(this, 'DbStack', {
+      writableBy: [fastApiLambda],
+      readableBy: [fastApiLambda],
+    })
 
     new cdk.CfnOutput(this, 'FastAPILambdaURL', {
       value: lambdaUrl.url,

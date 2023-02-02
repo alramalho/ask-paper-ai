@@ -1,5 +1,6 @@
 import os.path
 import traceback
+import uuid
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,8 +14,10 @@ from fastapi.responses import JSONResponse
 
 load_dotenv()
 import requests
+import boto3
 
-openai.api_key = os.getenv("OPENAI_KEY")
+openai.api_key = os.environ["OPENAI_KEY"]
+dynamodb_paper_tablename = os.environ['DYNAMODB_PAPER_TABLENAME']
 
 app = FastAPI()
 handler = Mangum(app)
@@ -28,6 +31,7 @@ app.add_middleware(
 )
 
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
+
 
 @app.middleware("http")
 async def verify_discord_login(request: Request, call_next):
@@ -56,16 +60,33 @@ async def verify_discord_login(request: Request, call_next):
         print("Discord successfully verified token")
         return await call_next(request)
 
+
 def process_paper(pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.replace('.pdf', '')
-    output_file = process_pdf_file(input_file=f'{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf', temp_dir=f"{FILESYSTEM_BASE}/temp", output_dir=f"{FILESYSTEM_BASE}/output")
+    output_file = process_pdf_file(input_file=f'{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf',
+                                   temp_dir=f"{FILESYSTEM_BASE}/temp", output_dir=f"{FILESYSTEM_BASE}/output")
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
         print(f['title'])
         os.rename(f"{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf", f"{FILESYSTEM_BASE}/papers/{f['title'][:200]}.pdf")
-        os.rename(f"{FILESYSTEM_BASE}/temp/{pdf_file_name}.tei.xml", f"{FILESYSTEM_BASE}/temp/{f['title'][:200]}.tei.xml")
+        os.rename(f"{FILESYSTEM_BASE}/temp/{pdf_file_name}.tei.xml",
+                  f"{FILESYSTEM_BASE}/temp/{f['title'][:200]}.tei.xml")
         os.rename(f"{FILESYSTEM_BASE}/output/{pdf_file_name}.json", f"{FILESYSTEM_BASE}/output/{f['title'][:200]}.json")
         return f
+
+
+def write_json_paper_to_dynamodb(email, paper):
+    dynamodb = boto3.resource('dynamodb')
+    response = dynamodb.put_item(
+        ReturnConsumedCapacity='TOTAL',
+        TableName=dynamodb_paper_tablename,
+        Item={
+            'id': {'S': uuid.uuid4()},
+            'email': {'S': email},
+            'paper': {'S': json.dumps(paper)}
+        })
+    print(response)
+
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
@@ -88,8 +109,10 @@ async def upload_paper(pdf_file: UploadFile):
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+
 def num_tokens(text):
-    return len(text.split(' ')) * (8/5)  # safe rule of thumb https://beta.openai.com/tokenizer
+    return len(text.split(' ')) * (8 / 5)  # safe rule of thumb https://beta.openai.com/tokenizer
+
 
 @app.post("/ask")
 async def ask(request: Request):
@@ -124,4 +147,5 @@ async def ask(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
