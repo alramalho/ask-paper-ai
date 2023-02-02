@@ -8,6 +8,7 @@ import PaperUploader from "../components/paper-uploader";
 import axios from "axios";
 import {DiscordSessionWrapper} from "../components/discord-session-wrapper";
 import Feedback from "../components/feedback";
+import {useSession} from "next-auth/react";
 
 export type Paper = {
   abstract: string
@@ -29,6 +30,7 @@ const Home = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false)
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
+  const {data: session} = useSession()
 
   const {
     value: questionValue,
@@ -60,6 +62,17 @@ const Home = () => {
         setIsRunning(false)
       })
   }
+
+  function askPaper(question: string, context: string, quote: boolean = false) {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote}, {
+      headers: {
+        'Content-Type': 'application/json',
+        // @ts-ignore
+        'Authorization': `Bearer ${session!.accessToken}`,
+      }
+    })
+  }
+
 
   return <Layout seo={{
     title: "Hippo Prototype",
@@ -136,17 +149,6 @@ const Home = () => {
   </Layout>
     ;
 };
-
-function askPaper(question: string, context: string, quote: boolean = false) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote}, {
-    headers: {
-      'Content-Type': 'application/json',
-      // @ts-ignore
-      'Authorization': `Bearer ${session!.accessToken}`,
-    }
-  })
-}
-
 function makeLinksClickable(text: string) {
   return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
 }
