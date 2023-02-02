@@ -6,6 +6,7 @@ export const authOptions = {
         DiscordProvider({
             clientId: process.env.DISCORD_CLIENT_ID,
             clientSecret: process.env.DISCORD_CLIENT_SECRET,
+            callbackUrl: process.env.NEXTAUTH_URL + "/api/auth/callback/discord",
             token: "https://discord.com/api/oauth2/token",
             userinfo: "https://discord.com/api/users/@me",
             authorization: {
