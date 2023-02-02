@@ -58,7 +58,7 @@ export const SponsorButton = () => {
       size="xl"
 
     >
-      Sponsor
+      Support the foundation
     </Button>
   )
 };
