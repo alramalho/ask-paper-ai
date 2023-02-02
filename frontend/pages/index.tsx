@@ -75,7 +75,6 @@ const Home = () => {
 
 
   return <Layout seo={{
-    title: "Hippo Prototype",
     description: "Accelerating medical research. Join us today."
   }}>
     <DiscordSessionWrapper>

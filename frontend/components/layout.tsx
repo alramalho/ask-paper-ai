@@ -9,7 +9,7 @@ interface LayoutProps {
 }
 interface LayoutSEO {
   siteName?: string
-  title: string
+  title?: string
   description: string
   images?: ReadonlyArray<OpenGraphMedia>
 }
