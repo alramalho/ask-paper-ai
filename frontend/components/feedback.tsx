@@ -84,16 +84,26 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                                 onChange={() => setIncludeAttachments(previous => !previous)}
                             />
                           {includeAttachments && paper &&
-                              <Text id="paper" name="paper"
-                                    css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}>
-                                {JSON.stringify(paper)}
-                              </Text>
+                              <Input
+                                  readOnly
+                                  initialValue={JSON.stringify(paper)}
+                                  id="paper"
+                                  name="paper"
+                                // @ts-ignore
+                                  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}
+                              >
+                              </Input>
                           }
                           {includeAttachments && answer &&
-                              <Text id="answer" name="answer"
-                                    css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}>
-                                {answer}
-                              </Text>
+                              <Input
+                                  readOnly
+                                  initialValue={answer}
+                                  id="answer"
+                                  name="answer"
+                                  // @ts-ignore
+                                  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}
+                              >
+                              </Input>
                           }
 
                         </Flex>
