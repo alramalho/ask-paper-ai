@@ -46,6 +46,7 @@ const Feedback = ({ css }: FeedbackProps) => {
                     onChange={setChecked}
                     isRequired
                     name="sentiment"
+                    id="sentiment"
                   >
                     <Radio value="Very good" color="error">☹️</Radio>
                     <Radio value="Bad" color="error">😕</Radio>
