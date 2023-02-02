@@ -17,7 +17,6 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
     answer: answer,
   })
   const [visible, setVisible] = React.useState(false);
-  const [includeAttachments, setIncludeAttachments] = useState<boolean>(true);
   const [checked, setChecked] = useState<string | undefined>(undefined)
 
   const encode = data => {
@@ -46,7 +45,7 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
   }
 
   const handleChange = e => {
-    setFormState(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
+    setFormState(previousState => ({...previousState, [e.target.name]: e.target.value}))
   }
 
   return (
@@ -91,17 +90,17 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
               <Radio.Group
                 value={checked}
                 onChange={(value) => {
-                  setFormState(previousState => ({ ...previousState, sentiment: value }))
+                  setFormState(previousState => ({...previousState, sentiment: value}))
                   setChecked(value)
                 }}
                 isRequired
                 name="sentiment"
                 id="sentiment"
               >
-                <Radio value="Very good">😡️</Radio>
-                <Radio value="Bad">😕</Radio>
-                <Radio value="Good">🙂</Radio>
-                <Radio value="Very bad">😍</Radio>
+                <Radio value="Very bad">😡️</Radio>
+                <Radio value="Good">😕</Radio>
+                <Radio value="Bad">🙂</Radio>
+                <Radio value="Very good">😍</Radio>
               </Radio.Group>
               <Flex direction="column" css={{width: "100%", gap: "$4"}}>
                 <label htmlFor='message'>Extra comments:</label>
@@ -116,6 +115,26 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                   // @ts-ignore
                   css={{width: "400px"}}
                 />
+                <Input
+                  readOnly
+                  onChange={handleChange}
+                  initialValue={JSON.stringify(paper)}
+                  id="paper"
+                  name="paper"
+                  // @ts-ignore
+                  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}
+                >
+                </Input>
+                <Input
+                  readOnly
+                  onChange={handleChange}
+                  initialValue={answer}
+                  id="answer"
+                  name="answer"
+                  // @ts-ignore
+                  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}
+                >
+                </Input>
               </Flex>
               <Modal.Footer>
                 <Button auto flat color="error" onPress={() => setVisible(false)}>
