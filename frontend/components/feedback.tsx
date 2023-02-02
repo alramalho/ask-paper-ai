@@ -13,7 +13,7 @@ interface FeedbackProps {
 const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
   const [formState, setFormState] = useState({
     email: userEmail,
-    paper: paper,
+    paper: JSON.stringify(paper),
     answer: answer,
   })
   const [visible, setVisible] = React.useState(false);
@@ -80,6 +80,7 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                 <label htmlFor='email'>Submitting as </label>
                 <Input
                   readOnly
+                  type="email"
                   id="email"
                   name="email"
                   initialValue={userEmail}
@@ -117,6 +118,7 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                 />
                 <Input
                   readOnly
+                  type="text"
                   onChange={handleChange}
                   initialValue={JSON.stringify(paper)}
                   id="paper"
@@ -127,6 +129,7 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                 </Input>
                 <Input
                   readOnly
+                  type="text"
                   onChange={handleChange}
                   initialValue={answer}
                   id="answer"
