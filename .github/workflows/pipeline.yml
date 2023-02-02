@@ -81,4 +81,4 @@ jobs:
           netlify env:set NEXTAUTH_URL https://hippo-prototype.netlify.app
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           yarn build
-          netlify deploy --auth $NETLIFY_AUTH_TOKEN --dir out --prod
+          netlify deploy --auth $NETLIFY_AUTH_TOKEN --prod
