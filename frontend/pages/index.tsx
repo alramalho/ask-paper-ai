@@ -88,6 +88,7 @@ const Home = () => {
 
               <Textarea
                 {...bindings}
+                  bordered
                 fullWidth
                 size="lg"
                 minRows={4}
@@ -140,7 +141,7 @@ const Home = () => {
                         options={{tables: true, emoji: true,}}
                     />
                 </Box>
-                <Feedback/>
+                <Feedback paper={selectedPaper} answer={LLMResponse} userEmail={session!.user!.email!}/>
             </>
         }
       </>}

@@ -12,6 +12,15 @@ export const lightTheme = createTheme({
       background: '#fcfcfc',
       discordColor: "#5865F2",
       primary: "#ff6372",
+      primaryLight: '#ffccd1',
+      primaryLightHover: '#f8b2b9', // commonly used on hover state
+      primaryLightActive: '#f8939e', // commonly used on pressed state
+      primaryLightContrast: '#fa495a', // commonly used for text inside the component
+      primaryBorder: '#f67581',
+      primaryBorderHover: '#ff6372',
+      primarySolidHover: '#f63e4f',
+      primarySolidContrast: '$white', // commonly used for text inside the component
+      primaryShadow: '#f67581',
       hippo1: "#ff6e9e",
       hippo1light: "#f598b7",
       hippo1dark: "#a1254e",
