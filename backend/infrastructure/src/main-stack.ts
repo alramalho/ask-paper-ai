@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
-import {DbStack} from "./db-stack";
+import {DynamoDbTableConstruct} from "./constructs/dynamo-table";
 interface MainStackProps {
   openaiApiKey: string
 }
@@ -28,7 +28,16 @@ export class MainStack extends cdk.Stack {
       authType: lambda.FunctionUrlAuthType.NONE
     });
 
-    new DbStack(this, 'DbStack', {
+    new DynamoDbTableConstruct(this, 'PapersTable', {
+      name: "HippoPrototypeJsonPapers",
+      indexFields: ['email'],
+      writableBy: [fastApiLambda],
+      readableBy: [fastApiLambda],
+    })
+
+    new DynamoDbTableConstruct(this, 'FeedbackTable', {
+      name: "HippoPrototypeFeedback",
+      indexFields: ['email'],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],
     })

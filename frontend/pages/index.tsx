@@ -30,6 +30,7 @@ const Home = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false)
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
+  const [question, setQuestion] = useState<string | undefined>(undefined)
   const {data: session} = useSession()
 
   const {
@@ -43,6 +44,7 @@ const Home = () => {
   const handleSubmit = (paper: Paper, question: string, quote: boolean = false, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
     setIsRunning(true)
     setLoadingText("Reading paper...")
+    setQuestion(question)
 
     const aggreggatedText = paper.abstract + paper.pdf_parse.body_text.concat(paper.pdf_parse.back_matter).filter(e => sectionFilterer(e.section)).map(bodyText => bodyText.text).join('\n')
 
@@ -141,7 +143,7 @@ const Home = () => {
                         options={{tables: true, emoji: true,}}
                     />
                 </Box>
-                <Feedback paper={selectedPaper} answer={LLMResponse} userEmail={session!.user!.email!}/>
+                <Feedback paper={selectedPaper} question={question!} answer={LLMResponse} userEmail={session!.user!.email!}/>
             </>
         }
       </>}
