@@ -3,6 +3,7 @@ import {Flex} from "./styles/flex";
 import React, {useState} from "react";
 import {Paper} from "../pages";
 
+
 interface FeedbackProps {
   paper: Paper,
   answer: string,
@@ -12,9 +13,9 @@ interface FeedbackProps {
 
 const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
   const [formState, setFormState] = useState({
-    email: userEmail,
-    paper: JSON.stringify(paper),
-    answer: answer,
+    email: encodeURIComponent(userEmail),
+    paper: encodeURIComponent(JSON.stringify(paper)),
+    answer: "Is it because of the encoding?",
   })
   const [visible, setVisible] = React.useState(false);
   const [checked, setChecked] = useState<string | undefined>(undefined)
@@ -29,7 +30,7 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
       method: "POST",
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: encode({
-        "form-name": "Feedback",
+        "form-name": "feedback",
         ...formState,
       }),
     })
@@ -67,26 +68,19 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
         </Modal.Header>
         <Modal.Body>
           <form
-            name="contact"
+            name="feedback"
             method="post"
             data-netlify="true"
             data-netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
           >
-            <input type="hidden" name="feedback-form" value="feedback"/>
 
             <Flex direction="column" css={{gap: "$10"}}>
-              <Flex css={{gap: "$4"}}>
-                <label htmlFor='email'>Submitting as </label>
-                <Input
-                  readOnly
-                  type="email"
-                  id="email"
-                  name="email"
-                  initialValue={userEmail}
-                  width={"300px"}
-                />
-              </Flex>
+              <label>
+                Your Email: <input type="email" name="email" value={userEmail} onChange={handleChange} />
+              </label>
+              <input type="hidden" name="paper" value={JSON.stringify(paper)}/>
+              <input type="hidden" name="answer" value={answer}/>
               <label htmlFor='sentiment'>How do you feel about the tool?</label>
               <Radio.Group
                 value={checked}
@@ -104,6 +98,7 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                 <Radio value="Very good">😍</Radio>
               </Radio.Group>
               <Flex direction="column" css={{width: "100%", gap: "$4"}}>
+
                 <label htmlFor='message'>Extra comments:</label>
                 <Textarea
                   bordered
@@ -116,28 +111,30 @@ const Feedback = ({css, paper, answer, userEmail}: FeedbackProps) => {
                   // @ts-ignore
                   css={{width: "400px"}}
                 />
-                <Input
-                  readOnly
-                  type="text"
-                  onChange={handleChange}
-                  initialValue={JSON.stringify(paper)}
-                  id="paper"
-                  name="paper"
-                  // @ts-ignore
-                  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}
-                >
-                </Input>
-                <Input
-                  readOnly
-                  type="text"
-                  onChange={handleChange}
-                  initialValue={answer}
-                  id="answer"
-                  name="answer"
-                  // @ts-ignore
-                  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}
-                >
-                </Input>
+                {/*<Input*/}
+                {/*  readOnly*/}
+                {/*  label="Paper"*/}
+                {/*  type="text"*/}
+                {/*  onChange={handleChange}*/}
+                {/*  initialValue={JSON.stringify(paper)}*/}
+                {/*  id="paper"*/}
+                {/*  name="paper"*/}
+                {/*  // @ts-ignore*/}
+                {/*  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}*/}
+                {/*>*/}
+                {/*</Input>*/}
+                {/*<Input*/}
+                {/*  readOnly*/}
+                {/*  type="text"*/}
+                {/*  label="answer"*/}
+                {/*  onChange={handleChange}*/}
+                {/*  initialValue={answer}*/}
+                {/*  id="answer"*/}
+                {/*  name="answer"*/}
+                {/*  // @ts-ignore*/}
+                {/*  css={{visibility: 'hidden', position: 'fixed', mw: 0, mh: 0}}*/}
+                {/*>*/}
+                {/*</Input>*/}
               </Flex>
               <Modal.Footer>
                 <Button auto flat color="error" onPress={() => setVisible(false)}>
