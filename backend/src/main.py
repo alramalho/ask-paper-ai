@@ -80,7 +80,6 @@ def write_to_dynamo(table_name: str, data: dict):
         dynamodb = boto3.resource('dynamodb', endpoint_url=os.getenv("LOCAL_AWS_ENDPOINT"), region_name='us-west-1')
     else:
         dynamodb = boto3.resource('dynamodb')
-    data = {key: {'S': str(value)} for key, value in data.items()}
     table = dynamodb.Table(table_name)
     response = table.put_item(
         ReturnConsumedCapacity='TOTAL',
