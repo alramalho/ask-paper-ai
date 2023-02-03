@@ -17,7 +17,7 @@ import requests
 import boto3
 
 openai.api_key = os.environ["OPENAI_KEY"]
-dynamodb_paper_tablename = os.environ['DYNAMODB_PAPER_TABLENAME']
+# dynamodb_paper_tablename = os.environ['DYNAMODB_PAPER_TABLENAME']
 
 app = FastAPI()
 handler = Mangum(app)
@@ -75,18 +75,39 @@ def process_paper(pdf_file_name) -> dict:
         return f
 
 
-def write_json_paper_to_dynamodb(email, paper):
-    dynamodb = boto3.resource('dynamodb')
-    response = dynamodb.put_item(
+def write_to_dynamo(table_name: str, data: dict):
+    if os.getenv("LOCAL_AWS_ENDPOINT", None) is not None:
+        dynamodb = boto3.resource('dynamodb', endpoint_url=os.getenv("LOCAL_AWS_ENDPOINT"), region_name='us-west-1')
+    else:
+        dynamodb = boto3.resource('dynamodb')
+    data = {key: {'S': str(value)} for key, value in data.items()}
+    table = dynamodb.Table(table_name)
+    response = table.put_item(
         ReturnConsumedCapacity='TOTAL',
-        TableName=dynamodb_paper_tablename,
-        Item={
-            'id': {'S': uuid.uuid4()},
-            'email': {'S': email},
-            'paper': {'S': json.dumps(paper)}
-        })
+        Item=data)
     print(response)
 
+
+# {
+#     'id': {'S': hash(paper)},
+#     'email': {'S': email},
+#     'paper': {'S': json.dumps(paper)}
+# }
+@app.post("/log-to-dynamo")
+async def log_do_dynamo(request: Request):
+    body = await request.json()
+
+    if 'table_name' not in body:
+        raise HTTPException(status_code=400, detail="Missing table_name")
+    if 'data' not in body:
+        raise HTTPException(status_code=400, detail="Missing data")
+
+    try:
+        write_to_dynamo(body['table_name'], body['data'])
+        return {"message": "success"}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=f"Error writing to dynamo. {e}")
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile):
