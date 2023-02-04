@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 
 if [ -d $HOME/grobid-0.6.2 ]; then
     echo "Grobid exists"
@@ -12,6 +13,7 @@ else
     ./gradlew install
 fi
 
+echo "Running Grobid"
 pushd $HOME/grobid-0.6.2
 ./gradlew run &
 popd
