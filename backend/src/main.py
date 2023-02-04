@@ -82,9 +82,11 @@ def process_paper(pdf_file_name) -> dict:
 
 def write_to_dynamo(table_name: str, data: dict):
     if os.getenv("LOCAL_AWS_ENDPOINT", None) is not None:
-        dynamodb = boto3.resource('dynamodb', endpoint_url=os.getenv("LOCAL_AWS_ENDPOINT"), region_name='us-west-1')
-    else:
-        dynamodb = boto3.resource('dynamodb')
+        # todo: currently no logging, but consider using moto for local aws env
+        print("In local environment, not writing to dynamodb")
+        return
+
+    dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
 
     if 'id' not in data:
