@@ -33,7 +33,6 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
         paper: crypto.MD5(JSON.stringify(paper)).toString(crypto.enc.Hex),
         question,
         answer,
-        submittedAt: new Date().toISOString()
       }
     }, {
       headers: {
