@@ -66,7 +66,6 @@ async def verify_discord_login(request: Request, call_next):
         print("Discord successfully verified token")
         return await call_next(request)
 
-
 def process_paper(pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.replace('.pdf', '')
     output_file = process_pdf_file(input_file=f'{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf',
@@ -100,11 +99,6 @@ def write_to_dynamo(table_name: str, data: dict):
     print(response)
 
 
-# {
-#     'id': {'S': hash(paper)},
-#     'email': {'S': email},
-#     'paper': {'S': json.dumps(paper)}
-# }
 @app.post("/log-to-dynamo")
 async def log_do_dynamo(request: Request):
     body = await request.json()
@@ -120,6 +114,7 @@ async def log_do_dynamo(request: Request):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=f"Error writing to dynamo. {e}")
+
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile, request: Request):
@@ -140,8 +135,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         json_paper = process_paper(pdf_file_name)
 
         print(f"Success! Returned json {json_paper}")
-        end = datetime.datetime.now()
-        time_elapsed = end - start
 
         sha256 = hashlib.sha256()
         sha256.update(json.dumps(json_paper).encode())
@@ -153,6 +146,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
             'paper_json': json.dumps(json_paper),
         })
 
+        end = datetime.datetime.now()
+        time_elapsed = end - start
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'latest_commit_id': LATEST_COMMIT_ID,
@@ -165,6 +160,15 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
     except Exception as e:
         print(e)
         print(traceback.format_exc())
+
+        end = datetime.datetime.now()
+        time_elapsed = end - start
+        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+            'function_path': request.url.path,
+            'latest_commit_id': LATEST_COMMIT_ID,
+            'time_elapsed': str(time_elapsed),
+            'error': e,
+        })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
@@ -174,6 +178,7 @@ def num_tokens(text):
 
 @app.post("/ask")
 async def ask(request: Request):
+    start = datetime.datetime.now()
     try:
         body = await request.json()
         question = body["question"]
@@ -197,10 +202,29 @@ async def ask(request: Request):
         )["choices"][0]["text"].strip("\n")
         print("Response: \n" + response)
 
+        end = datetime.datetime.now()
+        time_elapsed = end - start
+        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+            'function_path': request.url.path,
+            'latest_commit_id': LATEST_COMMIT_ID,
+            'time_elapsed': str(time_elapsed),
+            'prompt_text': text,
+            'response_text': response,
+        })
+
         return {"message": response}
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        end = datetime.datetime.now()
+        time_elapsed = end - start
+        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+            'function_path': request.url.path,
+            'latest_commit_id': LATEST_COMMIT_ID,
+            'time_elapsed': str(time_elapsed),
+            'error': e,
+        })
+
+    raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 if __name__ == "__main__":
