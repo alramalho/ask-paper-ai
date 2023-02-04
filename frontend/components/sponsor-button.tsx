@@ -33,9 +33,6 @@ export const SponsorButton = () => {
         color: "$text",
         maxH: "38px",
         px: "$8",
-        "@mdMax": {
-          d: "none",
-        },
         "& .nextui-button-icon": {
           mr: "$2",
         },
