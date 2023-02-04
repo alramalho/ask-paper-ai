@@ -101,8 +101,8 @@ def write_to_dynamo(table_name: str, data: dict):
     print(response)
 
 
-@app.post("/log-to-dynamo")
-async def log_do_dynamo(request: Request):
+@app.post("/store-feedback")
+async def store_feedback(request: Request):
     body = await request.json()
 
     if 'table_name' not in body:

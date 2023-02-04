@@ -23,7 +23,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   const {data: session} = useSession()
 
   function storeFeedback(email: string, sentiment: string, message: string, paper: Paper, question: string, answer: string) {
-    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/log-to-dynamo`, {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/store-feedback`, {
       "table_name": "HippoPrototypeFeedback",
       "data": {
         email,
