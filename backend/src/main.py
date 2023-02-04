@@ -2,6 +2,9 @@ import datetime
 import os.path
 import traceback
 import uuid
+import hashlib
+
+
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +21,8 @@ import requests
 import boto3
 
 openai.api_key = os.environ["OPENAI_KEY"]
+
+LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 # dynamodb_paper_tablename = os.environ['DYNAMODB_PAPER_TABLENAME']
 
 app = FastAPI()
@@ -117,7 +122,10 @@ async def log_do_dynamo(request: Request):
         raise HTTPException(status_code=500, detail=f"Error writing to dynamo. {e}")
 
 @app.post("/upload-paper")
-async def upload_paper(pdf_file: UploadFile):
+async def upload_paper(pdf_file: UploadFile, request: Request):
+
+    start = datetime.datetime.now()
+
     try:
         pdf_file_name = pdf_file.filename
         pdf_file_content = await pdf_file.read()
@@ -130,7 +138,29 @@ async def upload_paper(pdf_file: UploadFile):
             f.write(pdf_file_content)
             print("created file")
         json_paper = process_paper(pdf_file_name)
+
         print(f"Success! Returned json {json_paper}")
+        end = datetime.datetime.now()
+        time_elapsed = end - start
+
+        sha256 = hashlib.sha256()
+        sha256.update(json.dumps(json_paper).encode())
+        paper_hash = sha256.hexdigest()
+
+        write_to_dynamo("HippoPrototypeJsonPapers", {
+            'id': paper_hash,
+            'paper_title': json_paper['title'],
+            'paper_json': json.dumps(json_paper),
+        })
+
+        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+            'function_path': request.url.path,
+            'latest_commit_id': LATEST_COMMIT_ID,
+            'time_elapsed': str(time_elapsed),
+            'paper_hash': paper_hash,
+        })
+
+        json_paper['id'] = paper_hash
         return json_paper
     except Exception as e:
         print(e)

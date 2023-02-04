@@ -2,7 +2,6 @@ import {Button, CSS, Input, Modal, Radio, Text, Textarea} from '@nextui-org/reac
 import {Flex} from "./styles/flex";
 import React, {useState} from "react";
 import axios from "axios";
-import * as crypto from "crypto-js";
 import {Paper} from "../pages";
 import {useSession} from "next-auth/react";
 
@@ -30,7 +29,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
         email,
         sentiment,
         message,
-        paper: crypto.MD5(JSON.stringify(paper)).toString(crypto.enc.Hex),
+        paper_id: paper.id,
         question,
         answer,
       }
@@ -113,7 +112,10 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
                 if (userEmail && sentiment && message) {
                   storeFeedback(userEmail, sentiment, message, paper, question, answer)
                     .then(() => setSuccess(true))
-                    .catch(e => setError("Something went wrong :("))
+                    .catch(e => {
+                      console.error(e)
+                      setError("Something went wrong :(")
+                    })
                 } else {
                   setError("Please fill everything first.")
                 }

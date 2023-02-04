@@ -19,6 +19,7 @@ export class MainStack extends cdk.Stack {
       memorySize: 512,
       environment: {
         OPENAI_KEY: props.openaiApiKey,
+        LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
         DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
         FILESYSTEM_BASE: '/tmp',
         GROBID_URL: "https://cloud.science-miner.com/grobid", // todo use this only for PoC
@@ -38,6 +39,13 @@ export class MainStack extends cdk.Stack {
     new DynamoDbTableConstruct(this, 'FeedbackTable', {
       name: "HippoPrototypeFeedback",
       indexFields: ['email'],
+      writableBy: [fastApiLambda],
+      readableBy: [fastApiLambda],
+    })
+
+    new DynamoDbTableConstruct(this, 'InvocationsTable', {
+      name: "HippoPrototypeFunctionInvocations",
+      indexFields: ['function_path'],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],
     })

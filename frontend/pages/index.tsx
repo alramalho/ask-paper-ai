@@ -1,5 +1,5 @@
-import {Text, Button, Card, Spacer, Loading, Textarea, useInput, Image} from "@nextui-org/react";
-import {useEffect, useState} from "react";
+import {Text, Button, Spacer, Loading, Textarea, useInput } from "@nextui-org/react";
+import {useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
 import {Box, Layout} from "../components/layout";
@@ -11,6 +11,7 @@ import Feedback from "../components/feedback";
 import {useSession} from "next-auth/react";
 
 export type Paper = {
+  id: string
   abstract: string
   title: string
   pdf_parse: {
