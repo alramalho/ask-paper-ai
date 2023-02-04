@@ -23,6 +23,8 @@ import boto3
 openai.api_key = os.environ["OPENAI_KEY"]
 
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
+ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
+
 # dynamodb_paper_tablename = os.environ['DYNAMODB_PAPER_TABLENAME']
 
 app = FastAPI()
@@ -95,6 +97,9 @@ def write_to_dynamo(table_name: str, data: dict):
     if 'created_at' not in data:
         data['created_at'] = str(datetime.datetime.now())
 
+    data['latest_commit_id'] = LATEST_COMMIT_ID
+    data['environment'] = ENVIRONMENT
+
     response = table.put_item(
         ReturnConsumedCapacity='TOTAL',
         Item=data)
@@ -152,7 +157,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         time_elapsed = end - start
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
-            'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(time_elapsed),
             'paper_hash': paper_hash,
         })
@@ -167,7 +171,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         time_elapsed = end - start
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
-            'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(time_elapsed),
             'error': e,
         })
