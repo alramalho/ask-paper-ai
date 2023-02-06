@@ -65,7 +65,7 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
             top: '10px',
             right: '10px',
           }}>
-            <Text>{session.user!.name}</Text>
+            <Text data-testid="discord-username">{session.user!.name}</Text>
             <Avatar
               size="lg"
               src={session.user!.image ?? undefined}

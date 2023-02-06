@@ -91,7 +91,8 @@ const Home = () => {
 
               <Textarea
                 {...bindings}
-                  bordered
+                bordered
+                data-testid="ask-textarea"
                 fullWidth
                 size="lg"
                 minRows={4}
@@ -138,7 +139,7 @@ const Home = () => {
         }
         {LLMResponse &&
             <>
-                <Box css={{textAlign: 'left', margin: '$6'}}>
+                <Box data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
                     <MarkdownView
                         markdown={LLMResponse}
                         options={{tables: true, emoji: true,}}

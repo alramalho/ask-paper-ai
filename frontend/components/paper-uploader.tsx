@@ -80,13 +80,13 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
             labelEl.current!.click()
           }} icon={<UploadIcon/>}>Upload your paper</Button>
         </Label>
-        {status == 'uploading' && <Loading/>}
-        {status == 'uploaded' && <CheckIcon/>}
-        {status == 'error' && <XIcon/>}
+        {status == 'uploading' && <Loading data-testid="upload-loading"/>}
+        {status == 'uploaded' && <CheckIcon data-testid="upload-successful"/>}
+        {status == 'error' && <XIcon data-testid="upload-failed"/>}
       </Flex>
       <Spacer y={1}/>
       {underText &&
-          <Text>{underText}</Text>
+          <Text data-testid="upload-undertext">{underText}</Text>
       }
     </Box>
   );

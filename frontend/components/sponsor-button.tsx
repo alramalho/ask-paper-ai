@@ -47,6 +47,7 @@ export const SponsorButton = () => {
         position: 'fixed',
         top: '10px',
         left: '10px',
+        zIndex: 10,
       }}
       href="https://www.hippoai.org"
       icon={<HeartIcon filled fill="red" size={20} />}

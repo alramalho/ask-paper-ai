@@ -18,11 +18,12 @@ jobs:
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: sandbox
+      APP_URL: https://sandbox--hippo-prototype.netlify.app
 
     steps:
 
       - name: Checkout source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Environment setting
         run: |
@@ -80,12 +81,42 @@ jobs:
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
           netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
-          netlify env:set NEXTAUTH_URL https://hippo-prototype.netlify.app
+          netlify env:set NEXTAUTH_URL $APP_URL
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
 
-  Deploy-To-Production:
+  E2E-Tests:
     needs: Deploy-To-Sandbox
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      TEST_DISCORD_USERNAME: HippoDev
+      TEST_DISCORD_PASSWORD: ${{ secrets.TEST_DISCORD_PASSWORD }}
+      TEST_DISCORD_EMAIL : ${{ secrets.TEST_DISCORD_EMAIL }}
+      APP_URL: https://sandbox--hippo-prototype.netlify.app
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        working-directory: tests-e2e
+        run: yarn
+      - name: Install Playwright Browsers
+        working-directory: tests-e2e
+        run: yarn playwright install --with-deps
+      - name: Run Playwright tests
+        working-directory: tests-e2e
+        run: yarn playwright test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  Deploy-To-Production:
+    needs: E2E-Tests
     runs-on: ubuntu-latest
     env:
       OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
@@ -101,7 +132,7 @@ jobs:
     steps:
 
       - name: Checkout source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Environment setting
         run: |
