@@ -4,6 +4,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 import {DynamoDbTableConstruct} from "./constructs/dynamo-table";
 interface MainStackProps {
+  environment: string
   openaiApiKey: string
 }
 
@@ -12,6 +13,7 @@ export class MainStack extends cdk.Stack {
     super(scope, id);
 
     const fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
+      functionName: `HippoPrototypeFastAPI-${props.environment}`,
       code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'build.zip')),
       handler: 'main.handler',
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -30,21 +32,21 @@ export class MainStack extends cdk.Stack {
     });
 
     new DynamoDbTableConstruct(this, 'PapersTable', {
-      name: "HippoPrototypeJsonPapers",
+      name: `HippoPrototypeJsonPapers-${props.environment}`,
       indexFields: ['email'],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],
     })
 
     new DynamoDbTableConstruct(this, 'FeedbackTable', {
-      name: "HippoPrototypeFeedback",
+      name: `HippoPrototypeFeedback-${props.environment}`,
       indexFields: ['email'],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],
     })
 
     new DynamoDbTableConstruct(this, 'InvocationsTable', {
-      name: "HippoPrototypeFunctionInvocations",
+      name: `HippoPrototypeFunctionInvocations-${props.environment}`,
       indexFields: ['function_path'],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],

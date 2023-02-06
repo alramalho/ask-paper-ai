@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  Deploy:
+  Deploy-To-Sandbox:
     runs-on: ubuntu-latest
     env:
       OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
@@ -17,7 +17,86 @@ jobs:
       NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: ${{ secrets.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID }}
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       LATEST_COMMIT_ID: ${{ github.sha }}
-      ENVIROMENT: production
+      ENVIRONMENT: sandbox
+
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Environment setting
+        run: |
+          sudo apt update
+
+          sudo apt install nodejs
+          node -v
+          sudo apt install npm
+          npm -v
+          npm install -g aws-cdk
+          cdk --version
+          sudo apt install jq
+          jq --version
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt install python3.9
+          python3.9 --version
+
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws -h
+
+          npm i -g vercel
+          vercel --version
+
+
+      - name: Configure AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region eu-central-1
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
+          aws configure set region eu-central-1  --profile hippo
+
+      - name: Deploy-Backend
+        run: |
+
+          cd backend/infrastructure
+          yarn
+          yarn build-backend-zip
+          cdk bootstrap
+
+          yarn no-build-fast-deploy
+
+      - name: Deploy-Frontend
+        run: |
+          cd frontend
+          yarn
+
+          export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURL' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
+          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
+          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
+          netlify env:set NEXTAUTH_URL https://hippo-prototype.netlify.app
+          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
+          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
+
+  Deploy-To-Production:
+    needs: Deploy-To-Sandbox
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+      NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: ${{ secrets.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      LATEST_COMMIT_ID: ${{ github.sha }}
+      ENVIRONMENT: production
 
     steps:
 

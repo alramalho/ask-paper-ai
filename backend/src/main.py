@@ -83,27 +83,29 @@ def process_paper(pdf_file_name) -> dict:
 
 
 def write_to_dynamo(table_name: str, data: dict):
-    if os.getenv("LOCAL_AWS_ENDPOINT", None) is not None:
+
+    if ENVIRONMENT == 'production' or ENVIRONMENT == 'sandbox':
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table(f'{table_name}-{ENVIRONMENT}')
+
+        if 'id' not in data:
+            data['id'] = str(uuid.uuid4())
+
+        if 'created_at' not in data:
+            data['created_at'] = str(datetime.datetime.now())
+
+        data['latest_commit_id'] = LATEST_COMMIT_ID
+        data['environment'] = ENVIRONMENT
+
+        response = table.put_item(
+            ReturnConsumedCapacity='TOTAL',
+            Item=data)
+        print(response)
+    else:
         # todo: currently no logging, but consider using moto for local aws env
-        print("In local environment, not writing to dynamodb")
         return
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(table_name)
 
-    if 'id' not in data:
-        data['id'] = str(uuid.uuid4())
-
-    if 'created_at' not in data:
-        data['created_at'] = str(datetime.datetime.now())
-
-    data['latest_commit_id'] = LATEST_COMMIT_ID
-    data['environment'] = ENVIRONMENT
-
-    response = table.put_item(
-        ReturnConsumedCapacity='TOTAL',
-        Item=data)
-    print(response)
 
 
 @app.post("/store-feedback")

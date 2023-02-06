@@ -15,6 +15,11 @@ if (!process.env.OPENAI_KEY) {
   process.exit(1)
 }
 
+if (!process.env.ENVIRONMENT || !['sandbox', 'production'].includes(process.env.ENVIRONMENT)) {
+  prettyError(" ❌ Environment variable ENVIRONMENT not provided.")
+  process.exit(1)
+}
+
 
 if (!process.env.LATEST_COMMIT_ID) {
   prettyError(" ❌ Environment variable LATEST_COMMIT_ID not provided.")
@@ -23,5 +28,6 @@ if (!process.env.LATEST_COMMIT_ID) {
 
 
 new MainStack(app, `HippoPrototypeInfrastructureStack`, {
+  environment: process.env.ENVIRONMENT,
   openaiApiKey: process.env.OPENAI_KEY
 });
