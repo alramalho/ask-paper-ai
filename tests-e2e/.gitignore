@@ -4,3 +4,4 @@ node_modules/
 /playwright/.cache/
 
 storageState.json
+playwright-test-output
