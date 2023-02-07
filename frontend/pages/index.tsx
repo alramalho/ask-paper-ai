@@ -1,4 +1,4 @@
-import {Text, Button, Spacer, Loading, Textarea, useInput } from "@nextui-org/react";
+import {Text, Button, Spacer, Loading, Textarea, useInput} from "@nextui-org/react";
 import {useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -101,19 +101,22 @@ const Home = () => {
                 // @ts-ignore
                 css={{width: "400px", maxWidth: "100%", margin: "$2"}}
               />
-              <Button iconRight={<SendIcon/>} onPress={() => handleSubmit(
-                selectedPaper,
-                questionValue,
-                true,
-                (e) => ![
-                  "reference",
-                  "acknowledgement",
-                  "appendi",
-                  "discussion",
-                  "declaration",
-                  "supplem"
-                ].includes(e.toLowerCase())
-              )}> Ask </Button>
+              <Button
+                  data-testid="ask-button"
+                  iconRight={<SendIcon/>}
+                  onPress={() => handleSubmit(
+                    selectedPaper,
+                    questionValue,
+                    true,
+                    (e) => ![
+                      "reference",
+                      "acknowledgement",
+                      "appendi",
+                      "discussion",
+                      "declaration",
+                      "supplem"
+                    ].includes(e.toLowerCase())
+                  )}> Ask </Button>
           </Flex>
           <Spacer y={2}/>
           <h4>Or start with predefined action:</h4>
@@ -145,7 +148,8 @@ const Home = () => {
                         options={{tables: true, emoji: true,}}
                     />
                 </Box>
-                <Feedback paper={selectedPaper} question={question!} answer={LLMResponse} userEmail={session!.user!.email!}/>
+                <Feedback paper={selectedPaper} question={question!} answer={LLMResponse}
+                          userEmail={session!.user!.email!}/>
             </>
         }
       </>}
@@ -153,6 +157,7 @@ const Home = () => {
   </Layout>
     ;
 };
+
 function makeLinksClickable(text: string) {
   return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
 }

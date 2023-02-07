@@ -48,7 +48,8 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
     return (<>
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
-      <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>Sign in with Discord</Button>
+      <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>Sign in
+        with Discord</Button>
     </>)
   }
   if (session != null && status == "authenticated") {
@@ -59,20 +60,22 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
     } else if (userInDiscord) {
       return (
         <>
-          <Flex css={{
-            gap: '$4',
-            position: 'fixed',
-            top: '10px',
-            right: '10px',
-          }}>
-            <Text data-testid="discord-username">{session.user!.name}</Text>
-            <Avatar
-              size="lg"
-              src={session.user!.image ?? undefined}
-              color="warning"
-              bordered
-            />
-          </Flex>
+          {session.user &&
+              <Flex css={{
+                gap: '$4',
+                position: 'fixed',
+                top: '10px',
+                right: '10px',
+              }}>
+                  <Text data-testid="discord-username">{session.user!.name}</Text>
+                  <Avatar
+                      size="lg"
+                      src={session.user!.image ?? undefined}
+                      color="warning"
+                      bordered
+                  />
+              </Flex>
+          }
           {children}
         </>
       )

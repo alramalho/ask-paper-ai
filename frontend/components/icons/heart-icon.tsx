@@ -4,6 +4,7 @@ export const HeartIcon = ({
 }) => {
   return (
     <svg
+      {...props}
       width={props.size || props.width || 24}
       height={props.size || props.height || 24}
       viewBox="0 0 24 24"
