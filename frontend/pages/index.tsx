@@ -137,7 +137,7 @@ const Home = () => {
           <h3>Answer:</h3>
         {isRunning
           && <>
-                <Loading type="points">{loadingText}</Loading>
+                <Loading data-testid="loading-answer" type="points">{loadingText}</Loading>
             </>
         }
         {LLMResponse &&
