@@ -1,4 +1,5 @@
 import {test, expect, FileChooser, Page} from '@playwright/test';
+import { solveCaptcha } from 'playwright-hcaptcha-solver';
 
 test.describe.configure({mode: 'serial'});
 
@@ -15,6 +16,13 @@ test.beforeAll(async ({browser}) => {
   await page.fill('input[name="password"]', process.env.TEST_DISCORD_PASSWORD);
 
   await page.click('button[type="submit"]');
+
+  const isInCaptcha = await page.isVisible('text=Welcome back');
+
+  if (isInCaptcha) {
+    await solveCaptcha(page);
+  }
+
   await page.waitForURL(/.*discord.com.*\/authorize.*/);
   await page.locator('css=button:last-child').click();
 
