@@ -98,7 +98,7 @@ const config: PlaywrightTestConfig = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: 'playwright-report/',
+  outputDir: 'playwright-test-output/',
 
 
 

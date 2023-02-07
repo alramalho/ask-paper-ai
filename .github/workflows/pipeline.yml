@@ -115,6 +115,12 @@ jobs:
           name: playwright-report
           path: tests-e2e/playwright-report/
           retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-test-output
+          path: tests-e2e/playwright-test-output/
+          retention-days: 30
 
   Deploy-To-Production:
     needs: E2E-Tests
