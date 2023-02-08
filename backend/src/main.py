@@ -87,12 +87,12 @@ def process_paper(pdf_file_name) -> dict:
 
 
 def write_to_dynamo(table_name: str, data: dict):
-    if ENVIRONMENT not in table_name:
+    if ENVIRONMENT.lower() not in table_name.lower():
         table_name = f"{table_name}-{ENVIRONMENT}"
 
     if ENVIRONMENT == 'production' or ENVIRONMENT == 'sandbox':
         dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(f'{table_name}-{ENVIRONMENT}')
+        table = dynamodb.Table(table_name)
 
         if 'id' not in data:
             data['id'] = str(uuid.uuid4())
