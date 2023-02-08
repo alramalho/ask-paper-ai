@@ -87,6 +87,7 @@ def process_paper(pdf_file_name) -> dict:
 
 
 def write_to_dynamo(table_name: str, data: dict):
+    return
     if ENVIRONMENT.lower() not in table_name.lower():
         table_name = f"{table_name}-{ENVIRONMENT}"
 
@@ -239,8 +240,7 @@ async def ask(request: Request):
             'time_elapsed': str(time_elapsed),
             'error': e,
         })
-
-    raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 if __name__ == "__main__":
