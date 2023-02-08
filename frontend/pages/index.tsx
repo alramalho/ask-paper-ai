@@ -1,5 +1,5 @@
 import {Text, Button, Spacer, Loading, Textarea, useInput} from "@nextui-org/react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
 import {Box, Layout} from "../components/layout";
@@ -39,6 +39,13 @@ const Home = () => {
     reset: resetQuestion,
     bindings,
   } = useInput("");
+
+  useEffect(() => {
+    if (LLMResponse !== undefined ){
+      // @ts-ignore
+      document.getElementById('answer-area').scrollIntoView()
+    }
+  }, [LLMResponse])
 
 
   const handleSubmit = (paper: Paper, question: string, quote: boolean = false, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
@@ -140,7 +147,7 @@ const Home = () => {
       }
       {LLMResponse &&
           <>
-              <Box data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
+              <Box id="answer-area" data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
                   <MarkdownView
                       markdown={LLMResponse}
                       options={{tables: true, emoji: true,}}
