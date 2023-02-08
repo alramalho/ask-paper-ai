@@ -52,7 +52,7 @@ export class MainStack extends cdk.Stack {
       readableBy: [fastApiLambda],
     })
 
-    new cdk.CfnOutput(this, 'FastAPILambdaURL', {
+    new cdk.CfnOutput(this, `FastAPILambdaURL${props.environment}`, {
       value: lambdaUrl.url,
     });
   }
