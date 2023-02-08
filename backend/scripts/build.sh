@@ -7,7 +7,7 @@ NOCOLOR='\033[0m'
 set -e
 
 echo $PWD
-echo "${GREEN}Started building backend zip 🧹${NOCOLOR}"
+echo "${GREEN}Started building $ENVIRONMENT backend zip 🧹${NOCOLOR}"
 echo "${BLUE}Cleaning up... 🧹${NOCOLOR}"
 rm -rf ../src_dependencies && rm -rf ../build.zip
 
