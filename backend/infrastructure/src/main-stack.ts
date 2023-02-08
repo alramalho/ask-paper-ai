@@ -21,6 +21,7 @@ export class MainStack extends cdk.Stack {
       memorySize: 512,
       environment: {
         OPENAI_KEY: props.openaiApiKey,
+        ENVIRONMENT: props.environment,
         LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
         DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
         FILESYSTEM_BASE: '/tmp',

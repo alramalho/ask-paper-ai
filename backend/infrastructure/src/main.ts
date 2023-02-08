@@ -27,7 +27,7 @@ if (!process.env.LATEST_COMMIT_ID) {
 }
 
 
-new MainStack(app, `HippoPrototypeInfrastructureStack`, {
+new MainStack(app, `HippoPrototypeInfrastructureStack–${process.env.ENVIRONMENT}`, {
   environment: process.env.ENVIRONMENT,
   openaiApiKey: process.env.OPENAI_KEY
 });
