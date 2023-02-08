@@ -40,15 +40,19 @@ app.add_middleware(
 
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 
-
 @app.middleware("http")
 async def verify_discord_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
 
+    if ENVIRONMENT == 'sandbox':
+        print("Bypassing Discord")
+        return await call_next(request)
+        
     auth_header = request.headers.get('Authorization', None)
     if auth_header is None:
         return JSONResponse(status_code=401, content={"message": "Missing Authorization header"})
+
 
     def verify_token(bearer_token):
         try:
@@ -83,7 +87,6 @@ def process_paper(pdf_file_name) -> dict:
 
 
 def write_to_dynamo(table_name: str, data: dict):
-
     if ENVIRONMENT not in table_name:
         table_name = f"{table_name}-{ENVIRONMENT}"
 

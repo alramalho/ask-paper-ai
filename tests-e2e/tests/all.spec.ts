@@ -1,5 +1,4 @@
 import {test, expect, FileChooser, Page} from '@playwright/test';
-import { solveCaptcha } from 'playwright-hcaptcha-solver';
 
 test.describe.configure({mode: 'serial'});
 
@@ -9,26 +8,6 @@ test.beforeAll(async ({browser}) => {
   page = await browser.newPage()
 
   await page.goto(process.env.APP_URL)
-
-  await page.click('text=Sign in with Discord');
-  await page.waitForURL(/.*discord.com\/login.*/);
-  await page.fill('input[name="email"]', process.env.TEST_DISCORD_EMAIL);
-  await page.fill('input[name="password"]', process.env.TEST_DISCORD_PASSWORD);
-
-  await page.click('button[type="submit"]');
-
-  const isInCaptcha = await page.isVisible('text=Welcome back');
-
-  if (isInCaptcha) {
-    await solveCaptcha(page);
-  }
-
-  await page.waitForURL(/.*discord.com.*\/authorize.*/);
-  await page.locator('css=button:last-child').click();
-
-  await page.waitForURL(/.*localhost.*/);
-  await page.waitForSelector('text=Ask Paper');
-  await expect(page.getByTestId("discord-username")).toHaveText(process.env.TEST_DISCORD_USERNAME)
 
   page.on("filechooser", (fileChooser: FileChooser) => {
     fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);

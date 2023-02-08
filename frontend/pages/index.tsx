@@ -6,9 +6,8 @@ import {Box, Layout} from "../components/layout";
 import {Flex} from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import axios from "axios";
-import {DiscordSessionWrapper} from "../components/discord-session-wrapper";
 import Feedback from "../components/feedback";
-import {useSession} from "next-auth/react";
+import useCustomSession from "../hooks/session";
 
 export type Paper = {
   id: string
@@ -32,7 +31,7 @@ const Home = () => {
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const [question, setQuestion] = useState<string | undefined>(undefined)
-  const {data: session} = useSession()
+  const {data: session} = useCustomSession()
 
   const {
     value: questionValue,
@@ -80,80 +79,78 @@ const Home = () => {
   return <Layout seo={{
     description: "Accelerating medical research. Join us today."
   }}>
-    <DiscordSessionWrapper>
-      <h2>Ask Paper</h2>
-      <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
-      <Spacer y={3}/>
-      {selectedPaper && <>
-          <Spacer y={3}/>
-          <h4>And ask your question</h4>
-          <Flex css={{gap: "$5"}}>
+    <h2>Ask Paper</h2>
+    <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
+    <Spacer y={3}/>
+    {selectedPaper && <>
+        <Spacer y={3}/>
+        <h4>And ask your question</h4>
+        <Flex css={{gap: "$5"}}>
 
-              <Textarea
-                {...bindings}
-                bordered
-                data-testid="ask-textarea"
-                fullWidth
-                size="lg"
-                minRows={4}
-                maxRows={20}
-                placeholder="Type your question here..."
-                // @ts-ignore
-                css={{width: "400px", maxWidth: "100%", margin: "$2"}}
-              />
-              <Button
-                  data-testid="ask-button"
-                  iconRight={<SendIcon/>}
-                  onPress={() => handleSubmit(
-                    selectedPaper,
-                    questionValue,
-                    true,
-                    (e) => ![
-                      "reference",
-                      "acknowledgement",
-                      "appendi",
-                      "discussion",
-                      "declaration",
-                      "supplem"
-                    ].includes(e.toLowerCase())
-                  )}> Ask </Button>
-          </Flex>
-          <Spacer y={2}/>
-          <h4>Or start with predefined action:</h4>
-          <Button
-              css={{backgroundColor: "$selection", color: "black"}}
-              onPress={() => {
-                handleSubmit(
+            <Textarea
+              {...bindings}
+              bordered
+              data-testid="ask-textarea"
+              fullWidth
+              size="lg"
+              minRows={4}
+              maxRows={20}
+              placeholder="Type your question here..."
+              // @ts-ignore
+              css={{width: "400px", maxWidth: "100%", margin: "$2"}}
+            />
+            <Button
+                data-testid="ask-button"
+                iconRight={<SendIcon/>}
+                onPress={() => handleSubmit(
                   selectedPaper,
-                  `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
-                  false,
-                  (e) => e.toLowerCase().includes('data')
-                )
-              }}
-          >
-              <Text>Extract datasets</Text>
-          </Button>
-          <Spacer y={4}/>
-          <h3>Answer:</h3>
-        {isRunning
-          && <>
-                <Loading data-testid="loading-answer" type="points">{loadingText}</Loading>
-            </>
-        }
-        {LLMResponse &&
-            <>
-                <Box data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
-                    <MarkdownView
-                        markdown={LLMResponse}
-                        options={{tables: true, emoji: true,}}
-                    />
-                </Box>
-                <Feedback paper={selectedPaper} question={question!} answer={LLMResponse}
-                          userEmail={session!.user!.email!}/>
-            </>
-        }
-      </>}
-    </ DiscordSessionWrapper>
+                  questionValue,
+                  true,
+                  (e) => ![
+                    "reference",
+                    "acknowledgement",
+                    "appendi",
+                    "discussion",
+                    "declaration",
+                    "supplem"
+                  ].includes(e.toLowerCase())
+                )}> Ask </Button>
+        </Flex>
+        <Spacer y={2}/>
+        <h4>Or start with predefined action:</h4>
+        <Button
+            css={{backgroundColor: "$selection", color: "black"}}
+            onPress={() => {
+              handleSubmit(
+                selectedPaper,
+                `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
+                false,
+                (e) => e.toLowerCase().includes('data')
+              )
+            }}
+        >
+            <Text>Extract datasets</Text>
+        </Button>
+        <Spacer y={4}/>
+        <h3>Answer:</h3>
+      {isRunning
+        && <>
+              <Loading data-testid="loading-answer" type="points">{loadingText}</Loading>
+          </>
+      }
+      {LLMResponse &&
+          <>
+              <Box data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
+                  <MarkdownView
+                      markdown={LLMResponse}
+                      options={{tables: true, emoji: true,}}
+                  />
+              </Box>
+              <Feedback paper={selectedPaper} question={question!} answer={LLMResponse}
+                        userEmail={session!.user!.email!}/>
+          </>
+      }
+    </>}
   </Layout>
     ;
 };

@@ -3,7 +3,7 @@ import {Flex} from "./styles/flex";
 import React, {useState} from "react";
 import axios from "axios";
 import {Paper} from "../pages";
-import {useSession} from "next-auth/react";
+import useCustomSession from "../hooks/session";
 
 
 interface FeedbackProps {
@@ -20,7 +20,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   const [visible, setVisible] = useState(false);
   const [sentiment, setSentiment] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const {data: session} = useSession()
+  const {data: session} = useCustomSession()
 
   function storeFeedback(email: string, sentiment: string, message: string, paper: Paper, question: string, answer: string) {
     return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/store-feedback`, {

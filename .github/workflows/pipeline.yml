@@ -90,9 +90,6 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
-      TEST_DISCORD_USERNAME: HippoDev
-      TEST_DISCORD_PASSWORD: ${{ secrets.TEST_DISCORD_PASSWORD }}
-      TEST_DISCORD_EMAIL : ${{ secrets.TEST_DISCORD_EMAIL }}
       APP_URL: https://sandbox--hippo-prototype.netlify.app
       CI: true
     steps:

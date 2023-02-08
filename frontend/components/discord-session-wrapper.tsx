@@ -1,4 +1,4 @@
-import {Avatar, Button, Link, Loading, Spacer, styled, Text} from '@nextui-org/react';
+import {Avatar, Button, Image, Link, Loading, Spacer, styled, Text} from '@nextui-org/react';
 import {Flex} from "./styles/flex";
 import {useSession, signIn} from "next-auth/react"
 import {useEffect, useState} from "react";
@@ -13,7 +13,7 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
-export const DiscordSessionWrapper = ({children}: LayoutProps) => {
+const DiscordSessionWrapper = ({children}: LayoutProps) => {
   const [userInDiscord, setUserInDiscord] = useState<Boolean | undefined>(undefined);
   const {data: session, status} = useSession()
 
@@ -42,10 +42,18 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
     }, [session, userInDiscord]
   )
   if (session == null && status == "loading") {
-    return (<Loading>Checking if you're signed in...</Loading>)
+    return (
+      <>
+        <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
+
+        <Loading>Checking if you're signed in...</Loading>
+      </>
+    )
   }
   if (session == null && status == "unauthenticated") {
     return (<>
+      <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
+
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
       <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>Sign in
@@ -55,7 +63,10 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
   if (session != null && status == "authenticated") {
     if (userInDiscord == undefined) {
       return (
-        <Loading>Checking if you're in our server...</Loading>
+        <>
+          <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
+          <Loading>Checking if you're in our server...</Loading>
+        </>
       )
     } else if (userInDiscord) {
       return (
@@ -82,6 +93,7 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
     } else {
       return (
         <>
+          <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
           <Text>You're not in our discord community!</Text>
           <Link href="https://discord.gg/kgPYZsBgq5">Click here</Link> to join us!
         </>
@@ -90,3 +102,5 @@ export const DiscordSessionWrapper = ({children}: LayoutProps) => {
   }
   return (<></>)
 };
+
+export default DiscordSessionWrapper;

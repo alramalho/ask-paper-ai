@@ -9,6 +9,7 @@ import {Paper} from "../pages";
 import {Box} from "./layout";
 import {PressEvent} from "@react-types/shared";
 import {useSession} from "next-auth/react";
+import useCustomSession from "../hooks/session";
 
 const Label = styled('label')
 const Input = styled('input')
@@ -22,7 +23,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const labelEl = useRef(null)
-  const {data: session} = useSession()
+  const {data: session} = useCustomSession()
 
   useEffect(() => {
     if (uploadedPaper !== undefined && uploadedPaper !== null) {

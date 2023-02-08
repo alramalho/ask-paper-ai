@@ -1,9 +1,11 @@
 import '../styles/globals.css';
 import type {AppProps} from 'next/app';
 import {Session} from "next-auth";
-import {createTheme, NextUIProvider} from '@nextui-org/react';
+import {createTheme, NextUIProvider, Text} from '@nextui-org/react';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
 import {SessionProvider} from "next-auth/react";
+import DiscordSessionWrapper from "../components/discord-session-wrapper";
+import {useEffect} from "react";
 
 export const lightTheme = createTheme({
   type: 'light',
@@ -32,6 +34,9 @@ export const lightTheme = createTheme({
 });
 
 function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ session: Session }>) {
+
+  useEffect(() => {console.log(process.env.ENVIRONMENT)}, [])
+
   return (
     <>
       <SessionProvider session={session}>
@@ -43,7 +48,14 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
           }}
         >
           <NextUIProvider>
-            <Component {...pageProps} />
+            {process.env.ENVIRONMENT == 'sandbox'
+              ?
+              <Component {...pageProps} />
+              :
+              <DiscordSessionWrapper>
+                <Component {...pageProps} />
+              </DiscordSessionWrapper>
+            }
           </NextUIProvider>
         </NextThemesProvider>
       </SessionProvider>
