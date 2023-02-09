@@ -45,7 +45,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
 
 
   if (success) {
-    return (<Text>Thank you! </Text>)
+    return (<Text>Thank you {session?.user?.name ?? ''}! 🙏</Text>)
   }
   return (
     <>
@@ -97,6 +97,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
             <label htmlFor='sentiment'>How do you feel about the tool?</label>
             <Radio.Group
               value={sentiment}
+
               onChange={setSentiment}
               isRequired
               name="sentiment"
