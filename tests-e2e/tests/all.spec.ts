@@ -1,10 +1,13 @@
 import {test, expect, FileChooser, Page} from '@playwright/test';
+import {uuid} from 'uuidv4';
 
 test.describe.configure({mode: 'serial'});
 
 let page: Page
 
 test.beforeAll(async ({browser}) => {
+
+
   page = await browser.newPage()
 
   await page.goto(process.env.APP_URL)
@@ -46,4 +49,23 @@ test('should be able to extract datasets', async () => {
   await expect(page.getByTestId('answer-area')).toContainText("FracNet");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
+
+test('should be able to store feedback', async () => {
+  await page.getByTestId("ask-textarea").fill("What is the paper about?");
+  await page.getByTestId('ask-button').click();
+
+  await expect(page.getByTestId('loading-answer')).toBeVisible();
+  await expect(page.getByTestId('answer-area')).toBeVisible({timeout: 30000});
+
+  await page.click('text=Answer was accurate');
+
+  await page.click('text=😍');
+
+  const randomString = uuid();
+
+  await page.getByTestId("message").fill(randomString);
+  await page.click('text=Submit');
+
+  require('child_process').execSync(`[ $(aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message": {"S": "${randomString}"}}' --profile hippo | jq '.Items | length') -ne 0 ]`);
+})
 

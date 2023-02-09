@@ -9,6 +9,6 @@
   "scripts": {},
   "dependencies": {
     "dotenv": "^16.0.3",
-    "playwright-hcaptcha-solver": "https://github.com/xrip/playwright-hcaptcha-solver.git"
+    "uuidv4": "^6.2.13"
   }
 }

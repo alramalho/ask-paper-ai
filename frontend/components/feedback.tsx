@@ -113,6 +113,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               <Textarea
                 bordered
                 name='message'
+                data-testid='message'
                 id='message'
                 minRows={2}
                 maxRows={20}
