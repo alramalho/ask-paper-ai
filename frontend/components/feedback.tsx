@@ -1,11 +1,18 @@
-import {Button, CSS, Input, Modal, Radio, Text, Textarea} from '@nextui-org/react';
+import {Button, CSS, Divider, Input, Modal, Radio, styled, Text, Textarea} from '@nextui-org/react';
 import {Flex} from "./styles/flex";
 import React, {useState} from "react";
 import axios from "axios";
 import {Paper} from "../pages";
 import useCustomSession from "../hooks/session";
 
+const StyledRadio = styled(Radio, {
+  margin: '0 $5',
+  fontSize: '0.8rem',
+})
 
+const StyledLabel = styled('label', {
+  borderBottom: '1px solid $gray500',
+})
 interface FeedbackProps {
   paper: Paper,
   answer: string,
@@ -17,18 +24,20 @@ interface FeedbackProps {
 const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [nextFeature, setNextFeature] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
   const [accuracy, setAccuracy] = useState<boolean | undefined>(undefined);
   const [sentiment, setSentiment] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {data: session} = useCustomSession()
 
-  function storeFeedback(email: string, sentiment: string, message: string, paper: Paper, question: string, answer: string) {
+  function storeFeedback(email: string, sentiment: string, nextFeature: string, message: string, paper: Paper, question: string, answer: string) {
     return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/store-feedback`, {
       "table_name": "HippoPrototypeFeedback",
       "data": {
         email,
         sentiment,
+        next_feature: nextFeature,
         message,
         paper_id: paper.id,
         question,
@@ -94,20 +103,40 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
                 width={"300px"}
               />
             </Flex>
-            <label htmlFor='sentiment'>How do you feel about the tool?</label>
+            <Divider/>
+
+            <StyledLabel htmlFor='sentiment'>How do you feel about the tool?</StyledLabel>
             <Radio.Group
               value={sentiment}
-
               onChange={setSentiment}
               isRequired
               name="sentiment"
               id="sentiment"
+              orientation='horizontal'
             >
-              <Radio value="Very bad">😡️</Radio>
-              <Radio value="Good">😕</Radio>
-              <Radio value="Bad">🙂</Radio>
-              <Radio value="Very good">😍</Radio>
+              <StyledRadio size="lg" value="Very bad">😡️</StyledRadio>
+              <StyledRadio size="lg" value="Good">😕</StyledRadio>
+              <StyledRadio size="lg" value="Bad">🙂</StyledRadio>
+              <StyledRadio size="lg" value="Very good">😍</StyledRadio>
             </Radio.Group>
+            <Divider/>
+            <StyledLabel htmlFor='nextFeature'>What feature would you rather see next?</StyledLabel>
+            <Radio.Group
+              value={nextFeature}
+              onChange={setNextFeature}
+              isRequired
+              name="nextFeature"
+              id="nextFeature"
+            >
+              <StyledRadio size="sm" value="data-exploration" description="(like kaggle)">🔍 Inline data exploration tool </StyledRadio>
+              <StyledRadio size="sm" value="similar-items" description="(papers, datasets, models)">🧩 Recommendation on similar items</StyledRadio>
+              <StyledRadio size="sm" value="batch-paper-upload">⬆️ Upload & ask papers in batch</StyledRadio>
+              <StyledRadio size="sm" value="email-interface">📩 Email interface</StyledRadio>
+              <StyledRadio size="sm" value="more-speed">🏎 Improve overall speed</StyledRadio>
+              <StyledRadio size="sm" value="more-accuracy">🎯 Improve overall accuracy</StyledRadio>
+            </Radio.Group>
+            <Divider/>
+
             <Flex direction="column" css={{width: "100%", gap: "$4"}}>
 
               <label htmlFor='message'>Extra comments:</label>
@@ -119,7 +148,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
                 minRows={2}
                 maxRows={20}
                 onChange={e => setMessage(e.target.value)}
-                placeholder='Please provide extra comments! This could be anything from a bug report to a feature request.'
+                placeholder='Please provide extra comments! This could be anything from a bug report to a more detailed feature request.'
                 // @ts-ignore
                 css={{width: "400px"}}
               />
@@ -131,14 +160,14 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               </Button>
               <Button onClick={() => {
                 if (userEmail && sentiment) {
-                  storeFeedback(userEmail, sentiment, message ?? 'No message provided', paper, question, answer)
+                  storeFeedback(userEmail, sentiment, nextFeature ?? 'No feature selected',message ?? 'No message provided', paper, question, answer)
                     .then(() => setSuccess(true))
                     .catch(e => {
                       console.error(e)
                       setError("Something went wrong :(")
                     })
                 } else {
-                  setError("Please check one of the options.")
+                  setError("Please fill at least the sentiment field!")
                 }
               }}>Submit 🚀</Button>
             </Modal.Footer>

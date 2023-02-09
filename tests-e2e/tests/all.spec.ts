@@ -66,6 +66,6 @@ test('should be able to store feedback', async () => {
   await page.getByTestId("message").fill(randomString);
   await page.click('text=Submit');
 
-  require('child_process').execSync(`[ $(aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message": {"S": "${randomString}"}}' --profile hippo | jq '.Items | length') -ne 0 ]`);
+  require('child_process').execSync(`[ $(aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message": {"S": "${randomString}"}}' | jq '.Items | length') -ne 0 ]`);
 })
 
