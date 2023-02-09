@@ -101,7 +101,6 @@ def write_to_dynamo(table_name: str, data: dict):
             data['created_at'] = str(datetime.datetime.now())
 
         data['latest_commit_id'] = LATEST_COMMIT_ID
-        data['environment'] = ENVIRONMENT
 
         response = table.put_item(
             ReturnConsumedCapacity='TOTAL',
