@@ -45,7 +45,7 @@ async def verify_discord_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
 
-    if ENVIRONMENT == 'sandbox':
+    if ENVIRONMENT != 'production':
         print("Bypassing Discord")
         return await call_next(request)
         
@@ -149,7 +149,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
             print("created file")
         json_paper = process_paper(pdf_file_name)
 
-        print(f"Success! Returned json {json_paper}")
 
         sha256 = hashlib.sha256()
         sha256.update(json.dumps(json_paper).encode())

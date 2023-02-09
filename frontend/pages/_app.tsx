@@ -35,7 +35,9 @@ export const lightTheme = createTheme({
 
 function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ session: Session }>) {
 
-  useEffect(() => {console.log(process.env.ENVIRONMENT)}, [])
+  useEffect(() => {
+    console.log(process.env.ENVIRONMENT)
+  }, [])
 
   return (
     <>
@@ -48,13 +50,13 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
           }}
         >
           <NextUIProvider>
-            {process.env.ENVIRONMENT == 'sandbox'
+            {process.env.ENVIRONMENT == 'production' //todo: huge motherfucking risk. Deal with this asap
               ?
-              <Component {...pageProps} />
-              :
               <DiscordSessionWrapper>
                 <Component {...pageProps} />
               </DiscordSessionWrapper>
+              :
+              <Component {...pageProps} />
             }
           </NextUIProvider>
         </NextThemesProvider>

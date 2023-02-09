@@ -3,7 +3,7 @@ import {Session} from "next-auth";
 
 let useCustomSession = useSession
 
-if (process.env.ENVIRONMENT == 'sandbox') {
+if (process.env.ENVIRONMENT !== 'production') {
   // @ts-ignore
   useCustomSession = (options?: UseSessionOptions<boolean>) => {
     const session: Session = {
