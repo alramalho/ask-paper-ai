@@ -78,12 +78,13 @@ def process_paper(pdf_file_name) -> dict:
                                    temp_dir=f"{FILESYSTEM_BASE}/temp", output_dir=f"{FILESYSTEM_BASE}/output")
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
-        print(f['title'])
-        os.rename(f"{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf", f"{FILESYSTEM_BASE}/papers/{f['title'][:200]}.pdf")
-        os.rename(f"{FILESYSTEM_BASE}/temp/{pdf_file_name}.tei.xml",
-                  f"{FILESYSTEM_BASE}/temp/{f['title'][:200]}.tei.xml")
-        os.rename(f"{FILESYSTEM_BASE}/output/{pdf_file_name}.json", f"{FILESYSTEM_BASE}/output/{f['title'][:200]}.json")
-        return f
+    print(f['title'])
+
+    os.remove(f"{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf")
+    os.remove(f"{FILESYSTEM_BASE}/temp/{pdf_file_name}.tei.xml")
+    os.remove(f"{FILESYSTEM_BASE}/output/{pdf_file_name}.json")
+    print("Removed files")
+    return f
 
 
 def write_to_dynamo(table_name: str, data: dict):
@@ -150,7 +151,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
 
 
         sha256 = hashlib.sha256()
-        sha256.update(json.dumps(json_paper['pdf_parse']['body_parse']).encode())
+        sha256.update(json.dumps(json_paper['pdf_parse']['body_text']).encode())
         paper_hash = sha256.hexdigest()
 
         write_to_dynamo("HippoPrototypeJsonPapers", {
@@ -168,6 +169,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         })
 
         json_paper['id'] = paper_hash
+
         return json_paper
     except Exception as e:
         print(e)
