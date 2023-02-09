@@ -50,7 +50,7 @@ test('should be able to extract datasets', async () => {
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
 
-test.only('should be able to store feedback', async () => {
+test('should be able to store feedback', async () => {
   await page.getByTestId("ask-textarea").fill("What is the paper about?");
   await page.getByTestId('ask-button').click();
 
