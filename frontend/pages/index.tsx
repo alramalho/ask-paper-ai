@@ -1,4 +1,4 @@
-import {Text, Button, Spacer, Loading, Textarea, useInput} from "@nextui-org/react";
+import {Text, Button, Spacer, Loading, Textarea, useInput, Switch} from "@nextui-org/react";
 import {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -28,6 +28,7 @@ export type Paper = {
 const Home = () => {
   const [LLMResponse, setLLMResponse] = useState<string | undefined>(undefined)
   const [isRunning, setIsRunning] = useState<boolean>(false)
+  const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const [question, setQuestion] = useState<string | undefined>(undefined)
@@ -112,22 +113,28 @@ const Home = () => {
               // @ts-ignore
               css={{width: "400px", maxWidth: "100%", margin: "$2"}}
             />
-            <Button
-                data-testid="ask-button"
-                iconRight={<SendIcon/>}
-                onPress={() => handleSubmit(
-                  selectedPaper,
-                  questionValue,
-                  true,
-                  (e) => ![
-                    "reference",
-                    "acknowledgement",
-                    "appendi",
-                    "discussion",
-                    "declaration",
-                    "supplem"
-                  ].includes(e.toLowerCase())
-                )}> Ask </Button>
+            <Flex direction="column" align="start" css={{gap: "$2"}}>
+                <Button
+                    data-testid="ask-button"
+                    iconRight={<SendIcon/>}
+                    onPress={() => handleSubmit(
+                      selectedPaper,
+                      questionValue,
+                      quoteChecked,
+                      (e) => ![
+                        "reference",
+                        "acknowledgement",
+                        "appendi",
+                        "discussion",
+                        "declaration",
+                        "supplem"
+                      ].includes(e.toLowerCase())
+                    )}> Ask </Button>
+                <Flex css={{gap: "$2"}}>
+                    <Switch bordered initialChecked checked={quoteChecked} onChange={() => setQuoteChecked(previous => !previous)}></Switch>
+                    <Text small>Quote paper</Text>
+                </Flex>
+            </Flex>
         </Flex>
         <Spacer y={2}/>
         <h4>Or start with predefined action:</h4>
