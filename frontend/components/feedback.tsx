@@ -26,23 +26,15 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [nextFeature, setNextFeature] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
-  const [accuracy, setAccuracy] = useState<boolean | undefined>(undefined);
+  const [wasAnswerAccurate, setWasAnswerAccurate] = useState<boolean | undefined>(undefined);
   const [sentiment, setSentiment] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {data: session} = useCustomSession()
 
-  function storeFeedback(email: string, sentiment: string, nextFeature: string, message: string, paper: Paper, question: string, answer: string) {
+  function storeFeedback(data: any) {
     return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/store-feedback`, {
       "table_name": "HippoPrototypeFeedback",
-      "data": {
-        email,
-        sentiment,
-        next_feature: nextFeature,
-        message,
-        paper_id: paper.id,
-        question,
-        answer,
-      }
+      "data": data,
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +57,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
                 css={{color: 'green', '&:hover': {color: 'white'}}}
                 onPress={() => {
                   setVisible(true)
-                  setAccuracy(true)
+                  setWasAnswerAccurate(true)
                 }}
         >
           Answer was accurate
@@ -73,7 +65,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
         <Button ghost auto size="lg" iconRight="👎"
                 onPress={() => {
                   setVisible(true)
-                  setAccuracy(false)
+                  setWasAnswerAccurate(false)
                 }}
         >
           Answer was inaccurate
@@ -160,7 +152,16 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               </Button>
               <Button onClick={() => {
                 if (userEmail && sentiment) {
-                  storeFeedback(userEmail, sentiment, nextFeature ?? 'No feature selected',message ?? 'No message provided', paper, question, answer)
+                  storeFeedback({
+                    email: userEmail,
+                    was_answer_accurate: wasAnswerAccurate,
+                    sentiment,
+                    next_feature: nextFeature,
+                    message,
+                    paper_id: paper.id,
+                    question,
+                    answer,
+                  })
                     .then(() => setSuccess(true))
                     .catch(e => {
                       console.error(e)

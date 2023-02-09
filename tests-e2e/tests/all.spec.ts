@@ -50,7 +50,7 @@ test('should be able to extract datasets', async () => {
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
 
-test('should be able to store feedback', async () => {
+test.only('should be able to store feedback', async () => {
   await page.getByTestId("ask-textarea").fill("What is the paper about?");
   await page.getByTestId('ask-button').click();
 
@@ -58,14 +58,18 @@ test('should be able to store feedback', async () => {
   await expect(page.getByTestId('answer-area')).toBeVisible({timeout: 30000});
 
   await page.click('text=Answer was accurate');
+  const selectedAccuracy = true
 
   await page.click('text=😍');
+  const selectedSentiment = "Very good"
+  await page.click('text=🔍 Inline data exploration tool');
+  const selectedNextFeature = 'data-exploration'
 
   const randomString = uuid();
 
   await page.getByTestId("message").fill(randomString);
   await page.click('text=Submit');
 
-  require('child_process').execSync(`[ $(aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message": {"S": "${randomString}"}}' | jq '.Items | length') -ne 0 ]`);
+  require('child_process').execSync(`aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message":{"S":${randomString}}' | jq '.Items[] | select(.next_feature.S == ${selectedNextFeature} and .sentiment.S == ${selectedSentiment} and .was_answer_accurate.BOOL == ${selectedAccuracy})' | grep message || (echo "No item found with requested charactersitics" && exit 1)`);
 })
 
