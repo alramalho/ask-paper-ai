@@ -159,8 +159,10 @@ const Home = () => {
                       options={{tables: true, emoji: true,}}
                   />
               </Box>
+              <Spacer y={1}/>
               <Feedback paper={selectedPaper} question={question!} answer={LLMResponse}
                         userEmail={session!.user!.email!}/>
+              <Spacer y={4}/>
           </>
       }
     </>}

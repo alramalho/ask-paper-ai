@@ -18,6 +18,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
+  const [accuracy, setAccuracy] = useState<boolean | undefined>(undefined);
   const [sentiment, setSentiment] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {data: session} = useCustomSession()
@@ -48,9 +49,27 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   }
   return (
     <>
-      <Button ghost auto size="xl" onPress={() => setVisible(true)} iconRight="🚀">
-        Can you help us improve?
-      </Button>
+      <Text h5>Can you help us improve? 🚀</Text>
+      <Flex css={{gap: "$7"}}>
+
+        <Button ghost auto color="success" size="lg" iconRight="👍"
+                css={{color: 'green', '&:hover': {color: 'white'}}}
+                onPress={() => {
+                  setVisible(true)
+                  setAccuracy(true)
+                }}
+        >
+          Answer was accurate
+        </Button>
+        <Button ghost auto size="lg" iconRight="👎"
+                onPress={() => {
+                  setVisible(true)
+                  setAccuracy(false)
+                }}
+        >
+          Answer was inaccurate
+        </Button>
+      </Flex>
       <Modal
         closeButton
         aria-labelledby="feedback-modal"
@@ -109,15 +128,15 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
                 Close
               </Button>
               <Button onClick={() => {
-                if (userEmail && sentiment && message) {
-                  storeFeedback(userEmail, sentiment, message, paper, question, answer)
+                if (userEmail && sentiment) {
+                  storeFeedback(userEmail, sentiment, message ?? 'No message provided', paper, question, answer)
                     .then(() => setSuccess(true))
                     .catch(e => {
                       console.error(e)
                       setError("Something went wrong :(")
                     })
                 } else {
-                  setError("Please fill everything first.")
+                  setError("Please check one of the options.")
                 }
               }}>Submit 🚀</Button>
             </Modal.Footer>
