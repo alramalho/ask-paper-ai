@@ -2,7 +2,7 @@ html,
 body {
     padding: 0;
     margin: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: Inter, 'Roboto', sans-serif;
     text-align: center;
     scroll-behavior: smooth;
     display: flex;
@@ -32,20 +32,46 @@ ul {
     padding: 0;
 }
 table {
-    border-collapse: collapse;
-    background-color: #fafafa;
+    border-collapse: separate;
+    background-color: #fdfdfd;/*#fafafa;*/
+    margin: 1rem;
     padding: 1rem;
+    box-sizing: border-box;
+    border-spacing: 0;
+    border-radius: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 thead {
-    background-color: whitesmoke;
-    color: #565656;
+    border-radius: 20px;
+    color: var(--nextui-colors-accents7);
+}
+
+
+thead > tr:first-child {
+    border-radius: 20px;
+    padding: 1rem;
+}
+thead > tr:first-child > th:first-child {
+    border-radius: 20px 0 0 20px;
+    background-color: #f1f3f5;
+}
+thead > tr:first-child > th:last-child {
+    border-radius: 0 20px 20px 0;
+    background-color: #f1f3f5;
+}
+thead > tr:first-child > th:not(:first-child):not(:last-child) {
+    border-radius: 0;
+    background-color: #f1f3f5;
 }
 
 td, th {
-    padding: 0.5rem;
+    padding: 0.4rem;
     text-align: left;
 }
 
-thead th {
-   border-radius: 10px;
+th:first-child, td:first-child {
+    padding-left: 1.2rem;
+}
+th:last-child, td:last-child {
+    padding-right: 1.2rem;
 }
