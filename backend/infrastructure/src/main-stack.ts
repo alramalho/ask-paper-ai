@@ -41,7 +41,7 @@ export class MainStack extends cdk.Stack {
 
     new DynamoDbTableConstruct(this, 'FeedbackTable', {
       name: `HippoPrototypeFeedback-${props.environment}`,
-      indexFields: ['email'],
+      indexFields: ['email', 'message'],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],
     })
