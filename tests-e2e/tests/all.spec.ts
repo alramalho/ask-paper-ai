@@ -70,7 +70,7 @@ test('should be able to store feedback', async () => {
   await page.getByTestId("message").fill(randomString);
   await page.click('text=Submit');
 
-  require('child_process').execSync(`aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message":{"S":"${randomString}"}' | jq '.Items[] | select(.next_feature.S == ${selectedNextFeature} and .sentiment.S == ${selectedSentiment} and .was_answer_accurate.BOOL == ${selectedAccuracy})' | grep message || (echo "No item found with requested charactersitics" && exit 1)`);
+  require('child_process').execSync(`aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message":{"S":"${randomString}"}}' | jq '.Items[] | select(.next_feature.S == "${selectedNextFeature}" and .sentiment.S == "${selectedSentiment}" and .was_answer_accurate.BOOL == "${selectedAccuracy}")' | grep message || (echo "No item found with requested charactersitics" && exit 1)`);
 })
 
 
