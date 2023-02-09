@@ -41,11 +41,17 @@ const Home = () => {
   } = useInput("");
 
   useEffect(() => {
-    if (LLMResponse !== undefined ){
+    if (isRunning) {
+      if (document.getElementById('loading-answer')) {
+        // @ts-ignore
+        document.getElementById('loading-answer').scrollIntoView()
+      }
+    }
+    if (LLMResponse !== undefined) {
       // @ts-ignore
       document.getElementById('answer-area').scrollIntoView()
     }
-  }, [LLMResponse])
+  }, [LLMResponse, isRunning])
 
 
   const handleSubmit = (paper: Paper, question: string, quote: boolean = false, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
