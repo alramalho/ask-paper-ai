@@ -150,7 +150,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
 
 
         sha256 = hashlib.sha256()
-        sha256.update(json.dumps(json_paper).encode())
+        sha256.update(json.dumps(json_paper['pdf_parse']['body_parse']).encode())
         paper_hash = sha256.hexdigest()
 
         write_to_dynamo("HippoPrototypeJsonPapers", {
