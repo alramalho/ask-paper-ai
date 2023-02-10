@@ -159,7 +159,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
             'id': paper_hash,
             'paper_title': json_paper['title'],
             'paper_json': json.dumps(json_paper),
-            'uploaded_by': email,
+            'email': email,
         })
 
         end = datetime.datetime.now()
