@@ -1,6 +1,6 @@
 import {test, expect, FileChooser, Page} from '@playwright/test';
-import {uuid} from 'uuidv4';
 
+const TEST_EMAIL = process.env.TEST_ID ?? '' + 'e2e-test';
 test.describe.configure({mode: 'serial'});
 
 let page: Page
@@ -24,6 +24,14 @@ test.beforeAll(async ({browser}) => {
 test.afterAll(async () => {
   await page.close();
 });
+
+test('should be able to upload a paper', async () => {
+  await expect(page.getByTestId('upload-successful')).toBeVisible({timeout: 30000});
+
+  verifyIfInDynamo('HippoPrototypeJsonPapers-sandbox', 'email', TEST_EMAIL, {
+    paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
+  })
+})
 
 test('should be able to see the selected dialog after uploading a paper', async () => {
   await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
@@ -66,20 +74,20 @@ test('should be able to store feedback', async () => {
   await page.click('text=🔍 Inline data exploration tool');
   const selectedNextFeature = 'data-exploration'
 
-  const randomString = uuid();
 
-  await page.getByTestId("message").fill(randomString);
+  const writtenMessage = "dummy";
+  await page.getByTestId("message").fill(writtenMessage);
 
   await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded()
   await page.locator('button[data-testid="feedback-submit"]').click()
 
   await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
-  verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'message', randomString, {
+  verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
     was_answer_accurate: selectedAccuracy,
     sentiment: selectedSentiment,
     next_feature: selectedNextFeature,
-    email: 'e2e-test'
+    message: writtenMessage,
   })
 })
 

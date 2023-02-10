@@ -103,9 +103,16 @@ jobs:
       - name: Install Playwright Browsers
         working-directory: tests-e2e
         run: yarn playwright install --with-deps
+      - name: Set UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
+        with:
+          name: ${{ gihub.sha }}
       - name: Run Playwright tests
         working-directory: tests-e2e
-        run: yarn playwright test
+        run: |
+          export TEST_ID=${{ steps.generate-uuid.outputs.uuid }}
+          yarn playwright test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
