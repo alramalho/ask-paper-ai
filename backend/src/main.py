@@ -189,8 +189,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
-def num_tokens(text):
-    return len(text.split(' ')) * (8 / 5)  # safe rule of thumb https://beta.openai.com/tokenizer
+def num_tokens(text) -> int:
+    return int(len(text.split(' ')) * (8 / 5))  # safe rule of thumb https://beta.openai.com/tokenizer
 
 
 @app.post("/ask")
