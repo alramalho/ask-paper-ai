@@ -232,6 +232,7 @@ async def ask(request: Request):
             'question': question,
             'prompt_text': text,
             'was_prompt_cut': was_cut,
+            'prompt_token_length_estimate': num_tokens(text),
             'response_text': response,
         })
 
