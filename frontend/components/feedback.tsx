@@ -127,6 +127,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               <StyledRadio size="sm" value="email-interface" description="You would interact with the app via a designated email">📩 Email interface</StyledRadio>
               <StyledRadio size="sm" value="more-speed">🏎 Improve overall speed</StyledRadio>
               <StyledRadio size="sm" value="more-accuracy">🎯 Improve overall accuracy</StyledRadio>
+              <StyledRadio size="sm" value="other" description="Please specify below!">🤷‍️ Other</StyledRadio>
             </Radio.Group>
             <Divider/>
 
