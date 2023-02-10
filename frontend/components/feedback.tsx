@@ -46,7 +46,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
 
 
   if (success) {
-    return (<Text>Thank you {session?.user?.name ?? ''}! 🙏</Text>)
+    return (<Text data-testid="feedback-successful">Thank you {session?.user?.name ?? ''}! 🙏</Text>)
   }
   return (
     <>
@@ -77,6 +77,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
         open={visible}
         onClose={() => setVisible(false)}
         width={'fit-content'}
+        id='feedback-modal'
       >
         <Modal.Header>
           <Text css={{textDecoration: 'underline'}} id="feedback-modal" span size={20}>
@@ -123,7 +124,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               <StyledRadio size="sm" value="data-exploration" description="(like kaggle)">🔍 Inline data exploration tool </StyledRadio>
               <StyledRadio size="sm" value="similar-items" description="(papers, datasets, models)">🧩 Recommendation on similar items</StyledRadio>
               <StyledRadio size="sm" value="batch-paper-upload">⬆️ Upload & ask papers in batch</StyledRadio>
-              <StyledRadio size="sm" value="email-interface">📩 Email interface</StyledRadio>
+              <StyledRadio size="sm" value="email-interface" description="You would interact with the app via a designated email">📩 Email interface</StyledRadio>
               <StyledRadio size="sm" value="more-speed">🏎 Improve overall speed</StyledRadio>
               <StyledRadio size="sm" value="more-accuracy">🎯 Improve overall accuracy</StyledRadio>
             </Radio.Group>
@@ -150,7 +151,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               <Button auto flat color="error" onPress={() => setVisible(false)}>
                 Close
               </Button>
-              <Button onClick={() => {
+              <Button data-testid="feedback-submit" onClick={() => {
                 if (userEmail && sentiment) {
                   storeFeedback({
                     email: userEmail,
