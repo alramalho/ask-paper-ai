@@ -52,6 +52,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL || 'http://localhost:8080'}/upload-paper`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Email': session!.user!.email,
           // @ts-ignore
           'Authorization': `Bearer ${session!.accessToken}`,
         },

@@ -135,6 +135,7 @@ async def store_feedback(request: Request):
 async def upload_paper(pdf_file: UploadFile, request: Request):
 
     start = datetime.datetime.now()
+    email = request.headers.get('Email', None)
 
     try:
         pdf_file_name = pdf_file.filename
@@ -158,6 +159,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
             'id': paper_hash,
             'paper_title': json_paper['title'],
             'paper_json': json.dumps(json_paper),
+            'uploaded_by': email,
         })
 
         end = datetime.datetime.now()
@@ -165,6 +167,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
+            'email': email,
             'paper_hash': paper_hash,
         })
 
@@ -180,6 +183,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
+            'email': email,
             'error': e,
         })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
@@ -198,6 +202,7 @@ async def ask(request: Request):
         question = body["question"]
         context = body["context"]
         quote = body["quote"]
+        email = body["email"]
         text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". {'You must always pair your response with a quote from the provided paper (and enclose the extracted quote between double quotes). The only time where you may not provide a quote is when the provided paper context does not contain any helpful information to the request presented, in this scenario, you must asnwer with a sentence saying `The paper does not contain enough information to answer your question`' if quote else ''}. Request: {question}\nStart paper context\n{context}\nEnd paper context"
         print(f"Asked text: \n{text}\n")
         if num_tokens(text) > 3500:
@@ -221,8 +226,10 @@ async def ask(request: Request):
         time_elapsed = end - start
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
+            'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(time_elapsed),
+            'question': question,
             'prompt_text': text,
             'was_prompt_cut': was_cut,
             'response_text': response,
@@ -235,8 +242,10 @@ async def ask(request: Request):
         time_elapsed = end - start
         write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
+            'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(time_elapsed),
+            'question': question,
             'error': e,
         })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
