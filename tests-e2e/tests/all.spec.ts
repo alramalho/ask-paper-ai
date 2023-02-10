@@ -98,8 +98,7 @@ function formatAttributes(obj: {[key: string]: string | boolean}): string {
       formattedValue = `"${value}"`;
       return `.${key}.S == ${formattedValue}`;
     } else if (typeof value === 'boolean') {
-      formattedValue = value ? '"true"' : '"false"';
-      return `.${key}.BOOL == ${formattedValue}`;
+      return `.${key}.BOOL == ${value}`;
     }
     throw new Error(`Unsupported type ${typeof value} for value ${value}`);
   }).join(' and ');
