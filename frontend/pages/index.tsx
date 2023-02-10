@@ -80,7 +80,7 @@ const Home = () => {
   }
 
   function askPaper(question: string, context: string, quote: boolean = false) {
-    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote}, {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote, email: session!.user!.email}, {
       headers: {
         'Content-Type': 'application/json',
         // @ts-ignore
