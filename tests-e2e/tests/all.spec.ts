@@ -76,9 +76,10 @@ test('should be able to store feedback', async () => {
   await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
   verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'message', randomString, {
-    accuracy: selectedAccuracy,
+    was_answer_accurate: selectedAccuracy,
     sentiment: selectedSentiment,
-    nextFeature: selectedNextFeature,
+    next_feature: selectedNextFeature,
+    email: 'e2e-test'
   })
 })
 
