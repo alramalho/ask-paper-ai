@@ -107,10 +107,27 @@ jobs:
           node-version: 16
       - name: Install dependencies
         working-directory: tests-e2e
-        run: yarn
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws -h
+          
+          yarn
       - name: Install Playwright Browsers
         working-directory: tests-e2e
         run: yarn playwright install --with-deps
+
+      - name: Configure AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region eu-central-1
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
+          aws configure set region eu-central-1  --profile hippo
+
       - name: Run Playwright tests
         working-directory: tests-e2e
         run: |
