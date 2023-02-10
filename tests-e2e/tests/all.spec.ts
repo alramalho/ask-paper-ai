@@ -34,7 +34,7 @@ test('should be able ask a question', async () => {
   await page.getByTestId('ask-button').click();
 
   await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible({timeout: 30000});
+  await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await expect(page.getByTestId('answer-area')).toContainText("FracNet");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
@@ -46,7 +46,7 @@ test('should be able to extract datasets', async () => {
   await expect(page.getByTestId('loading-answer')).toBeVisible();
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
-  await expect(page.getByTestId('answer-area')).toContainText("Size");
+  await expect(page.getByTestId('answer-area')).toContainText("Size", {timeout: 30000});
   await expect(page.getByTestId('answer-area')).toContainText("FracNet");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
@@ -59,7 +59,7 @@ test('should be able to store feedback', async () => {
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await page.click('text=Answer was accurate');
-  const selectedAccuracy = true
+  const selectedAccuracy= true
 
   await page.click('text=😍');
   const selectedSentiment = "Very good"
@@ -75,9 +75,31 @@ test('should be able to store feedback', async () => {
 
   await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
-  require('child_process').execSync(`aws dynamodb query --table-name HippoPrototypeFeedback-sandbox --index-name message-index --key-condition-expression "message = :message" --expression-attribute-values '{":message":{"S":"${randomString}"}}' | jq '.Items[] | select(.next_feature.S == "${selectedNextFeature}" and .sentiment.S == "${selectedSentiment}" and .was_answer_accurate.BOOL == "${selectedAccuracy}")' | grep message || (echo "No item found with requested charactersitics" && exit 1)`);
+  verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'message', randomString, {
+    accuracy: selectedAccuracy,
+    sentiment: selectedSentiment,
+    nextFeature: selectedNextFeature,
+  })
 })
 
 
 // todo: missing test cases
 // - should be able to upload the same paper without doubling storage
+
+function verifyIfInDynamo(tableName: string, indexField: string, indexValue: string, extraAttributes: {[key: string]: string | boolean}) {
+  require('child_process').execSync(`aws dynamodb query --table-name ${tableName} --index-name ${indexField}-index --key-condition-expression "${indexField} = :${indexField}" --expression-attribute-values '{":${indexField}":{"S":"${indexValue}"}}' | jq '.Items[] | select(${formatAttributes(extraAttributes)})' | grep ${indexField} || (echo "No item found with requested charactersitics" && exit 1)`);
+}
+
+function formatAttributes(obj: {[key: string]: string | boolean}): string {
+  return Object.entries(obj).map(([key, value]) => {
+    let formattedValue: string;
+    if (typeof value === 'string') {
+      formattedValue = `"${value}"`;
+      return `.${key}.S == ${formattedValue}`;
+    } else if (typeof value === 'boolean') {
+      formattedValue = value ? '"true"' : '"false"';
+      return `.${key}.BOOL == ${formattedValue}`;
+    }
+    throw new Error(`Unsupported type ${typeof value} for value ${value}`);
+  }).join(' and ');
+}
