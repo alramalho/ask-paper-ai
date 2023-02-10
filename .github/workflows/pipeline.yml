@@ -107,7 +107,7 @@ jobs:
         id: generate-uuid
         uses: filipstefansson/uuid-action@v1
         with:
-          name: ${{ gihub.sha }}
+          name: ${{ github.sha }}
       - name: Run Playwright tests
         working-directory: tests-e2e
         run: |
