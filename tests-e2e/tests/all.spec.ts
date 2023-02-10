@@ -44,8 +44,9 @@ test('should be able to extract datasets', async () => {
   await page.click('text=Extract Datasets');
 
   await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible({timeout: 30000});
+  await expect(page.getByTestId('answer-area')).toBeVisible();
 
+  await expect(page.getByTestId('answer-area')).toContainText("Size");
   await expect(page.getByTestId('answer-area')).toContainText("FracNet");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
@@ -55,7 +56,7 @@ test('should be able to store feedback', async () => {
   await page.getByTestId('ask-button').click();
 
   await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible({timeout: 30000});
+  await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await page.click('text=Answer was accurate');
   const selectedAccuracy = true
