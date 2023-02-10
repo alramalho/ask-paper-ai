@@ -9,7 +9,7 @@ if (process.env.ENVIRONMENT !== 'production') {
     const session: Session = {
       user: {
         name: 'Test User',
-        email: process.env.TEST_ID ?? '' + 'e2e-test',
+        email: (process.env.TEST_ID ?? '') + '@e2e-test',
         image: 'dummy',
       },
       expires: 'never'
