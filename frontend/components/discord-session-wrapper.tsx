@@ -65,7 +65,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
       return (
         <>
           <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
-          <Loading>Checking if you're in our server...</Loading>
+          <Loading>Checking if you're in our server... If this takes too long try to clear your browser cookies</Loading>
         </>
       )
     } else if (userInDiscord) {
