@@ -106,7 +106,7 @@ jobs:
         with:
           node-version: 16
       - name: Install dependencies
-        working-directory: tests-e2e
+        working-directory: tests/e2e
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
@@ -116,7 +116,7 @@ jobs:
           
           yarn
       - name: Install Playwright Browsers
-        working-directory: tests-e2e
+        working-directory: tests/e2e
         run: yarn playwright install --with-deps
 
       - name: Configure AWS
@@ -129,7 +129,7 @@ jobs:
           aws configure set region eu-central-1  --profile hippo
 
       - name: Run Playwright tests
-        working-directory: tests-e2e
+        working-directory: tests/e2e
         run: |
           export TEST_ID=${{needs.Deploy-To-Sandbox.outputs.test_id}}
           yarn playwright test
@@ -137,13 +137,13 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: tests-e2e/playwright-report/
+          path: tests/e2e/playwright-report/
           retention-days: 30
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-test-output
-          path: tests-e2e/playwright-test-output/
+          path: tests/e2e/playwright-test-output/
           retention-days: 30
 
   Deploy-To-Production:
