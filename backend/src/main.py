@@ -4,7 +4,6 @@ import traceback
 import uuid
 import hashlib
 
-from codeguru_profiler_agent import with_lambda_profiler
 from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import openai
@@ -25,7 +24,12 @@ LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 
 app = FastAPI()
-handler = with_lambda_profiler(Mangum(app))
+
+if ENVIRONMENT == 'production':
+    from codeguru_profiler_agent import with_lambda_profiler
+    handler = with_lambda_profiler(Mangum(app))
+else:
+    handler = Mangum(app)
 
 app.add_middleware(
     CORSMiddleware,
