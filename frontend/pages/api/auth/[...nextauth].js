@@ -11,7 +11,7 @@ export const authOptions = {
             userinfo: "https://discord.com/api/users/@me",
             authorization: {
                 params: {
-                    scope: 'identify email guilds'
+                    scope: 'identify email'
                 }
             },
         }),

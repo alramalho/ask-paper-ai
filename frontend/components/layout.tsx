@@ -17,6 +17,9 @@ interface LayoutSEO {
   images?: ReadonlyArray<OpenGraphMedia>
 }
 
+export const Code = styled('code', {
+
+})
 export const Box = styled('div', {
   boxSizing: 'border-box',
 });

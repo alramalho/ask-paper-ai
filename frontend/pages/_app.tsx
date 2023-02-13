@@ -41,28 +41,30 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
 
   return (
     <>
-      <SessionProvider session={session}>
-        <NextThemesProvider
-          defaultTheme="light"
-          attribute="class"
-          value={{
-            light: lightTheme.className,
-          }}
-        >
-          <NextUIProvider>
-            {process.env.ENVIRONMENT == 'production' //todo: huge motherfucking risk. Deal with this asap
-              ?
-              <DiscordSessionWrapper>
-                <Component {...pageProps} />
-              </DiscordSessionWrapper>
-              :
+    <SessionProvider session={session}>
+      <NextThemesProvider
+        defaultTheme="light"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          {process.env.ENVIRONMENT != 'production' //todo: huge motherfucking risk. Deal with this asap
+            ?
+            <DiscordSessionWrapper>
               <Component {...pageProps} />
-            }
-          </NextUIProvider>
-        </NextThemesProvider>
-      </SessionProvider>
-    </>
-  );
+            </DiscordSessionWrapper>
+
+        :
+        <Component {...pageProps} />
+        }
+      </NextUIProvider>
+    </NextThemesProvider>
+    </SessionProvider>
+</>
+)
+  ;
 }
 
 export default MyApp;
