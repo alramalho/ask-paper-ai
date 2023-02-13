@@ -12,13 +12,7 @@ test.beforeAll(async ({browser}) => {
 
   await page.goto(process.env.APP_URL)
 
-  page.on("filechooser", (fileChooser: FileChooser) => {
-    fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
-  })
-  await page.click('text=Upload your paper');
-
-  await expect(page.getByTestId('upload-loading')).toBeVisible();
-  await expect(page.getByTestId('upload-successful')).toBeVisible({timeout: 30000});
+  await uploadPaper(process.cwd() + '/tests/fixtures/fracnet_paper.pdf');
 })
 
 test.afterAll(async () => {
@@ -38,28 +32,29 @@ test('should be able to see the selected dialog after uploading a paper', async 
 })
 
 test('should be able ask a question', async () => {
-  await page.getByTestId("ask-textarea").fill("What is the paper about?");
-  await page.getByTestId('ask-button').click();
-
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
-
-  await expect(page.getByTestId('answer-area')).toContainText("FracNet");
-  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  await askQuestion();
 });
 
 test('should be able to extract datasets', async () => {
-  await page.click('text=Extract Datasets');
-
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
-
-  await expect(page.getByTestId('answer-area')).toContainText("Size", {timeout: 30000});
-  await expect(page.getByTestId('answer-area')).toContainText("FracNet");
-  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  await extractDatasets();
 });
 
 test('should be able to store feedback', async () => {
+  await giveFeedback();
+})
+
+
+export async function uploadPaper(path: string) {
+  page.on("filechooser", (fileChooser: FileChooser) => {
+    fileChooser.setFiles([path]);
+  });
+  await page.click('text=Upload your paper');
+
+  await expect(page.getByTestId('upload-loading')).toBeVisible();
+  await expect(page.getByTestId('upload-successful')).toBeVisible({ timeout: 30000 });
+}
+
+export async function giveFeedback() {
   await page.getByTestId("ask-textarea").fill("What is the paper about?");
   await page.getByTestId('ask-button').click();
 
@@ -67,19 +62,19 @@ test('should be able to store feedback', async () => {
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await page.click('text=Answer was accurate');
-  const selectedAccuracy= true
+  const selectedAccuracy = true;
 
   await page.click('text=😍');
-  const selectedSentiment = "Very good"
+  const selectedSentiment = "Very good";
   await page.click('text=🔍 Inline data exploration tool');
-  const selectedNextFeature = 'data-exploration'
+  const selectedNextFeature = 'data-exploration';
 
 
   const writtenMessage = "dummy";
   await page.getByTestId("message").fill(writtenMessage);
 
-  await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded()
-  await page.locator('button[data-testid="feedback-submit"]').click()
+  await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded();
+  await page.locator('button[data-testid="feedback-submit"]').click();
 
   await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
@@ -88,9 +83,30 @@ test('should be able to store feedback', async () => {
     sentiment: selectedSentiment,
     next_feature: selectedNextFeature,
     message: writtenMessage,
-  })
-})
+  });
+}
 
+export async function extractDatasets() {
+  await page.click('text=Extract Datasets');
+
+  await expect(page.getByTestId('loading-answer')).toBeVisible();
+  await expect(page.getByTestId('answer-area')).toBeVisible();
+
+  await expect(page.getByTestId('answer-area')).toContainText("Size", { timeout: 30000 });
+  await expect(page.getByTestId('answer-area')).toContainText("FracNet");
+  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+}
+
+export async function askQuestion() {
+  await page.getByTestId("ask-textarea").fill("What is the paper about?");
+  await page.getByTestId('ask-button').click();
+
+  await expect(page.getByTestId('loading-answer')).toBeVisible();
+  await expect(page.getByTestId('answer-area')).toBeVisible();
+
+  await expect(page.getByTestId('answer-area')).toContainText("FracNet");
+  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+}
 
 // todo: missing test cases
 // - should be able to upload the same paper without doubling storage

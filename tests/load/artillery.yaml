@@ -1,0 +1,13 @@
+config:
+  target: "http://localhost:3000/"
+  phases:
+    - duration: 60
+      arrivalRate: 25
+  engines:
+    playwright: {}
+  processor: ./flows.js
+scenarios:
+  - name: "Upload paper, ask question & give full feedback"
+    engine: playwright
+    flowFunction: "uploadAskAndGiveFeedbackFlow"
+    flow: []
