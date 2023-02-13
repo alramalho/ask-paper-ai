@@ -18,7 +18,7 @@ export class MainStack extends cdk.Stack {
       handler: 'main.handler',
       runtime: lambda.Runtime.PYTHON_3_8,
       timeout: cdk.Duration.seconds(90),
-      memorySize: 256,
+      memorySize: 512,
       environment: {
         OPENAI_KEY: props.openaiApiKey,
         ENVIRONMENT: props.environment,
