@@ -101,7 +101,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
         <>
           <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
           <Text>You're not in our discord community with the required role <Code>{requiredRole}</Code>!</Text>
-          <Text><a href={process.env.NEXT_PUBLIC_DISCORD_INVITE_LINK}>Click here</a> to join us!</Text>
+          <Text><a href="https://discord.gg/6zugVKk2sd">Click here</a> to join us!</Text>
         </>
       )
     }
