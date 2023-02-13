@@ -4,8 +4,7 @@ import traceback
 import uuid
 import hashlib
 
-
-
+from codeguru_profiler_agent import with_lambda_profiler
 from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import openai
@@ -25,10 +24,8 @@ openai.api_key = os.environ["OPENAI_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 
-# dynamodb_paper_tablename = os.environ['DYNAMODB_PAPER_TABLENAME']
-
 app = FastAPI()
-handler = Mangum(app)
+handler = with_lambda_profiler(Mangum(app))
 
 app.add_middleware(
     CORSMiddleware,

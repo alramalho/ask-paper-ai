@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as codeguruprofiler from "aws-cdk-lib/aws-codeguruprofiler";
 import * as path from "path";
 import {DynamoDbTableConstruct} from "./constructs/dynamo-table";
 interface MainStackProps {
@@ -26,7 +27,14 @@ export class MainStack extends cdk.Stack {
         DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
         FILESYSTEM_BASE: '/tmp',
         GROBID_URL: "https://cloud.science-miner.com/grobid", // todo use this only for PoC
-      }
+      },
+      profiling: this.environment === 'production',
+      profilingGroup: this.environment === 'production'
+        ? new codeguruprofiler.ProfilingGroup(this, `HippoPrototypeFastAPI-${props.environment}` , {
+          profilingGroupName: `HippoPrototypeFastAPI-${props.environment}`,
+          computePlatform: codeguruprofiler.ComputePlatform.AWS_LAMBDA
+        })
+        : undefined,
     });
     const lambdaUrl = fastApiLambda.addFunctionUrl({
       authType: lambda.FunctionUrlAuthType.NONE
