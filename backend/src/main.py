@@ -148,7 +148,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
         pdf_file_content = await pdf_file.read()
         print(f"Upload paper {pdf_file_name}")
 
-        store_paper_in_s3(pdf_file_content, pdf_file_name)
 
         output_location = f"{FILESYSTEM_BASE}/papers"
         if not os.path.exists(output_location):
@@ -180,6 +179,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
             'email': email,
             'paper_hash': paper_hash,
         })
+        store_paper_in_s3(pdf_file_content, paper_hash)
+
 
         json_paper['id'] = paper_hash
 
