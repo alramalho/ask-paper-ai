@@ -2,7 +2,7 @@ import {Avatar, Button, Image, Link, Loading, Spacer, styled, Text} from '@nextu
 import {Flex} from "./styles/flex";
 import {useSession, signIn} from "next-auth/react"
 import {useEffect, useState} from "react";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import DiscordIcon from "./icons/discord-icon";
 
 interface LayoutProps {
@@ -51,14 +51,18 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
     )
   }
   if (session == null && status == "unauthenticated") {
-    return (<>
+    return (<Flex justify='center' direction='column'>
       <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
 
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
       <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>Sign in
-        with Discord</Button>
-    </>)
+        with Discord
+      </Button>
+      <Spacer/>
+      <Text>By signing in & using our tool, you are accepting our</Text>
+      <Link href='https://hippoai.org'>Terms & Conditions</Link>
+    </Flex>)
   }
   if (session != null && status == "authenticated") {
     if (userInDiscord == undefined) {
