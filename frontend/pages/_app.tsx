@@ -50,7 +50,7 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
         }}
       >
         <NextUIProvider>
-          {process.env.ENVIRONMENT != 'production' //todo: huge motherfucking risk. Deal with this asap
+          {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
             ?
             <DiscordSessionWrapper>
               <Component {...pageProps} />
