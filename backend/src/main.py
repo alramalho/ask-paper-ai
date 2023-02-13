@@ -4,7 +4,7 @@ import traceback
 import uuid
 import hashlib
 
-from fastapi import FastAPI, Request, UploadFile, HTTPException
+from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 import openai
 from doc2json.grobid2json.process_pdf import process_pdf_file
@@ -25,12 +25,6 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 
 app = FastAPI()
 
-if ENVIRONMENT == 'production':
-    from codeguru_profiler_agent import with_lambda_profiler
-    handler = with_lambda_profiler(Mangum(app))
-else:
-    handler = Mangum(app)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -38,6 +32,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+if ENVIRONMENT == 'production':
+    from codeguru_profiler_agent import with_lambda_profiler
+    handler = with_lambda_profiler(Mangum(app))
+else:
+    handler = Mangum(app)
 
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 
@@ -133,7 +133,7 @@ async def store_feedback(request: Request):
 
 
 @app.post("/upload-paper")
-async def upload_paper(pdf_file: UploadFile, request: Request):
+async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks: BackgroundTasks):
 
     start = datetime.datetime.now()
     email = request.headers.get('Email', None)
@@ -162,6 +162,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request):
             'paper_json': json.dumps(json_paper),
             'email': email,
         })
+
 
         end = datetime.datetime.now()
         time_elapsed = end - start
