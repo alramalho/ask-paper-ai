@@ -20,7 +20,7 @@ test.afterAll(async () => {
 });
 
 test('should be able to upload a paper', async () => {
-  await expect(page.getByTestId('upload-successful')).toBeVisible({timeout: 30000});
+  await expect(page.getByTestId('upload-successful')).toBeVisible();
 
   verifyIfInDynamo('HippoPrototypeJsonPapers-sandbox', 'email', TEST_EMAIL, {
     paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
@@ -51,7 +51,7 @@ export async function uploadPaper(path: string) {
   await page.click('text=Upload your paper');
 
   await expect(page.getByTestId('upload-loading')).toBeVisible();
-  await expect(page.getByTestId('upload-successful')).toBeVisible({ timeout: 30000 });
+  await expect(page.getByTestId('upload-successful')).toBeVisible();
 }
 
 export async function giveFeedback() {
@@ -92,7 +92,7 @@ export async function extractDatasets() {
   await expect(page.getByTestId('loading-answer')).toBeVisible();
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
-  await expect(page.getByTestId('answer-area')).toContainText("Size", { timeout: 30000 });
+  await expect(page.getByTestId('answer-area')).toContainText("Size", );
   await expect(page.getByTestId('answer-area')).toContainText("FracNet");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 }
