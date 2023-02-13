@@ -186,7 +186,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
             'email': email,
-            'error': e,
+            'error': str(e),
         })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
@@ -199,12 +199,12 @@ def num_tokens(text) -> int:
 async def ask(request: Request):
     start = datetime.datetime.now()
     was_cut = False
+    body = await request.json()
+    question = body["question"]
+    context = body["context"]
+    quote = body["quote"]
+    email = body["email"]
     try:
-        body = await request.json()
-        question = body["question"]
-        context = body["context"]
-        quote = body["quote"]
-        email = body["email"]
         text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". {'You must always pair your response with a quote from the provided paper (and enclose the extracted quote between double quotes). The only time where you may not provide a quote is when the provided paper context does not contain any helpful information to the request presented, in this scenario, you must asnwer with a sentence saying `The paper does not contain enough information to answer your question`' if quote else ''}. Request: {question}\nStart paper context\n{context}\nEnd paper context"
         print(f"Asked text: \n{text}\n")
         if num_tokens(text) > 3500:
@@ -249,7 +249,7 @@ async def ask(request: Request):
             'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(time_elapsed),
             'question': question,
-            'error': e,
+            'error': str(e),
         })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
