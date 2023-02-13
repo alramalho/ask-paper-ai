@@ -22,6 +22,7 @@ openai.api_key = os.environ["OPENAI_KEY"]
 
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
+S3_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
 
 app = FastAPI()
 
@@ -88,6 +89,10 @@ def process_paper(pdf_file_name) -> dict:
     return f
 
 
+def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
+    s3 = boto3.resource('s3')
+    s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}", Body=pdf_file)
+
 def write_to_dynamo(table_name: str, data: dict):
     if ENVIRONMENT.lower() not in table_name.lower():
         table_name = f"{table_name}-{ENVIRONMENT}"
@@ -142,6 +147,9 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
         pdf_file_name = pdf_file.filename
         pdf_file_content = await pdf_file.read()
         print(f"Upload paper {pdf_file_name}")
+
+        store_paper_in_s3(pdf_file_content, pdf_file_name)
+
         output_location = f"{FILESYSTEM_BASE}/papers"
         if not os.path.exists(output_location):
             os.mkdir(output_location)
