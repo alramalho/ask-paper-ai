@@ -8,9 +8,7 @@ export default async function handler(request, response) {
             console.log("Client Ready!");
             const guild = client.guilds.cache.get(process.env.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID);
             const members = await guild.members.fetch()
-            const memberExists = members.find(member => {
-                return member.roles.cache.find(role => member.id === request.query.userId)
-            })
+            const memberExists = members.find(member => member.id === request.query.userId)
             const hasRole = members.find(member => {
                 return member.roles.cache.find(role => role.name === request.query.role && member.id === request.query.userId)
             })
@@ -26,5 +24,4 @@ export default async function handler(request, response) {
     }).catch(() => {
         response.status(504).json({message: 'Timeout'})
     })
-
 }
