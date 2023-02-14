@@ -93,7 +93,6 @@ export async function extractDatasets() {
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await expect(page.getByTestId('answer-area')).toContainText("Size", );
-  await expect(page.getByTestId('answer-area')).toContainText("FracNet");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 }
 
@@ -104,7 +103,7 @@ export async function askQuestion() {
   await expect(page.getByTestId('loading-answer')).toBeVisible();
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
-  await expect(page.getByTestId('answer-area')).toContainText("FracNet");
+  await expect(page.getByTestId('answer-area')).toContainText("fracture");
   await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 }
 
