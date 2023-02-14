@@ -229,7 +229,7 @@ async def ask(request: Request):
             # We use temperature of 0.0 because it gives the most predictable, factual answer.
             temperature=0,
             max_tokens=500,
-            model="text-davinci-003",
+            model="text-davinci-002",
         )["choices"][0]["text"].strip("\n")
         print("Response: \n" + response)
 
