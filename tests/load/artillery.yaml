@@ -11,3 +11,10 @@ scenarios:
     engine: playwright
     flowFunction: "uploadAskAndGiveFeedbackFlow"
     flow: []
+
+
+# Using in .github workflow:
+# https://www.artillery.io/docs/guides/integration-guides/github-actions
+
+# Running tests from lambda
+# https://www.artillery.io/docs/guides/guides/distributed-load-tests-on-aws-lambda
