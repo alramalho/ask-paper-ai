@@ -17,6 +17,7 @@ export const Box = styled('div', {
 
 const DiscordSessionWrapper = ({children}: LayoutProps) => {
   const [userWhitelisted, setUserWhitelisted] = useState<Boolean | undefined>(undefined);
+  const [userInDiscord, setUserInDiscord] = useState<Boolean | undefined>(undefined);
   const {data: session, status} = useSession()
 
   const requiredRole = 'Pilot'
@@ -29,7 +30,10 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           },
         }).then((response) => {
           axios.get(`/api/discord/${requiredRole}?userId=${response.data.id}`)
-            .then(res => setUserWhitelisted(res.data.hasRole))
+            .then(res => {
+              setUserWhitelisted(res.data.hasRole)
+              setUserInDiscord(res.data.inDiscord)
+            })
             .catch(e => {
               console.log(e)
               setUserWhitelisted(false)
@@ -74,7 +78,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
             cookies</Loading>
         </>
       )
-    } else if (userWhitelisted) {
+    } else if (userInDiscord && userWhitelisted) {
       return (
         <>
           {session.user &&
@@ -96,12 +100,20 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           {children}
         </>
       )
-    } else {
+    } else if (userInDiscord && !userWhitelisted) {
       return (
         <>
           <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
-          <Text>You're not in our discord community with the required role <Code>{requiredRole}</Code>!</Text>
-          <Text><a href="https://discord.gg/6zugVKk2sd">Click here</a> to join us! (And don't forget to request the role 😊)</Text>
+          <Text>Uh oh! Currently only users with the <Code>{requiredRole}</Code> role can access the tool 😕</Text>
+          <Text> Talk to one of our moderators if you're interested in participating! </Text>
+        </>
+      )
+    } else if (!userInDiscord){
+      return (
+        <>
+          <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
+          <Text>You're not in our discord community!</Text>
+          <Text><a href="https://discord.gg/6zugVKk2sd">Click here</a> to join us! </Text>
         </>
       )
     }
