@@ -1,8 +1,9 @@
 config:
-  target: "http://localhost:3000/"
+  target: "https://sandbox--hippo-prototype.netlify.app/"
   phases:
     - duration: 60
-      arrivalRate: 25
+      arrivalRate: 5
+      maxVusers: 50
   engines:
     playwright: {}
   processor: ./flows.js
