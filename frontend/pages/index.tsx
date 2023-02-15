@@ -44,11 +44,11 @@ const Home = () => {
   } = useInput("");
 
   useEffect(() => {
-    if (isRunning && loadingRef != null) {
+    if (isRunning && loadingRef.current != null) {
       // @ts-ignore
       loadingRef.current.scrollIntoView()
     }
-    if (answerRef != null) {
+    if (answerRef.current != null) {
       // @ts-ignore
       answerRef.current.scrollIntoView()
     }
