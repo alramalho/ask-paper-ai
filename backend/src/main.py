@@ -217,18 +217,21 @@ async def ask(request: Request):
     quote = body["quote"]
     email = body["email"]
     try:
-        text = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". {'You must always pair your response with a quote from the provided paper (and enclose the extracted quote between double quotes). The only time where you may not provide a quote is when the provided paper context does not contain any helpful information to the request presented, in this scenario, you must asnwer with a sentence saying `The paper does not contain enough information to answer your question`' if quote else ''}. Request: {question}\nStart paper context\n{context}\nEnd paper context"
-        print(f"Asked text: \n{text}\n")
-        if num_tokens(text) > 3500:
+        prompt = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". {'You must always pair your response with a quote from the provided paper (and enclose the extracted quote between double quotes). The only time where you may not provide a quote is when the provided paper context does not contain any helpful information to the request presented, in this scenario, you must asnwer with a sentence saying `The paper does not contain enough information to answer your question`' if quote else ''}. Request: {question}\nStart paper context\n{context}\nEnd paper context"
+        print(f"Asked text: \n{prompt}\n")
+        if num_tokens(prompt) > 3500:
             was_cut = True
             print("Text too long, was cut")
-            max_length = int(len(' '.join(text.split(' ')) * 3500) / num_tokens(text))
-            text = text[:max_length] + "\nEnd paper context"
+            max_length = int(len(' '.join(prompt.split(' ')) * 3500) / num_tokens(prompt))
+            prompt = prompt[:max_length] + "\nEnd paper context"
 
-        print(f"Used text: \n{text}\n")
+        print(f"Used text: \n{prompt}\n")
+
+        if "@load.test" in email:
+            prompt = 'Say hi.'
 
         response = openai.Completion.create(
-            prompt=text,
+            prompt=prompt,
             # We use temperature of 0.0 because it gives the most predictable, factual answer.
             temperature=0,
             max_tokens=500,
@@ -244,9 +247,9 @@ async def ask(request: Request):
             'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(time_elapsed),
             'question': question,
-            'prompt_text': text,
+            'prompt_text': prompt,
             'was_prompt_cut': was_cut,
-            'prompt_token_length_estimate': num_tokens(text),
+            'prompt_token_length_estimate': num_tokens(prompt),
             'response_text': response,
         })
 
