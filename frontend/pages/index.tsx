@@ -1,5 +1,5 @@
 import {Text, Button, Spacer, Loading, Textarea, useInput, Switch, Badge} from "@nextui-org/react";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
 import {Box, Layout} from "../components/layout";
@@ -33,8 +33,6 @@ const Home = () => {
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const [question, setQuestion] = useState<string | undefined>(undefined)
   const {data: session} = useCustomSession()
-  const loadingRef = useRef(null)
-  const answerRef = useRef(null)
 
   const {
     value: questionValue,
@@ -44,13 +42,17 @@ const Home = () => {
   } = useInput("");
 
   useEffect(() => {
-    if (isRunning && loadingRef.current != null) {
-      // @ts-ignore
-      loadingRef.current.scrollIntoView()
+    if (isRunning) {
+      if (document.getElementById('loading-answer')) {
+        // @ts-ignore
+        document.getElementById('loading-answer').scrollIntoView()
+      }
     }
-    if (answerRef.current != null) {
-      // @ts-ignore
-      answerRef.current.scrollIntoView()
+    if (LLMResponse !== undefined) {
+      if (document.getElementById('answer-area')) {
+        // @ts-ignore
+        document.getElementById('answer-area').scrollIntoView()
+      }
     }
   }, [LLMResponse, isRunning])
 
@@ -166,12 +168,12 @@ const Home = () => {
         <h3>Answer:</h3>
       {isRunning
         && <>
-              <Loading ref={loadingRef} data-testid="loading-answer" type="points">{loadingText}</Loading>
+              <Loading data-testid="loading-answer" type="points">{loadingText}</Loading>
           </>
       }
       {LLMResponse &&
           <>
-              <Box ref={answerRef} id="answer-area" data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
+              <Box id="answer-area" data-testid="answer-area" css={{textAlign: 'left', margin: '$6'}}>
                   <MarkdownView
                       markdown={LLMResponse}
                       options={{tables: true, emoji: true,}}
