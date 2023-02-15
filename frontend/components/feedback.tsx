@@ -120,11 +120,14 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               isRequired
               name="nextFeature"
               id="nextFeature"
+              // @ts-ignore
+              css={{maxWidth: '450px'}}
             >
               <StyledRadio size="sm" value="data-exploration" description="(like kaggle)">🔍 Inline data exploration tool </StyledRadio>
+              <StyledRadio size="sm" value="pdf-render" >🔎 In-app pdf render </StyledRadio>
               <StyledRadio size="sm" value="similar-items" description="(papers, datasets, models)">🧩 Recommendation on similar items</StyledRadio>
               <StyledRadio size="sm" value="batch-paper-upload">⬆️ Upload & ask papers in batch</StyledRadio>
-              <StyledRadio size="sm" value="email-interface" description="You would interact with the app via a designated email">📩 Email interface</StyledRadio>
+              <StyledRadio size="sm" value="email-interface" description="You would interact with the app via direct or CC communication with a designated email">📩 Email interface</StyledRadio>
               <StyledRadio size="sm" value="more-speed">🏎 Improve overall speed</StyledRadio>
               <StyledRadio size="sm" value="more-accuracy">🎯 Improve overall accuracy</StyledRadio>
               <StyledRadio size="sm" value="other" description="Please specify below!">🤷‍️ Other</StyledRadio>
