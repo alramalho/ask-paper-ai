@@ -41,7 +41,7 @@ async function giveFeedback(page) {
 async function uploadAskAndGiveFeedbackFlow(page) {
     await page.goto('https://sandbox--hippo-prototype.netlify.app/');
 
-    await uploadPaper(process.cwd() + '/fixtures/fracnet_paper.pdf', page)
+    await uploadPaper(process.cwd() + '/tests/load/fixtures/fracnet_paper.pdf', page)
     await askQuestion(page)
     await giveFeedback(page)
 }
