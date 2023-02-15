@@ -150,8 +150,6 @@ jobs:
   Load-Test:
     runs-on: ubuntu-latest
 
-    container: artilleryio/artillery:latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -162,15 +160,14 @@ jobs:
           node-version: 16
 
       - name: Setup python
-        run: |
-          sudo apt update
-          sudo apt install software-properties-common
-          sudo add-apt-repository ppa:deadsnakes/ppa
-          sudo apt install python3.9
-          python3.9 --version
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
 
       - name: Execute load tests
         run: |
+          npm install -g artillery@latest
           npm install -g artillery artillery-engine-playwright
           artillery run tests/load/artillery.yml
 
