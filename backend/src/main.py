@@ -22,7 +22,7 @@ openai.api_key = os.environ["OPENAI_KEY"]
 
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
-S3_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
+S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', None)
 
 app = FastAPI()
 
@@ -90,6 +90,9 @@ def process_paper(pdf_file_name) -> dict:
 
 
 def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
+    if ENVIRONMENT not in ['production', 'sandbox']:
+        return
+
     s3 = boto3.resource('s3')
     s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}", Body=pdf_file)
 
