@@ -1,4 +1,4 @@
-import {Text, Button, Spacer, Loading, Textarea, useInput, Switch} from "@nextui-org/react";
+import {Text, Button, Spacer, Loading, Textarea, useInput, Switch, Badge} from "@nextui-org/react";
 import {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -80,7 +80,12 @@ const Home = () => {
   }
 
   function askPaper(question: string, context: string, quote: boolean = false) {
-    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {question, context, quote, email: session!.user!.email}, {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`, {
+      question,
+      context,
+      quote,
+      email: session!.user!.email
+    }, {
       headers: {
         'Content-Type': 'application/json',
         // @ts-ignore
@@ -93,7 +98,12 @@ const Home = () => {
   return <Layout seo={{
     description: "Accelerating medical research. Join us today."
   }}>
-    <h2>Ask Paper</h2>
+    <Flex>
+      <Text h2>Ask Paper</Text>
+      <Badge color="error" variant="flat">
+        BETA
+      </Badge>
+    </Flex>
     <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
     <Spacer y={3}/>
     {selectedPaper && <>
@@ -131,7 +141,8 @@ const Home = () => {
                       ].includes(e.toLowerCase())
                     )}> Ask </Button>
                 <Flex css={{gap: "$2"}}>
-                    <Switch bordered initialChecked checked={quoteChecked} onChange={() => setQuoteChecked(previous => !previous)}></Switch>
+                    <Switch bordered initialChecked checked={quoteChecked}
+                            onChange={() => setQuoteChecked(previous => !previous)}></Switch>
                     <Text small>Quote paper</Text>
                 </Flex>
             </Flex>
