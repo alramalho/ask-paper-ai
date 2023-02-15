@@ -169,7 +169,7 @@ jobs:
         run: |
           npm install -g artillery@latest
           npm install -g artillery artillery-engine-playwright
-          artillery run tests/load/artillery.yml
+          artillery run tests/load/artillery.yaml
 
       - name: Cleanup
         run:  |
