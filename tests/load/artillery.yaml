@@ -3,7 +3,7 @@ config:
   phases:
     - duration: 60
       arrivalRate: 5
-      maxVusers: 50
+      maxVusers: 1
   engines:
     playwright: {}
   processor: ./flows.js
@@ -19,3 +19,34 @@ scenarios:
 
 # Running tests from lambda
 # https://www.artillery.io/docs/guides/guides/distributed-load-tests-on-aws-lambda
+
+#  Load-Test:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#
+#      - name: Setup node
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 16
+#
+#      - name: Setup python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.9'
+#          cache: 'pip'
+#
+#      - name: Execute load tests
+#        run: |
+#          npm install -g artillery@latest
+#          npm install -g artillery artillery-engine-playwright
+#          artillery run tests/load/artillery.yaml
+#
+#      - name: Cleanup
+#        run:  |
+#          cd tests/load
+#          pip install -r requirements.txt
+#          python cleanup.py
+#

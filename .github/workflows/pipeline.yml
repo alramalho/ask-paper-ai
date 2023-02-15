@@ -6,181 +6,149 @@ on:
 
 jobs:
 
-#  Deploy-To-Sandbox:
-#    runs-on: ubuntu-latest
-#    env:
-#      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-#      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-#      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-#      DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
-#      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
-#      DISCORD_CLIENT_BOT_TOKEN: ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
-#      NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: ${{ secrets.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID }}
-#      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-#      LATEST_COMMIT_ID: ${{ github.sha }}
-#      ENVIRONMENT: sandbox
-#      APP_URL: https://sandbox--hippo-prototype.netlify.app
-#
-#    steps:
-#
-#      - name: Checkout source code
-#        uses: actions/checkout@v3
-#
-#      - name: Environment setting
-#        run: |
-#          sudo apt update
-#
-#          sudo apt install nodejs
-#          node -v
-#          sudo apt install npm
-#          npm -v
-#          npm install -g aws-cdk
-#          cdk --version
-#          sudo apt install jq
-#          jq --version
-#          sudo apt install software-properties-common
-#          sudo add-apt-repository ppa:deadsnakes/ppa
-#          sudo apt install python3.9
-#          python3.9 --version
-#
-#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#          unzip awscliv2.zip
-#          sudo ./aws/install --update
-#          aws --version
-#          aws -h
-#
-#          npm i -g vercel
-#          vercel --version
-#
-#
-#      - name: Configure AWS
-#        run: |
-#          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws configure set region eu-central-1
-#          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
-#          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
-#          aws configure set region eu-central-1  --profile hippo
-#
-#      - name: Deploy-Backend
-#        run: |
-#
-#          cd backend/infrastructure
-#          yarn
-#          yarn build-backend-zip
-#          cdk bootstrap
-#
-#          yarn no-build-fast-deploy
-#
-#      - name: Deploy-Frontend
-#        id: deploy-frontend
-#        run: |
-#          cd frontend
-#          yarn
-#
-#          export TEST_ID=$(uuidgen)
-#          netlify env:set TEST_ID $TEST_ID
-#          echo "test_id=$TEST_ID" >> $GITHUB_OUTPUT
-#
-#          export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURLsandbox' | grep -v 'null' | tr -d '"')
-#          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
-#          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
-#          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
-#          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
-#          netlify env:set NEXTAUTH_URL $APP_URL
-#          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
-#          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
-#
-#    outputs:
-#      test_id: ${{ steps.deploy-frontend.outputs.test_id }}
-#
-#  E2E-Tests:
-#    needs: Deploy-To-Sandbox
-#    timeout-minutes: 60
-#    runs-on: ubuntu-latest
-#    env:
-#      APP_URL: https://sandbox--hippo-prototype.netlify.app
-#      CI: true
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: 16
-#      - name: Install dependencies
-#        working-directory: tests/e2e
-#        run: |
-#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#          unzip awscliv2.zip
-#          sudo ./aws/install --update
-#          aws --version
-#          aws -h
-#
-#          yarn
-#      - name: Install Playwright Browsers
-#        working-directory: tests/e2e
-#        run: yarn playwright install --with-deps
-#
-#      - name: Configure AWS
-#        run: |
-#          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws configure set region eu-central-1
-#          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
-#          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
-#          aws configure set region eu-central-1  --profile hippo
-#
-#      - name: Run Playwright tests
-#        working-directory: tests/e2e
-#        run: |
-#          export TEST_ID=${{needs.Deploy-To-Sandbox.outputs.test_id}}
-#          yarn playwright test
-#      - uses: actions/upload-artifact@v3
-#        if: always()
-#        with:
-#          name: playwright-report
-#          path: tests/e2e/playwright-report/
-#          retention-days: 30
-#      - uses: actions/upload-artifact@v3
-#        if: always()
-#        with:
-#          name: playwright-test-output
-#          path: tests/e2e/playwright-test-output/
-#          retention-days: 30
-
-  Load-Test:
+  Deploy-To-Sandbox:
     runs-on: ubuntu-latest
+    env:
+      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+      DISCORD_CLIENT_BOT_TOKEN: ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
+      NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: ${{ secrets.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      LATEST_COMMIT_ID: ${{ github.sha }}
+      ENVIRONMENT: sandbox
+      APP_URL: https://sandbox--hippo-prototype.netlify.app
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Setup node
-        uses: actions/setup-node@v3
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Environment setting
+        run: |
+          sudo apt update
+
+          sudo apt install nodejs
+          node -v
+          sudo apt install npm
+          npm -v
+          npm install -g aws-cdk
+          cdk --version
+          sudo apt install jq
+          jq --version
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt install python3.9
+          python3.9 --version
+
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws -h
+
+          npm i -g vercel
+          vercel --version
+
+
+      - name: Configure AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region eu-central-1
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
+          aws configure set region eu-central-1  --profile hippo
+
+      - name: Deploy-Backend
+        run: |
+
+          cd backend/infrastructure
+          yarn
+          yarn build-backend-zip
+          cdk bootstrap
+
+          yarn no-build-fast-deploy
+
+      - name: Deploy-Frontend
+        id: deploy-frontend
+        run: |
+          cd frontend
+          yarn
+
+          export TEST_ID=$(uuidgen)
+          netlify env:set TEST_ID $TEST_ID
+          echo "test_id=$TEST_ID" >> $GITHUB_OUTPUT
+
+          export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURLsandbox' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
+          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
+          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
+          netlify env:set NEXTAUTH_URL $APP_URL
+          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
+          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
+
+    outputs:
+      test_id: ${{ steps.deploy-frontend.outputs.test_id }}
+
+  E2E-Tests:
+    needs: Deploy-To-Sandbox
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      APP_URL: https://sandbox--hippo-prototype.netlify.app
+      CI: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          cache: 'pip'
-
-      - name: Execute load tests
+      - name: Install dependencies
+        working-directory: tests/e2e
         run: |
-          npm install -g artillery@latest
-          npm install -g artillery artillery-engine-playwright
-          artillery run tests/load/artillery.yaml
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws -h
 
-      - name: Cleanup
-        run:  |
-          cd tests/load
-          pip install -r requirements.txt
-          python cleanup.py
-          
-          
+          yarn
+      - name: Install Playwright Browsers
+        working-directory: tests/e2e
+        run: yarn playwright install --with-deps
+
+      - name: Configure AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region eu-central-1
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
+          aws configure set region eu-central-1  --profile hippo
+
+      - name: Run Playwright tests
+        working-directory: tests/e2e
+        run: |
+          export TEST_ID=${{needs.Deploy-To-Sandbox.outputs.test_id}}
+          yarn playwright test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report/
+          retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-test-output
+          path: tests/e2e/playwright-test-output/
+          retention-days: 30
 
   Deploy-To-Production:
-    needs: Load-Test
+    needs: E2E-Tests
     runs-on: ubuntu-latest
     env:
       OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
