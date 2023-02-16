@@ -86,6 +86,7 @@ jobs:
           netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
+          netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
           netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
           netlify env:set NEXTAUTH_URL $APP_URL
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
@@ -222,6 +223,7 @@ jobs:
           netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
+          netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
           netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
           netlify env:set NEXTAUTH_URL https://hippo-prototype.netlify.app
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
