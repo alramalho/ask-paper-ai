@@ -11,4 +11,6 @@ artillery run --output report.json artillery.yaml
 echo "${GREEN}🧹 Cleaning up${NOCOLOR}"
 python3 cleanup.py
 
+artillery report report.json
+
 echo "${GREEN}✅ Done${NOCOLOR}"
