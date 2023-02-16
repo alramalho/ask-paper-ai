@@ -32,13 +32,6 @@ export class MainStack extends cdk.Stack {
         S3_BUCKET_NAME: destinationBucketName,
         GROBID_URL: "https://cloud.science-miner.com/grobid", // todo use this only for PoC
       },
-      profiling: this.environment === 'production',
-      profilingGroup: this.environment === 'production'
-        ? new codeguruprofiler.ProfilingGroup(this, `HippoPrototypeFastAPI-${props.environment}` , {
-          profilingGroupName: `HippoPrototypeFastAPI-${props.environment}`,
-          computePlatform: codeguruprofiler.ComputePlatform.AWS_LAMBDA
-        })
-        : undefined,
     });
 
     const paperBucket = new s3.Bucket(this, 'PaperBucket', {

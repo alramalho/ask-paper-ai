@@ -34,15 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-if ENVIRONMENT == 'production':
-    from codeguru_profiler_agent import with_lambda_profiler
-    @with_lambda_profiler
-    def profiled_handler(event, context):
-        return Mangum(app)(event, context)
-
-    handler = profiled_handler
-else:
-    handler = Mangum(app)
+handler = Mangum(app)
 
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 
