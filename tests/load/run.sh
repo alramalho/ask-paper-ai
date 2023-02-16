@@ -4,8 +4,6 @@ GREEN='\033[0;32m'
 NOCOLOR='\033[0m'
 
 set -e
-TEST_EMAIL=$(uuidgen)@load.test
-export TEST_EMAIL=$TEST_EMAIL
 
 echo "${GREEN}🏃‍Running load tests...${NOCOLOR}"
 artillery run --output report.json artillery.yaml
