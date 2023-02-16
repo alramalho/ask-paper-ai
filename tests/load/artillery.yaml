@@ -2,12 +2,13 @@ config:
   target: "https://sandbox--hippo-prototype.netlify.app/"
   phases:
     - duration: 60
-      arrivalRate: 5
-      maxVusers: 1
+      arrivalRate: 2
+      maxVusers: 5
   engines:
-    playwright: {
-      screenshot: 'only-on-failure',
-    }
+    playwright:
+      screenshot: 'only-on-failure'
+      outputDir: 'playwright-test-output/'
+      timeout: 120000
   processor: ./flows.js
 scenarios:
   - name: "Upload paper, ask question & give full feedback"

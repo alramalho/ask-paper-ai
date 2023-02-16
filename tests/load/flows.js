@@ -1,3 +1,6 @@
+const crypto = require('crypto');
+const TEST_EMAIL = process.env.TEST_ID + '@e2e-test';
+
 async function uploadPaper(path, page) {
     page.on("filechooser", (fileChooser) => {
         fileChooser.setFiles([path]);
@@ -5,10 +8,8 @@ async function uploadPaper(path, page) {
     await page.click('text=Upload your paper');
 
 }
-async function giveFeedback(page) {
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
-    await page.getByTestId('ask-button').click();
 
+async function giveFeedback(page) {
 
     await page.click('text=Answer was accurate');
     const selectedAccuracy = true;
@@ -18,19 +19,19 @@ async function giveFeedback(page) {
     await page.click('text=🔍 Inline data exploration tool');
     const selectedNextFeature = 'data-exploration';
 
-
-    const writtenMessage = "dummy";
+    const randomuuid = crypto.randomUUID()
+    const writtenMessage = `load test ${randomuuid}`;
     await page.getByTestId("message").fill(writtenMessage);
 
     await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded();
     await page.locator('button[data-testid="feedback-submit"]').click();
 
 
-    verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', process.env.TEST_ID + '@e2e-test', {
+    verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'message', writtenMessage, {
         was_answer_accurate: selectedAccuracy,
         sentiment: selectedSentiment,
         next_feature: selectedNextFeature,
-        message: writtenMessage,
+        email: TEST_EMAIL,
     });
 }
 
@@ -38,7 +39,7 @@ function verifyIfInDynamo(tableName, indexField, indexValue, extraAttributes) {
     require('child_process').execSync(`aws dynamodb query --table-name ${tableName} --index-name ${indexField}-index --key-condition-expression "${indexField} = :${indexField}" --expression-attribute-values '{":${indexField}":{"S":"${indexValue}"}}' | jq '.Items[] | select(${formatAttributes(extraAttributes)})' | grep '"${indexField}":' || (echo "No item found with requested charactersitics" && exit 1)`);
 }
 
-function formatAttributes(obj)  {
+function formatAttributes(obj) {
     return Object.entries(obj).map(([key, value]) => {
         let formattedValue;
         if (typeof value === 'string') {
@@ -51,10 +52,11 @@ function formatAttributes(obj)  {
     }).join(' and ');
 }
 
- async function askQuestion(page) {
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+async function askQuestion(page) {
+    await page.getByTestId("ask-textarea").fill(`this is a load test`);
     await page.getByTestId('ask-button').click();
 }
+
 async function uploadAskAndGiveFeedbackFlow(page) {
     await page.goto('https://sandbox--hippo-prototype.netlify.app/');
 
