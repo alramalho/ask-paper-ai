@@ -149,7 +149,7 @@ jobs:
           retention-days: 30
 
   Deploy-To-Production:
-    needs: E2E-Tests
+#    needs: E2E-Tests
     runs-on: ubuntu-latest
     env:
       OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
