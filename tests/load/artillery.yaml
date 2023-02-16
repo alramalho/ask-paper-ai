@@ -5,7 +5,9 @@ config:
       arrivalRate: 5
       maxVusers: 1
   engines:
-    playwright: {}
+    playwright: {
+      screenshot: 'only-on-failure',
+    }
   processor: ./flows.js
 scenarios:
   - name: "Upload paper, ask question & give full feedback"
