@@ -62,7 +62,11 @@ const Home = () => {
     setLoadingText("Reading paper...")
     setQuestion(question)
 
-    const aggreggatedText = paper.abstract + paper.pdf_parse.body_text.concat(paper.pdf_parse.back_matter).filter(e => sectionFilterer(e.section)).map(bodyText => bodyText.text).join('\n')
+    const aggreggatedText = paper.abstract + paper.pdf_parse.body_text
+      .concat(paper.pdf_parse.back_matter)
+      .filter(e => sectionFilterer(e.section))
+      .map(bodyText => bodyText.text)
+      .join('\n')
 
     askPaper(question, aggreggatedText, quote)
       .then(res => {

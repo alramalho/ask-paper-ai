@@ -2,7 +2,6 @@ import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as s3 from "aws-cdk-lib/aws-s3";
-import * as codeguruprofiler from "aws-cdk-lib/aws-codeguruprofiler";
 import * as path from "path";
 import {DynamoDbTableConstruct} from "./constructs/dynamo-table";
 interface MainStackProps {
@@ -22,7 +21,7 @@ export class MainStack extends cdk.Stack {
       handler: 'main.handler',
       runtime: lambda.Runtime.PYTHON_3_8,
       timeout: cdk.Duration.seconds(90),
-      memorySize: 512,
+      memorySize: 1024,
       environment: {
         OPENAI_KEY: props.openaiApiKey,
         ENVIRONMENT: props.environment,
