@@ -92,6 +92,7 @@ def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
     s3 = boto3.resource('s3')
     s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}", Body=pdf_file)
 
+
 def write_to_dynamo(table_name: str, data: dict):
     if ENVIRONMENT.lower() not in table_name.lower():
         table_name = f"{table_name}-{ENVIRONMENT}"
@@ -172,13 +173,13 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
         end = datetime.datetime.now()
         time_elapsed = end - start
-        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+        background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
             'email': email,
             'paper_hash': paper_hash,
         })
-        store_paper_in_s3(pdf_file_content, paper_hash)
+        background_tasks.add_task(store_paper_in_s3, pdf_file_content, pdf_file_name)
 
 
         json_paper['id'] = paper_hash
@@ -190,7 +191,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
         end = datetime.datetime.now()
         time_elapsed = end - start
-        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+        background_tasks.add_task(write_to_dynamo,"HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
             'email': email,
@@ -204,7 +205,7 @@ def num_tokens(text) -> int:
 
 
 @app.post("/ask")
-async def ask(request: Request):
+async def ask(request: Request, background_tasks: BackgroundTasks):
     start = datetime.datetime.now()
     was_cut = False
     body = await request.json()
@@ -237,7 +238,7 @@ async def ask(request: Request):
 
         end = datetime.datetime.now()
         time_elapsed = end - start
-        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+        background_tasks.add_task(write_to_dynamo,"HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
@@ -254,7 +255,7 @@ async def ask(request: Request):
         print(traceback.format_exc())
         end = datetime.datetime.now()
         time_elapsed = end - start
-        write_to_dynamo("HippoPrototypeFunctionInvocations", {
+        background_tasks.add_task(write_to_dynamo,"HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
