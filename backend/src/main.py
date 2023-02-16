@@ -36,7 +36,11 @@ app.add_middleware(
 
 if ENVIRONMENT == 'production':
     from codeguru_profiler_agent import with_lambda_profiler
-    handler = with_lambda_profiler(Mangum(app))
+    @with_lambda_profiler
+    def profiled_handler(event, context):
+        return Mangum(app)(event, context)
+
+    handler = profiled_handler
 else:
     handler = Mangum(app)
 
