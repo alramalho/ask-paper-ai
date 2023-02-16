@@ -79,18 +79,18 @@ jobs:
           yarn
 
           export TEST_ID=$(uuidgen)
-          netlify env:set TEST_ID $TEST_ID --context $ENVIRONMENT
+          netlify env:set TEST_ID $TEST_ID
           echo "test_id=$TEST_ID" >> $GITHUB_OUTPUT
 
           export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURLsandbox' | grep -v 'null' | tr -d '"')
-          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL) --context $ENVIRONMENT
-          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }} --context $ENVIRONMENT
-          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }} --context $ENVIRONMENT
-          netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }} --context $ENVIRONMENT
-          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID) --context $ENVIRONMENT
-          netlify env:set NEXTAUTH_URL $APP_URL --context $ENVIRONMENT
-          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }} --context $ENVIRONMENT
-          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox --context $ENVIRONMENT
+          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
+          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
+          netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
+          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
+          netlify env:set NEXTAUTH_URL $APP_URL
+          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
+          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
 
     outputs:
       test_id: ${{ steps.deploy-frontend.outputs.test_id }}
@@ -220,11 +220,11 @@ jobs:
           yarn
 
           export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURLproduction' | grep -v 'null' | tr -d '"')
-          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL) --context $ENVIRONMENT
-          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }} --context $ENVIRONMENT
-          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }} --context $ENVIRONMENT
-          netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }} --context $ENVIRONMENT
-          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID) --context $ENVIRONMENT
-          netlify env:set NEXTAUTH_URL https://hippo-prototype.netlify.app --context $ENVIRONMENT
-          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }} --context $ENVIRONMENT
-          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --prod --context $ENVIRONMENT
+          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
+          netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
+          netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
+          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
+          netlify env:set NEXTAUTH_URL https://hippo-prototype.netlify.app
+          netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
+          netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --prod
