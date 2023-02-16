@@ -221,7 +221,8 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
             max_length = int(len(' '.join(prompt.split(' ')) * 3500) / num_tokens(prompt))
             prompt = prompt[:max_length] + "\nEnd paper context"
 
-        if "@load.test" in email:
+        if "this is a load test" in question:
+            print("Load test!")
             prompt = 'Say hi.'
 
         response = openai.Completion.create(
