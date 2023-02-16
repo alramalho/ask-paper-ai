@@ -26,7 +26,7 @@ async function giveFeedback(page) {
     await page.locator('button[data-testid="feedback-submit"]').click();
 
 
-    verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', process.env.TEST_EMAIL, {
+    verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', process.env.TEST_ID + '@e2e-test', {
         was_answer_accurate: selectedAccuracy,
         sentiment: selectedSentiment,
         next_feature: selectedNextFeature,
