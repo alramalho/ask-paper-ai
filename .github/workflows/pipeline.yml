@@ -148,6 +148,12 @@ jobs:
           path: tests/e2e/playwright-test-output/
           retention-days: 30
 
+      - name: Cleanup sandbox
+        working-directory: tests
+        run: |
+          python cleanup_sandbox.py
+          
+
   Deploy-To-Production:
     needs: E2E-Tests
     runs-on: ubuntu-latest
