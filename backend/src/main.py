@@ -214,12 +214,29 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
     quote = body["quote"]
     email = body["email"]
     try:
-        prompt = f"Please answer the following request, denoted by \"Request:\" in the best way possible with the given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\" is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\". {'You must always pair your response with a quote from the provided paper (and enclose the extracted quote between double quotes). The only time where you may not provide a quote is when the provided paper context does not contain any helpful information to the request presented, in this scenario, you must asnwer with a sentence saying `The paper does not contain enough information to answer your question`. ' if quote else ''}Request: {question}\nStart paper context\n{context}\nEnd paper context"
-        if num_tokens(prompt) > 3500:
+
+        max_context_tokens = 3350
+        if num_tokens(context) > max_context_tokens:
             was_cut = True
             print("Text too long, was cut")
-            max_length = int(len(' '.join(prompt.split(' ')) * 3500) / num_tokens(prompt))
-            prompt = prompt[:max_length] + "\nEnd paper context"
+            max_length = int(len(' '.join(context.split(' ')) * max_context_tokens) / num_tokens(context))
+            context = context[:max_length] + "\nEnd paper context"
+
+        quoteText = """If the paper contains enough information to answer the request, your response must be paired with
+        a quote from the provided paper (and enclose the extracted quote between double quotes).
+        Every extracted quote must be in a new line.""" if quote else ''
+
+        prompt = """Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
+         given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
+         is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
+         {0}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
+         for answering your question\". {1}
+         Start paper context:
+         {2}
+         :End paper context.
+         Request: '{1}'
+         Response:
+        """.format(quoteText, question, context)
 
         if "this is a load test" in question:
             print("Load test!")
@@ -232,6 +249,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
             max_tokens=500,
             model="text-davinci-002",
         )["choices"][0]["text"].strip("\n")
+        print(response)
 
         end = datetime.datetime.now()
         time_elapsed = end - start
