@@ -2,7 +2,6 @@ import datetime
 import os.path
 import traceback
 import uuid
-import hashlib
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,6 +37,11 @@ handler = Mangum(app)
 
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 
+def generate_hash(content: str):
+    import hashlib
+    sha256 = hashlib.sha256()
+    sha256.update(content.encode())
+    return sha256.hexdigest()
 @app.middleware("http")
 async def verify_discord_login(request: Request, call_next):
     if request.method == 'OPTIONS':
@@ -126,8 +130,6 @@ def write_to_dynamo(table_name: str, data: dict):
         return
 
 
-
-
 @app.post("/store-feedback")
 async def store_feedback(request: Request):
     body = await request.json()
@@ -158,9 +160,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
         json_paper = process_paper(pdf_file_content, pdf_file_name)
 
-        sha256 = hashlib.sha256()
-        sha256.update(json.dumps(json_paper['pdf_parse']['body_text']).encode())
-        paper_hash = sha256.hexdigest()
+        paper_hash = generate_hash(json.dumps(json_paper['pdf_parse']['body_text']))
 
         write_to_dynamo("HippoPrototypeJsonPapers", {
             'id': paper_hash,
@@ -169,9 +169,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
             'email': email,
         })
 
+        time_elapsed = datetime.datetime.now() - start
 
-        end = datetime.datetime.now()
-        time_elapsed = end - start
         background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
@@ -179,7 +178,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
             'paper_hash': paper_hash,
         })
         background_tasks.add_task(store_paper_in_s3, pdf_file_content, pdf_file_name)
-
 
         json_paper['id'] = paper_hash
 
