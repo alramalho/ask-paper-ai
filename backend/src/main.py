@@ -95,10 +95,12 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
     os.remove(f"{output_location}/{pdf_file_name}.json")
     print("Removed files")
+
     return f
 
 
 def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
+    print('Storing paper in S3')
     if ENVIRONMENT not in ['production', 'sandbox']:
         return
 
@@ -107,6 +109,7 @@ def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
 
 
 def write_to_dynamo(table_name: str, data: dict):
+    print('Writing to dynamo')
     if ENVIRONMENT.lower() not in table_name.lower():
         table_name = f"{table_name}-{ENVIRONMENT}"
 
@@ -189,7 +192,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
         end = datetime.datetime.now()
         time_elapsed = end - start
-        background_tasks.add_task(write_to_dynamo,"HippoPrototypeFunctionInvocations", {
+        write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'time_elapsed': str(time_elapsed),
             'email': email,
@@ -268,7 +271,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         print(traceback.format_exc())
         end = datetime.datetime.now()
         time_elapsed = end - start
-        background_tasks.add_task(write_to_dynamo,"HippoPrototypeFunctionInvocations", {
+        write_to_dynamo("HippoPrototypeFunctionInvocations", {
             'function_path': request.url.path,
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
