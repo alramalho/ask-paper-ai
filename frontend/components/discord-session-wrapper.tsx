@@ -66,7 +66,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
       </Button>
       <Spacer/>
       <Text>By signing in & using our tool, you are accepting our</Text>
-      <Link href='https://hippoai.org'>Terms & Conditions</Link>
+      <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms & Conditions</Link>
     </Flex>)
   }
   if (session != null && status == "authenticated") {
