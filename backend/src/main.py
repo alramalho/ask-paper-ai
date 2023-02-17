@@ -70,17 +70,25 @@ async def verify_discord_login(request: Request, call_next):
         print("Discord successfully verified token")
         return await call_next(request)
 
-def process_paper(pdf_file_name) -> dict:
+def process_paper(pdf_file_content, pdf_file_name) -> dict:
+    output_location = f"{FILESYSTEM_BASE}/processing_output"
+    if not os.path.exists(output_location):
+        os.mkdir(output_location)
+        print("created dir")
+    with open(f"{output_location}/{pdf_file_name}", "wb") as f:
+        f.write(pdf_file_content)
+        print("created file")
+
     pdf_file_name = pdf_file_name.replace('.pdf', '')
-    output_file = process_pdf_file(input_file=f'{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf',
-                                   temp_dir=f"{FILESYSTEM_BASE}/temp", output_dir=f"{FILESYSTEM_BASE}/output")
+    output_file = process_pdf_file(input_file=f'{output_location}/{pdf_file_name}.pdf',
+                                   temp_dir=output_location, output_dir=output_location)
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
     print(f['title'])
 
-    os.remove(f"{FILESYSTEM_BASE}/papers/{pdf_file_name}.pdf")
-    os.remove(f"{FILESYSTEM_BASE}/temp/{pdf_file_name}.tei.xml")
-    os.remove(f"{FILESYSTEM_BASE}/output/{pdf_file_name}.json")
+    os.remove(f"{output_location}/{pdf_file_name}.pdf")
+    os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
+    os.remove(f"{output_location}/{pdf_file_name}.json")
     print("Removed files")
     return f
 
@@ -148,16 +156,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
         pdf_file_content = await pdf_file.read()
         print(f"Upload paper {pdf_file_name}")
 
-
-        output_location = f"{FILESYSTEM_BASE}/papers"
-        if not os.path.exists(output_location):
-            os.mkdir(output_location)
-            print("created dir")
-        with open(f"{output_location}/{pdf_file_name}", "wb") as f:
-            f.write(pdf_file_content)
-            print("created file")
-        json_paper = process_paper(pdf_file_name)
-
+        json_paper = process_paper(pdf_file_content, pdf_file_name)
 
         sha256 = hashlib.sha256()
         sha256.update(json.dumps(json_paper['pdf_parse']['body_text']).encode())
