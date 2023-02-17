@@ -1,21 +1,27 @@
 config:
-  target: "https://sandbox--hippo-prototype.netlify.app/"
+  target: "https://elu5r5xboeui4hdy2dovhttnmm0nvndr.lambda-url.eu-central-1.on.aws/"
+  http:
+    timeout: 30
   phases:
     - duration: 60
       arrivalRate: 2
-      maxVusers: 5
-  engines:
-    playwright:
-      screenshot: 'only-on-failure'
-      outputDir: 'playwright-test-output/'
-      timeout: 120000
-  processor: ./flows.js
-scenarios:
-  - name: "Upload paper, ask question & give full feedback"
-    engine: playwright
-    flowFunction: "uploadAskAndGiveFeedbackFlow"
-    flow: []
+  plugins:
+    expect: {}
 
+scenarios:
+  - name: "Ask question (upload only in pro)"
+    flow:
+      - post:
+          url: /ask
+          headers:
+            Authorization: "Bearer dummy"
+          json:
+            context: "dummy context"
+            question: "this is a load test"
+            email: "load@test"
+            quote: true
+          expect:
+            - statusCode: 200
 
 # Using in .github workflow:
 # https://www.artillery.io/docs/guides/integration-guides/github-actions
@@ -45,11 +51,11 @@ scenarios:
 #        run: |
 #          npm install -g artillery@latest
 #          npm install -g artillery artillery-engine-playwright
-#          artillery run tests/load/artillery.yaml
+#          artillery run tests/load/fullstack.yaml
 #
 #      - name: Cleanup
 #        run:  |
 #          cd tests/load
 #          pip install -r requirements.txt
-#          python cleanup_sandbox.py
+#          python cleanup_sandbox.pyn
 #

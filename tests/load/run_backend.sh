@@ -13,7 +13,7 @@ echo "${BLUE}🧹 Cleaning up sandbox to be able to verify${NOCOLOR}"
 python3 ../cleanup_sandbox.py
 
 echo "${GREEN}🏃‍Running load tests...${NOCOLOR}"
-artillery run --output report.json fullstack.yaml
+artillery run --output report.json backend.yaml
 
 artillery report report.json
 

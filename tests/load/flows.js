@@ -59,12 +59,19 @@ async function askQuestion(page) {
 
 async function uploadAskAndGiveFeedbackFlow(page) {
     await page.goto('https://sandbox--hippo-prototype.netlify.app/');
+    page.setDefaultTimeout(240000)
 
     await uploadPaper(process.cwd() + '/fixtures/fracnet_paper.pdf', page)
     await askQuestion(page)
     await giveFeedback(page)
 }
 
+const defineConfig = {
+    use: {
+        timeout: 10000
+    }
+}
 module.exports = {
-    uploadAskAndGiveFeedbackFlow
+    uploadAskAndGiveFeedbackFlow,
+    defineConfig
 }

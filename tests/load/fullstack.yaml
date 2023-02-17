@@ -1,0 +1,52 @@
+config:
+  target: "https://sandbox--hippo-prototype.netlify.app/"
+  phases:
+    - duration: 60
+      arrivalRate: 2
+      maxVusers: 50
+  engines:
+    playwright: {}
+  processor: ./flows.js
+scenarios:
+  - name: "Upload paper, ask question & give full feedback"
+    engine: playwright
+    flowFunction: "uploadAskAndGiveFeedbackFlow"
+    flow: []
+
+
+# Using in .github workflow:
+# https://www.artillery.io/docs/guides/integration-guides/github-actions
+
+# Running tests from lambda
+# https://www.artillery.io/docs/guides/guides/distributed-load-tests-on-aws-lambda
+
+#  Load-Test:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#
+#      - name: Setup node
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 16
+#
+#      - name: Setup python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.9'
+#          cache: 'pip'
+#
+#      - name: Execute load tests
+#        run: |
+#          npm install -g artillery@latest
+#          npm install -g artillery artillery-engine-playwright
+#          artillery run tests/load/fullstack.yaml
+#
+#      - name: Cleanup
+#        run:  |
+#          cd tests/load
+#          pip install -r requirements.txt
+#          python cleanup_sandbox.py
+#
