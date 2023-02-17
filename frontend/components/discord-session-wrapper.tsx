@@ -105,7 +105,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
         <>
           <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
           <Text>Uh oh! Currently only users with the <Code>{requiredRole}</Code> role can access the tool 😕</Text>
-          <Text> Talk to one of our moderators if you're interested in participating! </Text>
+          <Text>You can request access to it in our <a href="https://discord.com/channels/1022781602893414410/1022836524410220554">discord server</a> </Text>
         </>
       )
     } else if (!userInDiscord){
