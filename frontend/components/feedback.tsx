@@ -128,6 +128,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               <StyledRadio size="sm" value="similar-items" description="(papers, datasets, models)">🧩 Recommendation on similar items</StyledRadio>
               <StyledRadio size="sm" value="batch-paper-upload">⬆️ Upload & ask papers in batch</StyledRadio>
               <StyledRadio size="sm" value="email-interface" description="You would interact with the app via direct or CC communication with a designated email">📩 Email interface</StyledRadio>
+              <StyledRadio size="sm" value="customize-response-length">✍️ Customize response length</StyledRadio>
               <StyledRadio size="sm" value="more-speed">🏎 Improve overall speed</StyledRadio>
               <StyledRadio size="sm" value="more-accuracy">🎯 Improve overall accuracy</StyledRadio>
               <StyledRadio size="sm" value="other" description="Please specify below!">🤷‍️ Other</StyledRadio>
