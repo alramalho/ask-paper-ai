@@ -10,6 +10,7 @@ async def verify_discord_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
 
+    assert True == False
     if ENVIRONMENT != 'production':
         print("Bypassing Discord")
         return await call_next(request)
@@ -64,6 +65,7 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
         response = await call_next(request)
         return response
     except Exception as e:
+        print("Caught by middleware")
         print(e)
         print(traceback.format_exc())
         write_to_dynamo('HippoPrototypeFunctionInvocations', {

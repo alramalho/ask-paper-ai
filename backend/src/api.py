@@ -23,8 +23,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.middleware("http")(write_all_errors_to_dynamo)
 app.middleware("http")(verify_discord_login)
+app.middleware("http")(write_all_errors_to_dynamo)
 
 handler = Mangum(app)
 
