@@ -20,7 +20,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
   const [userInDiscord, setUserInDiscord] = useState<Boolean | undefined>(undefined);
   const {data: session, status} = useSession()
 
-  const requiredRole = 'Pilot'
+  const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {
       if (session != undefined && userWhitelisted == undefined) {
         axios.get("https://discord.com/api/users/@me", {
