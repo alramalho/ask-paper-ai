@@ -1,12 +1,12 @@
 import {Text, Button, Spacer, Loading, Textarea, useInput, Switch, Badge} from "@nextui-org/react";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
 import {Box, Layout} from "../components/layout";
 import {Flex} from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import axios from "axios";
-import Feedback from "../components/feedback";
+import FeedbackModal, {storeFeedback} from "../components/feedback-modal";
 import useCustomSession from "../hooks/session";
 
 export type Paper = {
@@ -33,6 +33,7 @@ const Home = () => {
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const [question, setQuestion] = useState<string | undefined>(undefined)
   const {data: session} = useCustomSession()
+  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
 
   const {
     value: questionValue,
@@ -170,7 +171,7 @@ const Home = () => {
                 <Text>Extract datasets</Text>
             </Button>
             <Button
-                css={{backgroundColor: "$yellow200", color: "black"}}
+                css={{backgroundColor: "$green200", color: "black"}}
                 onPress={() => {
                   handleSubmit(
                     selectedPaper,
@@ -180,6 +181,20 @@ const Home = () => {
                 }}
             >
                 <Text>Generate Summary</Text>
+            </Button>
+            <Button
+                css={{
+                  border: "2px solid $yellow400",
+                  backgroundColor: "$background",
+                  '&:hover': {
+                    backgroundColor: "$yellow400",
+                  }
+                }}
+                onPress={() => {
+                  setIsFeedbackModalVisible(true)
+                }}
+            >
+                <Text>Pick what goes here 🚀</Text>
             </Button>
         </Flex>
         <Spacer y={4}/>
@@ -198,8 +213,47 @@ const Home = () => {
                   />
               </Box>
               <Spacer y={1}/>
-              <Feedback paper={selectedPaper} question={question!} answer={LLMResponse}
-                        userEmail={session!.user!.email!}/>
+              <Flex css={{gap: "$7"}}>
+
+                  <Button ghost auto color="success" size="lg" iconRight="👍"
+                          css={{color: 'green', '&:hover': {color: 'white'}}}
+                          onPress={() => {
+                            setIsFeedbackModalVisible(true)
+                            storeFeedback({
+                              email: session!.user!.email,
+                              was_answer_accurate: true,
+                              question,
+                              answer: LLMResponse,
+                              // @ts-ignore
+                            }, session!.accessToken)
+                          }}
+                  >
+                      Answer was accurate
+                  </Button>
+                  <Button ghost auto size="lg" iconRight="👎"
+                          onPress={() => {
+                            setIsFeedbackModalVisible(true)
+                            storeFeedback({
+                              email: session!.user!.email,
+                              was_answer_accurate: false,
+                              question,
+                              answer: LLMResponse,
+                              // @ts-ignore
+                            }, session!.accessToken)
+                          }}
+                  >
+                      Answer was inaccurate
+                  </Button>
+              </Flex>
+            {isFeedbackModalVisible &&
+                <FeedbackModal paper={selectedPaper}
+                               question={question!}
+                               answer={LLMResponse}
+                               userEmail={session!.user!.email!}
+                               visible={isFeedbackModalVisible}
+                               setVisible={setIsFeedbackModalVisible}
+                />
+            }
               <Spacer y={4}/>
           </>
       }
