@@ -1,4 +1,4 @@
-import {test, expect, FileChooser, Page} from '@playwright/test';
+import {expect, FileChooser, Page, test} from '@playwright/test';
 
 const TEST_EMAIL = (process.env.TEST_ID ?? '') + '@e2e-test';
 test.describe.configure({mode: 'serial'});
@@ -12,7 +12,13 @@ test.beforeAll(async ({browser}) => {
 
   await page.goto(process.env.APP_URL)
 
-  await uploadPaper(process.cwd() + '/tests/fixtures/fracnet_paper.pdf');
+  page.on("filechooser", (fileChooser: FileChooser) => {
+    fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
+  });
+  await page.click('text=Upload your paper');
+
+  await expect(page.getByTestId('upload-loading')).toBeVisible();
+  await expect(page.getByTestId('upload-successful')).toBeVisible();
 })
 
 test.afterAll(async () => {
@@ -32,29 +38,27 @@ test('should be able to see the selected dialog after uploading a paper', async 
 })
 
 test('should be able ask a question', async () => {
-  await askQuestion();
+  await page.getByTestId("ask-textarea").fill("What is the paper about?");
+  await page.getByTestId('ask-button').click();
+
+  await expect(page.getByTestId('loading-answer')).toBeVisible();
+  await expect(page.getByTestId('answer-area')).toBeVisible();
+
+  await expect(page.getByTestId('answer-area')).toContainText("fracture");
+  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
 
 test('should be able to extract datasets', async () => {
-  await extractDatasets();
+  await page.click('text=Extract Datasets');
+
+  await expect(page.getByTestId('loading-answer')).toBeVisible();
+  await expect(page.getByTestId('answer-area')).toBeVisible();
+
+  await expect(page.getByTestId('answer-area')).toContainText("Size",);
+  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
 });
 
 test('should be able to store feedback', async () => {
-  await giveFeedback();
-})
-
-
-export async function uploadPaper(path: string) {
-  page.on("filechooser", (fileChooser: FileChooser) => {
-    fileChooser.setFiles([path]);
-  });
-  await page.click('text=Upload your paper');
-
-  await expect(page.getByTestId('upload-loading')).toBeVisible();
-  await expect(page.getByTestId('upload-successful')).toBeVisible();
-}
-
-export async function giveFeedback() {
   await page.getByTestId("ask-textarea").fill("What is the paper about?");
   await page.getByTestId('ask-button').click();
 
@@ -62,8 +66,6 @@ export async function giveFeedback() {
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await page.click('text=Answer was accurate');
-  const selectedAccuracy = true;
-
   await page.click('text=😍');
   const selectedSentiment = "Very good";
   await page.click('text=🔍 Inline data exploration tool');
@@ -78,34 +80,16 @@ export async function giveFeedback() {
 
   await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
-  verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
-    was_answer_accurate: selectedAccuracy,
+  await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
+    was_answer_accurate: true,
+  });
+  await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
     sentiment: selectedSentiment,
     next_feature: selectedNextFeature,
     message: writtenMessage,
   });
-}
+})
 
-export async function extractDatasets() {
-  await page.click('text=Extract Datasets');
-
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
-
-  await expect(page.getByTestId('answer-area')).toContainText("Size", );
-  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
-}
-
-export async function askQuestion() {
-  await page.getByTestId("ask-textarea").fill("What is the paper about?");
-  await page.getByTestId('ask-button').click();
-
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
-
-  await expect(page.getByTestId('answer-area')).toContainText("fracture");
-  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
-}
 
 // todo: missing test cases
 // - should be able to upload the same paper without doubling storage

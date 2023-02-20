@@ -130,6 +130,17 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
           aws configure set region eu-central-1  --profile hippo
 
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Cleanup sandbox
+        working-directory: tests
+        run: |
+          pip install -r requirements.txt
+          python cleanup_sandbox.py
+
       - name: Run Playwright tests
         working-directory: tests/e2e
         run: |
@@ -147,17 +158,6 @@ jobs:
           name: playwright-test-output
           path: tests/e2e/playwright-test-output/
           retention-days: 30
-
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Cleanup sandbox
-        working-directory: tests
-        run: |
-          pip install -r requirements.txt
-          python cleanup_sandbox.py
           
 
   Deploy-To-Production:
