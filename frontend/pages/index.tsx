@@ -70,7 +70,7 @@ const Home = () => {
 
     askPaper(question, aggreggatedText, quote)
       .then(res => {
-        setLLMResponse(makeLinksClickable(res.data.message))
+        setLLMResponse(makeLinksClickable(fixNewlines(res.data.message)))
       })
       .catch(error => {
         if (error.response) {
@@ -207,6 +207,10 @@ const Home = () => {
   </Layout>
     ;
 };
+
+function fixNewlines(text: string) {
+  return text.replace(/\\n/g, '\n').replace(/  /g, '')
+}
 
 function makeLinksClickable(text: string) {
   return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
