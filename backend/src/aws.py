@@ -19,10 +19,11 @@ def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
 
 def write_to_dynamo(table_name: str, data: dict):
     print('Writing to dynamo')
-    if ENVIRONMENT.lower() not in table_name.lower():
-        table_name = f"{table_name}-{ENVIRONMENT}"
 
     if ENVIRONMENT == 'production' or ENVIRONMENT == 'sandbox':
+        if ENVIRONMENT.lower() not in table_name.lower():
+            table_name = f"{table_name}-{ENVIRONMENT}"
+
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table(table_name)
 
