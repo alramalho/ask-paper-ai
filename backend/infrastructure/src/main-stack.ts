@@ -29,7 +29,6 @@ export class MainStack extends cdk.Stack {
         DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
         FILESYSTEM_BASE: '/tmp',
         S3_BUCKET_NAME: destinationBucketName,
-        GROBID_URL: "https://cloud.science-miner.com/grobid", // todo use this only for PoC
       },
     });
 
