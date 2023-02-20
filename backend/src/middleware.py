@@ -6,6 +6,7 @@ import traceback
 from constants import ENVIRONMENT, LATEST_COMMIT_ID
 from aws import write_to_dynamo
 
+
 async def verify_discord_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
@@ -18,7 +19,6 @@ async def verify_discord_login(request: Request, call_next):
     if auth_header is None:
         # todo: you should know if whether this failed
         return JSONResponse(status_code=401, content={"message": "Missing Authorization header"})
-
 
     def verify_token(bearer_token):
         try:
@@ -39,10 +39,10 @@ async def verify_discord_login(request: Request, call_next):
         return await call_next(request)
 
 
-
 async def set_body(request: Request, body: bytes):
     async def receive():
         return {"type": "http.request", "body": body}
+
     request._receive = receive
 
 
@@ -76,5 +76,4 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
             'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': datetime.datetime.now() - start
         })
-        return JSONResponse(status_code=500, content="Internal Server Error, please try again later. Traceback: "
-                                                     "" + str(traceback.format_exc()))
+        return JSONResponse(status_code=500, content="Internal Server Error, please try again later. Error: " + str(e))
