@@ -66,7 +66,8 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
       </Button>
       <Spacer/>
       <Text>By signing in & using our tool, you are accepting our</Text>
-      <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms & Conditions</Link>
+      <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
+        Conditions</Link>
     </Flex>)
   }
   if (session != null && status == "authenticated") {
@@ -104,11 +105,18 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
       return (
         <>
           <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
-          <Text>Uh oh! Currently only users with the <Code>{requiredRole}</Code> role can access the tool 😕</Text>
-          <Text>You can request access to it in our <a href="https://discord.com/channels/1022781602893414410/1022836524410220554">discord server</a> </Text>
+          <Flex>
+            <Text>Uh oh! You're succesfully logged in as {session.user?.name}</Text>
+            <Avatar size='sm' src={session.user!.image ?? undefined} css={{marginLeft: '$2'}}/>
+            <Text>,</Text>
+            <Text>but it appears you don't have the required
+              role <Code>{requiredRole}</Code> to access the tool 😕</Text>
+            <Text>Head to this <a href="https://discord.com/channels/1022781602893414410/1022836524410220554">discord
+              channel</a> to request it!</Text>
+          </Flex>
         </>
       )
-    } else if (!userInDiscord){
+    } else if (!userInDiscord) {
       return (
         <>
           <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
