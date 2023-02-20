@@ -50,7 +50,6 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
   }
   return (
     <>
-      <Text h5>Can you help us improve? 🚀</Text>
       <Flex css={{gap: "$7"}}>
 
         <Button ghost auto color="success" size="lg" iconRight="👍"
@@ -81,7 +80,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
       >
         <Modal.Header>
           <Text css={{textDecoration: 'underline'}} id="feedback-modal" span size={20}>
-            Hippo's <Text b>Feedback form </Text>
+            Can you help us improve? 🚀
           </Text>
         </Modal.Header>
         <Modal.Body>
@@ -113,7 +112,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               <StyledRadio size="lg" value="Very good">😍</StyledRadio>
             </Radio.Group>
             <Divider/>
-            <StyledLabel htmlFor='nextFeature'>What feature would you rather see next?</StyledLabel>
+            <StyledLabel htmlFor='nextFeature'>What feature would you like to see next?</StyledLabel>
             <Radio.Group
               value={nextFeature}
               onChange={setNextFeature}
@@ -124,7 +123,7 @@ const Feedback = ({css, userEmail, paper, answer, question}: FeedbackProps) => {
               css={{maxWidth: '450px'}}
             >
               <StyledRadio size="sm" value="data-exploration" description="(like kaggle)">🔍 Inline data exploration tool </StyledRadio>
-              <StyledRadio size="sm" value="pdf-render" >🔎 In-app pdf render </StyledRadio>
+              <StyledRadio size="sm" value="pdf-render" >📉 In-app pdf render </StyledRadio>
               <StyledRadio size="sm" value="similar-items" description="(papers, datasets, models)">🧩 Recommendation on similar items</StyledRadio>
               <StyledRadio size="sm" value="batch-paper-upload">⬆️ Upload & ask papers in batch</StyledRadio>
               <StyledRadio size="sm" value="email-interface" description="You would interact with the app via direct or CC communication with a designated email">📩 Email interface</StyledRadio>
