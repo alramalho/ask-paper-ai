@@ -112,7 +112,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
             <Text>but it appears you don't have the required
               role <Code>{requiredRole}</Code> to access the tool 😕</Text>
             <Text>Head to this <a href="https://discord.com/channels/1022781602893414410/1022836524410220554">discord
-              channel</a> to request it!</Text>
+              channel</a> to get it!</Text>
           </Flex>
         </>
       )
