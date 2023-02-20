@@ -40,5 +40,6 @@ def write_to_dynamo(table_name: str, data: dict):
         print(response)
     else:
         # todo: currently no logging, but consider using moto for local aws env
+        print("Not writing to dynamo because not in production or sandbox")
         return
 
