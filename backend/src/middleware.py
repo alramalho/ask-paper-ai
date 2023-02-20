@@ -10,7 +10,6 @@ async def verify_discord_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
 
-    assert True == False
     if ENVIRONMENT != 'production':
         print("Bypassing Discord")
         return await call_next(request)
