@@ -18,7 +18,7 @@ require something scalable too, which is not implemented for the moment.
 '''
 
 DEFAULT_GROBID_CONFIG = {
-    "grobid_url": os.getenv("GROBID_URL", "https://cloud.science-miner.com/grobid"),
+    "grobid_url": "http://localhost:8070",
     "batch_size": 1000,
     "sleep_time": 5,
     "generateIDs": False,
@@ -32,7 +32,9 @@ DEFAULT_GROBID_CONFIG = {
 class GrobidClient(ApiClient):
 
     def __init__(self, config=None):
-        self.config = config or DEFAULT_GROBID_CONFIG
+        self.config = DEFAULT_GROBID_CONFIG
+        if config:
+            self.config.update(config)
         self.generate_ids = self.config["generateIDs"]
         self.consolidate_header = self.config["consolidate_header"]
         self.consolidate_citations = self.config["consolidate_citations"]
@@ -41,6 +43,7 @@ class GrobidClient(ApiClient):
         self.max_workers = self.config["max_workers"]
         self.grobid_url = self.config["grobid_url"]
         self.sleep_time = self.config["sleep_time"]
+        print(self.grobid_url)
 
     def process(self, input: str, output: str, service: str):
         batch_size_pdf = self.config['batch_size']
