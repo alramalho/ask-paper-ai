@@ -593,7 +593,7 @@ def extract_body_text_from_div(
                 )
 
     # keep divs with no tags, like outer headings
-    if len(div.contents) == 1 and div.text == sections[-1][1]:
+    if len(div.contents) == 1 and sections != [] and div.text == sections[-1][1]:
         chunks.append({
             'text': '',
             'cite_spans': [],
