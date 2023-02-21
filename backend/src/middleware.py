@@ -76,4 +76,4 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
             'latest_commit_id': LATEST_COMMIT_ID,
             'time_elapsed': str(datetime.datetime.now() - start)
         })
-        return JSONResponse(status_code=500, content="Internal Server Error, please try again later. Error: " + str(e))
+        return JSONResponse(status_code=500, content="Internal Server Error: \n" + str(e))
