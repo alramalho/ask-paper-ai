@@ -148,14 +148,12 @@ const Home = () => {
               selectedPaper,
               questionValue,
               quoteChecked,
-              (section) => ![
-                "reference",
-                "acknowledgement",
-                "appendi",
-                "discussion",
-                "declaration",
-                "supplem"
-              ].includes(section.toLowerCase())
+              (section) => !section.toLowerCase().includes("reference") &&
+                !section.toLowerCase().includes("acknowledgement") &&
+                !section.toLowerCase().includes("appendi") &&
+                !section.toLowerCase().includes("discussion") &&
+                !section.toLowerCase().includes("declaration") &&
+                !section.toLowerCase().includes("supplem")
             )}> Ask </Button>
           <Flex css={{ gap: "$2" }}>
             <Switch bordered initialChecked checked={quoteChecked}
