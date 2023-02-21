@@ -71,6 +71,8 @@ const Home = () => {
     if (filteredText.length !== 0) {
       aggreggatedText = filteredText
       console.log("Section filterer makes sense, continuing with filtered text")
+    } else {
+      console.log("Section filterer doesn't make sense, continuing with unfiltered text")
     }
 
     const joinedText = aggreggatedText
@@ -146,14 +148,14 @@ const Home = () => {
               selectedPaper,
               questionValue,
               quoteChecked,
-              (e) => ![
+              (section) => ![
                 "reference",
                 "acknowledgement",
                 "appendi",
                 "discussion",
                 "declaration",
                 "supplem"
-              ].includes(e.toLowerCase())
+              ].includes(section.toLowerCase())
             )}> Ask </Button>
           <Flex css={{ gap: "$2" }}>
             <Switch bordered initialChecked checked={quoteChecked}
@@ -172,7 +174,10 @@ const Home = () => {
               selectedPaper,
               `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
               false,
-              (e) => e.toLowerCase().includes('data')
+              (section) => (
+                section.toLowerCase().includes('data') ||
+                section.toLowerCase().includes('experime') ||
+                isAcronym(section))
             )
           }}
         >
@@ -270,6 +275,10 @@ const Home = () => {
     ;
 };
 
+function isAcronym(s: string) {
+  // If the word has more than one character and is all uppercase, it's an acronym
+  return s.length > 1 && s === s.toUpperCase()
+}
 function fixNewlines(text: string) {
   return text.replace(/\\n/g, '\n').replace(/  /g, '')
 }
