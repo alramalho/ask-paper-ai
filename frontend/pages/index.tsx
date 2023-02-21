@@ -194,7 +194,7 @@ const Home = () => {
                   setIsFeedbackModalVisible(true)
                 }}
             >
-                <Text>Pick what goes here 🚀</Text>
+                <Text>Decide what goes here 🚀✨</Text>
             </Button>
         </Flex>
         <Spacer y={4}/>
