@@ -52,7 +52,7 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     print(f['title'])
 
     os.remove(f"{output_location}/{pdf_file_name}.pdf")
-    os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
+    # os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
     os.remove(f"{output_location}/{pdf_file_name}.json")
     print("Removed files")
 
@@ -93,26 +93,48 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
     return json_paper
 
 
-def num_tokens(text) -> int:
+def text_to_ntokens(text) -> int:
     return int(len(text.split(' ')) * (8 / 5))  # safe rule of thumb https://beta.openai.com/tokenizer
 
+def ntokens_to_nwords(tokens) -> str:
+    return tokens * 5 / 8
+
+
+import math
+def split_text_into_chunks(text, max_words):
+    words = text.split()
+    num_tokens = math.ceil(len(words) * 8 / 5) # calculate number of tokens
+    if num_tokens <= max_words: # if within limit, return original text
+        return [text]
+    else:
+        chunks = []
+        current_chunk = ""
+        current_tokens = 0
+        for word in words:
+            if current_tokens + 1 > max_words: # if adding current word would exceed token limit, start new chunk
+                chunks.append(current_chunk.strip())
+                current_chunk = word + " "
+                current_tokens = 1
+            else:
+                current_chunk += word + " "
+                current_tokens += 1
+        chunks.append(current_chunk.strip()) # add last chunk
+        return chunks
 
 @app.post("/ask")
 async def ask(request: Request, background_tasks: BackgroundTasks):
     start = datetime.datetime.now()
-    was_cut = False
     body = await request.json()
     question = body["question"]
-    context = body["context"]
     quote = body["quote"]
     email = body["email"]
+    context_chunks = split_text_into_chunks(body['context'], ntokens_to_nwords(3350))
+    context = context_chunks[0] + "\nEnd paper context"
+    print(context)
 
-    max_context_tokens = 3350
-    if num_tokens(context) > max_context_tokens:
-        was_cut = True
+    was_cut = len(context_chunks) > 1
+    if was_cut:
         print("Text too long, was cut")
-        max_length = int(len(' '.join(context.split(' ')) * max_context_tokens) / num_tokens(context))
-        context = context[:max_length] + "\nEnd paper context"
 
     quoteText = """If the paper contains enough information to answer the request, your response must be paired with
     a quote from the provided paper (and enclose the extracted quote between double quotes).
@@ -153,7 +175,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         'question': question,
         'prompt_text': prompt,
         'was_prompt_cut': was_cut,
-        'prompt_token_length_estimate': num_tokens(prompt),
+        'prompt_token_length_estimate': text_to_ntokens(prompt),
         'response_text': response,
     })
     return {"message": response}
@@ -169,6 +191,8 @@ async def store_feedback(request: Request):
         raise HTTPException(status_code=400, detail="Missing data")
 
     write_to_dynamo(body['table_name'], body['data'])
+    import asyncio
+    await asyncio.sleep(5)
     return {"message": "success"}
 
 
