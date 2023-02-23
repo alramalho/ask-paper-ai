@@ -1,4 +1,4 @@
-import {Text, Button, Spacer, Loading, Textarea, useInput, Switch, Badge} from "@nextui-org/react";
+import {Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput} from "@nextui-org/react";
 import React, {useEffect, useState} from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -16,10 +16,12 @@ export type Paper = {
     body_text: {
       text: string
       section: string
+      sec_num: string | null
     }[],
     back_matter: {
       text: string
       section: string
+      sec_num: string | null
     }[]
   }
 }
@@ -57,31 +59,33 @@ const Home = () => {
   }, [LLMResponse, isRunning])
 
 
-  const handleSubmit = (paper: Paper, question: string, quote: boolean = false, sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true) => {
+  const handleSubmit = (
+    paper: Paper,
+    question: string,
+    quote: boolean = false,
+    sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true,
+    onFinish: () => void = () => {}
+  ) => {
     setIsRunning(true)
     setLoadingText("Reading paper...")
     setQuestion(question)
 
-    let aggreggatedText = [{text: paper.abstract, section: 'Abstract'}]
-      .concat(paper.pdf_parse.body_text)
-      .concat(paper.pdf_parse.back_matter)
+    const paperDeepCopy = JSON.parse(JSON.stringify(paper))
 
-    const filteredText = aggreggatedText.filter((e) => sectionFilterer(e.section))
-    if (filteredText.length !== 0) {
-      aggreggatedText = filteredText
+    let isBodyTextEmptyAfterFiltering = !(paperDeepCopy.pdf_parse.body_text.find((e) => sectionFilterer(e.section)));
+    let isBackMattertEmptyAfterFiltering = !(paperDeepCopy.pdf_parse.back_matter.find((e) => sectionFilterer(e.section)));
+    if (!isBodyTextEmptyAfterFiltering || !isBackMattertEmptyAfterFiltering) {
+      paperDeepCopy.pdf_parse.body_text = paperDeepCopy.pdf_parse.body_text.filter((e) => sectionFilterer(e.section))
+      paperDeepCopy.pdf_parse.back_matter = paperDeepCopy.pdf_parse.back_matter.filter((e) => sectionFilterer(e.section))
       console.log("Section filterer makes sense, continuing with filtered text")
     } else {
       console.log("Section filterer doesn't make sense, continuing with unfiltered text")
     }
 
-    const joinedText = aggreggatedText
-      .map(bodyText => bodyText.text)
-      .join('\n')
-
-    askPaper(question, joinedText, quote)
+    askPaper(question, paperToText(paperDeepCopy), quote, onFinish)
   }
 
-  function askPaper(question: string, context: string, quote: boolean = false) {
+  function askPaper(question: string, context: string, quote: boolean = false, onFinish: () => void = () => {}) {
     let url = `${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`;
     url = url.replace("http", "ws");
 
@@ -98,21 +102,20 @@ const Home = () => {
 
 
       socket.addEventListener('open', function (event) {
-        console.log('WebSocket connection opened');
         socket.send(JSON.stringify(data))
       });
 
       socket.addEventListener('message', function (event) {
         // close all webscoket connections
-        console.log('Received message:', event.data);
         const data = JSON.parse(event.data)
         let loadedPartsInPercentage = Math.round(data['part'] / data['n_parts'] * 100);
-        setLoadingText( "Still Reading paper... Here's what we think so far:")
+        setLoadingText("Still Reading paper... Here's what we think so far:")
         if (data['part'] === 1) {
           setLLMResponse(makeLinksClickable(fixNewlines(data['message'])))
         }
 
         if (data['part'] === data['n_parts']) {
+          setLLMResponse(makeLinksClickable(fixNewlines(data['message'])))
           setIsRunning(false)
           socket.close()
         }
@@ -120,6 +123,7 @@ const Home = () => {
       });
 
       socket.addEventListener('close', function (event) {
+        onFinish()
         console.log('WebSocket connection closed');
       });
 
@@ -149,7 +153,9 @@ const Home = () => {
         v1.1
       </Badge>
     </Flex>
-    <PaperUploader onFinish={(paper) => setSelectedPaper(paper)}/>
+    <PaperUploader onFinish={(paper) => {
+      setSelectedPaper(paper)
+    }}/>
     <Spacer y={3}/>
     {selectedPaper && <>
         <Spacer y={3}/>
@@ -200,10 +206,10 @@ const Home = () => {
                     selectedPaper,
                     `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
                     false,
-                      (section) => (
-                        section.toLowerCase().includes('data') ||
-                        section.toLowerCase().includes('inclusion criteria')
-                      )
+                    (section) => (
+                      section.toLowerCase().includes('data') ||
+                      section.toLowerCase().includes('inclusion criteria')
+                    )
                   )
                 }
                 }
@@ -215,8 +221,14 @@ const Home = () => {
                 onPress={() => {
                   handleSubmit(
                     selectedPaper,
-                    `Please provide me a short summary.`,
-                    false
+                    `Please provide me a summary of the paper per section. Sections are denoted by "\\n #### {SECTION_NAME} :\\n".
+                     Each section summary should be as succint as possible. You should still contain the section headings, and assure they
+                     are in the correct order.`,
+                    false,
+                    () => true,
+                    // () => {
+                    //   setLLMResponse(previous => formatMarkdownBlocks(previous))
+                    // }
                   )
                 }}
             >
@@ -241,9 +253,7 @@ const Home = () => {
         <h3>Answer:</h3>
       {isRunning
         && <>
-              <Loading data-testid="loading-answer"/>
-              <Text>{loadingText}</Text>
-          {/*<Loading data-testid="loading-answer" >{loadingText}</Loading>*/}
+              <Loading data-testid="loading-answer">{loadingText}</Loading>
           </>
       }
       {LLMResponse &&
@@ -296,13 +306,41 @@ const Home = () => {
                                setVisible={setIsFeedbackModalVisible}
                 />
             }
-              <Spacer y={4}/>
           </>
       }
+        <Spacer y={4}/>
     </>}
   </Layout>
     ;
 };
+
+
+function paperToText(jsonObj: Paper): string {
+  const result: string[] = [];
+
+  if (jsonObj.abstract !== "") {
+    result.push('#### Abstract');
+    result.push(jsonObj.abstract);
+  }
+
+  for (const bodyTextEntry of (jsonObj.pdf_parse.body_text).concat(jsonObj.pdf_parse.back_matter)) {
+    const secNum = bodyTextEntry.sec_num ? bodyTextEntry.sec_num : '';
+    const section = "#### " + secNum + bodyTextEntry.section;
+
+    if (!result.includes(section)) {
+      result.push(section);
+    }
+
+    result.push(bodyTextEntry.text);
+  }
+
+  return result.join('\n\n');
+}
+
+function formatMarkdownBlocks(text) {
+  const regex = /#+\s+\w.*?:/gm;
+  return text.replace(regex, '\n $& \n');
+}
 
 function fixNewlines(text: string) {
   return text.replace(/\\n/g, '\n').replace(/  /g, '')
