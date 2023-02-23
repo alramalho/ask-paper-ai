@@ -1,14 +1,15 @@
 import datetime
 import os.path
+from typing import Tuple
 
-from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect, Response
 from fastapi.middleware.cors import CORSMiddleware
 import openai
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
-from constants import OPENAI_KEY, LATEST_COMMIT_ID, FILESYSTEM_BASE
+from constants import OPENAI_KEY, LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
 from aws import write_to_dynamo, store_paper_in_s3
 from middleware import verify_discord_login, write_all_errors_to_dynamo
 
@@ -51,10 +52,11 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
         f = json.load(f)
     print(f['title'])
 
-    os.remove(f"{output_location}/{pdf_file_name}.pdf")
-    # os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
-    os.remove(f"{output_location}/{pdf_file_name}.json")
-    print("Removed files")
+    if ENVIRONMENT == 'production' or ENVIRONMENT == 'sandbox':
+        os.remove(f"{output_location}/{pdf_file_name}.pdf")
+        os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
+        os.remove(f"{output_location}/{pdf_file_name}.json")
+        print("Removed files")
 
     return f
 
@@ -99,12 +101,12 @@ def text_to_ntokens(text) -> int:
 def ntokens_to_nwords(tokens) -> str:
     return tokens * 5 / 8
 
-
 import math
 def split_text_into_chunks(text, max_words):
     words = text.split()
     num_tokens = math.ceil(len(words) * 8 / 5) # calculate number of tokens
     if num_tokens <= max_words: # if within limit, return original text
+        print("Didn't split")
         return [text]
     else:
         chunks = []
@@ -119,66 +121,108 @@ def split_text_into_chunks(text, max_words):
                 current_chunk += word + " "
                 current_tokens += 1
         chunks.append(current_chunk.strip()) # add last chunk
+        print(f"Split text into {len(chunks)} chunks of {str(list(map(lambda x: text_to_ntokens(x), chunks)))} tokens")
         return chunks
 
-@app.post("/ask")
-async def ask(request: Request, background_tasks: BackgroundTasks):
+@app.websocket("/ask")
+async def ask(websocket: WebSocket, background_tasks: BackgroundTasks):
+    print("you've hit the websocket")
+    await websocket.accept()
+    print("accepted websocket")
     start = datetime.datetime.now()
-    body = await request.json()
-    question = body["question"]
-    quote = body["quote"]
-    email = body["email"]
-    context_chunks = split_text_into_chunks(body['context'], ntokens_to_nwords(3350))
-    context = context_chunks[0] + "\nEnd paper context"
-    print(context)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            if "question" in data and "quote" in data and "email" in data and "context" in data:
+                question = data["question"]
+                quote = data["quote"]
+                email = data["email"]
+                context_size = text_to_ntokens(data["context"])
+                print("Context size: ", context_size)
+                context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
 
-    was_cut = len(context_chunks) > 1
-    if was_cut:
-        print("Text too long, was cut")
+                max_chunks = 2
+                last_response = None
+                for (response, part, n_parts) in get_llm_response(context_chunks, max_chunks, question, quote):
+                    await websocket.send_json({'message': response, 'part': part, 'n_parts': n_parts})
+                    last_response = response # is this needed?
 
-    quoteText = """If the paper contains enough information to answer the request, your response must be paired with
-    a quote from the provided paper (and enclose the extracted quote between double quotes).
-    Every extracted quote must be in a new line.""" if quote else ''
+                time_elapsed = datetime.datetime.now() - start
+                background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
+                    'function_path': websocket.url.path,
+                    'email': email,
+                    'latest_commit_id': LATEST_COMMIT_ID,
+                    'time_elapsed': str(time_elapsed),
+                    'question': question,
+                    'was_prompt_cut': len(context_chunks) > 1,
+                    'prompt_token_length_estimate': sum(list(map(lambda x: text_to_ntokens(x), context_chunks[:max_chunks]))) + text_to_ntokens(question) + 80,
+                    'response_text': last_response,
+                })
+                await websocket.close()
+            else:
+                await websocket.send_json({"error": "Invalid request data"})
+                await websocket.close()
 
-    prompt = """Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
-     given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
-     is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
-     {0}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
-     for answering your question\". {1}
-     Start paper context:
-     {2}
-     :End paper context.
-     Request: '{1}'
-     Response:
-    """.format(quoteText, question, context)
+    except WebSocketDisconnect:
+        pass
 
-    if "this is a load test" in question:
-        print("Load test!")
-        prompt = 'Say hi.'
+def get_llm_response(context_chunks, max_chunks, question, quote) -> Tuple[str, int, int]:
+    responses = []
+    for index, chunk in enumerate(context_chunks[:max_chunks], 1):
+        quoteText = """If the paper contains enough information to answer the request, your response must be paired with
+        a quote from the provided paper (and enclose the extracted quote between double quotes).
+        Every extracted quote must be in a new line.""" if quote else ''
+        prompt = """Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
+         given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
+         is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
+         {0}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
+         for answering your question\". Your answer must not include ANY links that are not present in the paper context.
+         Start paper context:
+         {1}
+         :End paper context.
+         Request: '{2}'
+         Response:
+        """.format(quoteText, chunk, question)
+        if "this is a load test" in question:
+            print("Load test!")
+            response = openai.Completion.create(
+                prompt='Say hi.',
+                # We use temperature of 0.0 because it gives the most predictable, factual answer.
+                temperature=0,
+                max_tokens=500,
+                model="text-davinci-003",
+            )["choices"][0]["text"].strip("\n")
+            print(response)
+            yield (response, 1, 1)
+            return
+        else:
+            response = openai.Completion.create(
+                prompt=prompt,
+                # We use temperature of 0.0 because it gives the most predictable, factual answer.
+                temperature=0,
+                max_tokens=500,
+                model="text-davinci-003",
+            )["choices"][0]["text"].strip("\n")
+            responses.append(f"Response {index}. {response}")
+            number_of_chunks = min(len(context_chunks), max_chunks)
+            yield response, index, number_of_chunks + (1 if number_of_chunks >= 2 else 0) # account for the summary
+        # response = "#### The paper is large, I'm still not finished reading it! Here's what I think in the meantime...\n\n" + response
 
-    response = openai.Completion.create(
-        prompt=prompt,
-        # We use temperature of 0.0 because it gives the most predictable, factual answer.
-        temperature=0,
-        max_tokens=500,
-        model="text-davinci-003",
-    )["choices"][0]["text"].strip("\n")
-    print(response)
+    if len(responses) > 1:
+        print('Gnerating summary')
+        summary = openai.Completion.create(
+            prompt="""Please append the following responses together in a way that no information is ommited
+                   , duplicated, its sequentiality is kept (i.e 'Response N+1' contents come after 'Response N'
+                    and it reads well. All of these different responses were an answer to the question \"{0}\",
+                    and your job is to put it all together in a naturally sounding joint response. 
+                    Do not try to combine web links.\n\n""".format(question) + "\n\n".join(responses),
+            # We use temperature of 0.0 because it gives the most predictable, factual answer.
+            temperature=0,
+            max_tokens=500,
+            model="text-davinci-003",
+        )["choices"][0]["text"].strip("\n")
+        yield summary, len(responses) + 1, len(responses) + 1
 
-    end = datetime.datetime.now()
-    time_elapsed = end - start
-    background_tasks.add_task(write_to_dynamo,"HippoPrototypeFunctionInvocations", {
-        'function_path': request.url.path,
-        'email': email,
-        'latest_commit_id': LATEST_COMMIT_ID,
-        'time_elapsed': str(time_elapsed),
-        'question': question,
-        'prompt_text': prompt,
-        'was_prompt_cut': was_cut,
-        'prompt_token_length_estimate': text_to_ntokens(prompt),
-        'response_text': response,
-    })
-    return {"message": response}
 
 
 @app.post("/store-feedback")
@@ -201,4 +245,4 @@ async def store_feedback(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)
