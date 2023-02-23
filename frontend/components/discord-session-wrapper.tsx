@@ -61,8 +61,8 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
 
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
-      <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>Sign in
-        with Discord
+      <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>
+        {' '}Enter with Discord
       </Button>
       <Spacer/>
       <Text>By signing in & using our tool, you are accepting our</Text>
