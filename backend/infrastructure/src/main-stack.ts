@@ -14,10 +14,16 @@ export class MainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: MainStackProps) {
     super(scope, id);
 
+    const paperBucket = new s3.Bucket(this, 'PaperBucket', {
+        bucketName: `hippo-prototype-papers-${props.environment}`,
+    })
+        
     const {fastApiLambda} = new ApiStack(this, 'ApiStack', {
       environment: props.environment,
       openaiApiKey: props.openaiApiKey,
+      destinationBucketName: paperBucket.bucketName,
     })
+    paperBucket.grantReadWrite(fastApiLambda);
 
     new DynamoDbTableConstruct(this, 'PapersTable', {
       name: `HippoPrototypeJsonPapers-${props.environment}`,

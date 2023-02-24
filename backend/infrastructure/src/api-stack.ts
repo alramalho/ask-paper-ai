@@ -8,15 +8,16 @@ import * as apigatewayv2Integrations from '@aws-cdk/aws-apigatewayv2-integration
 interface ApiStackProps {
     environment: string
     openaiApiKey: string
+    destinationBucketName: string
 }
 
 export class ApiStack extends cdk.Stack {
     readonly fastApiLambda: lambda.Function
+    
 
     constructor(scope: Construct, id: string, props: ApiStackProps) {
         super(scope, id);
 
-        const destinationBucketName = `hippo-prototype-papers-${props.environment}`;
 
         this.fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
             functionName: `HippoPrototypeFastAPI-${props.environment}`,
@@ -31,14 +32,9 @@ export class ApiStack extends cdk.Stack {
                 LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
                 DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
                 FILESYSTEM_BASE: '/tmp',
-                S3_BUCKET_NAME: destinationBucketName,
+                S3_BUCKET_NAME: props.destinationBucketName,
             },
         });
-
-        const paperBucket = new s3.Bucket(this, 'PaperBucket', {
-            bucketName: destinationBucketName,
-        })
-        paperBucket.grantReadWrite(this.fastApiLambda);
 
         const lambdaUrl = this.fastApiLambda.addFunctionUrl({
             authType: lambda.FunctionUrlAuthType.NONE
