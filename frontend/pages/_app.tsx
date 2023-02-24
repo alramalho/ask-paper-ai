@@ -11,7 +11,9 @@ export const lightTheme = createTheme({
   type: 'light',
   theme: {
     colors: {
-      background: '#fcfcfc',
+      backgroundLighter: '#fcfcfc',
+      background: '#f2f2f2',
+      backgroundDarker: '#efefef',
       discordColor: "#5865F2",
       primary: "#ff6372",
       primaryLight: '#ffccd1',

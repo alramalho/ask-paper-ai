@@ -38,7 +38,7 @@ export const Layout = ({children, css, seo}: LayoutProps) => {
         css={{
           minHeight: '100%',
           maxWidth: '100vw',
-          background: '$background',
+          background: 'transparent',
           ...css
         }}
       >

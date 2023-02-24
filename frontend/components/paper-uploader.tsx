@@ -1,14 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import {Button, Loading, Spacer, styled, Text} from "@nextui-org/react";
+import { Button, Loading, Spacer, styled, Text } from "@nextui-org/react";
 import UploadIcon from "./icons/upload-icon";
-import {Flex} from "./styles/flex";
+import { Flex } from "./styles/flex";
 import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
-import {Paper} from "../pages";
-import {Box} from "./layout";
-import {PressEvent} from "@react-types/shared";
-import {useSession} from "next-auth/react";
+import { Paper } from "../pages";
+import { Box } from "./layout";
+import { PressEvent } from "@react-types/shared";
+import { useSession } from "next-auth/react";
 import useCustomSession from "../hooks/session";
 
 const Label = styled('label')
@@ -18,12 +18,12 @@ interface PaperUploaderProps {
   onFinish: (paper: Paper) => void
 }
 
-const PaperUploader = ({onFinish}: PaperUploaderProps) => {
+const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
   const [underText, setUnderText] = useState<string | undefined>(undefined)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const labelEl = useRef(null)
-  const {data: session} = useCustomSession()
+  const { data: session } = useCustomSession()
 
   useEffect(() => {
     if (uploadedPaper !== undefined && uploadedPaper !== null) {
@@ -72,23 +72,25 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   }
 
   return (
-    <Box css={{margin: '0 $3'}}>
-      <Flex css={{gap: "$5"}}>
-        <Input css={{display: 'none'}} id="paper-upload" type="file" onChange={handlePaperSubmit}
-               accept="application/pdf"/>
+    <Box css={{ margin: '0 $3' }}>
+      <Flex css={{ gap: "$5" }}>
+        <Input css={{ display: 'none' }} id="paper-upload" type="file" onChange={handlePaperSubmit}
+          accept="application/pdf" />
         <Label htmlFor="paper-upload" ref={labelEl}>
           <Button onPress={(e: PressEvent) => {
             // @ts-ignore
             labelEl.current!.click()
-          }} icon={<UploadIcon/>}>Upload your paper</Button>
+          }} icon={<UploadIcon />}>Upload your paper</Button>
         </Label>
-        {status == 'uploading' && <Loading data-testid="upload-loading"/>}
-        {status == 'uploaded' && <CheckIcon data-testid="upload-successful"/>}
-        {status == 'error' && <XIcon data-testid="upload-failed"/>}
+        {status == 'uploading' && <Loading data-testid="upload-loading" />}
+        {status == 'uploaded' && <CheckIcon data-testid="upload-successful" />}
+        {status == 'error' && <XIcon data-testid="upload-failed" />}
       </Flex>
-      <Spacer y={1}/>
+      <Spacer y={1} />
       {underText &&
+        <Box css= {{maxWidth: '800px'}}>
           <Text data-testid="upload-undertext">{underText}</Text>
+        </Box>
       }
     </Box>
   );

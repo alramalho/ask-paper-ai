@@ -138,41 +138,40 @@ async def ask(websocket: WebSocket, background_tasks: BackgroundTasks):
     print("accepted websocket")
     start = datetime.datetime.now()
     try:
-        while True:
-            data = await websocket.receive_json()
-            if "question" in data and "quote" in data and "email" in data and "context" in data:
-                question = data["question"]
-                quote = data["quote"]
-                email = data["email"]
-                context_size = text_to_ntokens(data["context"])
-                print("Context size: ", context_size)
-                context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
+        data = await websocket.receive_json()
+        if "question" in data and "quote" in data and "email" in data and "context" in data:
+            question = data["question"]
+            quote = data["quote"]
+            email = data["email"]
+            context_size = text_to_ntokens(data["context"])
+            print("Context size: ", context_size)
+            context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
 
-                max_chunks = 2
-                last_response, time_elapsed_for_first_reply = None, None
-                for (response, part, n_parts) in get_llm_response(context_chunks, max_chunks, question, quote):
-                    await websocket.send_json({'message': response, 'part': part, 'n_parts': n_parts})
-                    time_elapsed_for_first_reply = datetime.datetime.now() - start
-                    last_response = response  # is this needed?
+            max_chunks = 2
+            last_response, time_elapsed_for_first_reply = None, None
+            for (response, part, n_parts) in get_llm_response(context_chunks, max_chunks, question, quote):
+                await websocket.send_json({'message': response, 'part': part, 'n_parts': n_parts})
+                time_elapsed_for_first_reply = datetime.datetime.now() - start
+                last_response = response  # is this needed?
 
-                time_elapsed = datetime.datetime.now() - start
-                background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
-                    'function_path': websocket.url.path,
-                    'email': email,
-                    'latest_commit_id': LATEST_COMMIT_ID,
-                    'time_elapsed_for_first_reply': str(time_elapsed_for_first_reply),
-                    'time_elapsed': str(time_elapsed),
-                    'question': question,
-                    'was_prompt_cut': len(context_chunks) > 1,
-                    'prompt_token_length_estimate': sum(
-                        list(map(lambda x: text_to_ntokens(x), context_chunks[:max_chunks]))) + text_to_ntokens(
-                        question) + 80,
-                    'response_text': last_response,
-                })
-                await websocket.close()
-            else:
-                await websocket.send_json({"error": "Invalid request data"})
-                await websocket.close()
+            time_elapsed = datetime.datetime.now() - start
+            background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
+                'function_path': websocket.url.path,
+                'email': email,
+                'latest_commit_id': LATEST_COMMIT_ID,
+                'time_elapsed_for_first_reply': str(time_elapsed_for_first_reply),
+                'time_elapsed': str(time_elapsed),
+                'question': question,
+                'was_prompt_cut': len(context_chunks) > 1,
+                'prompt_token_length_estimate': sum(
+                    list(map(lambda x: text_to_ntokens(x), context_chunks[:max_chunks]))) + text_to_ntokens(
+                    question) + 80,
+                'response_text': last_response,
+            })
+            await websocket.close()
+        else:
+            await websocket.send_json({"error": "Invalid request data"})
+            await websocket.close()
 
     except WebSocketDisconnect:
         pass
@@ -234,18 +233,19 @@ def get_llm_response(context_chunks, max_chunks, question, quote) -> Tuple[str, 
                    , duplicated, its sequentiality is kept (i.e 'Response N+1' contents come after 'Response N').
                     All of these different responses were an answer to an initial question
                     (denoted by 'Initial Question')
-                    and your job is to put it all together.
-                    Do not try to combine web links.""" \
+                    and your job is to put it all together in a way that it still answers the original question.
+                    Do not try to combine web links.
+                    Again, do not omite any information, do not duplicate any information, and keep the sequentiality of the responses.
+                    """ \
                   + "\n".join(responses) \
                   + "\nInitial Question: \n{0}\n".format(question) \
                   + "\n\nResponse:\n"
-
 
         response = openai.Completion.create(
             prompt=summary,
             # We use temperature of 0.0 because it gives the most predictable, factual answer.
             temperature=0,
-            max_tokens=500,
+            max_tokens=2000,
             model="text-davinci-003",
         )["choices"][0]["text"].strip("\n")
         yield response, len(responses) + 1, len(responses) + 1
