@@ -91,7 +91,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
         'email': email,
         'paper_hash': paper_hash,
     })
-    background_tasks.add_task(store_paper_in_s3, pdf_file_content, paper_hash)
+    background_tasks.add_task(store_paper_in_s3, pdf_file_content, f"{paper_hash}.pdf")
 
     json_paper['id'] = paper_hash
 
