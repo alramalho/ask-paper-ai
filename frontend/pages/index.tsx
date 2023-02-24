@@ -86,7 +86,7 @@ const Home = () => {
   }
 
   function askPaper(question: string, context: string, quote: boolean = false, onFinish: () => void = () => { }) {
-    let url = `${process.env.NEXT_PUBLIC_BACKEND_APIURL}/ask`;
+    let url = `${process.env.NEXT_PUBLIC_BACKEND_WS_APIURL}/ask`;
     url = url.replace("http", "ws");
 
     const data = {

@@ -82,8 +82,10 @@ jobs:
           netlify env:set TEST_ID $TEST_ID
           echo "test_id=$TEST_ID" >> $GITHUB_OUTPUT
 
-          export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURLsandbox' | grep -v 'null' | tr -d '"')
-          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          export NEXT_PUBLIC_BACKEND_HTTP_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .AskPaperBackendHTTPURLsandbox' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_HTTP_APIURL $(echo $NEXT_PUBLIC_BACKEND_HTTP_APIURL)
+          export NEXT_PUBLIC_BACKEND_WS_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .AskPaperBackendWSURLsandbox' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_WS_APIURL $(echo $NEXT_PUBLIC_BACKEND_WS_APIURL)
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
           netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
@@ -231,8 +233,10 @@ jobs:
           cd frontend
           yarn
 
-          export NEXT_PUBLIC_BACKEND_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .FastAPILambdaURLproduction' | grep -v 'null' | tr -d '"')
-          netlify env:set NEXT_PUBLIC_BACKEND_APIURL $(echo $NEXT_PUBLIC_BACKEND_APIURL)
+          export NEXT_PUBLIC_BACKEND_HTTP_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .AskPaperBackendHTTPURLproduction' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_HTTP_APIURL $(echo $NEXT_PUBLIC_BACKEND_HTTP_APIURL)
+          export NEXT_PUBLIC_BACKEND_WS_APIURL=$(aws cloudformation describe-stacks | jq '.Stacks | .[] | .Outputs | reduce .[]? as $i ({}; .[$i.OutputKey] = $i.OutputValue) | .AskPaperBackendWSURLproduction' | grep -v 'null' | tr -d '"')
+          netlify env:set NEXT_PUBLIC_BACKEND_WS_APIURL $(echo $NEXT_PUBLIC_BACKEND_WS_APIURL)
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
           netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}

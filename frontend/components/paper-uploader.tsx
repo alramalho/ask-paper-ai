@@ -49,7 +49,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
     // notice that this 'name' must match the name of the field read in the backend
     formData.append('pdf_file', file);
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_APIURL || 'http://localhost:8080'}/upload-paper`, formData, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/upload-paper`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Email': session!.user!.email,
