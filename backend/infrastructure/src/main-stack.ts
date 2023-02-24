@@ -14,14 +14,15 @@ export class MainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: MainStackProps) {
     super(scope, id);
 
+    const destinationBucketName = `hippo-prototype-papers-${props.environment}`;
     const paperBucket = new s3.Bucket(this, 'PaperBucket', {
-        bucketName: `hippo-prototype-papers-${props.environment}`,
+        bucketName: destinationBucketName,
     })
         
     const {fastApiLambda} = new ApiStack(this, 'ApiStack', {
       environment: props.environment,
       openaiApiKey: props.openaiApiKey,
-      destinationBucketName: paperBucket.bucketName,
+      destinationBucketName: destinationBucketName,
     })
     paperBucket.grantReadWrite(fastApiLambda);
 
