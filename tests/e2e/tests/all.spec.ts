@@ -66,6 +66,7 @@ test('should be able to store feedback', async () => {
   await expect(page.getByTestId('answer-area')).toBeVisible();
 
   await page.click('text=Answer was accurate');
+  await page.click('text=Feedback?');
   await page.click('text=😍');
   const selectedSentiment = "Very good";
   await page.click('text=🔍 Inline data exploration tool');

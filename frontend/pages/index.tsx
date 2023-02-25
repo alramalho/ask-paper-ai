@@ -31,6 +31,7 @@ const Home = () => {
   const [LLMResponse, setLLMResponse] = useState<string | undefined>(undefined)
   const [isRunning, setIsRunning] = useState<boolean>(false)
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
+  const [underFeedbackText, setUnderFeedbackText] = useState<string | undefined>(undefined)
   const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const [question, setQuestion] = useState<string | undefined>(undefined)
@@ -253,7 +254,6 @@ const Home = () => {
             <Button ghost auto color="success" size="lg" iconRight="👍"
               css={{ color: 'green', '&:hover': { color: 'white' } }}
               onPress={() => {
-                setIsFeedbackModalVisible(true)
                 storeFeedback({
                   email: session!.user!.email,
                   was_answer_accurate: true,
@@ -261,13 +261,14 @@ const Home = () => {
                   answer: LLMResponse,
                   // @ts-ignore
                 }, session!.accessToken)
+                setUnderFeedbackText('Thank you! 🙏')
+                setTimeout(() => setUnderFeedbackText(undefined), 4000)
               }}
             >
               Answer was accurate
             </Button>
             <Button ghost auto size="lg" iconRight="👎"
               onPress={() => {
-                setIsFeedbackModalVisible(true)
                 storeFeedback({
                   email: session!.user!.email,
                   was_answer_accurate: false,
@@ -275,11 +276,28 @@ const Home = () => {
                   answer: LLMResponse,
                   // @ts-ignore
                 }, session!.accessToken)
+                setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏' )
+                setTimeout(() => setUnderFeedbackText(undefined), 8000)
               }}
             >
               Answer was inaccurate
             </Button>
           </Flex>
+          <Spacer y={1} />
+          {underFeedbackText && <Text css={{maxWidth: '400px'}}>{underFeedbackText}</Text>}
+          <Box data-testid='feedback-component' css={{
+            position: 'fixed',
+            bottom: '0',
+            right: '10px',
+            padding: '$6',
+            backgroundColor: '$primary',
+            zIndex: 50,
+            color: 'white',
+            borderRadius: '15px 15px 0 0',
+            cursor: 'pointer',
+          }} onClick={() => setIsFeedbackModalVisible(true)}>
+              <Text b css={{color: 'inherit'}}>👋 Feedback?</Text>
+          </Box>
           {isFeedbackModalVisible &&
             <FeedbackModal paper={selectedPaper}
               question={question!}
