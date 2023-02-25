@@ -14,7 +14,7 @@ def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
         return
 
     s3 = boto3.resource('s3')
-    s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}", Body=pdf_file)
+    s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}.pdf", Body=pdf_file)
 
 
 def write_to_dynamo(table_name: str, data: dict):
