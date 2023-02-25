@@ -7,6 +7,7 @@ import { Flex } from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import FeedbackModal, { storeFeedback } from "../components/feedback-modal";
 import useCustomSession from "../hooks/session";
+import axios from "axios";
 
 export type Paper = {
   id: string
@@ -82,64 +83,37 @@ const Home = () => {
       console.log("Section filterer doesn't make sense, continuing with unfiltered text")
     }
 
-    askPaper(question, paperToText(paperDeepCopy), quote, onFinish)
+    askPaper(question, paperToText(paperDeepCopy), quote)
+      .then(res => {
+        setLLMResponse(makeLinksClickable(fixNewlines(res.data.message)))
+      })
+      .catch(error => {
+        if (error.response) {
+          setLLMResponse("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
+        } else {
+          setLLMResponse("Something went wrong...</br>Technical Details: " + error.message)
+        }
+        console.error(error)
+      })
+      .finally(() => {
+        setIsRunning(false)
+      })
   }
 
-  function askPaper(question: string, context: string, quote: boolean = false, onFinish: () => void = () => { }) {
-    let url = `${process.env.NEXT_PUBLIC_BACKEND_WS_APIURL}/ask`;
-    url = url.replace("http", "ws");
-
-    const data = {
+  function askPaper(question: string, context: string, quote: boolean = false) {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
       question,
       context,
       quote,
       email: session!.user!.email
-    }
-
-    const socket = typeof window !== "undefined" ? new WebSocket(url) : null
-
-    if (socket != null) {
-
-
-      socket.addEventListener('open', function (event) {
-        socket.send(JSON.stringify(data))
-      });
-
-      socket.addEventListener('message', function (event) {
-        // close all webscoket connections
-        const data = JSON.parse(event.data)
-        let loadedPartsInPercentage = Math.round(data['part'] / data['n_parts'] * 100);
-        setLoadingText("Still Reading paper... Here's what we think so far:")
-        if (data['part'] === 1) {
-          setLLMResponse(makeLinksClickable(fixNewlines(data['message'])))
-        }
-
-        if (data['part'] === data['n_parts']) {
-          setLLMResponse(makeLinksClickable(fixNewlines(data['message'])))
-          setIsRunning(false)
-          socket.close()
-        }
-
-      });
-
-      socket.addEventListener('close', function (event) {
-        onFinish()
-        console.log('WebSocket connection closed');
-      });
-
-      socket.addEventListener('error', function (event) {
-        console.error('WebSocket connection error: ' + event);
-        setLLMResponse("Something went wrong...</br>Technical Details: " + event)
-      });
-
-      setTimeout(() => {
-        console.log('Timeout! Closing socket')
-        socket.close()
-      }, 180000)
-    }
-
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        // @ts-ignore
+        'Authorization': `Bearer ${session!.accessToken}`,
+      }
+    })
   }
-
 
   return <Layout seo={{
     description: "Accelerating medical research. Join us today."

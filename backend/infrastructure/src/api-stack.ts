@@ -40,26 +40,9 @@ export class ApiStack extends cdk.Stack {
             authType: lambda.FunctionUrlAuthType.NONE
         });
 
-        const webSocketApi = new apigatewayv2.WebSocketApi(this, 'MyWebSocketApi', {
-            apiName: 'My WebSocket API',
-        });
-        const webSocketStage = new apigatewayv2.WebSocketStage(this, 'MyWebSocketStage', {
-            webSocketApi,
-            stageName: props.environment,
-            autoDeploy: true,
-        })
-
-        // Add a Lambda integration for the WebSocket API
-        webSocketApi.addRoute('$default', {
-            integration: new apigatewayv2Integrations.WebSocketLambdaIntegration('MyWebSocketLambdaIntegration', this.fastApiLambda),
-        });
-
 
         new cdk.CfnOutput(this, `AskPaperBackendHTTPURL${props.environment}`, {
             value: lambdaUrl.url,
-        });
-        new cdk.CfnOutput(this, `AskPaperBackendWSURL${props.environment}`, {
-            value: webSocketStage.url,
         });
     }
 }

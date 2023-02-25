@@ -132,99 +132,89 @@ def split_text_into_chunks(text, max_words):
         return chunks
 
 
-@app.websocket("/ask")
-async def ask(websocket: WebSocket, background_tasks: BackgroundTasks):
-    await websocket.accept()
-    print("accepted websocket")
+@app.post("/ask")
+async def ask(request: Request, background_tasks: BackgroundTasks):
     start = datetime.datetime.now()
-    try:
-        data = await websocket.receive_json()
-        if "question" in data and "quote" in data and "email" in data and "context" in data:
-            question = data["question"]
-            quote = data["quote"]
-            email = data["email"]
-            context_size = text_to_ntokens(data["context"])
-            print("Context size: ", context_size)
-            context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
+    data = await request.json()
+    if "question" in data and "quote" in data and "email" in data and "context" in data:
+        question = data["question"]
+        quote = data["quote"]
+        email = data["email"]
+        context_size = text_to_ntokens(data["context"])
+        print("Context size: ", context_size)
+        context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
 
-            max_chunks = 2
-            last_response, time_elapsed_for_first_reply = None, None
-            for (response, part, n_parts) in get_llm_response(context_chunks, max_chunks, question, quote):
-                await websocket.send_json({'message': response, 'part': part, 'n_parts': n_parts})
-                time_elapsed_for_first_reply = datetime.datetime.now() - start
-                last_response = response  # is this needed?
+        max_chunks = 2
+        last_response, time_elapsed_for_first_reply = None, None
+        response = get_llm_response(context_chunks, max_chunks, question, quote)
 
-            time_elapsed = datetime.datetime.now() - start
-            background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
-                'function_path': websocket.url.path,
-                'email': email,
-                'latest_commit_id': LATEST_COMMIT_ID,
-                'time_elapsed_for_first_reply': str(time_elapsed_for_first_reply),
-                'time_elapsed': str(time_elapsed),
-                'question': question,
-                'was_prompt_cut': len(context_chunks) > 1,
-                'prompt_token_length_estimate': sum(
-                    list(map(lambda x: text_to_ntokens(x), context_chunks[:max_chunks]))) + text_to_ntokens(
-                    question) + 80,
-                'response_text': last_response,
-            })
-            await websocket.close()
-        else:
-            await websocket.send_json({"error": "Invalid request data"})
-            await websocket.close()
-
-    except WebSocketDisconnect:
-        pass
+        time_elapsed = datetime.datetime.now() - start
+        background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
+            'function_path': request.url.path,
+            'email': email,
+            'latest_commit_id': LATEST_COMMIT_ID,
+            'time_elapsed': str(time_elapsed),
+            'question': question,
+            'was_prompt_cut': len(context_chunks) > 1,
+            'prompt_token_length_estimate': sum(
+                list(map(lambda x: text_to_ntokens(x), context_chunks[:max_chunks]))) + text_to_ntokens(
+                question) + 80,
+            'response_text': last_response,
+        })
+        return {'message': response}
+    else:
+        raise HTTPException(status_code=400, detail="Missing parameters")
 
 
 def get_llm_response(context_chunks, max_chunks, question, quote) -> Tuple[str, int, int]:
-    responses = []
-    for index, chunk in enumerate(context_chunks[:max_chunks], 1):
-        quoteText = """If the paper contains enough information to answer the request, your response must be paired with
-        a quote from the provided paper (and enclose the extracted quote between double quotes).
-        Every extracted quote must be in a new line.""" if quote else ''
+    futures = []
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for index, chunk in enumerate(context_chunks[:max_chunks], 1):
+            quoteText = """If the paper contains enough information to answer the request, your response must be paired with
+            a quote from the provided paper (and enclose the extracted quote between double quotes).
+            Every extracted quote must be in a new line.""" if quote else ''
 
-        def discard_last_sentence(text):
-            last_dot = text.rfind('.')
-            last_question_mark = text.rfind('?')
-            last_exclamation_mark = text.rfind('!')
-            last_sentence_end = max(last_dot, last_question_mark, last_exclamation_mark)
-            return text[:last_sentence_end + 1]
+            def discard_last_sentence(text):
+                last_dot = text.rfind('.')
+                last_question_mark = text.rfind('?')
+                last_exclamation_mark = text.rfind('!')
+                last_sentence_end = max(last_dot, last_question_mark, last_exclamation_mark)
+                return text[:last_sentence_end + 1]
 
-        prompt = """Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
-         given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
-         is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
-         {0}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
-         for answering your question\". Your answer must not include ANY links that are not present in the paper context.\n
-         Start paper context:
-         {1}
-         :End paper context.\n
-         Request:\n'{2}'\n
-         Response:\n
-        """.format(quoteText, discard_last_sentence(chunk), question)
-        if "this is a load test" in question:
-            print("Load test!")
-            response = openai.Completion.create(
-                prompt='Say hi.',
-                # We use temperature of 0.0 because it gives the most predictable, factual answer.
-                temperature=0,
-                max_tokens=500,
-                model="text-davinci-003",
-            )["choices"][0]["text"].strip("\n")
-            yield (response, 1, 1)
-            return
-        else:
-            response = openai.Completion.create(
-                prompt=prompt,
-                # We use temperature of 0.0 because it gives the most predictable, factual answer.
-                temperature=0,
-                max_tokens=500,
-                model="text-davinci-003",
-            )["choices"][0]["text"].strip("\n")
-            responses.append(f"\nResponse {index}:\n{response}\n")
-            number_of_chunks = min(len(context_chunks), max_chunks)
-            yield response, index, number_of_chunks + (1 if number_of_chunks >= 2 else 0)  # account for the summary
-        # response = "#### The paper is large, I'm still not finished reading it! Here's what I think in the meantime...\n\n" + response
+            prompt = """Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
+             given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
+             is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
+             {0}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
+             for answering your question\". Your answer must not include ANY links that are not present in the paper context.\n
+             Start paper context:
+             {1}
+             :End paper context.\n
+             Request:\n'{2}'\n
+             Response:\n
+            """.format(quoteText, discard_last_sentence(chunk), question)
+            if "this is a load test" in question:
+                print("Load test!")
+                response = openai.Completion.create(
+                    prompt='Say hi.',
+                    # We use temperature of 0.0 because it gives the most predictable, factual answer.
+                    temperature=0,
+                    max_tokens=500,
+                    model="text-davinci-003",
+                )["choices"][0]["text"].strip("\n")
+                return response
+            else:
+                print("made request nr ", index)
+                future = executor.submit(openai.Completion.create,
+                    prompt= prompt,
+                    temperature= 0,
+                    max_tokens= 500,
+                    model= "text-davinci-003",
+                )
+                futures.append(future)
+
+    responses = [f"\n Response {i}: \n" + f.result()["choices"][0]["text"].strip("\n") for i, f in enumerate(futures, 1)]
+    print("Got responses")
 
     if len(responses) > 1:
         print('Gnerating summary')
@@ -248,7 +238,10 @@ def get_llm_response(context_chunks, max_chunks, question, quote) -> Tuple[str, 
             max_tokens=2000,
             model="text-davinci-003",
         )["choices"][0]["text"].strip("\n")
-        yield response, len(responses) + 1, len(responses) + 1
+        responses.append(response)
+
+        print("Got summary")
+    return responses[-1]
 
 
 @app.post("/store-feedback")
