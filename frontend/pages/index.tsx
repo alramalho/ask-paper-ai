@@ -197,7 +197,7 @@ const Home = () => {
             handleSubmit(
               selectedPaper,
               `Please provide me a summary of the paper per section. Sections are denoted by "\\n #### {SECTION_NAME} :\\n".
-                     Each section summary should be as succint as possible. You should still contain the section headings, and assure they
+                     Each section summary should be as detailed as possible. You should still contain the section headings, and assure they
                      are in the correct order.`,
               false,
               () => true,
