@@ -15,19 +15,20 @@ const Label = styled('label')
 const Input = styled('input')
 
 interface PaperUploaderProps {
-  onFinish: (paper: Paper) => void
+  onFinish: (paper: Paper, pdf: File) => void
 }
 
 const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
   const [underText, setUnderText] = useState<string | undefined>(undefined)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
+  const [pdf, setPdf] = useState<File | undefined>(undefined)
   const labelEl = useRef(null)
   const { data: session } = useCustomSession()
 
   useEffect(() => {
-    if (uploadedPaper !== undefined && uploadedPaper !== null) {
-      onFinish(uploadedPaper)
+    if (uploadedPaper !== undefined && uploadedPaper !== null && pdf !== undefined) {
+      onFinish(uploadedPaper, pdf)
     }
   }, [uploadedPaper])
 
@@ -41,7 +42,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
     }
     if (!file) return;
     if (file.size > 6_000_000) {
-      setUnderText("Sorry! But currently we only support file up to 6MB. Please compress it before uploading it 🙏")
+      setUnderText("Sorry! But currently we only support pdf up to 6MB. Please compress it before uploading it 🙏")
       setStatus('error')
       return
     }
@@ -63,6 +64,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
         setUnderText(`There was a problem reading the paper title. Everything should still work though!`)
       }
       setUploadedPaper(res.data as Paper)
+      setPdf(file)
       setStatus('uploaded')
     } catch (error) {
       setUploadedPaper(null)
