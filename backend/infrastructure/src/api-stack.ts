@@ -24,7 +24,7 @@ export class ApiStack extends cdk.Stack {
             code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'build.zip')),
             handler: 'api.handler',
             runtime: lambda.Runtime.PYTHON_3_8,
-            timeout: cdk.Duration.seconds(90),
+            timeout: cdk.Duration.seconds(150),
             memorySize: 1024,
             environment: {
                 OPENAI_KEY: props.openaiApiKey,
