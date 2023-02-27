@@ -5,16 +5,19 @@ from typing import Tuple
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect, \
     Response
 from fastapi.middleware.cors import CORSMiddleware
-import openai
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
-from constants import OPENAI_KEY, LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
+from constants import OPENAI_API_KEY, LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
 from aws import write_to_dynamo, store_paper_in_s3
 from middleware import verify_discord_login, write_all_errors_to_dynamo
+import asyncio
 
-openai.api_key = OPENAI_KEY
+from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+
 app = FastAPI()
 
 app.add_middleware(
@@ -145,7 +148,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
 
         max_chunks = 2
-        response = get_llm_response(context_chunks, max_chunks, question, quote)
+        response = await get_llm_response(context_chunks, max_chunks, question, quote)
 
         time_elapsed = datetime.datetime.now() - start
         background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
@@ -165,82 +168,63 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         raise HTTPException(status_code=400, detail="Missing parameters")
 
 
-def get_llm_response(context_chunks, max_chunks, question, quote) -> Tuple[str, int, int]:
-    futures = []
-    import concurrent.futures
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        for index, chunk in enumerate(context_chunks[:max_chunks], 1):
-            quoteText = """If the paper contains enough information to answer the request, your response must be paired with
-            a quote from the provided paper (and enclose the extracted quote between double quotes).
-            Every extracted quote must be in a new line.""" if quote else ''
+async def get_llm_response(context_chunks, max_chunks, question, quote):
 
-            def discard_last_sentence(text):
-                last_dot = text.rfind('.')
-                last_question_mark = text.rfind('?')
-                last_exclamation_mark = text.rfind('!')
-                last_sentence_end = max(last_dot, last_question_mark, last_exclamation_mark)
-                return text[:last_sentence_end + 1]
+    if "this is a load test" in question.lower():
+        return "This is a load test response"
 
-            prompt = """Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
+    llm = OpenAI(temperature=0, max_tokens=500)
+
+    prompt = PromptTemplate(
+            input_variables=["quoteText", "context", "request"],
+            template="""Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
              given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
              is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
-             {0}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
+             {quoteText}. If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
              for answering your question\". Your answer must not include ANY links that are not present in the paper context.\n
              Start paper context:
-             {1}
+             {context}
              :End paper context.\n
-             Request:\n'{2}'\n
+             Request:\n'{request}'\n
              Response:\n
-            """.format(quoteText, discard_last_sentence(chunk), question)
-            if "this is a load test" in question:
-                print("Load test!")
-                response = openai.Completion.create(
-                    prompt='Say hi.',
-                    # We use temperature of 0.0 because it gives the most predictable, factual answer.
-                    temperature=0,
-                    max_tokens=500,
-                    model="text-davinci-003",
-                )["choices"][0]["text"].strip("\n")
-                return response
-            else:
-                print("made request nr ", index)
-                future = executor.submit(openai.Completion.create,
-                    prompt= prompt,
-                    temperature= 0,
-                    max_tokens= 500,
-                    model= "text-davinci-003",
-                )
-                futures.append(future)
+            """,
+        )
 
-    responses = [f"\n Response {i}: \n" + f.result()["choices"][0]["text"].strip("\n") for i, f in enumerate(futures, 1)]
-    print("Got responses")
+    chain = LLMChain(llm=llm, prompt=prompt)
 
-    if len(responses) > 1:
-        print('Gnerating summary')
+    quoteText = """If the paper contains enough information to answer the request, your response must be paired with
+        a quote from the provided paper (and enclose the extracted quote between double quotes).
+        Every extracted quote must be in a new line.""" if quote else ''
 
-        summary = """Please append the following responses (denoted by 'Response N:') together in a way that no information is ommited
+    responses = [chain.arun(request=question, context=context, quoteText=quoteText) for context in context_chunks[:max_chunks]]
+    responses = await asyncio.gather(*responses)
+    print(responses)
+
+    responses = [f"\nResponse {index}:\n {response} \n" for index, response in enumerate(responses)]
+    print(responses)
+    if (len(responses) > 1):
+        summary_prompt = PromptTemplate(
+            input_variables=["responses", "question"],
+            template="""Please append the following responses (denoted by 'Response N:') together in a way that no information is ommited
                    , duplicated, its sequentiality is kept (i.e 'Response N+1' contents come after 'Response N').
                     All of these different responses were an answer to an initial question
                     (denoted by 'Initial Question')
-                    and your job is to put it all together in a way that it still answers the original question.
+                    and your job is to put it all together in a way that it still faithfully answers the original question.
                     Do not try to combine web links.
                     Again, do not omite any information, do not duplicate any information, and keep the sequentiality of the responses.
-                    """ \
-                  + "\n".join(responses) \
-                  + "\nInitial Question: \n{0}\n".format(question) \
-                  + "\n\nResponse:\n"
-
-        response = openai.Completion.create(
-            prompt=summary,
-            # We use temperature of 0.0 because it gives the most predictable, factual answer.
-            temperature=0,
-            max_tokens=2000,
-            model="text-davinci-003",
-        )["choices"][0]["text"].strip("\n")
+                    {responses}
+                    Initial Question:
+                    {question}
+                    Response:
+                    """,
+        )
+        llm = OpenAI(temperature=0, max_tokens=2000)
+        chain = LLMChain(llm=llm, prompt=summary_prompt)
+        response = chain.run(responses='\n'.join(responses), question=question)
         responses.append(response)
 
-        print("Got summary")
     return responses[-1]
+
 
 
 @app.post("/store-feedback")

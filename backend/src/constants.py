@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-OPENAI_KEY = os.environ["OPENAI_KEY"]
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', None)

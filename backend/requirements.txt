@@ -13,4 +13,4 @@ latex2mathml==2.16.2
 itsdangerous==2.0.1
 python-multipart
 mangum
-websockets
+langchain

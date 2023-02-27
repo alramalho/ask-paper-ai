@@ -3,16 +3,18 @@ import {Document, Page, pdfjs} from "react-pdf";
 // import pdf worker as a url, see `next.config.js` and `pdf-worker.js`
 import workerSrc from "../pdf-worker";
 import {Box} from "./layout";
-import {Button, Text} from "@nextui-org/react";
+import {Button, CSS, Text} from "@nextui-org/react";
 import {Flex} from "./styles/flex";
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 interface PdfViewerProps {
   pdf: File,
+  css?: CSS
+
 }
 
-const PdfViewer = ({pdf}: PdfViewerProps) => {
+const PdfViewer = ({pdf, css}: PdfViewerProps) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -34,7 +36,7 @@ const PdfViewer = ({pdf}: PdfViewerProps) => {
   }
 
   return (
-    <Box>
+    <Box css={css}>
       <Box css={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}>
         <Document
           file={pdf}

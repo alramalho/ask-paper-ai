@@ -9,7 +9,7 @@ jobs:
   Deploy-To-Sandbox:
     runs-on: ubuntu-latest
     env:
-      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
@@ -164,7 +164,7 @@ jobs:
     needs: E2E-Tests
     runs-on: ubuntu-latest
     env:
-      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
