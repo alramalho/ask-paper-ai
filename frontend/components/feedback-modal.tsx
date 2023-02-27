@@ -119,7 +119,6 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                     <StyledRadio size="sm" value="data-exploration" description="(like kaggle)">🔍 Inline data
                       exploration
                       tool </StyledRadio>
-                    <StyledRadio size="sm" value="pdf-render">📉 In-app pdf render </StyledRadio>
                     <StyledRadio size="sm" value="similar-items" description="(papers, datasets, models)">🧩
                       Recommendation
                       on similar items</StyledRadio>
