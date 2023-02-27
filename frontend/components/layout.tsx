@@ -1,8 +1,9 @@
-import {CSS, Image, styled} from '@nextui-org/react';
+import {CSS, Image, styled, Text} from '@nextui-org/react';
 import {Flex} from "./styles/flex";
 import {NextSeo} from 'next-seo';
 import {OpenGraphMedia} from 'next-seo/lib/types';
 import {SponsorButton} from "./sponsor-button";
+import React from "react";
 
 interface LayoutProps {
   children: React.ReactNode;

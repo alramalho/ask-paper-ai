@@ -285,32 +285,33 @@ const Home = () => {
           </Flex>
           <Spacer y={1} />
           {underFeedbackText && <Text css={{maxWidth: '400px'}}>{underFeedbackText}</Text>}
-          <Box data-testid='feedback-component' css={{
-            position: 'fixed',
-            bottom: '0',
-            right: '10px',
-            padding: '$6',
-            backgroundColor: '$primary',
-            zIndex: 50,
-            color: 'white',
-            borderRadius: '15px 15px 0 0',
-            cursor: 'pointer',
-          }} onClick={() => setIsFeedbackModalVisible(true)}>
-              <Text b css={{color: 'inherit'}}>👋 Feedback?</Text>
-          </Box>
-          {isFeedbackModalVisible &&
-            <FeedbackModal paper={selectedPaper}
-              question={question!}
-              answer={LLMResponse}
-              userEmail={session!.user!.email!}
-              visible={isFeedbackModalVisible}
-              setVisible={setIsFeedbackModalVisible}
-            />
-          }
+
         </>
       }
       <Spacer y={4} />
     </>}
+    {isFeedbackModalVisible &&
+        <FeedbackModal paper={selectedPaper ?? null}
+                       question={question ?? null}
+                       answer={LLMResponse ?? null}
+                       userEmail={session!.user!.email!}
+                       visible={isFeedbackModalVisible}
+                       setVisible={setIsFeedbackModalVisible}
+        />
+    }
+    <Box data-testid='feedback-component' css={{
+      position: 'fixed',
+      bottom: '0',
+      right: '10px',
+      padding: '$6',
+      backgroundColor: '$primary',
+      zIndex: 50,
+      color: 'white',
+      borderRadius: '15px 15px 0 0',
+      cursor: 'pointer',
+    }} onClick={() => setIsFeedbackModalVisible(true)}>
+      <Text b css={{color: 'inherit'}}>👋 Feedback?</Text>
+    </Box>
   </Layout>
     ;
 };
