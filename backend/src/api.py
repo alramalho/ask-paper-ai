@@ -145,7 +145,6 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
 
         max_chunks = 2
-        last_response, time_elapsed_for_first_reply = None, None
         response = get_llm_response(context_chunks, max_chunks, question, quote)
 
         time_elapsed = datetime.datetime.now() - start
@@ -159,7 +158,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
             'prompt_token_length_estimate': sum(
                 list(map(lambda x: text_to_ntokens(x), context_chunks[:max_chunks]))) + text_to_ntokens(
                 question) + 80,
-            'response_text': last_response,
+            'response_text': response,
         })
         return {'message': response}
     else:
