@@ -146,7 +146,11 @@ const Home = () => {
     <Spacer y={3}/>
     {selectedPaper &&
         <Flex direction='row' css={{flexWrap: 'wrap', '@xs' : {flexWrap: 'nowrap'}, margin: '$10', gap:'$10'}}>
-          {pdf && <PdfViewer pdf={pdf}/>}
+          {pdf && <PdfViewer
+              pdf={pdf}
+              // @ts-ignore
+              css={{alignSelf: 'flex-start'}}
+          />}
             <Flex direction={'column'}>
                 <Spacer y={3}/>
                 <h4>And ask your question</h4>
