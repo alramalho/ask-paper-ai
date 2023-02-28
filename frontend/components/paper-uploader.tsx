@@ -41,8 +41,8 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
       return;
     }
     if (!file) return;
-    if (file.size > 6_000_000) {
-      setUnderText("Sorry! But currently we only support pdf up to 6MB. Please compress it before uploading it 🙏")
+    if (file.size > 4_500_000) {
+      setUnderText("Sorry! But currently we only support pdf up to 4.5MB. Please compress it before uploading it 🙏")
       setStatus('error')
       return
     }
