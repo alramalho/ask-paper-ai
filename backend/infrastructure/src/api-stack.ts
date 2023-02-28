@@ -27,7 +27,7 @@ export class ApiStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(150),
             memorySize: 1024,
             environment: {
-                OPENAI_KEY: props.openaiApiKey,
+                OPENAI_API_KEY: props.openaiApiKey,
                 ENVIRONMENT: props.environment,
                 LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
                 DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",

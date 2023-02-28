@@ -10,8 +10,8 @@ function prettyError(s: string) {
 
 const app = new cdk.App();
 
-if (!process.env.OPENAI_KEY) {
-  prettyError(" ❌ Environment variable OPENAI_KEY not provided.")
+if (!process.env.OPENAI_API_KEY) {
+  prettyError(" ❌ Environment variable OPENAI_API_KEY not provided.")
   process.exit(1)
 }
 
@@ -29,5 +29,5 @@ if (!process.env.LATEST_COMMIT_ID) {
 
 new MainStack(app, `HippoPrototypeInfrastructureStack${process.env.ENVIRONMENT}`, {
   environment: process.env.ENVIRONMENT,
-  openaiApiKey: process.env.OPENAI_KEY
+  openaiApiKey: process.env.OPENAI_API_KEY
 });
