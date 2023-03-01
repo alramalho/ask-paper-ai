@@ -53,7 +53,7 @@ export const Layout = ({children, css, seo}: LayoutProps) => {
                   url,
                   title: title,
                   description: seo.description,
-                  images: seo.images ?? [{url: `${url}/hippo.png`}, {url: `${url}/demo.png`}],
+                  images: seo.images ?? [{url: `${url}/demo.png`}, {url: `${url}/hippo.png`}],
                   site_name: siteName,
                 }}
             />

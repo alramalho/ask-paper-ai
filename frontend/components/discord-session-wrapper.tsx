@@ -49,15 +49,12 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
   if (session == null && status == "loading") {
     return (
       <>
-        <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
-
         <Loading>Checking if you're signed in...</Loading>
       </>
     )
   }
   if (session == null && status == "unauthenticated") {
     return (<Flex justify='center' direction='column'>
-      <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
 
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
@@ -74,7 +71,6 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
     if (userWhitelisted == undefined) {
       return (
         <>
-          <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
           <Loading>Checking if you're in our server...<br/> If this takes too long try to clear your browser
             cookies</Loading>
         </>
@@ -104,7 +100,6 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
     } else if (userInDiscord && !userWhitelisted) {
       return (
         <>
-          <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
           <Flex>
             <Text>Uh oh! You're succesfully logged in as {session.user?.name}</Text>
             <Avatar size='sm' src={session.user!.image ?? undefined} css={{marginLeft: '$2'}}/>
@@ -119,7 +114,6 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
     } else if (!userInDiscord) {
       return (
         <>
-          <Image src="hippo.svg" css={{width: "100px", margin: '0 auto'}}/>
           <Text>You're not in our discord community!</Text>
           <Text><a href="https://discord.gg/6zugVKk2sd">Click here</a> to join us! </Text>
         </>

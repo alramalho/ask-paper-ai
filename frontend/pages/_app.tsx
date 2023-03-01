@@ -6,6 +6,7 @@ import {ThemeProvider as NextThemesProvider} from 'next-themes';
 import {SessionProvider} from "next-auth/react";
 import DiscordSessionWrapper from "../components/discord-session-wrapper";
 import {useEffect} from "react";
+import {Layout} from "../components/layout";
 
 export const lightTheme = createTheme({
   type: 'light',
@@ -43,30 +44,33 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
 
   return (
     <>
-    <SessionProvider session={session}>
-      <NextThemesProvider
-        defaultTheme="light"
-        attribute="class"
-        value={{
-          light: lightTheme.className,
-        }}
-      >
-        <NextUIProvider>
-          {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
-            ?
-            <DiscordSessionWrapper>
-              <Component {...pageProps} />
-            </DiscordSessionWrapper>
-
-        :
-        <Component {...pageProps} />
-        }
-      </NextUIProvider>
-    </NextThemesProvider>
-    </SessionProvider>
-</>
-)
-  ;
+      <SessionProvider session={session}>
+        <NextThemesProvider
+          defaultTheme="light"
+          attribute="class"
+          value={{
+            light: lightTheme.className,
+          }}
+        >
+          <NextUIProvider>
+            <Layout seo={{
+              description: "Accelerating medical research. Join us today."
+            }}>
+              {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
+                ?
+                <DiscordSessionWrapper>
+                  <Component {...pageProps} />
+                </DiscordSessionWrapper>
+                :
+                <Component {...pageProps} />
+              }
+            </Layout>
+          </NextUIProvider>
+        </NextThemesProvider>
+      </SessionProvider>
+    </>
+  )
+    ;
 }
 
 export default MyApp;
