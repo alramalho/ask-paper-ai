@@ -173,7 +173,7 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
     if "this is a load test" in question.lower():
         return "This is a load test response"
 
-    llm = OpenAI(temperature=0, max_tokens=500, model="gpt-3.5-turbo")
+    llm = OpenAI(temperature=0, max_tokens=500)
 
     prompt = PromptTemplate(
             input_variables=["quoteText", "context", "request"],
@@ -218,7 +218,7 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
                     Response:
                     """,
         )
-        llm = OpenAI(temperature=0, max_tokens=2000, model="gpt-3.5-turbo")
+        llm = OpenAI(temperature=0, max_tokens=2000)
         chain = LLMChain(llm=llm, prompt=summary_prompt)
         response = chain.run(responses='\n'.join(responses), question=question)
         responses.append(response)
