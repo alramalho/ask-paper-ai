@@ -237,6 +237,6 @@ jobs:
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
           netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
           netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
-          netlify env:set NEXTAUTH_URL https://askpaper.hippoai.dev
+          netlify env:set NEXTAUTH_URL https://www.askpaper.ai
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --prod
