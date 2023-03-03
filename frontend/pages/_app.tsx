@@ -54,7 +54,7 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
         >
           <NextUIProvider>
             <Layout seo={{
-              description: "Accelerating medical research. Join us today."
+              description: "Ask questions & Extract datasets from papers."
             }}>
               {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
                 ?
