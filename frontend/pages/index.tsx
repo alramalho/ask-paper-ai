@@ -196,7 +196,15 @@ const Home = () => {
                           onPress={() => {
                             handleSubmit(
                               selectedPaper,
-                              `Please summarize the following text on a markdown table. The text will contain possibly repeated information about the characteristics of one or more datasets. I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. The resulting table should be easy to read and contain any information that might be useful for medical researchers thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", "Origin" and "Data or code link to find more", but add as many as you think are relevant for a medical researcher. The resulting table should contain as many entries as possible but it should NOT contain any duplicates (columns with the same "Name" field) and it should NOT contain any entries where the "Name" field is not defined/unknown/ not specified.`,
+                              `Please summarize the following text on a markdown table. 
+                              The text will contain possibly repeated information about the characteristics of one or more datasets. 
+                              I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. 
+                              The resulting table should be easy to read and contain any information that might be useful for medical researchers 
+                              thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", 
+                              "Origin", "Link to Data or Code", "Extra Info". "Extra Info" must be one sentence only. 
+                              The resulting table should contain as many entries as possible but it should NOT contain any duplicates 
+                              (columns with the same "Name" field) and it should NOT contain any entries where the "Name" 
+                              field is not defined/unknown/ not specified.`,
                               false,
                               (section) => (
                                 section.toLowerCase().includes('data') ||
