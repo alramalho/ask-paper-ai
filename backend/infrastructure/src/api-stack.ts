@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as apigatewayv2 from "@aws-cdk/aws-apigatewayv2-alpha";
 import * as path from "path";
 import * as apigatewayv2Integrations from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
@@ -13,7 +14,7 @@ interface ApiStackProps {
 
 export class ApiStack extends cdk.Stack {
     readonly fastApiLambda: lambda.Function
-    
+
 
     constructor(scope: Construct, id: string, props: ApiStackProps) {
         super(scope, id);
@@ -35,6 +36,12 @@ export class ApiStack extends cdk.Stack {
                 S3_BUCKET_NAME: props.destinationBucketName,
             },
         });
+        this.fastApiLambda.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['ses:SendEmail', 'SES:SendRawEmail'],
+            resources: ['*'],
+            effect: iam.Effect.ALLOW,
+        }));
+
 
         const lambdaUrl = this.fastApiLambda.addFunctionUrl({
             authType: lambda.FunctionUrlAuthType.NONE

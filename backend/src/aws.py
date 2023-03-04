@@ -8,6 +8,36 @@ S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', None)
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 
 
+def ses_send_email(to: str, subject: str, html_body: str):
+    if ENVIRONMENT not in ['production', 'sandbox']:
+        print("Not sending email because not in production or sandbox")
+        return
+
+    sender = 'alex@hippoai.dev'
+    client = boto3.client('ses', region_name='eu-central-1')
+    
+    return client.send_email(
+        Destination={
+            'ToAddresses': [
+                to,
+            ],
+        },
+        Message={
+            'Body': {
+                'Html': {
+                    'Charset': 'UTF-8',
+                    'Data': html_body,
+                },
+            },
+            'Subject': {
+                'Charset': 'UTF-8',
+                'Data': subject,
+            },
+        },
+        Source=sender,
+    )
+
+
 def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
     if ENVIRONMENT not in ['production', 'sandbox']:
         print("Not storing paper in S3 because not in production or sandbox")

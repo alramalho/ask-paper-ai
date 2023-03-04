@@ -9,8 +9,8 @@ from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
-from constants import OPENAI_API_KEY, LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
-from aws import write_to_dynamo, store_paper_in_s3
+from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
+from aws import write_to_dynamo, store_paper_in_s3, ses_send_email
 from middleware import verify_discord_login, write_all_errors_to_dynamo
 import asyncio
 
@@ -65,6 +65,16 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
         print("Removed files")
 
     return f
+
+
+@app.post('/send-email')
+async def send_email(subject: str, body_html: str, recipient: str):    
+    try:
+        response = ses_send_email(recipient, subject, body_html)
+    except ClientError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
+    else:
+        return {'message': f"Email sent! Message ID: {response['MessageId']}"}
 
 
 @app.post("/upload-paper")
