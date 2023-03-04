@@ -12,6 +12,7 @@ from mangum import Mangum
 from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
 from aws import write_to_dynamo, store_paper_in_s3, ses_send_email
 from middleware import verify_discord_login, write_all_errors_to_dynamo
+from botocore.exceptions import ClientError
 import asyncio
 
 from langchain.llms import OpenAI
