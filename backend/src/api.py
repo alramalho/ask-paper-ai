@@ -68,7 +68,11 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
 
 
 @app.post('/send-email')
-async def send_email(subject: str, body_html: str, recipient: str):    
+async def send_email(request: Request):  
+    data = await request.json()  
+    recipient = data.get('recipient', None)
+    subject = data.get('subject', None)
+    body_html = data.get('body_html', None)
     try:
         response = ses_send_email(recipient, subject, body_html)
     except ClientError as e:
