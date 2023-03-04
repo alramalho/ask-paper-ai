@@ -67,14 +67,14 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     return f
 
 
-@app.post('/send-email')
-async def send_email(subject: str, body_html: str, recipient: str):    
-    try:
-        response = ses_send_email(recipient, subject, body_html)
-    except ClientError as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
-    else:
-        return {'message': f"Email sent! Message ID: {response['MessageId']}"}
+# @app.post('/send-email')
+# async def send_email(subject: str, body_html: str, recipient: str):    
+#     try:
+#         response = ses_send_email(recipient, subject, body_html)
+#     except ClientError as e:
+#         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
+#     else:
+#         return {'message': f"Email sent! Message ID: {response['MessageId']}"}
 
 
 @app.post("/upload-paper")
