@@ -5,13 +5,9 @@ import hashlib
 import requests
 from flask import Flask, request, jsonify, flash, url_for, redirect, render_template, send_file
 from doc2json.grobid2json.process_pdf import process_pdf_stream
-from doc2json.tex2json.process_tex import process_tex_stream
-from doc2json.jats2json.process_jats import process_jats_stream
-from doc2json.utils.file_util import FILE_TYPES, unknow_type
+from doc2json.utils.file_util import process_file
 
 app = Flask(__name__)
-
-ALLOWED_EXTENSIONS = {'pdf', 'gz', 'nxml'}
 
 
 @app.route('/')
@@ -22,15 +18,15 @@ def home():
 def upload_file():
     uploaded_file = request.files['file']
     if uploaded_file.filename != '':
-        filename = uploaded_file.filename
-        extension = filename.split('.')[-1]
-        return FILE_TYPES.get(extension, unknow_type())
+        # TODO create test for the method below
+        return process_file(upload_file)
 
     return redirect(url_for('index'))
 
 @app.route('/upload_url')
 def upload_url():
     url = request.args.get('url')
+    # TODO improve the way to retrieve query parameters.
     filename = "unknown"
     pdf_content = requests.get(url).content
     # compute hash

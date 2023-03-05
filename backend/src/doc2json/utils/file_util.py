@@ -30,11 +30,18 @@ def _process_nxml(file: UploadFile) -> json:
     results = process_jats_stream(file.filename, xml_content)
     return jsonify(results)
 
-def unknow_type() -> json:
-    return { "Error": "Unknown file type!" }
+def _unknow_type(file: UploadFile) -> json:
+    return { "Error": f"Unknown file typeof file {file.filename}" }
 
-FILE_TYPES: dict[str, Callable] = {
-    'pdf': _process_pdf(),
-    'gz': _process_gz(),
-    'nxml': _process_nxml()
+SUPPORTED_FILE_EXTENSION: dict[str, Callable] = {
+    'pdf': _process_pdf,
+    'gz': _process_gz,
+    'nxml': _process_nxml
 }
+
+def process_file(file: UploadFile) -> json:
+    filename: str = file.filename
+    extension: str = filename.split('.')[-1]
+    # if filename doesn't contain '.', extension == whole filename
+    callable: Callable = SUPPORTED_FILE_EXTENSION.get(extension, _unknow_type)
+    return callable(file)
