@@ -47,7 +47,7 @@ export class MainStack extends cdk.Stack {
       readableBy: [fastApiLambda],
     })
 
-    new DynamoDbTableConstruct(this, 'InvocationsTable', {
+    new DynamoDbTableConstruct(this, 'EmailsSentTable', {
       name: `HippoPrototypeEmailsSent-${props.environment}`,
       indexFields: ['email'],
       writableBy: [fastApiLambda],
