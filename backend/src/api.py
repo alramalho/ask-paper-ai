@@ -15,7 +15,7 @@ from middleware import verify_discord_login, write_all_errors_to_dynamo
 from botocore.exceptions import ClientError
 import asyncio
 
-from langchain.llms import OpenAI
+from langchain.llms import OpenAIChat
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
@@ -213,7 +213,7 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
     if "this is a load test" in question.lower():
         return "This is a load test response"
 
-    llm = OpenAI(temperature=0, max_tokens=500)
+    llm = OpenAIChat(temperature=0, max_tokens=500)
 
     prompt = PromptTemplate(
             input_variables=["quoteText", "context", "request"],
@@ -236,12 +236,15 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
         a quote from the provided paper (and enclose the extracted quote between double quotes).
         Every extracted quote must be in a new line.""" if quote else ''
 
-    responses = [chain.arun(request=question, context=context, quoteText=quoteText) for context in context_chunks[:max_chunks]]
-    responses = await asyncio.gather(*responses)
+    futures = []
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for chunk in context_chunks[:max_chunks]:
+            futures.append(executor.submit(chain.run, request=question, context=chunk, quoteText=quoteText))
+
+    responses = [f"\n Response {i}: \n" + f.result() for i, f in enumerate(futures, 1)]
     print(responses)
 
-    responses = [f"\nResponse {index}:\n {response} \n" for index, response in enumerate(responses)]
-    print(responses)
     if (len(responses) > 1):
         summary_prompt = PromptTemplate(
             input_variables=["responses", "question"],
@@ -258,7 +261,7 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
                     Response:
                     """,
         )
-        llm = OpenAI(temperature=0, max_tokens=2000)
+        llm = OpenAIChat(temperature=0, max_tokens=2000)
         chain = LLMChain(llm=llm, prompt=summary_prompt)
         response = chain.run(responses='\n'.join(responses), question=question)
         responses.append(response)
