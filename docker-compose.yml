@@ -9,8 +9,8 @@ services:
     restart: unless-stopped
     ports:
       - 8000:8000
-    environment:
-      OPENAI_API_KEY: dummy_key
+    env_file:
+      - ./backend/.env
     networks:
       - main
 
@@ -24,9 +24,8 @@ services:
     restart: unless-stopped
     ports:
       - 3000:3000
-    environment:
-      NEXT_PUBLIC_BACKEND_HTTP_APIURL: dummy_api_url
-      NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: dummy_id
+    env_file:
+      - ./frontend/.env
     networks:
       - main
 
