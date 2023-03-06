@@ -15,6 +15,10 @@ async def verify_discord_login(request: Request, call_next):
         print("Bypassing Discord")
         return await call_next(request)
 
+    if request.url.path == '/send-instructions-email':
+        print("Sending instructions email, bypassing Discord")
+        return await call_next(request)
+
     auth_header = request.headers.get('Authorization', request.headers.get('authorization', None))
     if auth_header is None:
         # todo: you should know if whether this failed

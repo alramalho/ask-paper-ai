@@ -1,4 +1,15 @@
-import {Avatar, Button, Image, Link, Loading, Spacer, styled, Text} from '@nextui-org/react';
+import {
+  Avatar,
+  Button,
+  Divider,
+  Image,
+  Input,
+  Link,
+  Loading,
+  Spacer,
+  styled,
+  Text
+} from '@nextui-org/react';
 import {Flex} from "./styles/flex";
 import {signIn, useSession} from "next-auth/react"
 import {useEffect, useState} from "react";
@@ -19,6 +30,14 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
   const [userWhitelisted, setUserWhitelisted] = useState<Boolean | undefined>(undefined);
   const [userInDiscord, setUserInDiscord] = useState<Boolean | undefined>(undefined);
   const {data: session, status} = useSession()
+  const [email, setEmail] = useState<string | undefined>(undefined);
+  const [underText, setUnderText] = useState<string | undefined>(undefined);
+
+  function sendInstructionsEmail(recipient) {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
+      "recipient": recipient,
+    })
+  }
 
   const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {
@@ -58,13 +77,60 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
 
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
-      <Button css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>} onClick={() => signIn("discord")}>
-        {' '}Enter with Discord
+      <Button size="lg" css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>}
+              onClick={() => signIn("discord")}>
+        {' '}Join with Discord
       </Button>
-      <Spacer/>
-      <Text>By signing in & using our tool, you are accepting our</Text>
-      <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
-        Conditions</Link>
+      <Spacer y={1}/>
+      <Button auto bordered color="secondary" icon={<DiscordIcon/>}
+              onClick={() => window.location.href = "https://discord.com/register?redirect_to=https://askpaper.ai"}>
+        {' '}Create discord account
+      </Button>
+      {process.env.ENVIRONMENT != 'production' &&
+          <>
+              <Spacer y={2}/>
+              <Text b css={{
+                marginBottom: "$2"
+              }}>or</Text>
+              <Box>
+                  <Input
+                    // @ts-ignore
+                      css={{
+                        minWidth: "100%",
+                        padding: "0",
+                        margin: "0",
+                      }} placeholder="Email" initialValue={email} onChange={(e) => setEmail(e.target.value)}/>
+                  <Button size="lg" auto bordered color="error" css={{
+                    marginTop: "$4",
+                    backgroundColor: 'transparent',
+                    textTransform: 'uppercase',
+                    borderRadius: "$0"
+                  }} icon={<Text>📩</Text>} onClick={() => {
+                    sendInstructionsEmail(email)
+                      .then(() => setUnderText("Email sent! ✅"))
+                      .catch(() => setUnderText("Something went wrong 😕"))
+                  }
+                  }>
+                    {' '}Email me the instructions
+                  </Button>
+              </Box>
+            {underText && <>
+                <Spacer y={1}/>
+                <Text>{underText}</Text>
+            </>}
+          </>
+      }
+      <Box css={{
+        position: "fixed",
+        bottom: '0',
+        paddingBottom: "$9"
+      }}>
+        <Divider/>
+        <Text>By signing in & using our tool, you are accepting our
+          <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
+            Conditions</Link>
+        </Text>
+      </Box>
     </Flex>)
   }
   if (session != null && status == "authenticated") {

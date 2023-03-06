@@ -8,3 +8,4 @@ LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', None)
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
+EMAIL_SENDER = 'alex@hippoai.dev'

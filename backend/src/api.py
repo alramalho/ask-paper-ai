@@ -9,7 +9,7 @@ from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
-from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT
+from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER
 from aws import write_to_dynamo, store_paper_in_s3, ses_send_email
 from middleware import verify_discord_login, write_all_errors_to_dynamo
 from botocore.exceptions import ClientError
@@ -68,18 +68,40 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     return f
 
 
-@app.post('/send-email')
-async def send_email(request: Request):  
-    data = await request.json()  
-    recipient = data.get('recipient', None)
-    subject = data.get('subject', None)
-    body_html = data.get('body_html', None)
+@app.post('/send-instructions-email')
+async def send_instructions_email(request: Request, background_tasks: BackgroundTasks):
+    data = await request.json()
+    recipient = data['recipient']
+    subject ='Hippo AI 📝 How to start using Ask Paper'
+    body_html = f"""
+    <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca">
+        <img src="https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/askpaperbanner.png" width="100%"/>
+        <br/>
+        <br/>
+        <br/>
+        <h2>How to use Ask Paper</h2>
+        <ul style="list-style: none">
+            <li>1️⃣. First, you need to create a Discord account. <a href="https://discord.com/register?redirect_to=https://askpaper.ai">Click here to register</a></li>
+            <li>2️⃣. Next, you need to join the Ask Paper Discord server. <a href="https://discord.gg/6zugVKk2sd">Click here to join</a></li>
+            <li>3️⃣. Once you have joined the server, you can use the <a href="https://askapper.ai">web app</a> normally to ask questions about the paper you uploaded.</li>
+        </ul>
+        <h2>If you have any questions, just reply to this email.</h2>
+        </div>
+    """
     try:
-        response = ses_send_email(recipient, subject, body_html)
+        response = ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
+        background_tasks.add_task(write_to_dynamo, 'HippoPrototypeEmailsSent', {
+            'recipient': recipient,
+            'subject': subject,
+            'body_html': body_html,
+            'sender': EMAIL_SENDER,
+            'type': 'instructions',
+            'sent_at': str(datetime.datetime.now())
+        })
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
-    else:
-        return {'message': f"Email sent! Message ID: {response['MessageId']}"}
+    print(response)
+    return {'message': f"Email sent! Message ID: {response['MessageId']}"}
 
 
 @app.post("/upload-paper")
@@ -181,6 +203,9 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         return {'message': response}
     else:
         raise HTTPException(status_code=400, detail="Missing parameters")
+
+
+
 
 
 async def get_llm_response(context_chunks, max_chunks, question, quote):
