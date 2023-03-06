@@ -184,7 +184,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         print("Context size: ", context_size)
         context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
 
-        max_chunks = 2
+        max_chunks = 3
         response = await get_llm_response(context_chunks, max_chunks, question, quote)
 
         time_elapsed = datetime.datetime.now() - start
