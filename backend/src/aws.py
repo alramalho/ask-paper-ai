@@ -7,11 +7,10 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', None)
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 
-
-def ses_send_email(to: str, subject: str, html_body: str, sender: str):
+def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
     if ENVIRONMENT not in ['production', 'sandbox']:
         print("Not sending email because not in production or sandbox")
-        return
+        return {'MessageId': 'local'}
 
     client = boto3.client('ses', region_name='eu-central-1')
 
@@ -19,7 +18,7 @@ def ses_send_email(to: str, subject: str, html_body: str, sender: str):
     return client.send_email(
         Destination={
             'ToAddresses': [
-                to,
+                recipient,
             ],
         },
         Message={

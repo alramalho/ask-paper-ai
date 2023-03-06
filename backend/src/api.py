@@ -1,6 +1,5 @@
 import datetime
 import os.path
-from typing import Tuple
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect, \
     Response
@@ -13,7 +12,8 @@ from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SEND
 from aws import write_to_dynamo, store_paper_in_s3, ses_send_email
 from middleware import verify_discord_login, write_all_errors_to_dynamo
 from botocore.exceptions import ClientError
-import asyncio
+import concurrent.futures
+
 
 from langchain.llms import OpenAIChat
 from langchain.prompts import PromptTemplate
@@ -74,7 +74,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     recipient = data['recipient']
     subject ='Hippo AI 📝 How to start using Ask Paper'
     body_html = f"""
-    <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca">
+    <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca; border-radius: 15px">
         <img src="https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/askpaperbanner.png" width="100%"/>
         <br/>
         <br/>
@@ -102,6 +102,40 @@ async def send_instructions_email(request: Request, background_tasks: Background
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
     return {'message': f"Email sent! Message ID: {response['MessageId']}"}
+
+@app.post('/send-answer-email')
+async def send_answer_email(request: Request, background_tasks: BackgroundTasks):
+    data = await request.json()
+    recipient = data['recipient']
+    subject = f'Ask Paper 📝 Regarding your question on "{data["paper_title"]}"'
+    body_html = f"""
+    <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca; border-radius: 15px">
+        <img src="https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/askpaperbanner.png" width="100%"/>
+        <br/>
+        <br/>
+        <br/>
+        <h2>Your question on {data['paper_title']}</h2>
+        <p>{data['question']}</p>
+        <h2>The answer</h2>
+        <p>{data['answer']}</p>
+        <h2>If you have any questions, just reply to this email.</h2>
+        </div>
+    """
+    try:
+        response = ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
+        background_tasks.add_task(write_to_dynamo, 'HippoPrototypeEmailsSent', {
+            'recipient': recipient,
+            'subject': subject,
+            'body_html': body_html,
+            'sender': EMAIL_SENDER,
+            'type': 'answer',
+            'sent_at': str(datetime.datetime.now())
+        })
+    except ClientError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
+    print(response)
+    return {'message': f"Email sent! Message ID: {response['MessageId']}"}
+
 
 
 @app.post("/upload-paper")
@@ -237,9 +271,9 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
         Every extracted quote must be in a new line.""" if quote else ''
 
     futures = []
-    import concurrent.futures
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        for chunk in context_chunks[:max_chunks]:
+        for index, chunk in enumerate(context_chunks[:max_chunks]):
+            print('Made request nr ' + str(index))
             futures.append(executor.submit(chain.run, request=question, context=chunk, quoteText=quoteText))
 
     responses = [f"\n Response {i}: \n" + f.result() for i, f in enumerate(futures, 1)]

@@ -9,6 +9,7 @@ import FeedbackModal, {storeFeedback} from "../components/feedback-modal";
 import useCustomSession from "../hooks/session";
 import axios from "axios";
 import dynamic from "next/dynamic";
+import CheckIcon from "../components/icons/check-icon";
 
 const PdfViewer = dynamic(
   // @ts-ignore
@@ -47,6 +48,7 @@ const Home = () => {
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [emailSent, setEmailSent] = useState<boolean>(false)
 
   const {
     value: questionValue,
@@ -110,6 +112,15 @@ const Home = () => {
       .finally(() => {
         setIsRunning(false)
       })
+  }
+
+  function sendAsnwerEmail(recipient) {
+    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`, {
+      "recipient": recipient,
+      "question": question,
+      "answer": document?.getElementById('answer')?.innerHTML,
+      "paper_title": selectedPaper!.title
+    })
   }
 
   function askPaper(question: string, context: string, quote: boolean = false) {
@@ -272,10 +283,42 @@ const Home = () => {
                               borderRadius: '20px 20px 20px 0',
                               maxWidth: '1200px',
                             }}>
-                                <MarkdownView
-                                    markdown={LLMResponse}
-                                    options={{tables: true, emoji: true,}}
-                                />
+                                <Box id="answer">
+                                    <MarkdownView
+                                        markdown={LLMResponse}
+                                        options={{tables: true, emoji: true,}}
+                                    />
+                                </Box>
+
+                              {process.env.ENVIRONMENT != 'production' &&
+                                  <>
+                                      <Spacer y={2}/>
+                                      <Flex css={{justifyContent: 'flex-start'}}>
+                                          <Button
+                                              auto
+                                              css={{
+                                                border: "2px solid $yellow400",
+                                                backgroundColor: "$backgroundLighter",
+                                                '&:hover': {
+                                                  backgroundColor: "$yellow400",
+                                                }
+                                              }}
+                                              onPress={() => {
+                                                sendAsnwerEmail(session!.user!.email)
+                                                  .then(() => {
+                                                    setEmailSent(true)
+                                                    setTimeout(() => {
+                                                      setEmailSent(false)
+                                                    }, 1500)
+                                                  })
+                                              }}
+                                          >
+                                              <Text>Email me this 📩</Text>
+                                          </Button>
+                                        {emailSent && <CheckIcon/>}
+                                      </Flex>
+                                  </>
+                              }
                             </Box>
                         </Flex>
                         <Spacer y={1}/>
@@ -314,6 +357,7 @@ const Home = () => {
                             </Button>
                         </Flex>
                         <Spacer y={1}/>
+
                       {underFeedbackText && <Text css={{maxWidth: '400px'}}>{underFeedbackText}</Text>}
 
                     </>
@@ -322,15 +366,15 @@ const Home = () => {
               </Flex>
           </Flex>
       }
-    {isFeedbackModalVisible &&
-        <FeedbackModal paper={selectedPaper ?? null}
-                       question={question ?? null}
-                       answer={LLMResponse ?? null}
-                       userEmail={session!.user!.email!}
-                       visible={isFeedbackModalVisible}
-                       setVisible={setIsFeedbackModalVisible}
-        />
-    }
+      {isFeedbackModalVisible &&
+          <FeedbackModal paper={selectedPaper ?? null}
+                         question={question ?? null}
+                         answer={LLMResponse ?? null}
+                         userEmail={session!.user!.email!}
+                         visible={isFeedbackModalVisible}
+                         setVisible={setIsFeedbackModalVisible}
+          />
+      }
       <Box data-testid='feedback-component' css={{
         position: 'fixed',
         bottom: '0',
@@ -347,7 +391,6 @@ const Home = () => {
     </>
   )
 };
-
 
 function paperToText(jsonObj: Paper): string {
   const result: string[] = [];
