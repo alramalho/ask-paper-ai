@@ -1,6 +1,6 @@
 import {
   Avatar,
-  Button,
+  Button, Collapse,
   Divider,
   Image,
   Input,
@@ -77,15 +77,16 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
 
       <Text h4>You are not signed in!</Text>
       <Spacer y={1}/>
-      <Button size="lg" css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>}
-              onClick={() => signIn("discord")}>
-        {' '}Join with Discord
-      </Button>
-      <Spacer y={1}/>
-      <Button auto bordered color="secondary" icon={<DiscordIcon/>}
-              onClick={() => window.location.href = "https://discord.com/register?redirect_to=https://askpaper.ai"}>
-        {' '}Create discord account
-      </Button>
+      <Flex css={{justifyContent: 'center', alignItems: 'center', gap: "$8"}}>
+        <Button size="lg" css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>}
+                onClick={() => signIn("discord")}>
+          Join with Discord
+        </Button>
+        <Button css={{paddingLeft: "$16"}}size="lg" bordered color="secondary" icon={<DiscordIcon/>}
+                onClick={() => window.location.href = "https://discord.com/register?redirect_to=https://askpaper.ai"}>
+          Create discord account
+        </Button>
+      </Flex>
       {process.env.ENVIRONMENT != 'production' &&
           <>
               <Spacer y={2}/>
@@ -111,7 +112,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
                       .catch(() => setUnderText("Something went wrong 😕"))
                   }
                   }>
-                    {' '}Email me the instructions
+                    {' '}No time now? Email me the instructions
                   </Button>
               </Box>
             {underText && <>
@@ -120,6 +121,20 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
             </>}
           </>
       }
+      <Box css={{maxWidth: '700px', textAlign: 'left'}}>
+        <Spacer y={3}/>
+        <Collapse
+          css={{border: 0, margin: "$4"}}
+          shadow
+          title="Why Discord?"
+          subtitle="Free, community oriented & reliable"
+        >
+          <Text>Discord is a communication platform designed for co-creating communities online.
+            It allows users to connect with each other through voice, video, and text chat.</Text>
+          <Text>We use discord because it is a <b>free, open, reliable and
+            easy-to-access</b> with the goal of uniting and build our own open sourced platform..</Text>
+        </Collapse>
+      </Box>
       <Box css={{
         position: "fixed",
         bottom: '0',
