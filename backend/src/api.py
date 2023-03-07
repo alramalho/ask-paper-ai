@@ -1,8 +1,7 @@
 import datetime
 import os.path
 
-from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect, \
-    Response
+from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
@@ -276,7 +275,7 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
             print('Made request nr ' + str(index))
             futures.append(executor.submit(chain.run, request=question, context=chunk, quoteText=quoteText))
 
-    responses = [f"\n Response {i}: \n" + f.result() for i, f in enumerate(futures, 1)]
+    responses = [f.result() for f in futures]
     print(responses)
 
     if (len(responses) > 1):
@@ -297,6 +296,7 @@ async def get_llm_response(context_chunks, max_chunks, question, quote):
         )
         llm = OpenAIChat(temperature=0, max_tokens=2000)
         chain = LLMChain(llm=llm, prompt=summary_prompt)
+        responses = [f"\n Response {i}: \n" + r for i, r in enumerate(responses)]
         response = chain.run(responses='\n'.join(responses), question=question)
         responses.append(response)
 
