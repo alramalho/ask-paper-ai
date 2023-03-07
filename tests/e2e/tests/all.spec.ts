@@ -1,6 +1,6 @@
 import {expect, FileChooser, Page, test} from '@playwright/test';
 
-const TEST_EMAIL = (process.env.TEST_ID ?? '') + '@e2e-test';
+const TEST_EMAIL = (process.env.TEST_ID ?? 'local') + '@e2e.test';
 test.describe.configure({mode: 'serial'});
 
 let page: Page

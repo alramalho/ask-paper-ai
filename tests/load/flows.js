@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const TEST_EMAIL = process.env.TEST_ID + '@e2e-test';
+const TEST_EMAIL = process.env.TEST_ID + '@e2e.test';
 
 async function uploadPaper(path, page) {
     page.on("filechooser", (fileChooser) => {
