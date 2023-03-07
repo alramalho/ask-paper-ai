@@ -1,19 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import {Button, Loading, Spacer, styled, Text} from "@nextui-org/react";
-import UploadIcon from "./icons/upload-icon";
 import {Flex} from "./styles/flex";
 import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
 import {Paper} from "../pages";
 import {Box} from "./layout";
-import {PressEvent} from "@react-types/shared";
-import {useSession} from "next-auth/react";
 import useCustomSession from "../hooks/session";
 import MarkdownView from "react-showdown";
-
-const Label = styled('label')
-const Input = styled('input')
+import FileInput from "./input";
 
 interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
@@ -24,7 +19,6 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const [pdf, setPdf] = useState<File | undefined>(undefined)
-  const labelEl = useRef(null)
   const {data: session} = useCustomSession()
 
   useEffect(() => {
@@ -77,14 +71,12 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   return (
     <Box css={{margin: '0 $3'}}>
       <Flex css={{gap: "$5"}}>
-        <Input css={{display: 'none'}} id="paper-upload" type="file" onChange={handlePaperSubmit}
-               accept="application/pdf"/>
-        <Label htmlFor="paper-upload" ref={labelEl}>
-          <Button onPress={(e: PressEvent) => {
-            // @ts-ignore
-            labelEl.current!.click()
-          }} icon={<UploadIcon/>}>Upload your paper</Button>
-        </Label>
+        <FileInput
+          id="paper-upload"
+          type="file"
+          onChange={handlePaperSubmit}
+          accept="application/pdf"
+        />
         {status == 'uploading' && <Loading data-testid="upload-loading"/>}
         {status == 'uploaded' && <CheckIcon data-testid="upload-successful"/>}
         {status == 'error' && <XIcon data-testid="upload-failed"/>}
