@@ -10,7 +10,7 @@ if (process.env.ENVIRONMENT !== 'production') {
       user: {
         name: 'Test User',
         // TODO: use TEST_EMAIL instead of TEST_ID
-        email: (process.env.TEST_ID ?? '') + '@e2e-test',
+        email: (process.env.TEST_ID ?? 'local') + '@e2e.test',
         image: 'dummy',
       },
       expires: 'never'

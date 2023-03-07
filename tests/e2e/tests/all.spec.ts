@@ -5,91 +5,130 @@ test.describe.configure({mode: 'serial'});
 
 let page: Page
 
-test.beforeAll(async ({browser}) => {
+
+test.describe('Normal upload', () => {
+  test.beforeAll(async ({browser}) => {
 
 
-  page = await browser.newPage()
+    page = await browser.newPage()
 
-  await page.goto(process.env.APP_URL)
+    await page.goto(process.env.APP_URL)
 
-  page.on("filechooser", (fileChooser: FileChooser) => {
-    fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
-  });
-  await page.click('text=Upload your paper');
+    page.on("filechooser", (fileChooser: FileChooser) => {
+      fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
+    });
+    await page.getByTestId('file-upload').click();
 
-  await expect(page.getByTestId('upload-loading')).toBeVisible();
-  await expect(page.getByTestId('upload-successful')).toBeVisible();
-})
-
-test.afterAll(async () => {
-  await page.close();
-});
-
-test('should be able to upload a paper', async () => {
-  await expect(page.getByTestId('upload-successful')).toBeVisible();
-
-  verifyIfInDynamo('HippoPrototypeJsonPapers-sandbox', 'email', TEST_EMAIL, {
-    paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
+    await expect(page.getByTestId('upload-loading')).toBeVisible();
+    await expect(page.getByTestId('upload-successful')).toBeVisible();
   })
-})
 
-test('should be able to see the selected dialog after uploading a paper', async () => {
-  await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
-})
+  test.afterAll(async () => {
+    await page.close();
+  });
 
-test('should be able ask a question', async () => {
-  await page.getByTestId("ask-textarea").fill("What is the paper about?");
-  await page.getByTestId('ask-button').click();
+  test('should be able to upload a paper via URL', async () => {})
 
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
+  test('should be able to upload a paper', async () => {
+    await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-  await expect(page.getByTestId('answer-area')).toContainText("fracture");
-  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    verifyIfInDynamo('HippoPrototypeJsonPapers-sandbox', 'email', TEST_EMAIL, {
+      paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
+    })
+  })
+
+  test('should be able to see the selected dialog after uploading a paper', async () => {
+    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
+  })
+
+  test('should be able ask a question', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  });
+
+  test('should be able to extract datasets', async () => {
+    await page.click('text=Extract Datasets');
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("Size",);
+    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  });
+
+  test('should be able to store feedback', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await page.click('text=Answer was accurate');
+    await page.click('text=Feedback?');
+    await page.click('text=😍');
+    const selectedSentiment = "Very good";
+    await page.click('text=🔍 Inline data exploration tool');
+    const selectedNextFeature = 'data-exploration';
+
+
+    const writtenMessage = "dummy";
+    await page.getByTestId("message").fill(writtenMessage);
+
+    await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded();
+    await page.locator('button[data-testid="feedback-submit"]').click();
+
+    await expect(page.getByTestId('feedback-successful')).toBeVisible();
+
+    await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
+      was_answer_accurate: true,
+    });
+    await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
+      sentiment: selectedSentiment,
+      next_feature: selectedNextFeature,
+      message: writtenMessage,
+    });
+  })
+
+  test('should be able to receive the results email', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+
+    await page.click('text=Email me this');
+    await expect(page.getByTestId('email-sent')).toBeVisible();
+    // await verifyEmailSentInLastXMinutes(1);
+  })
 });
 
-test('should be able to extract datasets', async () => {
-  await page.click('text=Extract Datasets');
+test.describe('Upload with URL', () => {
+  test('should be able to upload the paper via URL', async ({browser}) => {
+    page = await browser.newPage()
+    await page.goto(process.env.APP_URL)
 
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
+    await page.getByTestId('upload-url-input').fill('https://arxiv.org/pdf/2302.04761.pdf');
+    await page.getByTestId('upload-url-button').click();
 
-  await expect(page.getByTestId('answer-area')).toContainText("Size",);
-  await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('upload-loading')).toBeVisible();
+    await expect(page.getByTestId('upload-successful')).toBeVisible();
+
+    await expect(page.getByTestId('data-testid=\'file-upload-label')).toBeVisible();
+  })
 });
 
-test('should be able to store feedback', async () => {
-  await page.getByTestId("ask-textarea").fill("What is the paper about?");
-  await page.getByTestId('ask-button').click();
 
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area')).toBeVisible();
-
-  await page.click('text=Answer was accurate');
-  await page.click('text=Feedback?');
-  await page.click('text=😍');
-  const selectedSentiment = "Very good";
-  await page.click('text=🔍 Inline data exploration tool');
-  const selectedNextFeature = 'data-exploration';
-
-
-  const writtenMessage = "dummy";
-  await page.getByTestId("message").fill(writtenMessage);
-
-  await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded();
-  await page.locator('button[data-testid="feedback-submit"]').click();
-
-  await expect(page.getByTestId('feedback-successful')).toBeVisible();
-
-  await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
-    was_answer_accurate: true,
-  });
-  await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
-    sentiment: selectedSentiment,
-    next_feature: selectedNextFeature,
-    message: writtenMessage,
-  });
-})
+function verifyEmailSentInLastXMinutes(minutes: number) {
+  require('child_process').execSync(`timestamp=$(date -v -${minutes}M +"%Y-%m-%dT%H:%M:%S%z"); for entry in $(aws ses get-send-statistics | jq '.SendDataPoints[] .Timestamp' | tr -d '"'); do if [[ $entry > $timestamp ]]; then  echo "Found"; else exit 1; fi; done`);
+}
 
 
 // todo: missing test cases

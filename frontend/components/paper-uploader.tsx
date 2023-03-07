@@ -82,12 +82,13 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
 
         <Flex css={{gap: "$2"}}>
           <Input
+            data-testid={'upload-url-input'}
             type="url"
             style={{borderRadius: '10px 0 0 10px', width: '300px'}}
             onChange={e => setUrlInput(e.target.value)}
-            placeholder="Or paste an URL to a paper pdf"
+            placeholder="Or upload your paper via URL"
           />
-          <Button auto css={{}} onClick={() => {
+          <Button data-testid='upload-url-button' auto css={{}} onClick={() => {
             if (urlInput === undefined) {
               setUnderText("<i>Please enter a URL ❌</i>")
               return
@@ -121,7 +122,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
       </Flex>
       <Spacer y={1}/>
       {underText &&
-          <Box css={{maxWidth: '800px'}}>
+          <Box data-testid="under-text" css={{maxWidth: '800px'}}>
               <MarkdownView
                   data-testid="upload-undertext"
                   markdown={underText}

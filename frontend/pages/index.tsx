@@ -309,13 +309,13 @@ const Home = () => {
                                                     setEmailSent(true)
                                                     setTimeout(() => {
                                                       setEmailSent(false)
-                                                    }, 1500)
+                                                    }, 2500)
                                                   })
                                               }}
                                           >
                                               <Text>Email me this 📩</Text>
                                           </Button>
-                                        {emailSent && <CheckIcon/>}
+                                        {emailSent && <CheckIcon data-testid="email-sent" />}
                                       </Flex>
                                   </>
                               }

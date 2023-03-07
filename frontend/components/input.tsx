@@ -35,9 +35,9 @@ const Outer = styled('div', {
 })
 const FileInput = ({...props}) => {
   return (
-    <Area>
+    <Area data-testid='file-upload'>
       <Input type="file" {...props} />
-      <Outer className='file-helper'>
+      <Outer  className='file-helper'>
         {props.children ? props.children : <><UploadIcon/>Click to upload or drag your paper here</>}
       </Outer>
     </Area>

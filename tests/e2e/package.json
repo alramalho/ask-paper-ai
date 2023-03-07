@@ -6,7 +6,9 @@
   "devDependencies": {
     "@playwright/test": "^1.30.0"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "npx playwright test --headed"
+  },
   "dependencies": {
     "dotenv": "^16.0.3"
   }
