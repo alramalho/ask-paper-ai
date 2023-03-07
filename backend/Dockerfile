@@ -1,4 +1,4 @@
-FROM python:3-slim as python
+FROM python:3.9-slim as python
 # https://github.com/aws/amazon-sagemaker-examples/issues/319#issuecomment-405749895
 ENV PYTHONUNBUFFERED=true
 WORKDIR /app

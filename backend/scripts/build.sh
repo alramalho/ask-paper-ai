@@ -14,7 +14,13 @@ rm -rf ../src_dependencies && rm -rf ../build.zip
 echo "${BLUE}Building dependencies... 📦${NOCOLOR}"
 # it uses docker so dependencies are build from a linux image, resembling lambda real environment
 cd ..
-docker run -v "$PWD":/var/task "lambci/lambda:build-python3.8" /bin/sh -c "pip install -r requirements.txt -t src_dependencies/; exit"
+docker run -v "$PWD":/var/task "acidrain/python-poetry:3.9" \
+/bin/sh -c \
+"cd /var/task && \
+poetry install --no-root --no-interaction --no-ansi --without dev && \
+poetry export -f requirements.txt --without-hashes > requirements.txt && \
+pip install -r requirements.txt -t src_dependencies && rm requirements.txt; exit"
+
 cd ./src_dependencies
 zip ../build.zip -r .
 cd ..

@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+      # TODO: remove this before merge the PR
+      - dockernize-it
 
 jobs:
 
@@ -242,3 +244,5 @@ jobs:
           netlify env:set NEXTAUTH_URL https://www.askpaper.ai
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --prod
+    # deploy to production if the branch is main
+    if: ${{ github.ref == 'refs/heads/main' }}
