@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
-import {Button, Loading, Spacer, styled, Text} from "@nextui-org/react";
+import {Button, Input, Link, Loading, Spacer, styled, Text} from "@nextui-org/react";
 import {Flex} from "./styles/flex";
 import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
@@ -9,6 +9,7 @@ import {Box} from "./layout";
 import useCustomSession from "../hooks/session";
 import MarkdownView from "react-showdown";
 import FileInput from "./input";
+import UploadIcon from "./icons/upload-icon";
 
 interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
@@ -19,6 +20,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const [pdf, setPdf] = useState<File | undefined>(undefined)
+  const [urlInput, setUrlInput] = useState<string | undefined>(undefined)
   const {data: session} = useCustomSession()
 
   useEffect(() => {
@@ -70,13 +72,49 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
 
   return (
     <Box css={{margin: '0 $3'}}>
-      <Flex css={{gap: "$5"}}>
+      <Flex css={{gap: "$5"}} direction={'column'} >
         <FileInput
           id="paper-upload"
           type="file"
           onChange={handlePaperSubmit}
           accept="application/pdf"
         />
+
+        <Flex css={{gap: "$2"}}>
+          <Input
+            type="url"
+            style={{borderRadius: '10px 0 0 10px', width: '300px'}}
+            onChange={e => setUrlInput(e.target.value)}
+            placeholder="Or paste an URL to a paper pdf"
+          />
+          <Button auto css={{}} onClick={() => {
+            if (urlInput === undefined) {
+              setUnderText("<i>Please enter a URL ❌</i>")
+              return
+            }
+            fetch(urlInput)
+              .then(response => response.blob())
+              .then(blob => {
+                handlePaperSubmit({
+                  target: {
+                    files: [new File(
+                      [blob],
+                      'paper.pdf',
+                      {type: 'application/pdf'})
+                    ]
+                  }
+                } as any)
+              }).catch(e => {
+                setStatus('error')
+              setUnderText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
+            })
+
+          }
+          }>
+            <UploadIcon/>
+          </Button>
+        </Flex>
+
         {status == 'uploading' && <Loading data-testid="upload-loading"/>}
         {status == 'uploaded' && <CheckIcon data-testid="upload-successful"/>}
         {status == 'error' && <XIcon data-testid="upload-failed"/>}
