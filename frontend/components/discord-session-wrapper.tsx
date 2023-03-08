@@ -87,40 +87,36 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           Create discord account
         </Button>
       </Flex>
-      {process.env.ENVIRONMENT != 'production' &&
-          <>
-              <Spacer y={2}/>
-              <Text b css={{
-                marginBottom: "$2"
-              }}>or</Text>
-              <Box>
-                  <Input
-                    // @ts-ignore
-                      css={{
-                        minWidth: "100%",
-                        padding: "0",
-                        margin: "0",
-                      }} placeholder="Email" initialValue={email} onChange={(e) => setEmail(e.target.value)}/>
-                  <Button size="lg" auto bordered color="error" css={{
-                    marginTop: "$4",
-                    backgroundColor: 'transparent',
-                    textTransform: 'uppercase',
-                    borderRadius: "$0"
-                  }} icon={<Text>📩</Text>} onClick={() => {
-                    sendInstructionsEmail(email)
-                      .then(() => setUnderText("Email sent! ✅"))
-                      .catch(() => setUnderText("Something went wrong 😕"))
-                  }
-                  }>
-                    {' '}No time now? Email me the instructions
-                  </Button>
-              </Box>
-            {underText && <>
-                <Spacer y={1}/>
-                <Text>{underText}</Text>
-            </>}
-          </>
-      }
+      <Spacer y={2}/>
+      <Text b css={{
+        marginBottom: "$2"
+      }}>or</Text>
+      <Box>
+        <Input
+          // @ts-ignore
+          css={{
+            minWidth: "100%",
+            padding: "0",
+            margin: "0",
+          }} placeholder="Email" initialValue={email} onChange={(e) => setEmail(e.target.value)}/>
+        <Button size="lg" auto bordered color="error" css={{
+          marginTop: "$4",
+          backgroundColor: 'transparent',
+          textTransform: 'uppercase',
+          borderRadius: "$0"
+        }} icon={<Text>📩</Text>} onClick={() => {
+          sendInstructionsEmail(email)
+            .then(() => setUnderText("Email sent! ✅"))
+            .catch(() => setUnderText("Something went wrong 😕"))
+        }
+        }>
+          {' '}No time now? Email me the instructions
+        </Button>
+      </Box>
+      {underText && <>
+          <Spacer y={1}/>
+          <Text>{underText}</Text>
+      </>}
       <Box css={{maxWidth: '700px', textAlign: 'left'}}>
         <Spacer y={3}/>
         <Collapse.Group shadow>
@@ -144,9 +140,11 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
             }
           >
             <Text>
-              This is still an experimental feature, but users report succesfully using AskPaper to ask questions in German, Dutch and French.
-            It works both ways, either with English content & non english questions, or the other way around!</Text>
-            <Text>We would be highly interested in seeing how did this feature work for you, so if you try it out, let us know! 🙌</Text>
+              This is still an experimental feature, but users report succesfully using AskPaper to ask questions in
+              German, Dutch and French.
+              It works both ways, either with English content & non english questions, or the other way around!</Text>
+            <Text>We would be highly interested in seeing how did this feature work for you, so if you try it out, let
+              us know! 🙌</Text>
           </Collapse>
         </Collapse.Group>
       </Box>

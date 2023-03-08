@@ -289,43 +289,42 @@ const Home = () => {
                                         options={{tables: true, emoji: true,}}
                                     />
                                 </Box>
-
-                              {process.env.ENVIRONMENT != 'production' &&
-                                  <>
-                                      <Spacer y={2}/>
-                                      <Flex css={{justifyContent: 'flex-start'}}>
-                                          <Button
-                                              auto
-                                              css={{
-                                                border: "2px solid $yellow400",
-                                                backgroundColor: "$backgroundLighter",
-                                                '&:hover': {
-                                                  backgroundColor: "$yellow400",
-                                                }
-                                              }}
-                                              onPress={() => {
-                                                sendAsnwerEmail(session!.user!.email)
-                                                  .then(() => {
-                                                    setEmailSent(true)
-                                                    setTimeout(() => {
-                                                      setEmailSent(false)
-                                                    }, 2500)
-                                                  })
-                                              }}
-                                          >
-                                              <Text>Email me this 📩</Text>
-                                          </Button>
-                                        {emailSent && <CheckIcon data-testid="email-sent" />}
-                                      </Flex>
-                                  </>
-                              }
+                                <Spacer y={2}/>
+                                <Flex css={{justifyContent: 'flex-start'}}>
+                                    <Button
+                                        auto
+                                        css={{
+                                          border: "2px solid $yellow400",
+                                          backgroundColor: "$backgroundLighter",
+                                          '&:hover': {
+                                            backgroundColor: "$yellow400",
+                                          }
+                                        }}
+                                        onPress={() => {
+                                          sendAsnwerEmail(session!.user!.email)
+                                            .then(() => {
+                                              setEmailSent(true)
+                                              setTimeout(() => {
+                                                setEmailSent(false)
+                                              }, 2500)
+                                            })
+                                        }}
+                                    >
+                                        <Text>Email me this 📩</Text>
+                                    </Button>
+                                  {emailSent && <CheckIcon data-testid="email-sent"/>}
+                                </Flex>
                             </Box>
                         </Flex>
                         <Spacer y={1}/>
                         <Flex css={{gap: "$7"}}>
 
                             <Button ghost auto color="success" size="lg" iconRight="👍"
-                                    css={{color: 'green', '&:hover': {color: 'white'}, backgroundColor: "$backgroundLighter",}}
+                                    css={{
+                                      color: 'green',
+                                      '&:hover': {color: 'white'},
+                                      backgroundColor: "$backgroundLighter",
+                                    }}
                                     onPress={() => {
                                       storeFeedback({
                                         email: session!.user!.email,
