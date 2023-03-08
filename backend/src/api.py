@@ -215,7 +215,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         email = data["email"]
         context_size = text_to_ntokens(data["context"])
         print("Context size: ", context_size)
-        context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3350))
+        context_chunks = split_text_into_chunks(data['context'], ntokens_to_nwords(3100))
 
         max_chunks = 3
         response = await get_llm_response(context_chunks, max_chunks, question, quote)
