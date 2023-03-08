@@ -82,7 +82,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
                 onClick={() => signIn("discord")}>
           Join with Discord
         </Button>
-        <Button css={{paddingLeft: "$16"}}size="lg" bordered color="secondary" icon={<DiscordIcon/>}
+        <Button css={{paddingLeft: "$16"}} size="lg" bordered color="secondary" icon={<DiscordIcon/>}
                 onClick={() => open("https://discord.com/register?redirect_to=https://askpaper.ai", "_self")}>
           Create discord account
         </Button>
@@ -123,17 +123,32 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
       }
       <Box css={{maxWidth: '700px', textAlign: 'left'}}>
         <Spacer y={3}/>
-        <Collapse
-          css={{border: 0, margin: "$4"}}
-          shadow
-          title="Why Discord?"
-          subtitle="Free, community oriented & reliable"
-        >
-          <Text>Discord is a communication platform designed for co-creating communities online.
-            It allows users to connect with each other through voice, video, and text chat.</Text>
-          <Text>We use discord because it is a <b>free, open, reliable and
-            easy-to-access</b> with the goal of uniting and build our own open sourced platform..</Text>
-        </Collapse>
+        <Collapse.Group shadow>
+          <Collapse
+            title={<Text h4>Why discord?</Text>}
+            subtitle="Free, community oriented & reliable"
+            contentLeft={
+              <DiscordIcon fill="#5865F2" width="35" height="35"/>
+            }
+          >
+            <Text>Discord is a communication platform designed for co-creating communities online.
+              It allows users to connect with each other through voice, video, and text chat.</Text>
+            <Text>We use discord because it is a <b>free, open, reliable and
+              easy-to-access</b> with the goal of uniting and build our own open sourced platform..</Text>
+          </Collapse>
+          <Collapse
+            title={<Text h4>Multilingual!</Text>}
+            subtitle="We support different languages!"
+            contentLeft={
+              <Text css={{fontSize: "1.15rem"}}>🇪🇺🇩🇪</Text>
+            }
+          >
+            <Text>
+              This is still an experimental feature, but users report succesfully using AskPaper to ask questions in German, Dutch and French.
+            It works both ways, either with English content & non english questions, or the other way around!</Text>
+            <Text>We would be highly interested in seeing how did this feature work for you, so if you try it out, let us know! 🙌</Text>
+          </Collapse>
+        </Collapse.Group>
       </Box>
       <Box css={{
         position: "fixed",
