@@ -325,7 +325,7 @@ const Home = () => {
                         <Flex css={{gap: "$7"}}>
 
                             <Button ghost auto color="success" size="lg" iconRight="👍"
-                                    css={{color: 'green', '&:hover': {color: 'white'}}}
+                                    css={{color: 'green', '&:hover': {color: 'white'}, backgroundColor: "$backgroundLighter",}}
                                     onPress={() => {
                                       storeFeedback({
                                         email: session!.user!.email,
@@ -340,7 +340,7 @@ const Home = () => {
                             >
                                 Answer was accurate
                             </Button>
-                            <Button ghost auto size="lg" iconRight="👎"
+                            <Button ghost auto size="lg" iconRight="👎" css={{backgroundColor: "$backgroundLighter",}}
                                     onPress={() => {
                                       storeFeedback({
                                         email: session!.user!.email,
