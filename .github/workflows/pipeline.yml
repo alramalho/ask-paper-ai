@@ -4,7 +4,7 @@ on:
     branches:
       - main
       # TODO: remove this before merge the PR
-      - bump-python-version
+      # - bump-python-version
 
 jobs:
 
