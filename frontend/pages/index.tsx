@@ -145,7 +145,7 @@ const Home = () => {
           BETA
         </Badge>
         <Badge color="warning" variant="flat">
-          v2.0
+          v2.1
         </Badge>
       </Flex>
       <PaperUploader onFinish={(paper, pdf) => {
