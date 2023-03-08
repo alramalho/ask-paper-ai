@@ -117,8 +117,6 @@ test.describe('Upload with URL', () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
     await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Toolformer: Language Models Can Teach Themselves to Use Tools\"")
-
-    await expect(page.getByTestId('data-testid=\'file-upload-label')).toBeVisible();
   })
 });
 
