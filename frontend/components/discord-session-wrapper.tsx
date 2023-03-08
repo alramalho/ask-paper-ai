@@ -83,7 +83,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           Join with Discord
         </Button>
         <Button css={{paddingLeft: "$16"}}size="lg" bordered color="secondary" icon={<DiscordIcon/>}
-                onClick={() => window.location.href = "https://discord.com/register?redirect_to=https://askpaper.ai"}>
+                onClick={() => open("https://discord.com/register?redirect_to=https://askpaper.ai", "_self")}>
           Create discord account
         </Button>
       </Flex>
