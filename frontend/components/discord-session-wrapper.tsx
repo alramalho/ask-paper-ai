@@ -105,6 +105,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           textTransform: 'uppercase',
           borderRadius: "$0"
         }} icon={<Text>📩</Text>} onClick={() => {
+          setUnderText("Sending instructions...")
           sendInstructionsEmail(email)
             .then(() => setUnderText("Email sent! ✅"))
             .catch(() => setUnderText("Something went wrong 😕"))
