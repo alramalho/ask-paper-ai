@@ -8,8 +8,6 @@ let page: Page
 
 test.describe('Normal upload', () => {
   test.beforeAll(async ({browser}) => {
-
-
     page = await browser.newPage()
 
     await page.goto(process.env.APP_URL)
@@ -29,15 +27,13 @@ test.describe('Normal upload', () => {
 
   test('should be able to upload a paper', async () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
+    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
 
     verifyIfInDynamo('HippoPrototypeJsonPapers-sandbox', 'email', TEST_EMAIL, {
       paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
     })
   })
 
-  test('should be able to see the selected dialog after uploading a paper', async () => {
-    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
-  })
 
   test('should be able ask a question', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
@@ -59,6 +55,20 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area')).toContainText("Size",);
     await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
   });
+
+  test('should be able to receive the results email', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+
+    await page.click('text=Email me this');
+    await expect(page.getByTestId('email-sent')).toBeVisible();
+    // await verifyEmailSentInLastXMinutes(1);
+  })
 
   test('should be able to store feedback', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
@@ -93,19 +103,6 @@ test.describe('Normal upload', () => {
     });
   })
 
-  test('should be able to receive the results email', async () => {
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
-
-    await expect(page.getByTestId('answer-area')).toContainText("fracture");
-
-    await page.click('text=Email me this');
-    await expect(page.getByTestId('email-sent')).toBeVisible();
-    // await verifyEmailSentInLastXMinutes(1);
-  })
 });
 
 test.describe('Upload with URL', () => {
