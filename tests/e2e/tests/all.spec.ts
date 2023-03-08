@@ -27,8 +27,6 @@ test.describe('Normal upload', () => {
     await page.close();
   });
 
-  test('should be able to upload a paper via URL', async () => {})
-
   test('should be able to upload a paper', async () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
@@ -120,6 +118,8 @@ test.describe('Upload with URL', () => {
 
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
+
+    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Toolformer: Language Models Can Teach Themselves to Use Tools\"")
 
     await expect(page.getByTestId('data-testid=\'file-upload-label')).toBeVisible();
   })
