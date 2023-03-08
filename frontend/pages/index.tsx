@@ -322,8 +322,7 @@ const Home = () => {
                             <Button ghost auto color="success" size="lg" iconRight="👍"
                                     css={{
                                       color: 'green',
-                                      '&:hover': {color: 'white'},
-                                      backgroundColor: "$backgroundLighter",
+                                      '&:hover': {color: 'white', backgroundColor: 'green'},
                                     }}
                                     onPress={() => {
                                       storeFeedback({
@@ -339,7 +338,7 @@ const Home = () => {
                             >
                                 Answer was accurate
                             </Button>
-                            <Button ghost auto size="lg" iconRight="👎" css={{backgroundColor: "$backgroundLighter",}}
+                            <Button ghost auto size="lg" iconRight="👎"
                                     onPress={() => {
                                       storeFeedback({
                                         email: session!.user!.email,
