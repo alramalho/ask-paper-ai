@@ -17,9 +17,7 @@ cd ..
 docker run -v "$PWD":/var/task "acidrain/python-poetry:3.9" \
 /bin/sh -c \
 "cd /var/task && \
-poetry install --no-root --no-interaction --no-ansi --without dev && \
-poetry export -f requirements.txt --without-hashes > requirements.txt && \
-pip install -r requirements.txt -t src_dependencies && rm requirements.txt; exit"
+pip install -r requirements.txt -t src_dependencies; exit"
 
 cd ./src_dependencies
 zip ../build.zip -r .
