@@ -4,7 +4,7 @@ import uuid
 import datetime
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
-S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', None)
+S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', 'hippo-prototype-papers-sandbox')
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 
 def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
