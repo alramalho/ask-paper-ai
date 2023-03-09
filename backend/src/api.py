@@ -178,9 +178,8 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         context = data['context']
         contexts = nlp.split_text(data['context'])
 
-        max_chunks = 3
         if quote:
-            question.append(" Please include at least one quote from the original paper.")
+            question += "Please include at least one quote from the original paper."
 
         response = await nlp.ask_llm(question, context)
 
