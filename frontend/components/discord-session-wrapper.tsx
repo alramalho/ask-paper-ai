@@ -122,6 +122,45 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
         <Spacer y={3}/>
         <Collapse.Group shadow>
           <Collapse
+            title={<Text h4>How does this work?</Text>}
+            subtitle="Using AI to aid researchers"
+            contentLeft={
+              <Text css={{fontSize: "2.2rem"}}>❓</Text>
+            }
+          >
+            <Text>Ask Paper is a tool powered by a Large Language Model. This is a Neural Network that was trained
+              on a lot of internet text to get a fundamental understanding on how the language works, all by trying to predict
+              the next word in a sequence. By feeding the paper contents and the query to the models, it will try to
+              "predict" a plausible answer!
+            </Text>
+            <Text><b>Careful!</b> As stated above, this is only trained to generate <b>plausible</b> answers, so you're encouraged
+              to verify its veracity. You can take usage of the "Quote" Switch in order to force the answer to contain paper quotes,
+              minimizing wrong content</Text>
+          </Collapse>
+          <Collapse
+            title={<Text h4>What can it do?</Text>}
+            subtitle="Ask, extract & understand"
+            contentLeft={
+              <Text css={{fontSize: "2.2rem"}}>🤔</Text>
+            }
+          >
+            <Text>Ask Paper allows you to more quickly read and extract information from papers. It allows you to upload papers either
+              by URL or by uploading a PDF file, and then ask natural language questions about the paper (e.g. What is the paper about).
+              You also have predefined actions like <code>Extract Datasets</code> and <code>Generate summary</code>.
+            </Text>
+          </Collapse>
+          <Collapse
+            title={<Text h4>Who can use it?</Text>}
+            subtitle="Anyone!"
+            contentLeft={
+              <Text css={{fontSize: "2.2rem"}}>🙋</Text>
+            }
+          >
+            <Text>Ask paper is free to use for every community member! All you have to do is register in discord and join our server.
+              If you want further help, just click the button above to receive an email with the instructions.
+            </Text>
+          </Collapse>
+          <Collapse
             title={<Text h4>Why discord?</Text>}
             subtitle="Free, community oriented & reliable"
             contentLeft={
@@ -137,7 +176,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
             title={<Text h4>Multilingual!</Text>}
             subtitle="We support different languages!"
             contentLeft={
-              <Text css={{fontSize: "1.15rem"}}>🇪🇺🇩🇪</Text>
+              <Text css={{fontSize: "2.2rem"}}>🌍</Text>
             }
           >
             <Text>
