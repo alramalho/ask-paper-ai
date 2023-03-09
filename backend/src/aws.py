@@ -4,6 +4,7 @@ import uuid
 import datetime
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
+# TODO: now it defaults to sandbox. Add localstack so we can really test it locally
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', 'hippo-prototype-papers-sandbox')
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 
