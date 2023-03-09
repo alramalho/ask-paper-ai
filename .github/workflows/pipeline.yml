@@ -8,6 +8,7 @@ jobs:
 
   Deploy-To-Sandbox:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -97,8 +98,8 @@ jobs:
 
   E2E-Tests:
     needs: Deploy-To-Sandbox
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       APP_URL: https://sandbox--ask-paper.netlify.app
       CI: true
@@ -163,6 +164,7 @@ jobs:
   Deploy-To-Production:
     needs: E2E-Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
