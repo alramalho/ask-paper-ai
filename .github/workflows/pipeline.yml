@@ -41,8 +41,8 @@ jobs:
           jq --version
           sudo apt install software-properties-common
           sudo add-apt-repository ppa:deadsnakes/ppa
-          sudo apt install python3.9
-          python3.9 --version
+          sudo apt install python3.8
+          python3.8 --version
 
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
@@ -134,7 +134,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.8'
 
       - name: Cleanup sandbox
         working-directory: tests
@@ -196,8 +196,8 @@ jobs:
           jq --version
           sudo apt install software-properties-common
           sudo add-apt-repository ppa:deadsnakes/ppa
-          sudo apt install python3.9
-          python3.9 --version
+          sudo apt install python3.8
+          python3.8 --version
 
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
@@ -242,3 +242,5 @@ jobs:
           netlify env:set NEXTAUTH_URL https://www.askpaper.ai
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --prod
+    # deploy to production if the branch is main
+    if: ${{ github.ref == 'refs/heads/main' }}

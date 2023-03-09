@@ -1,6 +1,7 @@
 import datetime
 import os.path
 
+
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from doc2json.grobid2json.process_pdf import process_pdf_file
@@ -219,4 +220,4 @@ async def store_feedback(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)

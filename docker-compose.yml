@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    image: backend:1.0.0
+    restart: unless-stopped
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    ports:
+      - 8000:8000
+    env_file:
+      - ./backend/.env
+    networks:
+      - main
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    image: frontend:1.0.0
+    depends_on:
+      - backend
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    env_file:
+      - ./frontend/.env
+    networks:
+      - main
+
+networks:
+  main:
