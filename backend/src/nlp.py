@@ -11,7 +11,7 @@ import tiktoken
 
 def count_tokens(text) -> int:
     enc = tiktoken.get_encoding("gpt2")
-    return int(len(enc.encode(text)) * 1.10)  # this is an estimate since it's been proved that underestimates
+    return int(len(enc.encode(text)) * 1.08)  # this is an estimate since it's been proved that underestimates
 
 
 def decode(tokens) -> str:
@@ -46,8 +46,9 @@ async def ask_llm(question, context):
     )
 
     completion_tokens = 500
-    max_tokens = LLM_MAX_TOKENS - count_tokens(question) - completion_tokens
-    contexts = split_text(context, max_tokens)
+    context_max_tokens = LLM_MAX_TOKENS - count_tokens(question) - completion_tokens - count_tokens(prompt.template)
+    print(f"context_max_tokens: {context_max_tokens}")
+    contexts = split_text(context, context_max_tokens)
 
     llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
     chain = LLMChain(llm=llm, prompt=prompt)
@@ -56,8 +57,8 @@ async def ask_llm(question, context):
     context_sizes = [count_tokens(context) for context in contexts]
     print("Context sizes: ", context_sizes)
 
-    prompt_sizes = [context_size + count_tokens(prompt.template) + count_tokens(question) for context_size in context_sizes]
-    print("Prompt sizes: ", prompt_sizes)
+    sequence_sizes = [context_size + count_tokens(prompt.template) + count_tokens(question) + completion_tokens for context_size in context_sizes]
+    print("Sequence sizes: ", sequence_sizes)
 
     futures = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
