@@ -188,6 +188,7 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           </Collapse>
         </Collapse.Group>
       </Box>
+      <Spacer y={7}/>
       <Box css={{
         position: "fixed",
         bottom: '0',
