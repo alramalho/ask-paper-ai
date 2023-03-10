@@ -17,7 +17,6 @@ ENVIRONMENT=<env>
 1. on `frontend/.env`
 ```
 NEXT_PUBLIC_BACKEND_HTTP_APIURL="http://localhost:8000"
-DISCORD_BYPASS_LOGIN_TOKEN=<discord_token>
 
 DISCORD_CLIENT_ID=<discord_id>
 DISCORD_CLIENT_SECRET=<discord_secret>
