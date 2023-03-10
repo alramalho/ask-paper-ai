@@ -1,6 +1,11 @@
 # Ask paper
 Visite me on [askpaper.ai](https://askpaper.ai)!
 
+## ✅ Coordination
+
+We currently have our backlog in [this notion page](https://www.notion.so/hippoteam/Ask-Paper-Development-d724d73c83b54c01a5bedb32de6ad075)
+
+
 ## 🔧 Set up
 
 ### Fill project with correct environment variables value
