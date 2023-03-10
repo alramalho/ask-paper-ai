@@ -18,7 +18,7 @@ export class ApiStack extends cdk.Stack {
 
     constructor(scope: Construct, id: string, props: ApiStackProps) {
         super(scope, id);
-
+ 
 
         this.fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
             functionName: `HippoPrototypeFastAPI-${props.environment}`,

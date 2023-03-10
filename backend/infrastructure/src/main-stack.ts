@@ -42,7 +42,7 @@ export class MainStack extends cdk.Stack {
 
     new DynamoDbTableConstruct(this, 'InvocationsTable', {
       name: `HippoPrototypeFunctionInvocations-${props.environment}`,
-      indexFields: ['function_path'],
+      indexFields: [],
       writableBy: [fastApiLambda],
       readableBy: [fastApiLambda],
     })

@@ -79,7 +79,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
         <ul style="list-style: none">
             <li>1️⃣. First, you need to create a Discord account. <a href="https://discord.com/register?redirect_to=https://askpaper.ai">Click here to register</a></li>
             <li>2️⃣. Next, you need to join the Ask Paper Discord server. <a href="https://discord.gg/6zugVKk2sd">Click here to join</a></li>
-            <li>3️⃣. Once you have joined the server, you can use the <a href="https://askapper.ai">web app</a> normally to ask questions about the paper you uploaded.</li>
+            <li>3️⃣. Once you have joined the server, you can use the <a href="https://askpaper.ai">web app</a> normally to ask questions about the paper you uploaded.</li>
         </ul>
         <h2>If you have any questions, just reply to this email.</h2>
         </div>
@@ -98,6 +98,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
     return {'message': f"Email sent! Message ID: {response['MessageId']}"}
+
 
 @app.post('/send-answer-email')
 async def send_answer_email(request: Request, background_tasks: BackgroundTasks):
@@ -167,7 +168,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
     return json_paper
 
 
-
 @app.post("/ask")
 async def ask(request: Request, background_tasks: BackgroundTasks):
     start = datetime.datetime.now()
@@ -198,8 +198,6 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         return {'message': response}
     else:
         raise HTTPException(status_code=400, detail="Missing parameters")
-
-
 
 
 @app.post("/store-feedback")
