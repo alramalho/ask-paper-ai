@@ -10,12 +10,12 @@ We currently have our backlog in [this notion page](https://www.notion.so/hippot
 ## 🔧 Set up
 
 ### Fill project with correct environment variables value
-1. on `backend/.env`
+* on `backend/.env`
 ```
 OPENAI_API_KEY=<key>
 ENVIRONMENT=<env>
 ```
-1. on `frontend/.env`
+* on `frontend/.env`
 ```
 NEXT_PUBLIC_BACKEND_HTTP_APIURL="http://localhost:8000"
 
@@ -38,36 +38,36 @@ ENVIRONMENT=<env>
 
 ## 💻 Run with python and yarn
 
-1. **install dependencies**
-  1. for backend (noting that dependencies will be install on your local machine, consider using venv to install to a python virtual environment)
+### **Install dependencies**
+1. for backend (noting that dependencies will be install on your local machine, consider using venv to install to a python virtual environment)
 ```shell
 cd backend && pip install -r requirements.txt
 ```
-  1. for frontend
+1. for frontend
 ```shell
 cd frontend && yarn
 ```
 
-1. **start project**
-  1. for backend
+### **Start project**
+1. for backend
 ```shell
 cd backend && python src/api.py
 ```
-  1. for frontend
+1. for frontend
 ```shell
 cd frontend && yarn dev
 ```
 
 ## 🚀 Run with docker
 
-1. **Start Project.**
+### **Start Project.**
 
-### To start, execute this:
+#### To start, execute this:
 ```shell
 docker-compose up -d
 ```
 
-### For no cache, execute this:
+#### For no cache, execute this:
 ```shell
 docker-compose build --no-cache
 docker-compose up -d --force-recreate
@@ -82,7 +82,7 @@ docker-compose up -d --no-deps --build
 1. **Check docker and images.**
 ```shell
 docker ps -a
-docekr images -a
+docker images -a
 ```
 
 1. **Stop and remove container.**
