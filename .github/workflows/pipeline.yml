@@ -50,9 +50,6 @@ jobs:
           aws --version
           aws -h
 
-          npm i -g vercel
-          vercel --version
-
 
       - name: Configure AWS
         run: |
@@ -204,10 +201,7 @@ jobs:
           sudo ./aws/install --update
           aws --version
           aws -h
-
-          npm i -g vercel
-          vercel --version
-
+          
 
       - name: Configure AWS
         run: |
