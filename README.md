@@ -1,5 +1,6 @@
-# Ask paper
-Visite me on [askpaper.ai](https://askpaper.ai)!
+<img style="width: 100%; object-fit: cover" src="https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/askpaperbanner.png"/>
+
+Visit me on [askpaper.ai](https://askpaper.ai)!
 
 ## ✅ Coordination
 
@@ -99,3 +100,8 @@ docker rmi $(docker images -q -f dangling=true)
 ```shell
 docker image prune -a
 ```
+
+---
+## ⚠️ Not in the repo
+- Domain setup
+  - this was done manually in EuroDNS and Netlify, and there is no way to include it here.
