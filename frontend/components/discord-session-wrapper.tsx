@@ -146,7 +146,8 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
           >
             <Text>Ask Paper allows you to more quickly read and extract information from papers. It allows you to upload papers either
               by URL or by uploading a PDF file, and then ask natural language questions about the paper (e.g. What is the paper about).
-              You also have predefined actions like <code>Extract Datasets</code> and <code>Generate summary</code>.
+              You also have predefined actions like <code>Extract Datasets</code> and <code>Generate summary</code>.<br/><br/>
+              Plus, it is natively multiligual, so you can ask questions in any language you want!
             </Text>
           </Collapse>
           <Collapse
@@ -171,20 +172,6 @@ const DiscordSessionWrapper = ({children}: LayoutProps) => {
               It allows users to connect with each other through voice, video, and text chat.</Text>
             <Text>We use discord because it is a <b>free, open, reliable and
               easy-to-access</b> with the goal of uniting and build our own open sourced platform..</Text>
-          </Collapse>
-          <Collapse
-            title={<Text h4>Multilingual!</Text>}
-            subtitle="We support different languages!"
-            contentLeft={
-              <Text css={{fontSize: "2.2rem"}}>🌍</Text>
-            }
-          >
-            <Text>
-              This is still an experimental feature, but users report succesfully using AskPaper to ask questions in
-              German, Dutch and French.
-              It works both ways, either with English content & non english questions, or the other way around!</Text>
-            <Text>We would be highly interested in seeing how did this feature work for you, so if you try it out, let
-              us know! 🙌</Text>
           </Collapse>
         </Collapse.Group>
       </Box>
