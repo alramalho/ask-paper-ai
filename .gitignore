@@ -17,3 +17,5 @@ pdf2json-api/output
 .vercel
 
 spike
+
+localstack

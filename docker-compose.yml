@@ -34,11 +34,26 @@ services:
   localstack:
     container_name: "localstack"
     image: localstack/localstack
-    # ports:
-    #   - "127.0.0.1:4566:4566"            # LocalStack Gateway
-    #   - "127.0.0.1:4510-4559:4510-4559"  # external services port range
-    # env_file:
-    #   - ./localstack/.env
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb,lambda,logs,s3
+      # creates a docker container everytime the lambda is invoked
+      - LAMBDA_EXECUTOR=docker
+      # necessary to invoke lambda within the docker container
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      # the main entry point for all API invocations
+      - EDGE_PORT=4566
+      - AWS_DEFAULT_REGION=eu-central-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      - DATA_DIR=/var/lib/localstack/data
+    ports:
+      - "4566:4566"
+    volumes:
+      - "${PWD}/localstack:/var/lib/localstack"
+      # necessary to invoke lambda within the docker container
+      - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - main
 
