@@ -22,7 +22,7 @@ export class ApiStack extends cdk.Stack {
 
         this.fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
             functionName: `HippoPrototypeFastAPI-${props.environment}`,
-            code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'build.zip')),
+            code: lambda.Code.fromAsset(path.join(__dirname, '..', 'build.zip')),
             handler: 'api.handler',
             runtime: lambda.Runtime.PYTHON_3_8,
             timeout: cdk.Duration.seconds(150),

@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - main
-
+      # TODO test purpose
+      - sheng-extract-infrastructure-out-from-backend
 jobs:
 
   Deploy-To-Sandbox:
@@ -63,7 +64,7 @@ jobs:
       - name: Deploy-Backend
         run: |
 
-          cd backend/infrastructure
+          cd infrastructure
           yarn
           yarn build-backend-zip
           cdk bootstrap
@@ -215,7 +216,7 @@ jobs:
       - name: Deploy-Backend
         run: |
 
-          cd backend/infrastructure
+          cd infrastructure
           yarn
           yarn build-backend-zip
           cdk bootstrap
