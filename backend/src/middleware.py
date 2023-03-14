@@ -6,19 +6,6 @@ import traceback
 from constants import ENVIRONMENT, LATEST_COMMIT_ID
 import users
 import db
-
-async def decrement_trial_requests(request: Request, call_next):
-    if request.method == 'OPTIONS':
-        return await call_next(request)
-
-    if request.url.path == '/ask':
-        email = request.headers.get('email', None)
-        if email is None:
-            return JSONResponse(status_code=400, content={"message": "Missing email"})
-        users.UserGateway().decrement_remaining_trial_requests(email)
-
-    return await call_next(request)
-
 async def verify_login(request: Request, call_next):
     if ENVIRONMENT != 'production':
         print("Not in production, bypassing verify login")
@@ -48,16 +35,23 @@ async def verify_login(request: Request, call_next):
             print(e)
             return False
 
-    email = request.headers.get('Email', (await request.json())['email'])
 
     if verify_token_in_discord(auth_header):
         print("Discord successfully verified token")
         return await call_next(request)
-    elif users.UserGateway().is_guest_user_allowed(email):
-        print("User is an allowed guest")
-        return await call_next(request)
     else:
-        return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
+        email = request.headers.get('Email', (await request.json())['email'])
+
+        if users.UserGateway().is_guest_user_allowed(email):
+            print("User is an allowed guest")
+            response = await call_next(request)
+
+            if request.url.path == '/ask':
+                users.UserGateway().decrement_remaining_trial_requests(email)
+
+            return response
+        else:
+            return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
 
 
 async def set_body(request: Request, body: bytes):

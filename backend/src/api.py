@@ -28,7 +28,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.middleware("http")(middleware.decrement_trial_requests)
 app.middleware("http")(middleware.verify_login)
 app.middleware("http")(middleware.write_all_errors_to_dynamo)
 
