@@ -6,6 +6,8 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as apigatewayv2 from "@aws-cdk/aws-apigatewayv2-alpha";
 import * as path from "path";
 import * as apigatewayv2Integrations from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
+import { CAMEL_CASE_PREFIX, PASCAL_CASE_PREFIX } from './utils/constants';
+
 interface ApiStackProps {
     environment: string
     openaiApiKey: string
@@ -21,7 +23,7 @@ export class ApiStack extends cdk.Stack {
  
 
         this.fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
-            functionName: `HippoPrototypeFastAPI-${props.environment}`,
+            functionName: `${CAMEL_CASE_PREFIX}FastAPI${props.environment}`,
             code: lambda.Code.fromAsset(path.join(__dirname, '..', 'build.zip')),
             handler: 'api.handler',
             runtime: lambda.Runtime.PYTHON_3_8,
@@ -31,7 +33,6 @@ export class ApiStack extends cdk.Stack {
                 OPENAI_API_KEY: props.openaiApiKey,
                 ENVIRONMENT: props.environment,
                 LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
-                DYNAMODB_PAPER_TABLENAME: "HippoPrototypeJsonPapers",
                 FILESYSTEM_BASE: '/tmp',
                 S3_BUCKET_NAME: props.destinationBucketName,
             },
@@ -48,7 +49,7 @@ export class ApiStack extends cdk.Stack {
         });
 
 
-        new cdk.CfnOutput(this, `AskPaperBackendHTTPURL${props.environment}`, {
+        new cdk.CfnOutput(this, `${PASCAL_CASE_PREFIX}BackendHTTPURL${props.environment}`, {
             value: lambdaUrl.url,
         });
     }
