@@ -14,10 +14,6 @@ itsdangerous
 python-multipart
 mangum
 langchain
-<<<<<<< Updated upstream
 tiktoken
 nltk
 pydantic
-=======
-tiktoken
->>>>>>> Stashed changes
