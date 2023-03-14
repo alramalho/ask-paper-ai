@@ -21,4 +21,8 @@ cd ./src_dependencies
 zip ../build.zip -r .
 cd ..
 
+echo "${BLUE}Adding source code... 🌊${NOCOLOR}"
+cd ./src
+zip ../build.zip -u . -r
+
 echo "${GREEN}Done ✅${NOCOLOR}"c
