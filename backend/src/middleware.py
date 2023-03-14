@@ -3,7 +3,7 @@ from fastapi import Request
 import datetime
 import requests
 import traceback
-from constants import ENVIRONMENT, LATEST_COMMIT_ID
+from constants import ENVIRONMENT, LATEST_COMMIT_ID, SNAKE_CASE_PREFIX
 import users
 import db
 async def verify_login(request: Request, call_next):
@@ -82,7 +82,7 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
         print("Caught by middleware")
         print(e)
         print(traceback.format_exc())
-        db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write({
+        db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_function_invocations').write({
             'function_path': request.url.path,
             'error': str(e),
             'email': email,

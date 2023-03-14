@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-      # TODO test purpose
-      - sheng-extract-infrastructure-out-from-backend
 jobs:
 
   Deploy-To-Sandbox:

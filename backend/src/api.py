@@ -9,7 +9,8 @@ from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
-from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER
+from constants import ( LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER,
+                        SNAKE_CASE_PREFIX )
 import aws
 import middleware
 from botocore.exceptions import ClientError
@@ -123,7 +124,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     """
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write, {
+        background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_emails_sent').write, {
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
@@ -157,7 +158,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
     """
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write, {
+        background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_emails_sent').write, {
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
@@ -183,7 +184,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     paper_hash = generate_hash(json.dumps(json_paper['pdf_parse']['body_text']))
 
-    db.DynamoDBGateway('HippoPrototypeJsonPapers').write({
+    db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_json_papers').write({
         'id': paper_hash,
         'paper_title': json_paper['title'],
         'paper_json': json.dumps(json_paper),
@@ -192,12 +193,11 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     time_elapsed = datetime.datetime.now() - start
 
-    background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write, {
-        'function_path': request.url.path,
-        'time_elapsed': str(time_elapsed),
-        'email': email,
-        'paper_hash': paper_hash,
-    })
+    background_tasks.add_task(db.DynamoDBGateway('{SNAKE_CASE_PREFIX}_function_invocations').write,
+                              {'function_path': request.url.path,
+                               'time_elapsed': str(time_elapsed),
+                               'email': email,
+                               'paper_hash': paper_hash})
     background_tasks.add_task(aws.store_paper_in_s3, pdf_file_content, f"{paper_hash}.pdf")
 
     json_paper['id'] = paper_hash
@@ -222,16 +222,16 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         response = await nlp.ask_llm(question, context)
 
         time_elapsed = datetime.datetime.now() - start
-        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write, {
-            'function_path': request.url.path,
-            'email': email,
-            'latest_commit_id': LATEST_COMMIT_ID,
-            'time_elapsed': str(time_elapsed),
-            'question': question,
-            'was_prompt_cut': len(contexts) > 1,
-            'prompt_token_length_estimate': nlp.count_tokens(context) + nlp.count_tokens(question) + 100,
-            'response_text': response,
-        })
+        token_length_estimate: int = nlp.count_tokens(context) + nlp.count_tokens(question) + 100
+        background_tasks.add_task(db.DynamoDBGateway('{SNAKE_CASE_PREFIX}_function_invocations').write,
+                                  {'function_path': request.url.path,
+                                   'email': email,
+                                   'latest_commit_id': LATEST_COMMIT_ID,
+                                   'time_elapsed': str(time_elapsed),
+                                   'question': question,
+                                   'was_prompt_cut': len(contexts) > 1,
+                                   'prompt_token_length_estimate': token_length_estimate,
+                                   'response_text': response})
         return {'message': response}
     else:
         raise HTTPException(status_code=400, detail="Missing data")
@@ -246,7 +246,7 @@ async def store_feedback(request: Request):
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    db.DynamoDBGateway('HippoPrototypeFeedback').write(body['data'])
+    db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_feedback').write(body['data'])
 
     return {"message": "success"}
 
