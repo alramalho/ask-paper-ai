@@ -193,7 +193,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     time_elapsed = datetime.datetime.now() - start
 
-    background_tasks.add_task(db.DynamoDBGateway('{SNAKE_CASE_PREFIX}_function_invocations').write,
+    background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_function_invocations').write,
                               {'function_path': request.url.path,
                                'time_elapsed': str(time_elapsed),
                                'email': email,
@@ -223,7 +223,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
 
         time_elapsed = datetime.datetime.now() - start
         token_length_estimate: int = nlp.count_tokens(context) + nlp.count_tokens(question) + 100
-        background_tasks.add_task(db.DynamoDBGateway('{SNAKE_CASE_PREFIX}_function_invocations').write,
+        background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_function_invocations').write,
                                   {'function_path': request.url.path,
                                    'email': email,
                                    'latest_commit_id': LATEST_COMMIT_ID,
