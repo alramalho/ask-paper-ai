@@ -15,5 +15,4 @@ python-multipart
 mangum
 langchain
 tiktoken
-nltk
 pydantic
