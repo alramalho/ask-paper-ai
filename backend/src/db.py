@@ -15,7 +15,7 @@ class DynamoDBGateway:
             self.mock = True
 
         if ENVIRONMENT.lower() not in self.table_name.lower():
-            self.table_name = f"{self.table_name}-{ENVIRONMENT}"
+            self.table_name = f"{self.table_name}_{ENVIRONMENT}"
 
     def read(self, key_name: str, key_value: str):
         if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack

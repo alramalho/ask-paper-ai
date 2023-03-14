@@ -1,0 +1,12 @@
+
+const PASCAL_CASE_PREFIX = "AskPaper"
+const CAMEL_CASE_PREFIX = "askPaper"
+const SNAKE_CASE_PREFIX = "ask_paper"
+const KEBAB_CASE_PREFIX = "ask-paper"
+
+export {
+  PASCAL_CASE_PREFIX,
+  CAMEL_CASE_PREFIX,
+  SNAKE_CASE_PREFIX,
+  KEBAB_CASE_PREFIX
+}

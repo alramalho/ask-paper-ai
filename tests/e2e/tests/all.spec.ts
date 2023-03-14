@@ -1,4 +1,5 @@
 import {expect, FileChooser, Page, test} from '@playwright/test';
+import { SNAKE_CASE_PREFIX } from './utils/constants';
 
 const TEST_EMAIL = (process.env.TEST_ID ?? 'local') + '@e2e.test';
 test.describe.configure({mode: 'serial'});
@@ -29,7 +30,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
     await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
 
-    verifyIfInDynamo('HippoPrototypeJsonPapers-sandbox', 'email', TEST_EMAIL, {
+    verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_sandbox`, 'email', TEST_EMAIL, {
       paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
     })
   })
@@ -93,10 +94,10 @@ test.describe('Normal upload', () => {
 
     await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
-    await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_sandbox`, 'email', TEST_EMAIL, {
       was_answer_accurate: true,
     });
-    await verifyIfInDynamo('HippoPrototypeFeedback-sandbox', 'email', TEST_EMAIL, {
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_sandbox`, 'email', TEST_EMAIL, {
       sentiment: selectedSentiment,
       next_feature: selectedNextFeature,
       message: writtenMessage,
