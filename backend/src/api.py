@@ -123,14 +123,14 @@ async def send_instructions_email(request: Request, background_tasks: Background
     """
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write({
+        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write, {
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
             'sender': EMAIL_SENDER,
             'type': 'instructions',
             'sent_at': str(datetime.datetime.now())
-        }))
+        })
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
@@ -157,14 +157,14 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
     """
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write({
+        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write, {
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
             'sender': EMAIL_SENDER,
             'type': 'answer',
             'sent_at': str(datetime.datetime.now())
-        }))
+        })
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
@@ -192,12 +192,12 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     time_elapsed = datetime.datetime.now() - start
 
-    background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write({
+    background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write, {
         'function_path': request.url.path,
         'time_elapsed': str(time_elapsed),
         'email': email,
         'paper_hash': paper_hash,
-    }))
+    })
     background_tasks.add_task(aws.store_paper_in_s3, pdf_file_content, f"{paper_hash}.pdf")
 
     json_paper['id'] = paper_hash
@@ -222,7 +222,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         response = await nlp.ask_llm(question, context)
 
         time_elapsed = datetime.datetime.now() - start
-        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write({
+        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write, {
             'function_path': request.url.path,
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
@@ -231,7 +231,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
             'was_prompt_cut': len(contexts) > 1,
             'prompt_token_length_estimate': nlp.count_tokens(context) + nlp.count_tokens(question) + 100,
             'response_text': response,
-        }))
+        })
         return {'message': response}
     else:
         raise HTTPException(status_code=400, detail="Missing data")
