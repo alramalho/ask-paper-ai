@@ -143,7 +143,6 @@ const Home = () => {
   }
   return (<>
       <Flex>
-
         <Text h2>Ask Paper</Text>
         <Badge color="error" variant="flat">
           BETA

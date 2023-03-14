@@ -71,6 +71,26 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
     }
   }
 
+  function fetchPaperUrl(paperUrl: string) {
+    fetch(paperUrl)
+    .then(response => response.blob())
+    .then(blob => {
+      handlePaperSubmit({
+        target: {
+          files: [new File(
+            [blob],
+            'paper.pdf',
+            {type: 'application/pdf'})
+          ]
+        }
+      } as any)
+    }).catch(e => {
+      setStatus('error')
+    setUnderText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
+  })
+  }
+
+  useEffect(() => {console.log(urlInput)}, [urlInput])
   return (
     <Box css={{margin: '0 $3'}}>
       <Flex css={{gap: "$5"}} direction={'column'} >
@@ -94,28 +114,16 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
               setUnderText("<i>Please enter a URL ❌</i>")
               return
             }
-            fetch(urlInput)
-              .then(response => response.blob())
-              .then(blob => {
-                handlePaperSubmit({
-                  target: {
-                    files: [new File(
-                      [blob],
-                      'paper.pdf',
-                      {type: 'application/pdf'})
-                    ]
-                  }
-                } as any)
-              }).catch(e => {
-                setStatus('error')
-              setUnderText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
-            })
-
+            fetchPaperUrl(urlInput)
           }
           }>
             <UploadIcon/>
           </Button>
         </Flex>
+      <Button onClick={() => {
+        fetchPaperUrl("https://arxiv.org/pdf/1901.07031.pdf")
+        }}>Or start with a demo paper</Button>
+
 
         {status == 'uploading' && <Loading data-testid="upload-loading"/>}
         {status == 'uploaded' && <CheckIcon data-testid="upload-successful"/>}
