@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import {Button, Input, Link, Loading, Spacer, styled, Text} from "@nextui-org/react";
 import {Flex} from "./styles/flex";
@@ -6,7 +6,7 @@ import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
 import {Paper} from "../pages";
 import {Box} from "./layout";
-import useCustomSession from "../hooks/session";
+import useCustomSession, {GuestUserContext, useGuestSession} from "../hooks/session";
 import MarkdownView from "react-showdown";
 import FileInput from "./input";
 import UploadIcon from "./icons/upload-icon";
@@ -21,7 +21,8 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const [pdf, setPdf] = useState<File | undefined>(undefined)
   const [urlInput, setUrlInput] = useState<string | undefined>(undefined)
-  const {data: session} = useCustomSession()
+  const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
+  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
 
   useEffect(() => {
     if (uploadedPaper !== undefined && uploadedPaper !== null && pdf !== undefined) {

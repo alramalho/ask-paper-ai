@@ -2,17 +2,21 @@ import datetime
 import os.path
 
 
-from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
+
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
 from constants import LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER
-from aws import write_to_dynamo, store_paper_in_s3, ses_send_email
-from middleware import verify_discord_login, write_all_errors_to_dynamo
+import aws
+import middleware
 from botocore.exceptions import ClientError
 import nlp
+import db
+import users
+import re
 
 
 app = FastAPI()
@@ -24,8 +28,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.middleware("http")(verify_discord_login)
-app.middleware("http")(write_all_errors_to_dynamo)
+app.middleware("http")(middleware.decrement_trial_requests)
+app.middleware("http")(middleware.verify_login)
+app.middleware("http")(middleware.write_all_errors_to_dynamo)
 
 handler = Mangum(app)
 
@@ -63,11 +68,44 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
 
     return f
 
+@app.post('/guest-login')
+async def guest_login(request: Request, response: Response):
+    user_email = request.headers.get('Email').lower()
+    if user_email is None:
+        raise HTTPException(status_code=400, detail="Missing email header")
+
+    # if email is not valid return 400
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", user_email):
+        raise HTTPException(status_code=400, detail="Invalid email")
+
+    users_gateway = users.UserGateway()
+    try:
+        user = users_gateway.get_user_by_email(user_email)
+    except users.UserDoesNotExistException:
+        user = users_gateway.create_user(user_email)
+        response.status_code = 201
+
+    return {'remaining_trial_requests': user.remaining_trial_requests}
+
+
+@app.get('/user-remaining-requests-count')
+async def get_user_remaining_requests_count(request: Request):
+    user_email = request.headers.get('Email')
+    if user_email is None:
+        raise HTTPException(status_code=400, detail="Missing email query param")
+
+    users_gateway = users.UserGateway()
+    try:
+        user = users_gateway.get_user_by_email(user_email)
+    except users.UserDoesNotExistException:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {'remaining_trial_requests': user.remaining_trial_requests}
 
 @app.post('/send-instructions-email')
 async def send_instructions_email(request: Request, background_tasks: BackgroundTasks):
-    data = await request.json()
-    recipient = data['recipient']
+    body = await request.json()
+    recipient = body['recipient']
     subject ='Hippo AI 📝 How to start using Ask Paper'
     body_html = f"""
     <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca; border-radius: 15px">
@@ -85,15 +123,15 @@ async def send_instructions_email(request: Request, background_tasks: Background
         </div>
     """
     try:
-        response = ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(write_to_dynamo, 'HippoPrototypeEmailsSent', {
+        response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
+        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write({
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
             'sender': EMAIL_SENDER,
             'type': 'instructions',
             'sent_at': str(datetime.datetime.now())
-        })
+        }))
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
@@ -119,15 +157,15 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
         </div>
     """
     try:
-        response = ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(write_to_dynamo, 'HippoPrototypeEmailsSent', {
+        response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
+        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeEmailsSent').write({
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
             'sender': EMAIL_SENDER,
             'type': 'answer',
             'sent_at': str(datetime.datetime.now())
-        })
+        }))
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
@@ -146,7 +184,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     paper_hash = generate_hash(json.dumps(json_paper['pdf_parse']['body_text']))
 
-    write_to_dynamo("HippoPrototypeJsonPapers", {
+    db.DynamoDBGateway('HippoPrototypeJsonPapers').write({
         'id': paper_hash,
         'paper_title': json_paper['title'],
         'paper_json': json.dumps(json_paper),
@@ -155,13 +193,13 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     time_elapsed = datetime.datetime.now() - start
 
-    background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
+    background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write({
         'function_path': request.url.path,
         'time_elapsed': str(time_elapsed),
         'email': email,
         'paper_hash': paper_hash,
-    })
-    background_tasks.add_task(store_paper_in_s3, pdf_file_content, f"{paper_hash}.pdf")
+    }))
+    background_tasks.add_task(aws.store_paper_in_s3, pdf_file_content, f"{paper_hash}.pdf")
 
     json_paper['id'] = paper_hash
 
@@ -172,10 +210,10 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 async def ask(request: Request, background_tasks: BackgroundTasks):
     start = datetime.datetime.now()
     data = await request.json()
-    if "question" in data and "quote" in data and "email" in data and "context" in data:
+    if "question" in data and "quote" in data and "context" in data and 'email' in request.headers:
         question = data["question"]
         quote = data["quote"]
-        email = data["email"]
+        email = request.headers.get("email")
         context = data['context']
         contexts = nlp.split_text(data['context'])
 
@@ -185,7 +223,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
         response = await nlp.ask_llm(question, context)
 
         time_elapsed = datetime.datetime.now() - start
-        background_tasks.add_task(write_to_dynamo, "HippoPrototypeFunctionInvocations", {
+        background_tasks.add_task(db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write({
             'function_path': request.url.path,
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
@@ -194,10 +232,10 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
             'was_prompt_cut': len(contexts) > 1,
             'prompt_token_length_estimate': nlp.count_tokens(context) + nlp.count_tokens(question) + 100,
             'response_text': response,
-        })
+        }))
         return {'message': response}
     else:
-        raise HTTPException(status_code=400, detail="Missing parameters")
+        raise HTTPException(status_code=400, detail="Missing data")
 
 
 @app.post("/store-feedback")
@@ -209,9 +247,8 @@ async def store_feedback(request: Request):
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    write_to_dynamo(body['table_name'], body['data'])
-    import asyncio
-    await asyncio.sleep(5)
+    db.DynamoDBGateway('HippoPrototypeFeedback').write(body['data'])
+
     return {"message": "success"}
 
 

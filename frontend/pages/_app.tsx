@@ -4,8 +4,7 @@ import {Session} from "next-auth";
 import {createTheme, NextUIProvider, Text} from '@nextui-org/react';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
 import {SessionProvider} from "next-auth/react";
-import DiscordSessionWrapper from "../components/discord-session-wrapper";
-import {useEffect} from "react";
+import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
 import {Layout} from "../components/layout";
 
 export const lightTheme = createTheme({
@@ -38,37 +37,31 @@ export const lightTheme = createTheme({
 
 function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ session: Session }>) {
 
-  useEffect(() => {
-    console.log(process.env.ENVIRONMENT)
-  }, [])
-
   return (
-    <>
-      <SessionProvider session={session}>
-        <NextThemesProvider
-          defaultTheme="light"
-          attribute="class"
-          value={{
-            light: lightTheme.className,
-          }}
-        >
-          <NextUIProvider>
-            <Layout seo={{
-              description: "Ask questions & Extract datasets from papers."
-            }}>
-              {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
-                ?
-                <DiscordSessionWrapper>
-                  <Component {...pageProps} />
-                </DiscordSessionWrapper>
-                :
+    <SessionProvider session={session}>
+      <NextThemesProvider
+        defaultTheme="light"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <Layout seo={{
+            description: "Ask questions & Extract datasets from papers."
+          }}>
+            {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
+              ?
+              <NextAuthSessionWrapper>
                 <Component {...pageProps} />
-              }
-            </Layout>
-          </NextUIProvider>
-        </NextThemesProvider>
-      </SessionProvider>
-    </>
+              </NextAuthSessionWrapper>
+              :
+              <Component {...pageProps} />
+            }
+          </Layout>
+        </NextUIProvider>
+      </NextThemesProvider>
+    </SessionProvider>
   )
     ;
 }

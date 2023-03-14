@@ -1,7 +1,9 @@
 #!/bin/zsh
 
+# all colors at: https://gist.github.com/vratiu/9780109
 BLUE='\033[0;34m'
 GREEN='\033[0;32m'
+YELLOW='\033[0;93m'
 NOCOLOR='\033[0m'
 
 set -e
@@ -19,8 +21,4 @@ cd ./src_dependencies
 zip ../build.zip -r .
 cd ..
 
-echo "${BLUE}Adding source code... 🌊${NOCOLOR}"
-cd ./src
-zip ../build.zip -u . -r
-
-echo "${GREEN}Done ✅${NOCOLOR}"
+echo "${GREEN}Done ✅${NOCOLOR}"c

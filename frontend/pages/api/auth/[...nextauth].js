@@ -18,11 +18,7 @@ export const authOptions = {
     ],
     callbacks: {
         async session({ session, token, user }) {
-            if (process.env.ENVIRONMENT === "sandbox") {
-                session.accessToken = 'dummy'
-            } else {
-                session.accessToken = token.accessToken
-            }
+            session.accessToken = token.accessToken
             return session;
         },
 

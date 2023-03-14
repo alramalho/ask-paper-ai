@@ -4,19 +4,32 @@ import datetime
 import requests
 import traceback
 from constants import ENVIRONMENT, LATEST_COMMIT_ID
-from aws import write_to_dynamo
+import users
+import db
 
-
-async def verify_discord_login(request: Request, call_next):
+async def decrement_trial_requests(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
 
+    if request.url.path == '/ask':
+        email = request.headers.get('email', None)
+        if email is None:
+            return JSONResponse(status_code=400, content={"message": "Missing email"})
+        users.UserGateway().decrement_remaining_trial_requests(email)
+
+    return await call_next(request)
+
+async def verify_login(request: Request, call_next):
     if ENVIRONMENT != 'production':
-        print("Bypassing Discord")
+        print("Not in production, bypassing verify login")
         return await call_next(request)
 
     if request.url.path == '/send-instructions-email':
-        print("Sending instructions email, bypassing Discord")
+        print("Sending instructions email, bypassing verify login")
+        return await call_next(request)
+
+    if request.url.path == '/guest-login':
+        print("Logging in as guest, bypassing verify login")
         return await call_next(request)
 
     auth_header = request.headers.get('Authorization', request.headers.get('authorization', None))
@@ -24,7 +37,7 @@ async def verify_discord_login(request: Request, call_next):
         # todo: you should know if whether this failed
         return JSONResponse(status_code=401, content={"message": "Missing Authorization header"})
 
-    def verify_token(bearer_token):
+    def verify_token_in_discord(bearer_token):
         try:
             response = requests.get(
                 "https://discord.com/api/users/@me",
@@ -35,12 +48,16 @@ async def verify_discord_login(request: Request, call_next):
             print(e)
             return False
 
-    if not verify_token(auth_header):
-        print("Discord did not verify token")
-        return JSONResponse(status_code=401, content={"message": "Invalid Authorization header"})
-    else:
+    email = request.headers.get('Email', (await request.json())['email'])
+
+    if verify_token_in_discord(auth_header):
         print("Discord successfully verified token")
         return await call_next(request)
+    elif users.UserGateway().is_guest_user_allowed(email):
+        print("User is an allowed guest")
+        return await call_next(request)
+    else:
+        return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
 
 
 async def set_body(request: Request, body: bytes):
@@ -71,7 +88,7 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
         print("Caught by middleware")
         print(e)
         print(traceback.format_exc())
-        write_to_dynamo('HippoPrototypeFunctionInvocations', {
+        db.DynamoDBGateway('HippoPrototypeFunctionInvocations').write({
             'function_path': request.url.path,
             'error': str(e),
             'email': email,

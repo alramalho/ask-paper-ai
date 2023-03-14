@@ -1,9 +1,9 @@
 import {Button, CSS, Divider, Input, Loading, Modal, Radio, styled, Text, Textarea} from '@nextui-org/react';
 import {Flex} from "./styles/flex";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Paper} from "../pages";
-import useCustomSession from "../hooks/session";
+import useCustomSession, {GuestUserContext, useGuestSession} from "../hooks/session";
 import {Box} from "./layout";
 
 const StyledRadio = styled(Radio, {
@@ -45,7 +45,8 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
   const [wasAnswerAccurate, setWasAnswerAccurate] = useState<boolean | undefined>(undefined);
   const [sentiment, setSentiment] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const {data: session} = useCustomSession()
+  const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
+  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
 
   useEffect(() => {
     if (error != undefined) {
