@@ -17,5 +17,5 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', f'{KEBAB_CASE_PREFIX}-papers-sandbox')
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 EMAIL_SENDER = 'alex@hippoai.dev'
-MAX_CONTEXTS = 3
+MAX_CONTEXTS = 7
 LLM_MAX_TOKENS = 4000
