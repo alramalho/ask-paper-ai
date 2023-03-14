@@ -31,6 +31,7 @@ ENVIRONMENT=<env>
 
 ### Install aws-cli and configure it
 1. Make sure that you have `~/.aws` folder with config and credentials
+> you can do by running `aws configure`
 
 ### Now you can bootstrap the project two ways:
 1. Using python and yarn
@@ -41,21 +42,25 @@ ENVIRONMENT=<env>
 ### **Install dependencies**
 1. for backend (noting that dependencies will be install on your local machine, consider using venv to install to a python virtual environment)
 ```shell
-cd backend && pip install -r requirements.txt
+cd backend
+pip install -r requirements.txt
 ```
 1. for frontend
 ```shell
-cd frontend && yarn
+cd frontend
+yarn
 ```
 
 ### **Start project**
 1. for backend
 ```shell
-cd backend && python src/api.py
+cd backend
+python src/api.py
 ```
 1. for frontend
 ```shell
-cd frontend && yarn dev
+cd frontend
+yarn dev
 ```
 
 ## 🚀 Run with docker
