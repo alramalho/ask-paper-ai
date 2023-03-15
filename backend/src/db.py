@@ -20,55 +20,17 @@ class DynamoDBGateway:
     def read(self, key_name: str, key_value: str):
         if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
 
-        response = self.read_from_dynamo_key(key_name, key_value)
+        response = self._read_from_dynamo_key(key_name, key_value)
         if response and 'Item' in response:
             result = response['Item']
         else:
-            response = self.read_from_dynamo_index(key_name, key_value)
+            response = self._read_from_dynamo_index(key_name, key_value)
             if response and 'Items' in response and len(response['Items']) > 0:
                 result = response['Items'][0]
             else:
                 return None
 
         return result
-
-    def read_from_dynamo_key(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
-        print('Reading from dynamo key')
-
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(self.table_name)
-
-        try:
-            result = table.get_item(
-                Key={
-                    key_name: key_value
-                }
-            )
-            return result
-        except ClientError as e:
-            print(e.response['Error']['Message'])
-            return
-
-    def read_from_dynamo_index(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
-
-        print('Reading from dynamo index')
-
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(self.table_name)
-        try:
-            result = table.query(
-                IndexName=f"{key_name}-index",
-                KeyConditionExpression=f"{key_name} = :{key_name}",
-                ExpressionAttributeValues={
-                    f':{key_name}': key_value
-                }
-            )
-            return result
-        except ClientError as e:
-            print('HEEEEEEY')
-            return
 
     def write(self, data: dict):
         if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
@@ -89,3 +51,41 @@ class DynamoDBGateway:
             ReturnConsumedCapacity='TOTAL',
             Item=data)
         print(response)
+
+    def _read_from_dynamo_key(self, key_name: str, key_value: str):
+        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
+        print('Reading from dynamo key')
+
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table(self.table_name)
+
+        try:
+            result = table.get_item(
+                Key={
+                    key_name: key_value
+                }
+            )
+            return result
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+            return
+
+    def _read_from_dynamo_index(self, key_name: str, key_value: str):
+        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
+
+        print('Reading from dynamo index')
+
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table(self.table_name)
+        try:
+            result = table.query(
+                IndexName=f"{key_name}-index",
+                KeyConditionExpression=f"{key_name} = :{key_name}",
+                ExpressionAttributeValues={
+                    f':{key_name}': key_value
+                }
+            )
+            return result
+        except ClientError as e:
+            print('HEEEEEEY')
+            return
