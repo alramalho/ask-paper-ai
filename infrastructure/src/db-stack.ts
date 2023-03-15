@@ -38,7 +38,7 @@ export class DbStack extends cdk.Stack {
 
     new DynamoDbTableConstruct(this, 'EmailsSentTable', {
       name: `${SNAKE_CASE_PREFIX}_emails_sent_${props.environment}`,
-      indexFields: ['email'],
+      indexFields: ['email'], // this field is not being used
       writableBy: props.writableBy,
       readableBy: props.readableBy,
     })
