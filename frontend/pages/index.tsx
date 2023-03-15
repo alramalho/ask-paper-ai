@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import CheckIcon from "../components/icons/check-icon";
 import {askPaper, getRemainingRequestsFor, sendAnswerEmail} from "../service/service";
 import ProfileInfo from "../components/profile-info";
+import RemainingRequests from "../components/remaining-requests";
 
 const PdfViewer = dynamic(
   // @ts-ignore
@@ -126,19 +127,7 @@ const Home = () => {
     return (
       <>
         <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image}/>
-        <Box css={{
-          background: 'rgba(0,0,0,0.03)',
-          padding: "$10",
-          border: '1px solid #aaaa',
-          width: '600px',
-          maxWidth: '95%',
-          margin: "$4",
-          borderRadius: '10px'
-        }}>
-          <Text h4>You have <Text as="span" color="warning">{remainingTrialRequests}</Text> remaining requests!</Text>
-          <Text>To unlock unlimited requests, please <a href="https://discord.gg/6zugVKk2sd">join us in
-            discord</a></Text>
-        </Box>
+        <RemainingRequests value={remainingTrialRequests}/>
       </>)
   }
   return (<>
@@ -158,19 +147,7 @@ const Home = () => {
       {isUserLoggedInAsGuest &&
           <>
               <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image}/>
-              <Box css={{
-                background: 'rgba(0,0,0,0.03)',
-                padding: "$10",
-                border: '1px solid #aaaa',
-                width: '600px',
-                maxWidth: '95%',
-                margin: "$4",
-                borderRadius: '10px'
-              }}>
-                  <Text h4>You have <Text as="span" color="warning">{remainingTrialRequests}</Text> remaining requests!</Text>
-                  <Text>To unlock unlimited requests, please <a href="https://discord.gg/6zugVKk2sd">join us in
-                      discord</a></Text>
-              </Box>
+              <RemainingRequests value={remainingTrialRequests}/>
           </>
       }
       {selectedPaper &&

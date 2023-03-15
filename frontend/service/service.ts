@@ -1,5 +1,11 @@
 import axios from "axios";
 
+export function sendInstructionsEmail(recipient) {
+  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
+    "recipient": recipient,
+  })
+}
+
 export function sendAnswerEmail(recipient: string, question: string, paper_title: string) {
   const email = recipient
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`, {

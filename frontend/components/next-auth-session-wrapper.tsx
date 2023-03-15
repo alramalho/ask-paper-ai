@@ -46,12 +46,6 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
     })
   }
 
-  function sendInstructionsEmail(recipient) {
-    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
-      "recipient": recipient,
-    })
-  }
-
   const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {
       if (!isUserLoggedInAsGuest && session != undefined && userWhitelisted == undefined) {
@@ -132,7 +126,9 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
               setIsUserLoggedInAsGuest(true)
               setRemainingTrialRequests(res.data.remaining_trial_requests)
             })
-            .catch((e) => setUnderText(`Something went wrong 😕`))
+            .catch((e) => {
+              setUnderText(`Something went wrong 😕` + (e.response?.data?.detail ? ` (${e.response.data.detail})` : ''))
+            })
         }
         }>
           {' '}Or login as guest user *
