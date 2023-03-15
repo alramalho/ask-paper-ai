@@ -11,9 +11,9 @@ dynamodb_resource = boto3.resource('dynamodb')
 dynamodb_client = boto3.client('dynamodb')
 
 # Define the table names
-table_names = ['HippoPrototypeFeedback-sandbox',
-               'HippoPrototypeFunctionInvocations-sandbox',
-               'HippoPrototypeJsonPapers-sandbox']
+table_names = ['ask_paper_feedback_sandbox',
+               'ask_paper_function_invocations_sandbox',
+               'ask_paper_json_papers_sandbox']
 
 
 # Delete all items in each table
