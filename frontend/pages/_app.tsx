@@ -50,13 +50,15 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
           <Layout seo={{
             description: "Ask questions & Extract datasets from papers."
           }}>
-            {process.env.ENVIRONMENT != 'sandbox' //todo: huge motherfucking risk. Deal with this asap
-              ?
-              <NextAuthSessionWrapper>
+            {
+              //todo: huge motherfucking risk. Deal with this asap
+              process.env.ENVIRONMENT == 'production'
+                ?
+                <NextAuthSessionWrapper>
+                  <Component {...pageProps} />
+                </NextAuthSessionWrapper>
+                :
                 <Component {...pageProps} />
-              </NextAuthSessionWrapper>
-              :
-              <Component {...pageProps} />
             }
           </Layout>
         </NextUIProvider>
