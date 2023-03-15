@@ -21,7 +21,8 @@ class UserGateway:
         return GuestUser(**data)
 
     def is_guest_user_allowed(self, email: str) -> bool:
-        user = self.db_gateway.read('email', email)
+        data = self.db_gateway.read('email', email)
+        user = GuestUser(**data)
         return user.remaining_trial_requests > 0
 
     def create_user(self, email: str) -> GuestUser:
