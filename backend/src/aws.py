@@ -1,6 +1,6 @@
 import boto3
 
-from constants import ENVIRONMENT, S3_BUCKET_NAME, LATEST_COMMIT_ID
+from utils.constants import ENVIRONMENT, S3_BUCKET_NAME
 def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
     if ENVIRONMENT not in ['production', 'sandbox']:
         print("Not sending email because not in production or sandbox")

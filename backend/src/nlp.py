@@ -1,6 +1,6 @@
 import concurrent.futures
 
-from constants import MAX_CONTEXTS, LLM_MAX_TOKENS
+from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
 from langchain.llms import OpenAIChat
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain

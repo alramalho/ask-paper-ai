@@ -3,9 +3,11 @@ from fastapi import Request
 import datetime
 import requests
 import traceback
-from constants import ENVIRONMENT, LATEST_COMMIT_ID, SNAKE_CASE_PREFIX
-import users
-import db
+from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS
+from database.users import UserGateway
+from database.db import DynamoDBGateway
+
+
 async def verify_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
@@ -32,7 +34,8 @@ async def verify_login(request: Request, call_next):
         return await call_next(request)
 
     email = request.headers.get('Email', None)
-    if users.UserGateway().is_guest_user_allowed(email):
+    user_gateway = UserGateway() # initialize UserGateway just once
+    if user_gateway.is_guest_user_allowed(email):
         print("User is an allowed guest")
         response = await call_next(request)
         if request.url.path == '/ask':
@@ -41,7 +44,7 @@ async def verify_login(request: Request, call_next):
             #    requests to ask at once, then he ends up only getting one response or none
             # 2. if ask failed on the backend, we are counting as it was succeeded and
             #    decrements the token anyway
-            users.UserGateway().decrement_remaining_trial_requests(email)
+            user_gateway.decrement_remaining_trial_requests(email)
         return response
 
     return JSONResponse(status_code=401,content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
@@ -75,7 +78,7 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
         print("Caught by middleware")
         print(e)
         print(traceback.format_exc())
-        db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_function_invocations').write({
+        DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write({
             'function_path': request.url.path,
             'error': str(e),
             'email': email,

@@ -1,5 +1,5 @@
 from botocore.exceptions import ClientError
-from constants import ENVIRONMENT, LATEST_COMMIT_ID
+from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID
 import boto3
 import uuid
 import datetime

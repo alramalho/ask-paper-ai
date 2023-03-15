@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from db import DynamoDBGateway
-from constants import SNAKE_CASE_PREFIX
+from utils.constants import DB_GUEST_USERS
 
 class GuestUser(BaseModel):
     email: str
@@ -12,7 +12,7 @@ class UserDoesNotExistException(Exception):
 
 class UserGateway:
     def __init__(self):
-        self.db_gateway = DynamoDBGateway(table_name=f'{SNAKE_CASE_PREFIX}_guest_users')
+        self.db_gateway = DynamoDBGateway(table_name=DB_GUEST_USERS)
 
     def get_user_by_email(self, email: str) -> GuestUser:
         data = self.db_gateway.read('email', email)

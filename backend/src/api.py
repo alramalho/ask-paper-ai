@@ -9,14 +9,16 @@ from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
 import json
 from mangum import Mangum
-from constants import ( LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER,
-                        SNAKE_CASE_PREFIX )
+from utils.constants import (
+    LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER, ASK_PAPER_BANNER_IMG,
+    DB_FUNCTION_INVOCATIONS, DB_EMAILS_SENT, DB_JSON_PAPERS, DB_FEEDBACK
+)
 import aws
 import middleware
 from botocore.exceptions import ClientError
 import nlp
-import db
-import users
+from database.db  import DynamoDBGateway
+from database.users import UserGateway, UserDoesNotExistException
 import re
 
 
@@ -78,10 +80,10 @@ async def guest_login(request: Request, response: Response):
     if not re.match(r"[^@]+@[^@]+\.[^@]+", user_email):
         raise HTTPException(status_code=400, detail="Invalid email")
 
-    users_gateway = users.UserGateway()
+    users_gateway = UserGateway()
     try:
         user = users_gateway.get_user_by_email(user_email)
-    except users.UserDoesNotExistException:
+    except UserDoesNotExistException:
         user = users_gateway.create_user(user_email)
         response.status_code = 201
 
@@ -94,10 +96,10 @@ async def get_user_remaining_requests_count(request: Request):
     if user_email is None:
         raise HTTPException(status_code=400, detail="Missing email query param")
 
-    users_gateway = users.UserGateway()
+    users_gateway = UserGateway()
     try:
         user = users_gateway.get_user_by_email(user_email)
-    except users.UserDoesNotExistException:
+    except UserDoesNotExistException:
         raise HTTPException(status_code=404, detail="User not found")
 
     return {'remaining_trial_requests': user.remaining_trial_requests}
@@ -109,7 +111,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     subject ='Hippo AI 📝 How to start using Ask Paper'
     body_html = f"""
     <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca; border-radius: 15px">
-        <img src="https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/askpaperbanner.png" width="100%"/>
+        <img src="{ASK_PAPER_BANNER_IMG}" width="100%"/>
         <br/>
         <br/>
         <br/>
@@ -124,7 +126,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     """
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_emails_sent').write, {
+        background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
@@ -145,7 +147,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
     subject = f'Ask Paper 📝 Regarding your question on "{data["paper_title"]}"'
     body_html = f"""
     <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca; border-radius: 15px">
-        <img src="https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/askpaperbanner.png" width="100%"/>
+        <img src="{ASK_PAPER_BANNER_IMG}" width="100%"/>
         <br/>
         <br/>
         <br/>
@@ -158,7 +160,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
     """
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_emails_sent').write, {
+        background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
@@ -184,7 +186,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     paper_hash = generate_hash(json.dumps(json_paper['pdf_parse']['body_text']))
 
-    db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_json_papers').write({
+    DynamoDBGateway(DB_JSON_PAPERS).write({
         'id': paper_hash,
         'paper_title': json_paper['title'],
         'paper_json': json.dumps(json_paper),
@@ -193,7 +195,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     time_elapsed = datetime.datetime.now() - start
 
-    background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_function_invocations').write,
+    background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write,
                               {'function_path': request.url.path,
                                'time_elapsed': str(time_elapsed),
                                'email': email,
@@ -223,7 +225,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
 
         time_elapsed = datetime.datetime.now() - start
         token_length_estimate: int = nlp.count_tokens(context) + nlp.count_tokens(question) + 100
-        background_tasks.add_task(db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_function_invocations').write,
+        background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write,
                                   {'function_path': request.url.path,
                                    'email': email,
                                    'latest_commit_id': LATEST_COMMIT_ID,
@@ -246,7 +248,7 @@ async def store_feedback(request: Request):
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    db.DynamoDBGateway(f'{SNAKE_CASE_PREFIX}_feedback').write(body['data'])
+    DynamoDBGateway(DB_FEEDBACK).write(body['data'])
 
     return {"message": "success"}
 
