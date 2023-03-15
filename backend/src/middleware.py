@@ -22,39 +22,29 @@ async def verify_login(request: Request, call_next):
         print("Logging in as guest, bypassing verify login")
         return await call_next(request)
 
-    auth_header = request.headers.get('Authorization', request.headers.get('authorization', None))
+    auth_header: str = request.headers.get('Authorization', request.headers.get('authorization', None))
     if auth_header is None:
         # todo: you should know if whether this failed
         return JSONResponse(status_code=401, content={"message": "Missing Authorization header"})
 
-    def verify_token_in_discord(bearer_token):
-        try:
-            response = requests.get(
-                "https://discord.com/api/users/@me",
-                headers={'Authorization': bearer_token},
-                allow_redirects=True)
-            return response.status_code // 100 == 2
-        except Exception as e:
-            print(e)
-            return False
-
-
-    if verify_token_in_discord(auth_header):
+    if _verify_token_in_discord(auth_header):
         print("Discord successfully verified token")
         return await call_next(request)
-    else:
-        email = request.headers.get('Email', None)
 
-        if users.UserGateway().is_guest_user_allowed(email):
-            print("User is an allowed guest")
-            response = await call_next(request)
+    email = request.headers.get('Email', None)
+    if users.UserGateway().is_guest_user_allowed(email):
+        print("User is an allowed guest")
+        response = await call_next(request)
+        if request.url.path == '/ask':
+            # TODO, the following logic isn't the best way due to following reasons:
+            # 1. if the user has very low latency, his browser might make several
+            #    requests to ask at once, then he ends up only getting one response or none
+            # 2. if ask failed on the backend, we are counting as it was succeeded and
+            #    decrements the token anyway
+            users.UserGateway().decrement_remaining_trial_requests(email)
+        return response
 
-            if request.url.path == '/ask':
-                users.UserGateway().decrement_remaining_trial_requests(email)
-
-            return response
-        else:
-            return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
+    return JSONResponse(status_code=401,content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
 
 
 async def set_body(request: Request, body: bytes):
@@ -95,3 +85,14 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
             'time_elapsed': str(datetime.datetime.now() - start)
         })
         return JSONResponse(status_code=500, content="Internal Server Error: \n" + str(e))
+
+def _verify_token_in_discord(bearer_token: str):
+    try:
+        response = requests.get(
+            "https://discord.com/api/users/@me",
+            headers={'Authorization': bearer_token},
+            allow_redirects=True)
+        return response.status_code // 100 == 2
+    except Exception as e:
+        print(f'fail verifying discord token: {e}')
+        return False
