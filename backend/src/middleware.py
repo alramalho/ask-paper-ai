@@ -43,7 +43,7 @@ async def verify_login(request: Request, call_next):
         print("Discord successfully verified token")
         return await call_next(request)
     else:
-        email = request.headers.get('Email', (await request.json())['email'])
+        email = request.headers.get('Email', None)
 
         if users.UserGateway().is_guest_user_allowed(email):
             print("User is an allowed guest")
