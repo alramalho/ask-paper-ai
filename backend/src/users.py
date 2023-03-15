@@ -25,7 +25,7 @@ class UserGateway:
         return user.remaining_trial_requests > 0
 
     def create_user(self, email: str) -> GuestUser:
-        user = GuestUser(email=email, remaining_trial_requests=10)
+        user = GuestUser(email=email, remaining_trial_requests=5)
         self.db_gateway.write(user.dict())
         return user
 
