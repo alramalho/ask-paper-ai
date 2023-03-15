@@ -28,6 +28,12 @@ NEXTAUTH_SECRET=<auth_secret>
 NEXTAUTH_URL="http://localhost:3000/"
 ENVIRONMENT=<env>
 ```
+* on `infrastructure/.env` (in case you are working on infrastructure locally):
+```
+OPENAI_API_KEY=<key>
+ENVIRONMENT=<env>
+LATEST_COMMIT_ID=<commit_id>
+```
 
 ### Install aws-cli and configure it
 1. Make sure that you have `~/.aws` folder with config and credentials

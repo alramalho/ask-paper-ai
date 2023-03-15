@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from db import DynamoDBGateway
+from database.db import DynamoDBGateway
 from utils.constants import DB_GUEST_USERS
 
 class GuestUser(BaseModel):
