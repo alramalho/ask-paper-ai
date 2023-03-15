@@ -7,6 +7,9 @@ from constants import ENVIRONMENT, LATEST_COMMIT_ID, SNAKE_CASE_PREFIX
 import users
 import db
 async def verify_login(request: Request, call_next):
+    if request.method == 'OPTIONS':
+        return await call_next(request)
+
     if ENVIRONMENT != 'production':
         print("Not in production, bypassing verify login")
         return await call_next(request)
