@@ -1,6 +1,8 @@
 import boto3
+from utils.aws_client import aws_client
 
 from utils.constants import ENVIRONMENT, S3_BUCKET_NAME
+
 def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
     # TODO for local dev we can use aws-ses mock to see if it was sent.
     # Example of mock server can be found in:
@@ -9,6 +11,7 @@ def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
         print("Not sending email because not in production or sandbox")
         return {'MessageId': 'local'}
 
+    # TODO use aws_client
     client = boto3.client('ses', region_name='eu-central-1')
 
 
@@ -41,10 +44,8 @@ def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
         return
 
     print('Storing paper in S3')
-    if ENVIRONMENT == 'dev':
-        s3 = boto3.resource('s3', endpoint_url='http://localhost:4566')
-    else:
-        s3 = boto3.resource('s3')
+    session = aws_client.get(ENVIRONMENT)
+    s3 = session(ENVIRONMENT)
     
     if '.pdf' not in pdf_file_name:
         pdf_file_name = f'{pdf_file_name}.pdf'

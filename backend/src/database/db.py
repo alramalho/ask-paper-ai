@@ -1,6 +1,7 @@
 from botocore.exceptions import ClientError
+from boto3.dynamodb.types import TypeSerializer
 from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID
-import boto3
+from utils.aws_client import aws_client
 import uuid
 import datetime
 
@@ -10,19 +11,13 @@ class DynamoDBGateway:
     def __init__(self, table_name: str):
         self.table_name = table_name
 
-        if ENVIRONMENT not in ['dev', 'production', 'sandbox']:
-            print("Not writing to dynamo because not in production or sandbox")
-            self.mock = True
-
         if ENVIRONMENT.lower() not in self.table_name.lower():
             self.table_name = f"{self.table_name}_{ENVIRONMENT}"
-        if ENVIRONMENT == 'dev':
-            self.dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:4566')
-        else:
-            self.dynamodb = boto3.resource('dynamodb')
+
+        session = aws_client.get(ENVIRONMENT)
+        self.dynamodb = session('dynamodb')
 
     def read(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
 
         response = self._read_from_dynamo_key(key_name, key_value)
         if response and 'Item' in response:
@@ -37,10 +32,7 @@ class DynamoDBGateway:
         return result
 
     def write(self, data: dict):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
         print('Writing to dynamo')
-
-        table = self.dynamodb.Table(self.table_name)
 
         if 'id' not in data:
             data['id'] = str(uuid.uuid4())
@@ -50,19 +42,18 @@ class DynamoDBGateway:
 
         data['latest_commit_id'] = LATEST_COMMIT_ID
 
-        response = table.put_item(
+        response = self.dynamodb.put_item(
+            TableName=self.table_name,
             ReturnConsumedCapacity='TOTAL',
-            Item=data)
+            Item=DynamoDBGateway._serielize_object(data))
         print(response)
 
     def _read_from_dynamo_key(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
         print('Reading from dynamo key')
 
-        table = self.dynamodb.Table(self.table_name)
-
         try:
-            result = table.get_item(
+            result = self.dynamodb.get_item(
+                TableName=self.table_name,
                 Key={
                     key_name: key_value
                 }
@@ -73,13 +64,11 @@ class DynamoDBGateway:
             return
 
     def _read_from_dynamo_index(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
-
         print('Reading from dynamo index')
 
-        table = self.dynamodb.Table(self.table_name)
         try:
-            result = table.query(
+            result = self.dynamodb.query(
+                TableName=self.table_name,
                 IndexName=f"{key_name}-index",
                 KeyConditionExpression=f"{key_name} = :{key_name}",
                 ExpressionAttributeValues={
@@ -90,3 +79,11 @@ class DynamoDBGateway:
         except ClientError as e:
             print('HEEEEEEY')
             return
+
+    @staticmethod
+    def _serielize_object(data):
+        serializer = TypeSerializer()
+        # TODO need to serielize nested object
+        serialized_item = serializer.serialize(data)
+
+        return serialized_item
