@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - sheng-use-localstack
 jobs:
 
   Deploy-To-Sandbox:
@@ -99,7 +98,6 @@ jobs:
     timeout-minutes: 30
     env:
       APP_URL: https://sandbox--ask-paper.netlify.app
-      ENVIRONMENT: sandbox
       CI: true
     steps:
       - uses: actions/checkout@v3

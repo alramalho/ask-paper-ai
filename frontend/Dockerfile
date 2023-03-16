@@ -4,10 +4,10 @@ WORKDIR /frontend
 
 COPY package*.json ./
 
-RUN yarn
+RUN npm install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD yarn dev
+CMD npm run dev

@@ -30,7 +30,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
     await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
 
-    verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+    verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_sandbox`, 'email', TEST_EMAIL, {
       paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
     })
   })
@@ -94,10 +94,10 @@ test.describe('Normal upload', () => {
 
     await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
-    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_sandbox`, 'email', TEST_EMAIL, {
       was_answer_accurate: true,
     });
-    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_sandbox`, 'email', TEST_EMAIL, {
       sentiment: selectedSentiment,
       next_feature: selectedNextFeature,
       message: writtenMessage,
@@ -131,12 +131,7 @@ function verifyEmailSentInLastXMinutes(minutes: number) {
 // - should be able to upload the same paper without doubling storage
 
 function verifyIfInDynamo(tableName: string, indexField: string, indexValue: string, extraAttributes: {[key: string]: string | boolean}) {
-  const query = `--index-name ${indexField}-index --key-condition-expression "${indexField} = :${indexField}" --expression-attribute-values '{":${indexField}":{"S":"${indexValue}"}}' | jq '.Items[] | select(${formatAttributes(extraAttributes)})' | grep '"${indexField}":' || (echo "No item found with requested charactersitics" && exit 1)`
-  if (process.env.ENVIRONMENT === 'dev') {
-    require('child_process').execSync(`aws --endpoint-url=http://localhost:4566 dynamodb query --table-name ${tableName} ${query}`);
-  } else {
-    require('child_process').execSync(`aws dynamodb query --table-name ${tableName} ${query}`);
-  }
+  require('child_process').execSync(`aws dynamodb query --table-name ${tableName} --index-name ${indexField}-index --key-condition-expression "${indexField} = :${indexField}" --expression-attribute-values '{":${indexField}":{"S":"${indexValue}"}}' | jq '.Items[] | select(${formatAttributes(extraAttributes)})' | grep '"${indexField}":' || (echo "No item found with requested charactersitics" && exit 1)`);
 }
 
 function formatAttributes(obj: {[key: string]: string | boolean}): string {
