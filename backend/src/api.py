@@ -1,6 +1,6 @@
 import datetime
 import os.path
-
+import uuid
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -184,7 +184,9 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     json_paper = process_paper(pdf_file_content, pdf_file_name)
 
-    paper_hash = generate_hash(json.dumps(json_paper['pdf_parse']['body_text']))
+    abstract = json_paper.get('pdf_parsed', {}).get('abstract')
+
+    paper_hash = generate_hash(abstract) if abstract is not None else uuid.uuid4()
 
     DynamoDBGateway(DB_JSON_PAPERS).write({
         'id': paper_hash,
