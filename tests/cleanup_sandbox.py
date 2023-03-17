@@ -11,8 +11,10 @@ dynamodb_resource = boto3.resource('dynamodb')
 dynamodb_client = boto3.client('dynamodb')
 
 # Define the table names
-table_names = ['ask_paper_feedback_sandbox',
+table_names = ['ask_paper_emails_sent_sandbox',
+               'ask_paper_feedback_sandbox',
                'ask_paper_function_invocations_sandbox',
+               'ask_paper_guest_users_sandbox',
                'ask_paper_json_papers_sandbox']
 
 

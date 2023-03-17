@@ -1,6 +1,6 @@
 import boto3
-from utils.aws_client import aws_client
-
+from botocore.exceptions import ClientError
+from utils.aws_client import aws_resource, AWSResource
 from utils.constants import ENVIRONMENT, S3_BUCKET_NAME
 
 def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
@@ -11,7 +11,7 @@ def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
         print("Not sending email because not in production or sandbox")
         return {'MessageId': 'local'}
 
-    # TODO use aws_client
+    # TODO use aws_resource
     client = boto3.client('ses', region_name='eu-central-1')
 
 
@@ -44,10 +44,13 @@ def store_paper_in_s3(pdf_file: bytes, pdf_file_name: str):
         return
 
     print('Storing paper in S3')
-    session = aws_client.get(ENVIRONMENT)
-    s3 = session(ENVIRONMENT)
+    resource = aws_resource.get(ENVIRONMENT)
+    s3 = resource(AWSResource.S3)
     
     if '.pdf' not in pdf_file_name:
         pdf_file_name = f'{pdf_file_name}.pdf'
-
-    s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}", Body=pdf_file)
+    try:
+        s3.Bucket(S3_BUCKET_NAME).put_object(Key=f"papers/{pdf_file_name}", Body=pdf_file)
+    except ClientError as e:
+        print(f'Error putting file onto {S3_BUCKET_NAME}')
+        raise e

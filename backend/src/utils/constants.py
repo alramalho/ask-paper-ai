@@ -20,9 +20,8 @@ ASK_PAPER_BANNER_IMG = "https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/as
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
-ENVIRONMENT = os.getenv("ENVIRONMENT", 'local')
-# TODO: now it defaults to sandbox. Add localstack so we can really test it locally
-S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', f'{KEBAB_CASE_PREFIX}-papers-sandbox')
+ENVIRONMENT = os.getenv("ENVIRONMENT", 'dev')
+S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', f'{KEBAB_CASE_PREFIX}-papers-{ENVIRONMENT}')
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 EMAIL_SENDER = 'alex@hippoai.dev'
 MAX_CONTEXTS = 7

@@ -1,11 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as s3 from "aws-cdk-lib/aws-s3";
 import * as iam from "aws-cdk-lib/aws-iam";
-import * as apigatewayv2 from "@aws-cdk/aws-apigatewayv2-alpha";
 import * as path from "path";
-import * as apigatewayv2Integrations from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import { CAMEL_CASE_PREFIX, PASCAL_CASE_PREFIX } from './utils/constants';
 
 interface ApiStackProps {
