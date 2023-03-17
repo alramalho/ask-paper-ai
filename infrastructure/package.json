@@ -10,13 +10,13 @@
     "test": "jest",
     "cdk": "cdk",
     "diff": "cdk diff --profile hippo",
-    "build-backend-zip": "(chmod +x scripts/build.sh; sh scripts/build.sh)",
+    "build-backend-zip": "(cd ../backend/scripts; chmod +x build.sh; sh ./build.sh)",
     "presynth": "yarn build-backend-zip",
     "synth": "echo '\n️\\0033[43;1m ⚠ Consider running `yarn diff` to check differences ⚠\\0033[0m️\n️' &&  rm -rf cdk.out && cdk synth",
     "deploy": "cdk deploy --profile hippo",
     "no-build-fast-deploy": "cdk synth && cdk deploy --require-approval never --all --profile hippo",
     "fast-deploy": "yarn synth && yarn deploy --require-approval never --all",
-    "build-local": "yarn presynth && cdklocal bootstrap",
+    "build-local": "yarn build-backend-zip && cdklocal bootstrap",
     "deploy-local": "cdklocal synth --local && cdklocal deploy --require-approval never --all"
   },
   "devDependencies": {
