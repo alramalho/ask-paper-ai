@@ -186,7 +186,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     abstract = json_paper.get('pdf_parsed', {}).get('abstract')
 
-    paper_hash = generate_hash(abstract) if abstract is not None else uuid.uuid4()
+    paper_hash = generate_hash(abstract) if abstract is not None else str(uuid.uuid4())
 
     DynamoDBGateway(DB_JSON_PAPERS).write({
         'id': paper_hash,
