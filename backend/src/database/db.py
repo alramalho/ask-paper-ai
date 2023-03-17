@@ -10,12 +10,16 @@ class DynamoDBGateway:
     def __init__(self, table_name: str):
         self.table_name = table_name
 
-        if ENVIRONMENT not in ['production', 'sandbox']:
+        if ENVIRONMENT not in ['dev', 'production', 'sandbox']:
             print("Not writing to dynamo because not in production or sandbox")
             self.mock = True
 
         if ENVIRONMENT.lower() not in self.table_name.lower():
             self.table_name = f"{self.table_name}_{ENVIRONMENT}"
+        if ENVIRONMENT == 'dev':
+            self.dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:4566')
+        else:
+            self.dynamodb = boto3.resource('dynamodb')
 
     def read(self, key_name: str, key_value: str):
         if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
@@ -36,8 +40,7 @@ class DynamoDBGateway:
         if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
         print('Writing to dynamo')
 
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(self.table_name)
+        table = self.dynamodb.Table(self.table_name)
 
         if 'id' not in data:
             data['id'] = str(uuid.uuid4())
@@ -56,8 +59,7 @@ class DynamoDBGateway:
         if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
         print('Reading from dynamo key')
 
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(self.table_name)
+        table = self.dynamodb.Table(self.table_name)
 
         try:
             result = table.get_item(
@@ -75,8 +77,7 @@ class DynamoDBGateway:
 
         print('Reading from dynamo index')
 
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(self.table_name)
+        table = self.dynamodb.Table(self.table_name)
         try:
             result = table.query(
                 IndexName=f"{key_name}-index",

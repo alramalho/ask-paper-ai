@@ -41,7 +41,7 @@ LATEST_COMMIT_ID=<commit_id>
 
 ### Now you can bootstrap the project two ways:
 1. Using python and yarn
-1. Using docker
+1. Using docker (uses localstack)
 
 ## 💻 Run with python and yarn
 
@@ -86,6 +86,15 @@ docker-compose up -d --force-recreate
 or
 ```shell
 docker-compose up -d --no-deps --build
+```
+
+### **Configure localstack**
+
+#### Go to infrastructure folder
+```shell
+yarn
+yarn build-local  # builds the backend project onto build.zip then does the bootstrap
+yarn deploy-local # deploys onto localstack
 ```
 
 ## 🧹 Docker clean up
