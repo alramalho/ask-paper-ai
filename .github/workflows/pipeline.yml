@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - sheng-use-localstack
 jobs:
 
   Deploy-To-Sandbox:

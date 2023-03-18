@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend/.aws:/root/.aws:ro
+      # to work on sandbox, point it to ~/.aws
+      # - ~/.aws:/root/.aws:ro
     ports:
       - 8000:8000
     env_file:
