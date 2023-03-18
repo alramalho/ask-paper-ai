@@ -1,8 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from "aws-cdk-lib/aws-s3";
-import {DynamoDbTableConstruct} from "./constructs/dynamo-table";
 import { ApiStack } from './api-stack';
 import { DbStack } from "./db-stack";
 import { KEBAB_CASE_PREFIX } from './utils/constants';

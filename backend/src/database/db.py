@@ -1,6 +1,6 @@
 from botocore.exceptions import ClientError
 from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID
-import boto3
+from utils.aws_client import aws_resource, AWSResource
 import uuid
 import datetime
 
@@ -8,21 +8,14 @@ import datetime
 class DynamoDBGateway:
 
     def __init__(self, table_name: str):
-        self.table_name = table_name
 
-        if ENVIRONMENT not in ['dev', 'production', 'sandbox']:
-            print("Not writing to dynamo because not in production or sandbox")
-            self.mock = True
+        if ENVIRONMENT.lower() not in table_name.lower():
+            table_name = f"{table_name}_{ENVIRONMENT}"
 
-        if ENVIRONMENT.lower() not in self.table_name.lower():
-            self.table_name = f"{self.table_name}_{ENVIRONMENT}"
-        if ENVIRONMENT == 'dev':
-            self.dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:4566')
-        else:
-            self.dynamodb = boto3.resource('dynamodb')
+        resource = aws_resource.get(ENVIRONMENT)
+        self.table = resource(AWSResource.DYNAMODB).Table(table_name)
 
     def read(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
 
         response = self._read_from_dynamo_key(key_name, key_value)
         if response and 'Item' in response:
@@ -37,10 +30,7 @@ class DynamoDBGateway:
         return result
 
     def write(self, data: dict):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
         print('Writing to dynamo')
-
-        table = self.dynamodb.Table(self.table_name)
 
         if 'id' not in data:
             data['id'] = str(uuid.uuid4())
@@ -49,37 +39,33 @@ class DynamoDBGateway:
             data['created_at'] = str(datetime.datetime.now())
 
         data['latest_commit_id'] = LATEST_COMMIT_ID
-
-        response = table.put_item(
-            ReturnConsumedCapacity='TOTAL',
-            Item=data)
-        print(response)
+        try:
+            response = self.table.put_item(
+                ReturnConsumedCapacity='TOTAL',
+                Item=data)
+            print(response)
+        except ClientError as e:
+            print('Fail putting item on dynamodb')
+            raise e   
 
     def _read_from_dynamo_key(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
         print('Reading from dynamo key')
-
-        table = self.dynamodb.Table(self.table_name)
-
         try:
-            result = table.get_item(
+            result = self.table.get_item(
                 Key={
                     key_name: key_value
                 }
             )
             return result
         except ClientError as e:
-            print(e.response['Error']['Message'])
+            print(f"fail reading from dynamodb via key {e.response['Error']['Message']}")
             return
 
     def _read_from_dynamo_index(self, key_name: str, key_value: str):
-        if hasattr(self, 'mock') and self.mock: return  # todo: remove when implementing localstack
-
         print('Reading from dynamo index')
 
-        table = self.dynamodb.Table(self.table_name)
         try:
-            result = table.query(
+            result = self.table.query(
                 IndexName=f"{key_name}-index",
                 KeyConditionExpression=f"{key_name} = :{key_name}",
                 ExpressionAttributeValues={
@@ -88,5 +74,5 @@ class DynamoDBGateway:
             )
             return result
         except ClientError as e:
-            print('HEEEEEEY')
+            print(f"fail reading from dynamodb via index {e.response['Error']['Message']}")
             return

@@ -25,4 +25,4 @@ echo "${BLUE}Adding source code... 🌊${NOCOLOR}"
 cd ./src
 zip ../build.zip -u . -r
 
-echo "${GREEN}Done ✅${NOCOLOR}"c
+echo "${GREEN}Done ✅${NOCOLOR}"

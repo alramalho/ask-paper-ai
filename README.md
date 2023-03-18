@@ -35,6 +35,12 @@ ENVIRONMENT=<env>
 LATEST_COMMIT_ID=<commit_id>
 ```
 
+* on `tests/e2e/.env`:
+```
+APP_URL=<frontend url>    # for dev env -> "http://127.0.0.1:3000"
+ENVIRONMENT=<env>
+```
+
 ### Install aws-cli and configure it
 1. Make sure that you have `~/.aws` folder with config and credentials
 > you can do by running `aws configure`
