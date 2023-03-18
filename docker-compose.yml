@@ -50,8 +50,6 @@ services:
       - AWS_ACCESS_KEY_ID=testUser
       - AWS_SECRET_ACCESS_KEY=testAccessKey
       - DATA_DIR=/var/lib/localstack/data
-    ports:
-      - "4566:4566"
     volumes:
       - "${PWD}/localstack:/var/lib/localstack"
       # necessary to invoke lambda within the docker container
