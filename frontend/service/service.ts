@@ -20,11 +20,12 @@ export function sendAnswerEmail(recipient: string, question: string, paper_title
   })
 }
 
-export function askPaper(accessToken: string, email: string, question: string, context: string, quote: boolean = false) {
+export function askPaper(paperHash: string, accessToken: string, email: string, question: string, context: string, quote: boolean = false) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
     question,
     context,
     quote,
+    paperHash
   }, {
     headers: {
       'Content-Type': 'application/json',

@@ -166,7 +166,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                           sentiment,
                           next_feature: nextFeature,
                           message,
-                          paper_id: paper?.id ?? null,
+                          paper_hash: paper?.hash ?? null,
                           // @ts-ignore
                         }, session!.accessToken)
                           .then(() => setStatus('success'))

@@ -20,7 +20,7 @@ const PdfViewer = dynamic(
 );
 
 export type Paper = {
-  id: string
+  hash: string
   abstract: string
   title: string
   pdf_parse: {
@@ -101,7 +101,7 @@ const Home = () => {
     }
 
     // @ts-ignore
-    askPaper(session!.accessToken, session!.user!.email, question, paperToText(paperDeepCopy), quote)
+    askPaper(selectedPaper!.hash, session!.accessToken, session!.user!.email, question, paperToText(paperDeepCopy), quote)
       .then(res => {
         setLLMResponse(makeLinksClickable(fixNewlines(res.data.message)))
         if (isUserLoggedInAsGuest && setRemainingTrialRequests != undefined && session!.user!.email !== null && session!.user!.email !== undefined) {

@@ -216,6 +216,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
     if "question" in data and "quote" in data and "context" in data and 'email' in request.headers:
         question = data["question"]
         quote = data["quote"]
+        paper_hash = data["paper_hash"]
         email = request.headers.get("email")
         context = data['context']
         contexts = nlp.split_text(data['context'])
@@ -233,6 +234,7 @@ async def ask(request: Request, background_tasks: BackgroundTasks):
                                    'latest_commit_id': LATEST_COMMIT_ID,
                                    'time_elapsed': str(time_elapsed),
                                    'question': question,
+                                   'paper_hash': paper_hash,
                                    'was_prompt_cut': len(contexts) > 1,
                                    'prompt_token_length_estimate': token_length_estimate,
                                    'response_text': response})
