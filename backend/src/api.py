@@ -186,10 +186,10 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     abstract = json_paper.get('pdf_parsed', {}).get('abstract')
 
-    paper_hash = generate_hash(abstract) if abstract is not None else str(uuid.uuid4())
+    paper_hash = generate_hash(abstract) if abstract is not None else str(uuid.uuid4()) # todo: is there a better way to identify papers?
 
     DynamoDBGateway(DB_JSON_PAPERS).write({
-        'id': paper_hash,
+        'hash': paper_hash,
         'paper_title': json_paper['title'],
         'paper_json': json.dumps(json_paper),
         'email': email,
@@ -204,7 +204,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
                                'paper_hash': paper_hash})
     background_tasks.add_task(aws.store_paper_in_s3, pdf_file_content, f"{paper_hash}.pdf")
 
-    json_paper['id'] = paper_hash
+    json_paper['hash'] = paper_hash
 
     return json_paper
 
