@@ -17,7 +17,8 @@ export class DbStack extends cdk.Stack {
 
     new DynamoDbTableConstruct(this, 'PapersTable', {
       name: `${SNAKE_CASE_PREFIX}_json_papers_${props.environment}`,
-      partitionKey: {name: 'hash', type: dynamodb.AttributeType.STRING},
+      // todo: this demands recreation, but we should use `hash` instead of `id` to be consistant with backend/frontend & other tables
+      // partitionKey: {name: 'hash', type: dynamodb.AttributeType.STRING},
       indexFields: ['email'],
       writableBy: props.writableBy,
       readableBy: props.readableBy,
