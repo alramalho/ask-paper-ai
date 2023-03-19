@@ -10,7 +10,7 @@ CAMEL_CASE_PREFIX = 'askPaper'
 SNAKE_CASE_PREFIX = 'ask_paper'
 KEBAB_CASE_PREFIX = 'ask-paper'
 
-DB_FUNCTION_INVOCATIONS = F'{SNAKE_CASE_PREFIX}_function_invocations'
+DB_FUNCTION_INVOCATIONS = f'{SNAKE_CASE_PREFIX}_function_invocations'
 DB_EMAILS_SENT = f'{SNAKE_CASE_PREFIX}_emails_sent'
 DB_JSON_PAPERS = f'{SNAKE_CASE_PREFIX}_json_papers'
 DB_FEEDBACK = f'{SNAKE_CASE_PREFIX}_feedback'
@@ -21,6 +21,7 @@ ASK_PAPER_BANNER_IMG = "https://hippoai-sandbox.s3.eu-central-1.amazonaws.com/as
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
 ENVIRONMENT = os.getenv("ENVIRONMENT", 'dev')
+LOCALSTACK_URL = os.getenv("LOCALSTACK_URL", 'http://localhost:4566')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', f'{KEBAB_CASE_PREFIX}-papers-{ENVIRONMENT}')
 FILESYSTEM_BASE = os.getenv('FILESYSTEM_BASE', '.')
 EMAIL_SENDER = 'alex@hippoai.dev'
