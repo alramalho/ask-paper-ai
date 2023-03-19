@@ -25,6 +25,9 @@ export "$(cat './infrastructure/.env' | xargs)"
 pushd infrastructure
 yarn
 
+echo "${GREEN}Starting local AWS ⬆️${NOCOLOR}"
+docker compose up localstack -d
+
 if $build; then
     echo "${GREEN}Building backend 🧹${NOCOLOR}"
     yarn build-backend-zip
@@ -35,5 +38,3 @@ fi
 echo "${GREEN}Deploying backend to local infrastructure 🧹${NOCOLOR}"
 yarn deploy-local
 
-echo "${GREEN}Starting docker containers ⬆️${NOCOLOR}"
-docker compose up localstack
