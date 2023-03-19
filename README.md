@@ -56,6 +56,10 @@ ENVIRONMENT=<env>
 ```shell
 ./start-infra-local.sh
 ```
+
+PS: Notice that despite needing the backend build (zip), this is irrelevant as you will not be using the output of that build
+You can optionally pass the `--no-build` flag to skip the backend build part.
+
 1. for backend (noting that dependencies will be install on your local machine, consider using venv to install to a python virtual environment)
 ```shell
 cd backend
@@ -103,8 +107,8 @@ docker-compose up -d --no-deps --build
 #### Go to infrastructure folder
 ```shell
 yarn
-yarn build-local  # builds the backend project onto build.zip then does the bootstrap
-yarn deploy-local # deploys onto localstack
+yarn build-backend-zip # builds the backend project onto build.zip 
+yarn deploy-local # bootstraps and then deploys onto localstack
 ```
 
 ## 🧹 Docker clean up
