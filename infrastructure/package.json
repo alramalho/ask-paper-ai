@@ -6,7 +6,7 @@
   },
   "scripts": {
     "diff": "cdk diff --profile hippo",
-    "build-backend-zip": "(cd ../backend/scripts; chmod +x build.sh; sh ./build.sh)",
+    "build-backend-zip": "(cd ../backend; chmod +x ./scripts/build.sh; sh ./scripts/build.sh)",
     "bootstrap": "[[$ENVIRONMENT == 'dev']] && cdklocal bootstrap || cdk bootstrap",
     "presynth": "echo '\n️\\0033[43;1m ⚠ Consider running `yarn diff` to check differences ⚠\\0033[0m️\n️' && rm -rf cdk.out",
     "synth": "[[$ENVIRONMENT == 'dev']] && cdklocal synth || cdk synth",
