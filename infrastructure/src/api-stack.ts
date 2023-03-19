@@ -25,7 +25,7 @@ export class ApiStack extends cdk.Stack {
             handler: 'api.handler',
             runtime: lambda.Runtime.PYTHON_3_8,
             timeout: cdk.Duration.seconds(150),
-            memorySize: 4096,
+            memorySize: 3008,
             environment: {
                 OPENAI_API_KEY: props.openaiApiKey,
                 ENVIRONMENT: props.environment,
