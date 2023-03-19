@@ -12,7 +12,8 @@
     "synth": "[[$ENVIRONMENT == 'dev']] && cdklocal synth || cdk synth",
     "predeploy": "yarn synth",
     "deploy": "cdk deploy --require-approval never --all",
-    "deploy-local": "cdklocal bootstrap && cdklocal deploy --require-approval never --all"
+    "predeploy-local": "cdklocal bootstrap",
+    "deploy-local": "cdklocal deploy --require-approval never --all"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
