@@ -25,7 +25,7 @@ export function askPaper(paperHash: string, accessToken: string, email: string, 
     question,
     context,
     quote,
-    paperHash
+    paper_hash: paperHash
   }, {
     headers: {
       'Content-Type': 'application/json',
