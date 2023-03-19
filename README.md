@@ -49,9 +49,13 @@ ENVIRONMENT=<env>
 1. Using python and yarn
 1. Using docker (uses localstack)
 
-## 💻 Run with python and yarn
+## 💻 Run manually (has hot reloading)
 
 ### **Install dependencies**
+1. for infrastructure
+```shell
+./start-infra-local.sh
+```
 1. for backend (noting that dependencies will be install on your local machine, consider using venv to install to a python virtual environment)
 ```shell
 cd backend

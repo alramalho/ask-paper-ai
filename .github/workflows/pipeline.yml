@@ -65,9 +65,8 @@ jobs:
           cd infrastructure
           yarn
           yarn build-backend-zip
-          cdk bootstrap
-
-          yarn no-build-fast-deploy
+          yarn bootstrap
+          yarn deploy
 
       - name: Deploy-Frontend
         id: deploy-frontend
@@ -218,9 +217,8 @@ jobs:
           cd infrastructure
           yarn
           yarn build-backend-zip
-          cdk bootstrap
-          
-          yarn no-build-fast-deploy
+          yarn bootstrap
+          yarn deploy
 
       - name: Deploy-Frontend
         run: |
