@@ -1,6 +1,6 @@
 import boto3
 from enum import Enum
-from constants import LOCALSTACK_URL
+from utils.constants import LOCALSTACK_URL
 class AWSResource(Enum):
     S3 = 's3'
     DYNAMODB = 'dynamodb'
