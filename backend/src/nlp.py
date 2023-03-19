@@ -84,8 +84,9 @@ async def ask_llm(question, context):
                     Response:
                     """,
         )
-        print("Summary prompt length: ", count_tokens(summary_prompt.template))
-        llm = OpenAIChat(temperature=0, max_tokens=2000)
+        summary_prompt_length = count_tokens(summary_prompt.template) + sum([count_tokens(response) for response in responses]) + count_tokens(question)
+        print("Summary prompt length: ",  + summary_prompt_length)
+        llm = OpenAIChat(temperature=0, max_tokens=max(1000, LLM_MAX_TOKENS - summary_prompt_length))
         chain = LLMChain(llm=llm, prompt=summary_prompt)
         responses = [f"\n Response {i}: \n" + r for i, r in enumerate(responses)]
         response = chain.run(responses='\n'.join(responses), question=question)
