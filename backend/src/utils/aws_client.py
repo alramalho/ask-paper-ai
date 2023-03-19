@@ -6,7 +6,7 @@ class AWSResource(Enum):
     DYNAMODB = 'dynamodb'
 
 def _dev_resource(resource):
-    return boto3.resource(resource.value, endpoint_url='http://localstack:4566')
+    return boto3.resource(resource.value, endpoint_url='http://0.0.0.0:4566')
 
 def _resource(resource):
     return boto3.resource(resource.value)
