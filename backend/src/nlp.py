@@ -1,7 +1,7 @@
 import concurrent.futures
 import time
 from pydantic import BaseModel
-from typing import List, Union
+from typing import List, Union, Set
 
 from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
 from langchain.llms import OpenAIChat
@@ -26,6 +26,24 @@ class Paper(BaseModel):
     title: str
     pdf_parse: PdfParse
 
+
+def get_sections(paper: Paper) -> Set[str]:
+    sections = set()
+    if paper.abstract:
+        sections.add('Abstract')
+    if paper.title:
+        sections.add('Title')
+    if paper.pdf_parse:
+        pdf_parse: PdfParse = paper.pdf_parse
+        if pdf_parse.body_text:
+            for text_block in pdf_parse.body_text:
+                if text_block.section:
+                    sections.add(text_block.section)
+        if pdf_parse.back_matter:
+            for text_block in pdf_parse.back_matter:
+                if text_block.section:
+                    sections.add(text_block.section)
+    return sections
 
 def count_tokens(text) -> int:
     if text is None: return 0
@@ -102,6 +120,14 @@ def paper_to_text(json_obj: Paper) -> str:
 
 async def ask_llm(question: str, paper: Paper, merge_at_end=True):
 
+    # print('Paper sections:')
+    # sections = get_sections(paper)
+    # sections = list(map(lambda x: f'\"{x}\"', sections))
+    # print(", ".join(sections))
+    # print("length: " + str(len(sections)))
+    #
+    # return "mock"
+
     if "this is a load test" in question.lower():
         return "This is a load test response"
 
@@ -114,7 +140,7 @@ async def ask_llm(question: str, paper: Paper, merge_at_end=True):
         template="""Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
              given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
              is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
-             If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
+             If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information
              for answering your question\".
              Your answer must only include information that is explicitly present in the paper context.
              Your answer must not include ANY links that are not present in the paper context.
@@ -126,7 +152,7 @@ async def ask_llm(question: str, paper: Paper, merge_at_end=True):
             """,
     )
 
-    completion_tokens = 500
+    completion_tokens = 600
     context_max_tokens = LLM_MAX_TOKENS - count_tokens(question) - completion_tokens - count_tokens(prompt.template)
     print(f"context_max_tokens: {context_max_tokens}")
     contexts = split_text(full_context, context_max_tokens)
