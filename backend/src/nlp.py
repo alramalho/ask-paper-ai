@@ -14,7 +14,7 @@ import tiktoken
 class TextBlock(BaseModel):
     text: str
     section: str
-    sec_num: Union[int, None]
+    sec_num: Union[int, None, str]
 
 class PdfParse(BaseModel):
     body_text: List[TextBlock]
