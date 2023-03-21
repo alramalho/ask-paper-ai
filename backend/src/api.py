@@ -216,14 +216,19 @@ async def extract_datasets(request: Request):
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
         Please summarize the following text on a markdown table. 
-        The text will contain possibly repeated information about the characteristics of one or more datasets. 
-        I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. 
-        The resulting table should be easy to read and contain any information that might be useful for medical researchers 
-        thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", 
-        "Origin", "Link to Data or Code", "Extra Info". "Extra Info" must be one sentence only. 
-        The resulting table should contain as many entries as possible but it should NOT contain any duplicates 
-        (columns with the same "Name" field) and it should NOT contain any entries where the "Name" 
-        field is not defined/unknown/ not specified."""
+        The text will contain possibly repeated information about the characteristics of one or more DATASETS. 
+        I want you to summarize the whole text into a markdown table that represents the characteristics of all the DATASETS. 
+        The resulting table should be easy to read and contain any information that might be useful for researchers 
+        thinking about using any of those DATASETS. Some example fields would be "Name", "Size", "Demographic information", 
+        "Origin", "Link to Data or Code", "Extra Info".
+        "Link to Data or Code" must be an URL.
+        "Extra Info" must be as succint as possible, preferably only one sentence long.
+        Here's a few caveats about how you should build your response:
+            - The resulting table should contain as many entries as possible
+            - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
+            - The resulting table should NOT contain any entries where the "Name" field is not defined/unknown/ not specified
+            - Every resulting table entry must be inferred from the paper context
+        """
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
@@ -233,7 +238,7 @@ async def extract_datasets(request: Request):
     return {'message': response}
 
 @app.post("/summarize")
-async def summarize(request: Request, background_tasks: BackgroundTasks):
+async def summarize(request: Request):
     data = await request.json()
     print('hello?')
     try:
@@ -245,11 +250,12 @@ async def summarize(request: Request, background_tasks: BackgroundTasks):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    response = await nlp.ask_llm(question, paper)
+    paper = nlp.filter_paper_sections(paper, 'exclude', ['abstract'])
+    response = await nlp.ask_llm(question, paper, merge_at_end=False)
     return {'message': response}
 
 @app.post("/ask")
-async def ask(request: Request, background_tasks: BackgroundTasks):
+async def ask(request: Request):
     data = await request.json()
     try:
         question = data['question']

@@ -100,7 +100,7 @@ def paper_to_text(json_obj: Paper) -> str:
     return '\n\n'.join(result)
 
 
-async def ask_llm(question: str, paper: Paper):
+async def ask_llm(question: str, paper: Paper, merge_at_end=True):
 
     if "this is a load test" in question.lower():
         return "This is a load test response"
@@ -115,7 +115,9 @@ async def ask_llm(question: str, paper: Paper):
              given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
              is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
              If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information 
-             for answering your question\". Your answer must not include ANY links that are not present in the paper context.\n
+             for answering your question\".
+             Your answer must only include information that is explicitly present in the paper context.
+             Your answer must not include ANY links that are not present in the paper context.
              Start paper context:
              {context}
              :End paper context.\n
@@ -155,27 +157,30 @@ async def ask_llm(question: str, paper: Paper):
     responses = [f.result() for f in futures]
 
     if (len(responses) > 1):
-        summary_prompt = PromptTemplate(
-            input_variables=["responses", "question"],
-            template="""Please append the following responses (denoted by 'Response N:') together in a way that no information is ommited
-                   , duplicated, its sequentiality is kept (i.e 'Response N+1' contents come after 'Response N').
-                    All of these different responses were an answer to an initial question
-                    (denoted by 'Initial Question')
-                    and your job is to put it all together in a way that it still faithfully answers the original question.
-                    Do not try to combine web links.
-                    Again, do not omite any information, do not duplicate any information, and keep the sequentiality of the responses.
-                    {responses}
-                    Initial Question:
-                    {question}
-                    Response:
-                    """,
-        )
-        summary_prompt_length = count_tokens(summary_prompt.template) + sum([count_tokens(response) for response in responses]) + count_tokens(question)
-        print("Summary prompt length: ",  + summary_prompt_length)
-        llm = OpenAIChat(temperature=0, max_tokens=max(1000, LLM_MAX_TOKENS - summary_prompt_length))
-        chain = LLMChain(llm=llm, prompt=summary_prompt)
-        responses = [f"\n Response {i}: \n" + r for i, r in enumerate(responses)]
-        response = chain.run(responses='\n'.join(responses), question=question)
+        if merge_at_end:
+            summary_prompt = PromptTemplate(
+                input_variables=["responses", "question"],
+                template="""Please append the following responses (denoted by 'Response N:') together in a way that no information is ommited
+                       , duplicated, its sequentiality is kept (i.e 'Response N+1' contents come after 'Response N').
+                        All of these different responses were an answer to an initial question
+                        (denoted by 'Initial Question')
+                        and your job is to put it all together in a way that it still faithfully answers the original question.
+                        Do not try to combine web links.
+                        Again, do not omite any information, do not duplicate any information, and keep the sequentiality of the responses.
+                        {responses}
+                        Initial Question:
+                        {question}
+                        Response:
+                        """,
+            )
+            summary_prompt_length = count_tokens(summary_prompt.template) + sum([count_tokens(response) for response in responses]) + count_tokens(question)
+            print("Summary prompt length: ",  + summary_prompt_length)
+            llm = OpenAIChat(temperature=0, max_tokens=max(1000, LLM_MAX_TOKENS - summary_prompt_length))
+            chain = LLMChain(llm=llm, prompt=summary_prompt)
+            responses = [f"\n Response {i}: \n" + r for i, r in enumerate(responses)]
+            response = chain.run(responses='\n'.join(responses), question=question)
+        else:
+            response = "\n".join(responses)
         responses.append(response)
 
     return responses[-1]
