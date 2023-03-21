@@ -11,7 +11,7 @@ set -e
 echo $PWD
 echo "${GREEN}Started building $ENVIRONMENT backend zip 🧹${NOCOLOR}"
 echo "${BLUE}Cleaning up... 🧹${NOCOLOR}"
-rm -rf ../src_dependencies && rm -rf ../build.zip
+rm -rf ../src_dependencies && rm -rf build.zip
 
 echo "${BLUE}Building dependencies... 📦${NOCOLOR}"
 # it uses docker so dependencies are build from a linux image, resembling lambda real environment
