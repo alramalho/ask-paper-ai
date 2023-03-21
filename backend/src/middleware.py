@@ -8,6 +8,18 @@ from database.users import UserGateway
 from database.db import DynamoDBGateway
 
 
+def _verify_token_in_discord(bearer_token: str):
+    try:
+        response = requests.get(
+            "https://discord.com/api/users/@me",
+            headers={'Authorization': bearer_token},
+            allow_redirects=True)
+        return response.status_code // 100 == 2
+    except Exception as e:
+        print(f'fail verifying discord token: {e}')
+        return False
+
+
 async def verify_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
@@ -18,6 +30,10 @@ async def verify_login(request: Request, call_next):
 
     if request.url.path == '/send-instructions-email':
         print("Sending instructions email, bypassing verify login")
+        return await call_next(request)
+
+    if request.url.path == '/send-answer-email':
+        print("Sending answers email, bypassing verify login")
         return await call_next(request)
 
     if request.url.path == '/guest-login':
@@ -88,14 +104,3 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
             'time_elapsed': str(datetime.datetime.now() - start)
         })
         return JSONResponse(status_code=500, content="Internal Server Error: \n" + str(e))
-
-def _verify_token_in_discord(bearer_token: str):
-    try:
-        response = requests.get(
-            "https://discord.com/api/users/@me",
-            headers={'Authorization': bearer_token},
-            allow_redirects=True)
-        return response.status_code // 100 == 2
-    except Exception as e:
-        print(f'fail verifying discord token: {e}')
-        return False
