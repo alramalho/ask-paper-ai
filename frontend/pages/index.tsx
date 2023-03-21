@@ -49,8 +49,6 @@ const Home = () => {
   const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')
 
   const {
@@ -132,13 +130,9 @@ const Home = () => {
       }
       {selectedPaper &&
           <>
-              <Spacer y={3}/>
-              <Spacer y={3}/>
-              <Flex direction='row' css={{flexWrap: 'wrap', '@xs': {flexWrap: 'nowrap'}, margin: '$10', gap: '$10'}}>
+              <Flex direction='column' css={{margin: '$10', gap: '$10'}}>
                 {pdf && <PdfViewer
                     pdf={pdf}
-                  // @ts-ignore
-                    css={{alignSelf: 'flex-start'}}
                 />}
                   <Flex direction={'column'}>
                       <Spacer y={3}/>
