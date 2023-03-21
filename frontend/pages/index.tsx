@@ -165,7 +165,8 @@ const Home = () => {
                                       quote: quoteChecked,
                                       // @ts-ignore
                                       paperHash: selectedPaper!.hash
-                                    })}
+                                    })
+                                  }
                                   }> Ask </Button>
                               <Flex css={{gap: "$2"}}>
                                   <Switch bordered initialChecked checked={quoteChecked}
@@ -180,30 +181,30 @@ const Home = () => {
                           <Button
                               css={{backgroundColor: "$blue200", color: "black"}}
                               onPress={() => {
-                                setQuestion("Extract Datasets")
-                                handleSubmit(extractDatasets,{
+                                handleSubmit(extractDatasets, {
                                   paper: JSON.parse(JSON.stringify(selectedPaper)),
                                   // @ts-ignore
                                   email: session!.user!.email,
                                   // @ts-ignore
                                   accessToken: session!.accessToken
-                                })}
-                              }
+                                })
+                                setQuestion("Extract Datasets")
+                              }}
                           >
                               <Text>Extract datasets</Text>
                           </Button>
                           <Button
                               css={{backgroundColor: "$green200", color: "black"}}
                               onPress={() => {
-                                setQuestion("Generate Summary")
-                                handleSubmit(generateSummary,{
+                                handleSubmit(generateSummary, {
                                   paper: JSON.parse(JSON.stringify(selectedPaper)),
                                   // @ts-ignore
                                   email: session!.user!.email,
                                   // @ts-ignore
                                   accessToken: session!.accessToken
-                                })}
-                              }
+                                })
+                                setQuestion("Generate Summary")
+                              }}
                           >
                               <Text>Generate Summary</Text>
                           </Button>
@@ -275,19 +276,21 @@ const Home = () => {
                                                 answer: document?.getElementById('answer')?.innerHTML, // to keep the html format
                                                 paperTitle: selectedPaper!.title
                                               }).then(() => {
-                                                  setEmailStatus('done')
-                                                  setTimeout(() => {
-                                                    setEmailStatus('idle')
-                                                  }, 5000)
-                                                })
+                                                setEmailStatus('done')
+                                                setTimeout(() => {
+                                                  setEmailStatus('idle')
+                                                }, 5000)
+                                              })
                                                 .catch(() => setEmailStatus('error'))
                                             }}
                                         >
                                             <Text>Email me this 📩</Text>
                                         </Button>
                                       {emailStatus == 'sending' && <Text>Sending email...</Text>}
-                                      {emailStatus == 'done' && <Text data-testid="email-sent">Email sent! ✅</Text>}
-                                      {emailStatus == 'error' && <Text>There was an error ❌ Please contact support.</Text>}
+                                      {emailStatus == 'done' &&
+                                          <Text data-testid="email-sent">Email sent! ✅ {question} /-</Text>}
+                                      {emailStatus == 'error' &&
+                                          <Text>There was an error ❌ Please contact support.</Text>}
                                     </Flex>
                                 </Box>
                             </Flex>
@@ -365,6 +368,7 @@ const Home = () => {
     </>
   )
 };
+
 function fixNewlines(text: string) {
   return text.replace(/\\n/g, '\n').replace(/  /g, '')
 }
