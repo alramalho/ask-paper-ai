@@ -65,12 +65,14 @@ interface AskOptions {
   email: string,
   question: string,
   paper: Paper,
+  quote: boolean
 }
-export function askPaper({question, paper, email, accessToken, paperHash}: AskOptions) {
+export function askPaper({question, paper, email, accessToken, paperHash, quote}: AskOptions) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
     question,
     paper: JSON.stringify(paper),
-    paper_hash: paperHash
+    paper_hash: paperHash,
+    quote
   }, {
     headers: {
       'Content-Type': 'application/json',
