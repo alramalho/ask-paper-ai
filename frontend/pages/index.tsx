@@ -44,7 +44,6 @@ const Home = () => {
   const [underFeedbackText, setUnderFeedbackText] = useState<string | undefined>(undefined)
   const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
-  const [question, setQuestion] = useState<string | undefined>(undefined)
   const {isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests} = useContext(GuestUserContext)
   const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
@@ -52,8 +51,8 @@ const Home = () => {
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')
 
   const {
-    value: questionValue,
-    setValue: setQuestionValue,
+    value: question,
+    setValue: setQuestion,
     reset: resetQuestion,
     bindings,
   } = useInput("");
@@ -181,6 +180,7 @@ const Home = () => {
                           <Button
                               css={{backgroundColor: "$blue200", color: "black"}}
                               onPress={() => {
+                                setQuestion("Extract Datasets")
                                 handleSubmit(extractDatasets,{
                                   paper: JSON.parse(JSON.stringify(selectedPaper)),
                                   // @ts-ignore
@@ -195,6 +195,7 @@ const Home = () => {
                           <Button
                               css={{backgroundColor: "$green200", color: "black"}}
                               onPress={() => {
+                                setQuestion("Generate Summary")
                                 handleSubmit(generateSummary,{
                                   paper: JSON.parse(JSON.stringify(selectedPaper)),
                                   // @ts-ignore
@@ -254,7 +255,7 @@ const Home = () => {
                                         />
                                     </Box>
                                     <Spacer y={2}/>
-                                    <Flex css={{justifyContent: 'flex-start'}}>
+                                    <Flex css={{justifyContent: 'flex-start', gap: "$4"}}>
                                         <Button
                                             auto
                                             css={{
@@ -266,9 +267,14 @@ const Home = () => {
                                             }}
                                             onPress={() => {
                                               setEmailStatus('sending')
-                                              // @ts-ignore # todo: dafuq? Why is this comment needed
-                                              sendAnswerEmail(session!.user!.email, LLMResponse, selectedPaper!.title)
-                                                .then(() => {
+                                              sendAnswerEmail({
+                                                // @ts-ignore # todo: dafuq? Why is this comment needed
+                                                recipient: session!.user!.email,
+                                                question: question,
+                                                // @ts-ignore
+                                                answer: document?.getElementById('answer')?.innerHTML, // to keep the html format
+                                                paperTitle: selectedPaper!.title
+                                              }).then(() => {
                                                   setEmailStatus('done')
                                                   setTimeout(() => {
                                                     setEmailStatus('idle')

@@ -7,13 +7,20 @@ export function sendInstructionsEmail(recipient) {
   })
 }
 
-export function sendAnswerEmail(recipient: string, question: string, paper_title: string) {
+interface SendAnswerEmailProps {
+  recipient: string,
+  question: string,
+  answer: string,
+  paperTitle: string
+}
+
+export function sendAnswerEmail({recipient, question, paperTitle, answer}: SendAnswerEmailProps) {
   const email = recipient
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`, {
-    "recipient": recipient,
-    "question": question,
-    "answer": document?.getElementById('answer')?.innerHTML,
-    "paper_title": paper_title,
+    recipient: recipient,
+    question: question,
+    answer: answer,
+    paper_title: paperTitle,
   }, {
     headers: {
       'Email': email
