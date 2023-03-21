@@ -38,3 +38,5 @@ fi
 echo "${GREEN}Deploying backend to local infrastructure 🧹${NOCOLOR}"
 yarn deploy-local
 
+docker logs -f localstack
+
