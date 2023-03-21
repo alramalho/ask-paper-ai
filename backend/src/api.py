@@ -4,6 +4,7 @@ import uuid
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Union
 
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
@@ -36,10 +37,13 @@ app.middleware("http")(middleware.log_function_invocation_to_dynamo)
 handler = Mangum(app)
 
 
-def generate_hash(content: str):
+def generate_hash(content: Union[str, bytes]):
     import hashlib
+    if isinstance(content, str):
+        content = content.encode()
+
     sha256 = hashlib.sha256()
-    sha256.update(content.encode())
+    sha256.update(content)
     return sha256.hexdigest()
 
 
@@ -61,11 +65,10 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
         f = json.load(f)
     print(f['title'])
 
-    if ENVIRONMENT == 'production' or ENVIRONMENT == 'sandbox':
-        os.remove(f"{output_location}/{pdf_file_name}.pdf")
-        os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
-        os.remove(f"{output_location}/{pdf_file_name}.json")
-        print("Removed files")
+    os.remove(f"{output_location}/{pdf_file_name}.pdf")
+    os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
+    os.remove(f"{output_location}/{pdf_file_name}.json")
+    print("Removed files")
 
     return f
 
@@ -188,17 +191,19 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
     pdf_file_content = await pdf_file.read()
     print(f"Upload paper {pdf_file_name}")
 
-    json_paper = process_paper(pdf_file_content, pdf_file_name)
+    paper_hash = generate_hash(pdf_file_content)
 
-    abstract = json_paper.get('pdf_parsed', {}).get('abstract')
-
-    paper_hash = generate_hash(abstract) if abstract is not None else str(
-        uuid.uuid4())  # todo: is there a better way to identify papers?
+    existing_paper = DynamoDBGateway(DB_JSON_PAPERS).read('id', paper_hash)
+    if existing_paper is None:
+        print("Creating new paper in Dynamo")
+        json_paper = process_paper(pdf_file_content, pdf_file_name)
+    else:
+        json_paper = json.loads(existing_paper['paper_json'])
 
     aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
 
     background_tasks.add_task(DynamoDBGateway(DB_JSON_PAPERS).write, {
-        'hash': paper_hash,
+        'id': paper_hash,
         'paper_title': json_paper['title'],
         'paper_json': json.dumps(json_paper),
         'email': email,
