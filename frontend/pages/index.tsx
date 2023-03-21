@@ -157,6 +157,7 @@ const Home = () => {
                                   iconRight={<SendIcon/>}
                                   onPress={() => {
                                     handleSubmit(askPaper, {
+                                      question: question ?? '',
                                       paper: JSON.parse(JSON.stringify(selectedPaper)),
                                       // @ts-ignore
                                       email: session!.user!.email,
