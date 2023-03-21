@@ -1,12 +1,11 @@
 from fastapi.responses import JSONResponse
-from fastapi import Request
+from fastapi import Request, BackgroundTasks
 import datetime
 import requests
 import traceback
 from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS
 from database.users import UserGateway
 from database.db import DynamoDBGateway
-
 
 def _verify_token_in_discord(bearer_token: str):
     try:
@@ -78,7 +77,8 @@ async def get_body(request: Request) -> bytes:
     return body
 
 
-async def write_all_errors_to_dynamo(request: Request, call_next):
+async def log_function_invocation_to_dynamo(request: Request, call_next):
+    background_tasks = BackgroundTasks()
     start = datetime.datetime.now()
     await set_body(request, await request.body())
     # fast api request.body or .json will hang: https://github.com/tiangolo/fastapi/issues/394#issuecomment-883524819
@@ -89,6 +89,16 @@ async def write_all_errors_to_dynamo(request: Request, call_next):
 
     try:
         response = await call_next(request)
+        time_elapsed = str(datetime.datetime.now() - start)
+        print(f"Elapsed time for {request.url.path}: {time_elapsed}")
+        background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write,
+                                  {'function_path': request.url.path,
+                                   'email': email,
+                                   'latest_commit_id': LATEST_COMMIT_ID,
+                                   'time_elapsed': time_elapsed,
+                                   'question': question,
+                                   'paper_hash': body.get('paper_hash', None)
+                                   })
         return response
     except Exception as e:
         print("Caught by middleware")

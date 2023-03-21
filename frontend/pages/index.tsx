@@ -8,10 +8,10 @@ import PaperUploader from "../components/paper-uploader";
 import FeedbackModal, {storeFeedback} from "../components/feedback-modal";
 import useCustomSession, {GuestUserContext, useGuestSession} from "../hooks/session";
 import dynamic from "next/dynamic";
-import CheckIcon from "../components/icons/check-icon";
-import {askPaper, getRemainingRequestsFor, sendAnswerEmail} from "../service/service";
+import {askPaper, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail} from "../service/service";
 import ProfileInfo from "../components/profile-info";
 import RemainingRequests from "../components/remaining-requests";
+import {AxiosResponse} from "axios";
 
 const PdfViewer = dynamic(
   // @ts-ignore
@@ -76,32 +76,12 @@ const Home = () => {
   }, [LLMResponse, isRunning])
 
 
-  const handleSubmit = (
-    paper: Paper,
-    question: string,
-    quote: boolean = false,
-    sectionFilterer: (sectionName: string) => boolean = (sectionName: string) => true,
-    onFinish: () => void = () => {
-    }
-  ) => {
+  function handleSubmit<T extends any[], R>(func: (...args: T) => Promise<AxiosResponse<any, any>>, ...args: T) {
     setIsRunning(true)
     setLoadingText("Reading paper...")
     setQuestion(question)
 
-    const paperDeepCopy = JSON.parse(JSON.stringify(paper))
-
-    let isBodyTextEmptyAfterFiltering = !(paperDeepCopy.pdf_parse.body_text.find((e) => sectionFilterer(e.section)));
-    let isBackMattertEmptyAfterFiltering = !(paperDeepCopy.pdf_parse.back_matter.find((e) => sectionFilterer(e.section)));
-    if (!isBodyTextEmptyAfterFiltering || !isBackMattertEmptyAfterFiltering) {
-      paperDeepCopy.pdf_parse.body_text = paperDeepCopy.pdf_parse.body_text.filter((e) => sectionFilterer(e.section))
-      paperDeepCopy.pdf_parse.back_matter = paperDeepCopy.pdf_parse.back_matter.filter((e) => sectionFilterer(e.section))
-      console.log("Section filterer makes sense, continuing with filtered text")
-    } else {
-      console.log("Section filterer doesn't make sense, continuing with unfiltered text")
-    }
-
-    // @ts-ignore
-    askPaper(selectedPaper!.hash, session!.accessToken, session!.user!.email, question, paperToText(paperDeepCopy), quote)
+    func(...args)
       .then(res => {
         setLLMResponse(makeLinksClickable(fixNewlines(res.data.message)))
         if (isUserLoggedInAsGuest && setRemainingTrialRequests != undefined && session!.user!.email !== null && session!.user!.email !== undefined) {
@@ -181,17 +161,18 @@ const Home = () => {
                               <Button
                                   data-testid="ask-button"
                                   iconRight={<SendIcon/>}
-                                  onPress={() => handleSubmit(
-                                    selectedPaper,
-                                    questionValue,
-                                    quoteChecked,
-                                    (section) => !section.toLowerCase().includes("reference") &&
-                                      !section.toLowerCase().includes("acknowledgement") &&
-                                      !section.toLowerCase().includes("appendi") &&
-                                      !section.toLowerCase().includes("discussion") &&
-                                      !section.toLowerCase().includes("declaration") &&
-                                      !section.toLowerCase().includes("supplem")
-                                  )}> Ask </Button>
+                                  onPress={() => {
+                                    handleSubmit(askPaper, {
+                                      paper: JSON.parse(JSON.stringify(selectedPaper)),
+                                      // @ts-ignore
+                                      email: session!.user!.email,
+                                      // @ts-ignore
+                                      accessToken: session!.accessToken,
+                                      quote: quoteChecked,
+                                      // @ts-ignore
+                                      paperHash: selectedPaper!.hash
+                                    })}
+                                  }> Ask </Button>
                               <Flex css={{gap: "$2"}}>
                                   <Switch bordered initialChecked checked={quoteChecked}
                                           onChange={() => setQuoteChecked(previous => !previous)}></Switch>
@@ -205,24 +186,13 @@ const Home = () => {
                           <Button
                               css={{backgroundColor: "$blue200", color: "black"}}
                               onPress={() => {
-                                handleSubmit(
-                                  selectedPaper,
-                                  `Please summarize the following text on a markdown table. 
-                              The text will contain possibly repeated information about the characteristics of one or more datasets. 
-                              I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. 
-                              The resulting table should be easy to read and contain any information that might be useful for medical researchers 
-                              thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", 
-                              "Origin", "Link to Data or Code", "Extra Info". "Extra Info" must be one sentence only. 
-                              The resulting table should contain as many entries as possible but it should NOT contain any duplicates 
-                              (columns with the same "Name" field) and it should NOT contain any entries where the "Name" 
-                              field is not defined/unknown/ not specified.`,
-                                  false,
-                                  (section) => (
-                                    section.toLowerCase().includes('data') ||
-                                    section.toLowerCase().includes('inclusion criteria')
-                                  )
-                                )
-                              }
+                                handleSubmit(extractDatasets,{
+                                  paper: JSON.parse(JSON.stringify(selectedPaper)),
+                                  // @ts-ignore
+                                  email: session!.user!.email,
+                                  // @ts-ignore
+                                  accessToken: session!.accessToken
+                                })}
                               }
                           >
                               <Text>Extract datasets</Text>
@@ -230,15 +200,14 @@ const Home = () => {
                           <Button
                               css={{backgroundColor: "$green200", color: "black"}}
                               onPress={() => {
-                                handleSubmit(
-                                  selectedPaper,
-                                  `Please provide me a summary of the paper per section. Sections are denoted by "\\n #### {SECTION_NAME} :\\n".
-                     Each section summary should be as detailed as possible. You should still contain the section headings, and assure they
-                     are in the correct order.`,
-                                  false,
-                                  () => true,
-                                )
-                              }}
+                                handleSubmit(generateSummary,{
+                                  paper: JSON.parse(JSON.stringify(selectedPaper)),
+                                  // @ts-ignore
+                                  email: session!.user!.email,
+                                  // @ts-ignore
+                                  accessToken: session!.accessToken
+                                })}
+                              }
                           >
                               <Text>Generate Summary</Text>
                           </Button>
@@ -395,29 +364,6 @@ const Home = () => {
     </>
   )
 };
-
-function paperToText(jsonObj: Paper): string {
-  const result: string[] = [];
-
-  if (jsonObj.abstract !== "") {
-    result.push('#### Abstract');
-    result.push(jsonObj.abstract);
-  }
-
-  for (const bodyTextEntry of (jsonObj.pdf_parse.body_text).concat(jsonObj.pdf_parse.back_matter)) {
-    const secNum = bodyTextEntry.sec_num ? bodyTextEntry.sec_num : '';
-    const section = "#### " + secNum + bodyTextEntry.section;
-
-    if (!result.includes(section)) {
-      result.push(section);
-    }
-
-    result.push(bodyTextEntry.text);
-  }
-
-  return result.join('\n\n');
-}
-
 function fixNewlines(text: string) {
   return text.replace(/\\n/g, '\n').replace(/  /g, '')
 }

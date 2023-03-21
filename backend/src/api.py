@@ -17,10 +17,9 @@ import aws
 import middleware
 from botocore.exceptions import ClientError
 import nlp
-from database.db  import DynamoDBGateway
+from database.db import DynamoDBGateway
 from database.users import UserGateway, UserDoesNotExistException
 import re
-
 
 app = FastAPI()
 
@@ -32,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.middleware("http")(middleware.verify_login)
-app.middleware("http")(middleware.write_all_errors_to_dynamo)
+app.middleware("http")(middleware.log_function_invocation_to_dynamo)
 
 handler = Mangum(app)
 
@@ -70,6 +69,7 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
 
     return f
 
+
 @app.post('/guest-login')
 async def guest_login(request: Request, response: Response):
     user_email = request.headers.get('Email').lower()
@@ -104,11 +104,12 @@ async def get_user_remaining_requests_count(request: Request):
 
     return {'remaining_trial_requests': user.remaining_trial_requests}
 
+
 @app.post('/send-instructions-email')
 async def send_instructions_email(request: Request, background_tasks: BackgroundTasks):
     body = await request.json()
     recipient = body['recipient']
-    subject ='Hippo AI 📝 How to start using Ask Paper'
+    subject = 'Hippo AI 📝 How to start using Ask Paper'
     body_html = f"""
     <div style="max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 1rem; border: 1px solid #cacaca; border-radius: 15px">
         <img src="{ASK_PAPER_BANNER_IMG}" width="100%"/>
@@ -176,8 +177,13 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
 
 @app.post("/upload-paper")
 async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks: BackgroundTasks):
-    start = datetime.datetime.now()
-    email = request.headers.get('Email', None)
+
+    try:
+        email = request.headers['Email']
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data")
+
+
     pdf_file_name = pdf_file.filename
     pdf_file_content = await pdf_file.read()
     print(f"Upload paper {pdf_file_name}")
@@ -186,7 +192,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     abstract = json_paper.get('pdf_parsed', {}).get('abstract')
 
-    paper_hash = generate_hash(abstract) if abstract is not None else str(uuid.uuid4()) # todo: is there a better way to identify papers?
+    paper_hash = generate_hash(abstract) if abstract is not None else str(
+        uuid.uuid4())  # todo: is there a better way to identify papers?
 
     aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
 
@@ -197,51 +204,65 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
         'email': email,
     })
 
-    time_elapsed = datetime.datetime.now() - start
-
-    background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write,
-                              {'function_path': request.url.path,
-                               'time_elapsed': str(time_elapsed),
-                               'email': email,
-                               'paper_hash': paper_hash})
-
     json_paper['hash'] = paper_hash
 
     return json_paper
 
 
+@app.post("/extract-datasets")
+async def extract_datasets(request: Request):
+    data = await request.json()
+    try:
+        paper = nlp.Paper(**json.loads(data['paper']))
+        question = """
+        Please summarize the following text on a markdown table. 
+        The text will contain possibly repeated information about the characteristics of one or more datasets. 
+        I want you to summarize the whole text into a markdown table that represents the characteristics of all the datasets. 
+        The resulting table should be easy to read and contain any information that might be useful for medical researchers 
+        thinking about using any of those datasets. Some example fields would be "Name", "Size", "Demographic information", 
+        "Origin", "Link to Data or Code", "Extra Info". "Extra Info" must be one sentence only. 
+        The resulting table should contain as many entries as possible but it should NOT contain any duplicates 
+        (columns with the same "Name" field) and it should NOT contain any entries where the "Name" 
+        field is not defined/unknown/ not specified."""
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data")
+
+    paper = nlp.filter_paper_sections(paper, 'include', ['data', 'inclusion criteria'])
+    response = await nlp.ask_llm(question, paper)
+
+    return {'message': response}
+
+@app.post("/summarize")
+async def summarize(request: Request, background_tasks: BackgroundTasks):
+    data = await request.json()
+    print('hello?')
+    try:
+        paper = nlp.Paper(**json.loads(data['paper']))
+        question = """
+        Please provide me a summary of the paper per section. Sections are denoted by "\n #### {SECTION_NAME} :\n".
+        Each section summary should be as detailed as possible. You should still contain the section headings, and assure they
+        are in the correct order."""
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data")
+
+    response = await nlp.ask_llm(question, paper)
+    return {'message': response}
+
 @app.post("/ask")
 async def ask(request: Request, background_tasks: BackgroundTasks):
-    start = datetime.datetime.now()
     data = await request.json()
-    if "question" in data and "quote" in data and "context" in data and 'email' in request.headers:
-        question = data["question"]
-        quote = data["quote"]
-        paper_hash = data["paper_hash"]
-        email = request.headers.get("email")
-        context = data['context']
-        contexts = nlp.split_text(data['context'])
-
-        if quote:
-            question += "Please include at least one quote from the original paper."
-
-        response = await nlp.ask_llm(question, context)
-
-        time_elapsed = datetime.datetime.now() - start
-        token_length_estimate: int = nlp.count_tokens(context) + nlp.count_tokens(question) + 100
-        background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write,
-                                  {'function_path': request.url.path,
-                                   'email': email,
-                                   'latest_commit_id': LATEST_COMMIT_ID,
-                                   'time_elapsed': str(time_elapsed),
-                                   'question': question,
-                                   'paper_hash': paper_hash,
-                                   'was_prompt_cut': len(contexts) > 1,
-                                   'prompt_token_length_estimate': token_length_estimate,
-                                   'response_text': response})
-        return {'message': response}
-    else:
+    try:
+        question = data['question']
+        paper = nlp.Paper(**json.loads(data['paper']))
+        quote = data['quote']
+    except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
+
+    if quote:
+        question += "Please include at least one quote from the original paper."
+
+    response = await nlp.ask_llm(question, paper)
+    return {'message': response}
 
 
 @app.post("/store-feedback")
@@ -259,6 +280,5 @@ async def store_feedback(request: Request):
 
 
 if __name__ == "__main__":
-
     import uvicorn
     uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)

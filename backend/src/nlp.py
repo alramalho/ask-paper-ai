@@ -1,4 +1,7 @@
 import concurrent.futures
+import time
+from pydantic import BaseModel
+from typing import List, Union
 
 from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
 from langchain.llms import OpenAIChat
@@ -8,10 +11,26 @@ from langchain.text_splitter import CharacterTextSplitter
 
 import tiktoken
 
+class TextBlock(BaseModel):
+    text: str
+    section: str
+    sec_num: Union[int, None]
+
+class PdfParse(BaseModel):
+    body_text: List[TextBlock]
+    back_matter: List[TextBlock]
+
+
+class Paper(BaseModel):
+    abstract: str
+    title: str
+    pdf_parse: PdfParse
+
 
 def count_tokens(text) -> int:
+    if text is None: return 0
     enc = tiktoken.get_encoding("gpt2")
-    return int(len(enc.encode(text)) * 1.08)  # this is an estimate since it's been proved that underestimates
+    return int(len(enc.encode(text, disallowed_special=())) * 1.08)  # this is an estimate since it's been proved that underestimates
 
 
 def decode(tokens) -> str:
@@ -25,10 +44,70 @@ def split_text(text, chunk_size=3500):
     return texts
 
 
-async def ask_llm(question, context):
+def filter_paper_sections(paper: Paper, mode: str, paper_sections_partially_matches: List[str]) -> Paper:
+    if mode not in ['include', 'exclude']:
+        raise ValueError("Mode must be either 'include' or 'exclude'")
+    # Create a set of section names to match against
+    match_set = set(paper_sections_partially_matches)
+
+    # Filter out text blocks whose section names don't partially match
+    filtered_blocks = []
+    for block in paper.pdf_parse.body_text:
+        if any(match.lower() in block.section.lower() for match in match_set):
+            filtered_blocks.append(block)
+
+    filtered_back_matters = []
+    for block in paper.pdf_parse.back_matter:
+        if any(match.lower() in block.section.lower() for match in match_set):
+            filtered_back_matters.append(block)
+
+    # Create a new Paper object with the filtered text blocks
+    if mode == "include":
+        filtered_paper = Paper(
+            abstract=paper.abstract,
+            title=paper.title,
+            pdf_parse=PdfParse(
+                body_text=filtered_blocks,
+                back_matter=filtered_back_matters
+            )
+        )
+    else:
+        filtered_paper = Paper(
+            abstract=paper.abstract,
+            title=paper.title,
+            pdf_parse=PdfParse(
+                body_text=[block for block in paper.pdf_parse.body_text if block not in filtered_blocks],
+                back_matter=[block for block in paper.pdf_parse.back_matter if block not in filtered_back_matters]
+            )
+        )
+
+    return filtered_paper
+def paper_to_text(json_obj: Paper) -> str:
+    sections = set()
+    result = []
+
+    if json_obj.abstract:
+        result.append(f'#### Abstract\n{json_obj.abstract}')
+
+    for text_block in json_obj.pdf_parse.body_text + json_obj.pdf_parse.back_matter:
+        section = f"#### {text_block.sec_num or ''}{text_block.section}"
+        if section not in sections:
+            result.append(f"{section}\n{text_block.text}")
+            sections.add(section)
+        else:
+            result[-1] += f"\n{text_block.text}"
+
+    return '\n\n'.join(result)
+
+
+async def ask_llm(question: str, paper: Paper):
 
     if "this is a load test" in question.lower():
         return "This is a load test response"
+
+    paper = filter_paper_sections(paper, 'exclude', ['reference', 'acknow', 'appendi', 'decl', 'supp'])
+
+    full_context = paper_to_text(paper)
 
     prompt = PromptTemplate(
         input_variables=["context", "request"],
@@ -48,7 +127,7 @@ async def ask_llm(question, context):
     completion_tokens = 500
     context_max_tokens = LLM_MAX_TOKENS - count_tokens(question) - completion_tokens - count_tokens(prompt.template)
     print(f"context_max_tokens: {context_max_tokens}")
-    contexts = split_text(context, context_max_tokens)
+    contexts = split_text(full_context, context_max_tokens)
 
     llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
     chain = LLMChain(llm=llm, prompt=prompt)
@@ -60,11 +139,18 @@ async def ask_llm(question, context):
     sequence_sizes = [context_size + count_tokens(prompt.template) + count_tokens(question) + completion_tokens for context_size in context_sizes]
     print("Sequence sizes: ", sequence_sizes)
 
+    def wrapper(request, context, index):
+        print("Running chain nr " + str(index))
+        start = time.time()
+        result = chain.run(request=request, context=context)
+        elapsed_time = time.time() - start
+        print(f"Elapsed time for chain nr {str(index)}: {elapsed_time:.2f} seconds")
+        return result
+
     futures = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for index, context in enumerate(contexts[:MAX_CONTEXTS]):
-            print('Made request nr ' + str(index))
-            futures.append(executor.submit(chain.run, request=question, context=context))
+            futures.append(executor.submit(wrapper, request=question, context=context, index=index))
 
     responses = [f.result() for f in futures]
 
