@@ -51,7 +51,7 @@ const Home = () => {
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [emailSent, setEmailSent] = useState<boolean>(false)
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')
 
   const {
     value: questionValue,
@@ -301,19 +301,23 @@ const Home = () => {
                                               }
                                             }}
                                             onPress={() => {
+                                              setEmailStatus('sending')
                                               // @ts-ignore # todo: dafuq? Why is this comment needed
                                               sendAnswerEmail(session!.user!.email, LLMResponse, selectedPaper!.title)
                                                 .then(() => {
-                                                  setEmailSent(true)
+                                                  setEmailStatus('done')
                                                   setTimeout(() => {
-                                                    setEmailSent(false)
-                                                  }, 2500)
+                                                    setEmailStatus('idle')
+                                                  }, 5000)
                                                 })
+                                                .catch(() => setEmailStatus('error'))
                                             }}
                                         >
                                             <Text>Email me this 📩</Text>
                                         </Button>
-                                      {emailSent && <CheckIcon data-testid="email-sent"/>}
+                                      {emailStatus == 'sending' && <Text>Sending email...</Text>}
+                                      {emailStatus == 'done' && <Text data-testid="email-sent">Email sent! ✅</Text>}
+                                      {emailStatus == 'error' && <Text>There was an error ❌ Please contact support.</Text>}
                                     </Flex>
                                 </Box>
                             </Flex>
