@@ -155,7 +155,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
         <br/>
         <br/>
         <br/>
-        <h2>Your question on {data['paper_title']}</h2>
+        <h2>Your question on "<i>{data['paper_title']}</i>"</h2>
         <p>{data['question']}</p>
         <h2>The answer</h2>
         <p>{data['answer']}</p>
