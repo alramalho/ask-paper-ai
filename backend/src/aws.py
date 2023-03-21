@@ -4,9 +4,7 @@ from utils.aws_client import aws_resource, AWSResource
 from utils.constants import ENVIRONMENT, S3_BUCKET_NAME
 
 def ses_send_email(recipient: str, subject: str, html_body: str, sender: str):
-    # TODO for local dev we can use aws-ses mock to see if it was sent.
-    # Example of mock server can be found in:
-    # https://github.com/shenggwang/docker-mail-server-mock
+    # TODO: https://docs.localstack.cloud/user-guide/aws/ses/
     if ENVIRONMENT not in ['production', 'sandbox']:
         print("Not sending email because not in production or sandbox")
         return {'MessageId': 'local'}
