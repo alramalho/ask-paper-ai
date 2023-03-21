@@ -27,24 +27,6 @@ class Paper(BaseModel):
     pdf_parse: PdfParse
 
 
-def get_sections(paper: Paper) -> Set[str]:
-    sections = set()
-    if paper.abstract:
-        sections.add('Abstract')
-    if paper.title:
-        sections.add('Title')
-    if paper.pdf_parse:
-        pdf_parse: PdfParse = paper.pdf_parse
-        if pdf_parse.body_text:
-            for text_block in pdf_parse.body_text:
-                if text_block.section:
-                    sections.add(text_block.section)
-        if pdf_parse.back_matter:
-            for text_block in pdf_parse.back_matter:
-                if text_block.section:
-                    sections.add(text_block.section)
-    return sections
-
 def count_tokens(text) -> int:
     if text is None: return 0
     enc = tiktoken.get_encoding("gpt2")
@@ -119,14 +101,6 @@ def paper_to_text(json_obj: Paper) -> str:
 
 
 async def ask_llm(question: str, paper: Paper, merge_at_end=True):
-
-    # print('Paper sections:')
-    # sections = get_sections(paper)
-    # sections = list(map(lambda x: f'\"{x}\"', sections))
-    # print(", ".join(sections))
-    # print("length: " + str(len(sections)))
-    #
-    # return "mock"
 
     if "this is a load test" in question.lower():
         return "This is a load test response"
