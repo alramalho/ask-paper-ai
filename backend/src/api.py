@@ -245,7 +245,6 @@ async def extract_datasets(request: Request):
 @app.post("/summarize")
 async def summarize(request: Request):
     data = await request.json()
-    print('hello?')
     try:
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
