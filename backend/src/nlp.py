@@ -7,7 +7,7 @@ from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
 from langchain.llms import OpenAIChat
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import MarkdownTextSplitter
 
 import tiktoken
 
@@ -30,7 +30,7 @@ class Paper(BaseModel):
 def count_tokens(text) -> int:
     if text is None: return 0
     enc = tiktoken.get_encoding("gpt2")
-    return int(len(enc.encode(text, disallowed_special=())) * 1.08)  # this is an estimate since it's been proved that underestimates
+    return int(len(enc.encode(text, disallowed_special=())))
 
 
 def decode(tokens) -> str:
@@ -39,7 +39,7 @@ def decode(tokens) -> str:
 
 
 def split_text(text, chunk_size=3500):
-    text_splitter = CharacterTextSplitter.from_tiktoken_encoder(chunk_size=chunk_size, chunk_overlap=0)
+    text_splitter = MarkdownTextSplitter.from_tiktoken_encoder(chunk_size=chunk_size, chunk_overlap=0)
     texts = text_splitter.split_text(text)
     return texts
 
@@ -81,7 +81,11 @@ def filter_paper_sections(paper: Paper, mode: str, paper_sections_partially_matc
             )
         )
 
-    return filtered_paper
+    if filtered_paper.pdf_parse.back_matter == filtered_paper.pdf_parse.body_text == []:
+        print("Filtered was too harsh! Paper went blank! Returning original")
+        return paper
+    else:
+        return filtered_paper
 def paper_to_text(json_obj: Paper) -> str:
     sections = set()
     result = []
@@ -90,7 +94,7 @@ def paper_to_text(json_obj: Paper) -> str:
         result.append(f'#### Abstract\n{json_obj.abstract}')
 
     for text_block in json_obj.pdf_parse.body_text + json_obj.pdf_parse.back_matter:
-        section = f"#### {text_block.sec_num or ''}{text_block.section}"
+        section = f"#### {text_block.sec_num or ''} {text_block.section}"
         if section not in sections:
             result.append(f"{section}\n{text_block.text}")
             sections.add(section)
@@ -100,14 +104,13 @@ def paper_to_text(json_obj: Paper) -> str:
     return '\n\n'.join(result)
 
 
+
 async def ask_llm(question: str, paper: Paper, merge_at_end=True):
 
     if "this is a load test" in question.lower():
         return "This is a load test response"
 
     paper = filter_paper_sections(paper, 'exclude', ['reference', 'acknow', 'appendi', 'decl', 'supp'])
-
-    full_context = paper_to_text(paper)
 
     prompt = PromptTemplate(
         input_variables=["context", "request"],
@@ -127,19 +130,28 @@ async def ask_llm(question: str, paper: Paper, merge_at_end=True):
     )
 
     completion_tokens = 600
-    context_max_tokens = LLM_MAX_TOKENS - count_tokens(question) - completion_tokens - count_tokens(prompt.template)
+    context_max_tokens = LLM_MAX_TOKENS - completion_tokens - count_tokens(prompt.template)
     print(f"context_max_tokens: {context_max_tokens}")
-    contexts = split_text(full_context, context_max_tokens)
+
+    full_context = paper_to_text(paper)
+
+    sequence_sizes = None
+    while sequence_sizes is None or max(sequence_sizes) > LLM_MAX_TOKENS:
+        contexts = split_text(full_context, context_max_tokens)
+
+        context_sizes = [count_tokens(context) for context in contexts]
+        print("Context sizes: ", context_sizes)
+
+        sequence_sizes = [context_size + count_tokens(prompt.template) + completion_tokens for context_size in context_sizes]
+        print("Sequence sizes: ", sequence_sizes)
+
+        if max(sequence_sizes) > LLM_MAX_TOKENS:
+            print("Sequences too big! Shortening..")
+            completion_tokens -= 60
+            context_max_tokens -= 200
 
     llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
     chain = LLMChain(llm=llm, prompt=prompt)
-
-
-    context_sizes = [count_tokens(context) for context in contexts]
-    print("Context sizes: ", context_sizes)
-
-    sequence_sizes = [context_size + count_tokens(prompt.template) + count_tokens(question) + completion_tokens for context_size in context_sizes]
-    print("Sequence sizes: ", sequence_sizes)
 
     def wrapper(request, context, index):
         print("Running chain nr " + str(index))

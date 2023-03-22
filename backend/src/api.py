@@ -231,7 +231,7 @@ async def extract_datasets(request: Request):
         Here's a few caveats about how you should build your response:
             - The resulting table should contain as many entries as possible
             - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
-            - The resulting table should NOT contain any entries where the "Name" field is not defined/unknown/ not specified
+            - ALL entries must have it's name SPECIFIED
             - Every resulting table entry must be inferred from the paper context
         """
     except KeyError as e:
