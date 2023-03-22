@@ -288,7 +288,7 @@ const Home = () => {
                                         </Button>
                                       {emailStatus == 'sending' && <Text>Sending email...</Text>}
                                       {emailStatus == 'done' &&
-                                          <Text data-testid="email-sent">Email sent! ✅ {question} /-</Text>}
+                                          <Text data-testid="email-sent">Email sent! </Text>}
                                       {emailStatus == 'error' &&
                                           <Text>There was an error ❌ Please contact support.</Text>}
                                     </Flex>
