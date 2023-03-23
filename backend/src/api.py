@@ -264,6 +264,7 @@ async def ask(request: Request):
     try:
         question = data['question']
         paper = nlp.Paper(**json.loads(data['paper']))
+        results_speed_trade_off = data.get('results_speed_trade_off', None)
         quote = data['quote']
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
@@ -271,7 +272,7 @@ async def ask(request: Request):
     if quote:
         question += "Please include at least one quote from the original paper."
 
-    response = await nlp.ask_paper(question, paper)
+    response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
     return {'message': response}
 
 

@@ -207,8 +207,7 @@ const Home = () => {
                                   // @ts-ignore
                                   email: session!.user!.email,
                                   // @ts-ignore
-                                  accessToken: session!.accessToken,
-                                  resultsSpeedTradeoff: resultsSpeedTradeoff
+                                  accessToken: session!.accessToken
                                 })
                                 setQuestion("Generate Summary")
                               }}

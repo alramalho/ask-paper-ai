@@ -49,10 +49,9 @@ export function extractDatasets({paper, email, accessToken, resultsSpeedTradeoff
 }
 
 
-export function generateSummary({paper, email, accessToken, resultsSpeedTradeoff}: DefaultEndpointOptions) {
+export function generateSummary({paper, email, accessToken}: DefaultEndpointOptions) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
     paper: JSON.stringify(paper),
-    results_speed_trade_off: resultsSpeedTradeoff
   }, {
     headers: {
       'Content-Type': 'application/json',
