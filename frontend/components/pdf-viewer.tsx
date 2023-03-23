@@ -39,6 +39,7 @@ const PdfViewer = ({pdf, css}: PdfViewerProps) => {
     <Box css={css}>
       <Box css={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}>
         <Document
+          style={{height: '800'}}
           file={pdf}
           onLoadSuccess={onDocumentLoadSuccess}
         >
