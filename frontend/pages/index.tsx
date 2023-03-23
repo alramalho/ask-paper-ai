@@ -288,7 +288,7 @@ const Home = () => {
                           setEmailStatus('sending')
                           sendAnswerEmail({
                             // @ts-ignore # todo: dafuq? Why is this comment needed
-                            recipient: session!.user!.email,
+                            email: session!.user!.email,
                             question: question,
                             // @ts-ignore
                             answer: document?.getElementById('answer')?.innerHTML, // to keep the html format
@@ -306,7 +306,7 @@ const Home = () => {
                       </Button>
                       {emailStatus == 'sending' && <Text>Sending email...</Text>}
                       {emailStatus == 'done' &&
-                        <Text data-testid="email-sent">Email sent! </Text>}
+                        <Text data-testid="email-sent">Email sent! ✅</Text>}
                       {emailStatus == 'error' &&
                         <Text>There was an error ❌ Please contact support.</Text>}
                     </Flex>
