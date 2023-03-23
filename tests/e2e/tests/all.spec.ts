@@ -35,9 +35,21 @@ test.describe('Normal upload', () => {
     })
   })
 
-
-  test('should be able ask a question', async () => {
+  test('should be able ask a question with best results', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.click('text=Best Results');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  });
+
+  test('should be able ask a question with best speed', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.click('text=Best Speed');
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
@@ -49,6 +61,16 @@ test.describe('Normal upload', () => {
 
   test('should be able to extract datasets', async () => {
     await page.click('text=Extract Datasets');
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("Size",);
+    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  });
+
+  test('should be able to generate summary', async () => {
+    await page.click('text=Generate Summary');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area')).toBeVisible();
