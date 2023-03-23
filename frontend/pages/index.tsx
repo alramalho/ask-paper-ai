@@ -13,6 +13,7 @@ import ProfileInfo from "../components/profile-info";
 import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
 import IconSlider from "../components/slider/slider";
+import Info from "../components/info";
 
 
 const PdfViewer = dynamic(
@@ -255,6 +256,7 @@ const Home = () => {
                 <Text>Decide what goes here 🚀✨</Text>
               </Button>
             </Flex>
+            <Info text="Your first request might be exceptionally slower, while the API bootstraps" />
             <Spacer y={4} />
             <h3>Answer:</h3>
             {isRunning
