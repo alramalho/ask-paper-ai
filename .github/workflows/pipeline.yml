@@ -15,7 +15,7 @@ jobs:
       DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
       DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
       DISCORD_CLIENT_BOT_TOKEN: ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
-      NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: ${{ secrets.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID }}
+      HIPPOAI_DISCORD_SERVER_ID: 1022781602893414410
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: sandbox
@@ -83,7 +83,7 @@ jobs:
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
           netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
-          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
+          netlify env:set HIPPOAI_DISCORD_SERVER_ID $HIPPOAI_DISCORD_SERVER_ID
           netlify env:set NEXTAUTH_URL $APP_URL
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
@@ -168,7 +168,7 @@ jobs:
       DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
       DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
       DISCORD_CLIENT_BOT_TOKEN: ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
-      NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID: ${{ secrets.NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID }}
+      HIPPOAI_DISCORD_SERVER_ID: 1022781602893414410
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: production
@@ -230,7 +230,7 @@ jobs:
           netlify env:set DISCORD_CLIENT_ID ${{ secrets.DISCORD_CLIENT_ID }}
           netlify env:set DISCORD_CLIENT_SECRET ${{ secrets.DISCORD_CLIENT_SECRET }}
           netlify env:set DISCORD_CLIENT_BOT_TOKEN ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
-          netlify env:set NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID $(echo $NEXT_PUBLIC_HIPPOAI_DISCORD_SERVER_ID)
+          netlify env:set HIPPOAI_DISCORD_SERVER_ID $HIPPOAI_DISCORD_SERVER_ID
           netlify env:set NEXTAUTH_URL https://www.askpaper.ai
           netlify env:set NEXTAUTH_SECRET ${{ secrets.NEXTAUTH_SECRET }}
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --prod

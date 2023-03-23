@@ -5,6 +5,7 @@ const nextConfig = {
   env: {
     // Make env var available in client-side code
     ENVIRONMENT: process.env.ENVIRONMENT,
+    HIPPOAI_DISCORD_SERVER_ID: process.env.HIPPOAI_DISCORD_SERVER_ID,
     TEST_ID: process.env.TEST_ID,
   },
   webpack: (config) => {

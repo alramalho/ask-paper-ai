@@ -3,28 +3,19 @@ from fastapi import Request, BackgroundTasks
 import datetime
 import requests
 import traceback
-from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS
+from utils.constants import LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS, DISCORD_WHITELIST_ROLENAME, HIPPOAI_DISCORD_SERVER_ID, DISCORD_CLIENT_BOT_TOKEN
 from database.users import UserGateway
 from database.db import DynamoDBGateway
+import discord
+from discord.ext import commands
 
-def _verify_token_in_discord(bearer_token: str):
-    try:
-        response = requests.get(
-            "https://discord.com/api/users/@me",
-            headers={'Authorization': bearer_token},
-            allow_redirects=True)
-        return response.status_code // 100 == 2
-    except Exception as e:
-        print(f'fail verifying discord token: {e}')
-        return False
-
+intents = discord.Intents.default()
+intents.guilds = True
+intents.members = True
+client = commands.Bot(intents=intents, command_prefix='!')
 
 async def verify_login(request: Request, call_next):
     if request.method == 'OPTIONS':
-        return await call_next(request)
-
-    if ENVIRONMENT != 'production':
-        print("Not in production, bypassing verify login")
         return await call_next(request)
 
     if request.url.path == '/send-instructions-email':
@@ -39,17 +30,13 @@ async def verify_login(request: Request, call_next):
         print("Logging in as guest, bypassing verify login")
         return await call_next(request)
 
-    auth_header: str = request.headers.get('Authorization', request.headers.get('authorization', None))
-    if auth_header is None:
-        # todo: you should know if whether this failed
-        return JSONResponse(status_code=401, content={"message": "Missing Authorization header"})
+    email = request.headers.get('Email', None)
 
-    if _verify_token_in_discord(auth_header):
-        print("Discord successfully verified token")
+    if verify_user_in_discord_server_with_role(email, DISCORD_WHITELIST_ROLENAME):
+        print(f"User in discord with role {DISCORD_WHITELIST_ROLENAME}")
         return await call_next(request)
 
-    email = request.headers.get('Email', None)
-    user_gateway = UserGateway() # initialize UserGateway just once
+    user_gateway = UserGateway()  # initialize UserGateway just once
     if user_gateway.is_guest_user_allowed(email):
         print("User is an allowed guest")
         response = await call_next(request)
@@ -62,7 +49,26 @@ async def verify_login(request: Request, call_next):
             user_gateway.decrement_remaining_trial_requests(email)
         return response
 
-    return JSONResponse(status_code=401,content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
+    return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
+
+
+async def verify_user_in_discord_server_with_role(email: str, role_name: str):
+    await client.login(DISCORD_CLIENT_BOT_TOKEN)
+    await client.wait_until_ready()
+    server = client.get_guild(HIPPOAI_DISCORD_SERVER_ID)
+
+    if not server:
+        print("Server not found.")
+        return False
+
+    role = discord.utils.get(server.roles, name=role_name)
+    if not role:
+        print("Role not found.")
+        return False
+
+    for member in server.members:
+        if member.email == email and role in member.roles:
+            return True
 
 
 async def set_body(request: Request, body: bytes):

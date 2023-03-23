@@ -16,3 +16,4 @@ mangum
 langchain
 tiktoken
 pydantic
+discord.py

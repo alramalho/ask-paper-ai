@@ -32,6 +32,8 @@ export class ApiStack extends cdk.Stack {
                 LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
                 FILESYSTEM_BASE: '/tmp',
                 S3_BUCKET_NAME: props.destinationBucketName,
+                HIPPOAI_DISCORD_SERVER_ID: process.env.HIPPOAI_DISCORD_SERVER_ID!,
+                DISCORD_CLIENT_BOT_TOKEN: process.env.DISCORD_CLIENT_BOT_TOKEN!,
             },
         });
         this.fastApiLambda.addToRolePolicy(new iam.PolicyStatement({
