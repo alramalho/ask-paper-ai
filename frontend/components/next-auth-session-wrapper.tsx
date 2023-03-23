@@ -109,6 +109,7 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
       <Text b css={{marginBottom: "$2"}}>or</Text>
       <Box>
         <Input
+          type={"email"}
           // @ts-ignore
           css={{
             minWidth: "100%",
