@@ -12,6 +12,8 @@ import {askPaper, extractDatasets, generateSummary, getRemainingRequestsFor, sen
 import ProfileInfo from "../components/profile-info";
 import RemainingRequests from "../components/remaining-requests";
 import {AxiosResponse} from "axios";
+import IconSlider from "../components/slider/slider";
+
 
 const PdfViewer = dynamic(
   // @ts-ignore
@@ -49,6 +51,7 @@ const Home = () => {
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')
+  const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(4)
 
   const {
     value: question,
@@ -164,7 +167,8 @@ const Home = () => {
                                       accessToken: session!.accessToken,
                                       quote: quoteChecked,
                                       // @ts-ignore
-                                      paperHash: selectedPaper!.hash
+                                      paperHash: selectedPaper!.hash,
+                                      resultsSpeedTradeoff: resultsSpeedTradeoff
                                     })
                                   }
                                   }> Ask </Button>
@@ -173,6 +177,7 @@ const Home = () => {
                                           onChange={() => setQuoteChecked(previous => !previous)}></Switch>
                                   <Text small>Quote paper</Text>
                               </Flex>
+                              <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
                           </Flex>
                       </Flex>
                       <Spacer y={2}/>
@@ -186,7 +191,8 @@ const Home = () => {
                                   // @ts-ignore
                                   email: session!.user!.email,
                                   // @ts-ignore
-                                  accessToken: session!.accessToken
+                                  accessToken: session!.accessToken,
+                                  resultsSpeedTradeoff: resultsSpeedTradeoff
                                 })
                                 setQuestion("Extract Datasets")
                               }}
@@ -201,7 +207,8 @@ const Home = () => {
                                   // @ts-ignore
                                   email: session!.user!.email,
                                   // @ts-ignore
-                                  accessToken: session!.accessToken
+                                  accessToken: session!.accessToken,
+                                  resultsSpeedTradeoff: resultsSpeedTradeoff
                                 })
                                 setQuestion("Generate Summary")
                               }}

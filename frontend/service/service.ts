@@ -8,16 +8,15 @@ export function sendInstructionsEmail(recipient) {
 }
 
 interface SendAnswerEmailProps {
-  recipient: string,
+  email: string,
   question: string,
   answer: string,
   paperTitle: string
 }
 
-export function sendAnswerEmail({recipient, question, paperTitle, answer}: SendAnswerEmailProps) {
-  const email = recipient
+export function sendAnswerEmail({email, question, paperTitle, answer}: SendAnswerEmailProps) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`, {
-    recipient: recipient,
+    recipient: email,
     question: question,
     answer: answer,
     paper_title: paperTitle,
@@ -28,16 +27,17 @@ export function sendAnswerEmail({recipient, question, paperTitle, answer}: SendA
   })
 }
 
-
-interface ExtractDatasetsOptions {
+interface DefaultEndpointOptions {
+  resultsSpeedTradeoff: number
   paper: Paper
   email: string
   accessToken: string
 }
 
-export function extractDatasets({paper, email, accessToken}: ExtractDatasetsOptions) {
+export function extractDatasets({paper, email, accessToken, resultsSpeedTradeoff}: DefaultEndpointOptions) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/extract-datasets`, {
     paper: JSON.stringify(paper),
+    results_speed_trade_off: resultsSpeedTradeoff
   }, {
     headers: {
       'Content-Type': 'application/json',
@@ -48,15 +48,11 @@ export function extractDatasets({paper, email, accessToken}: ExtractDatasetsOpti
   })
 }
 
-interface SummarizeOptions {
-  paper: Paper
-  email: string
-  accessToken: string
-}
 
-export function generateSummary({paper, email, accessToken}: SummarizeOptions) {
+export function generateSummary({paper, email, accessToken, resultsSpeedTradeoff}: DefaultEndpointOptions) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
     paper: JSON.stringify(paper),
+    results_speed_trade_off: resultsSpeedTradeoff
   }, {
     headers: {
       'Content-Type': 'application/json',
@@ -66,20 +62,20 @@ export function generateSummary({paper, email, accessToken}: SummarizeOptions) {
     }
   })
 }
-interface AskOptions {
+interface AskOptions extends DefaultEndpointOptions {
   paperHash: string,
   accessToken: string,
-  email: string,
   question: string,
-  paper: Paper,
   quote: boolean
 }
-export function askPaper({question, paper, email, accessToken, paperHash, quote}: AskOptions) {
+
+export function askPaper({question, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
     question,
     paper: JSON.stringify(paper),
     paper_hash: paperHash,
-    quote
+    quote,
+    results_speed_trade_off: resultsSpeedTradeoff
   }, {
     headers: {
       'Content-Type': 'application/json',

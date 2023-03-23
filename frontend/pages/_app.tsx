@@ -1,12 +1,14 @@
 import '../styles/globals.css';
-import type {AppProps} from 'next/app';
-import {Session} from "next-auth";
-import {createTheme, NextUIProvider, Text} from '@nextui-org/react';
-import {ThemeProvider as NextThemesProvider} from 'next-themes';
-import {SessionProvider} from "next-auth/react";
+import type { AppProps } from 'next/app';
+import { Session } from "next-auth";
+import { createTheme, NextUIProvider, Text } from '@nextui-org/react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { SessionProvider } from "next-auth/react";
 import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
-import {Layout} from "../components/layout";
+import { Layout } from "../components/layout";
+import { ConfigProvider } from 'antd';
 
+const primaryColor = "#ff6372"
 export const lightTheme = createTheme({
   type: 'light',
   theme: {
@@ -15,7 +17,7 @@ export const lightTheme = createTheme({
       background: '#f2f2f2',
       backgroundDarker: '#efefef',
       discordColor: "#5865F2",
-      primary: "#ff6372",
+      primary: primaryColor,
       primaryLight: '#ffccd1',
       primaryLightHover: '#f8b2b9', // commonly used on hover state
       primaryLightActive: '#f8939e', // commonly used on pressed state
@@ -35,7 +37,7 @@ export const lightTheme = createTheme({
   },
 });
 
-function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ session: Session }>) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) {
 
   return (
     <SessionProvider session={session}>
@@ -47,20 +49,28 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps<{ sessi
         }}
       >
         <NextUIProvider>
-          <Layout seo={{
-            description: "Ask questions & Extract datasets from papers."
-          }}>
-            {
-              //todo: huge motherfucking risk. Deal with this asap
-              process.env.ENVIRONMENT == 'production'
-                ?
-                <NextAuthSessionWrapper>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: primaryColor,
+              },
+            }}
+          >
+            <Layout seo={{
+              description: "Ask questions & Extract datasets from papers."
+            }}>
+              {
+                //todo: huge motherfucking risk. Deal with this asap
+                process.env.ENVIRONMENT == 'production'
+                  ?
+                  <NextAuthSessionWrapper>
+                    <Component {...pageProps} />
+                  </NextAuthSessionWrapper>
+                  :
                   <Component {...pageProps} />
-                </NextAuthSessionWrapper>
-                :
-                <Component {...pageProps} />
-            }
-          </Layout>
+              }
+            </Layout>
+          </ConfigProvider>
         </NextUIProvider>
       </NextThemesProvider>
     </SessionProvider>

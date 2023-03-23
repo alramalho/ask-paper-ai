@@ -1,6 +1,5 @@
 import datetime
 import os.path
-import uuid
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,8 +10,8 @@ import os
 import json
 from mangum import Mangum
 from utils.constants import (
-    LATEST_COMMIT_ID, FILESYSTEM_BASE, ENVIRONMENT, EMAIL_SENDER, ASK_PAPER_BANNER_IMG,
-    DB_FUNCTION_INVOCATIONS, DB_EMAILS_SENT, DB_JSON_PAPERS, DB_FEEDBACK
+    FILESYSTEM_BASE, EMAIL_SENDER, ASK_PAPER_BANNER_IMG,
+    DB_EMAILS_SENT, DB_JSON_PAPERS, DB_FEEDBACK
 )
 import aws
 import middleware
@@ -197,10 +196,9 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
     if existing_paper is None:
         print("Creating new paper in Dynamo")
         json_paper = process_paper(pdf_file_content, pdf_file_name)
+        aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
     else:
         json_paper = json.loads(existing_paper['paper_json'])
-
-    aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
 
     background_tasks.add_task(DynamoDBGateway(DB_JSON_PAPERS).write, {
         'id': paper_hash,
@@ -218,6 +216,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 async def extract_datasets(request: Request):
     data = await request.json()
     try:
+        results_speed_trade_off = data.get('results_speed_trade_off', None)
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
         Please summarize the following text on a markdown table. 
@@ -237,10 +236,10 @@ async def extract_datasets(request: Request):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    paper = nlp.filter_paper_sections(paper, 'include', ['data', 'inclusion criteria'])
-    response = await nlp.ask_llm(question, paper)
+    response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
 
     return {'message': response}
+
 
 @app.post("/summarize")
 async def summarize(request: Request):
@@ -254,9 +253,10 @@ async def summarize(request: Request):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    paper = nlp.filter_paper_sections(paper, 'exclude', ['abstract'])
-    response = await nlp.ask_llm(question, paper, merge_at_end=False)
+    paper.filter_sections('exclude', ['abstract'])
+    response = await nlp.ask_paper(question, paper, merge_at_end=False)
     return {'message': response}
+
 
 @app.post("/ask")
 async def ask(request: Request):
@@ -271,7 +271,7 @@ async def ask(request: Request):
     if quote:
         question += "Please include at least one quote from the original paper."
 
-    response = await nlp.ask_llm(question, paper)
+    response = await nlp.ask_paper(question, paper)
     return {'message': response}
 
 
