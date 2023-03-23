@@ -167,10 +167,11 @@ def top_k_labels(k, text, labels):
 async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trade_off: int = 1):
     print("Asking paper")
     switcher = {
-        1: None,
-        2: 18,
-        3: 12,
-        4: 6
+        0: None,
+        1: 20,
+        2: 14,
+        3: 8,
+        4: 3
     }
     top_k_sections = switcher.get(results_speed_trade_off, "invalid")
     if top_k_sections == "invalid":
