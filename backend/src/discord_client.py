@@ -15,9 +15,9 @@ class DiscordClient(discord.Client):
     def setup(self) -> None:
         # await self.wait_until_ready()
 
-        def get_guild(id: int):
+        def get_guild(id: str):
             for guild in self.guilds:
-                if int(guild.id) == int(id):
+                if str(guild.id) == str(id):
                     return guild
 
         server = get_guild(HIPPOAI_DISCORD_SERVER_ID)
@@ -41,7 +41,7 @@ class DiscordClient(discord.Client):
     def member_present_with_needed_role(self, discord_id: str) -> bool:
         if discord_id is None: return False
         for member in self.members:
-            if int(member.id) == int(discord_id):
+            if str(member.id) == discord_id:
                 if self.role in member.roles:
                     print(f"Member {member} has role {self.role}")
                     return True
