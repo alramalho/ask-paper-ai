@@ -64,6 +64,9 @@ class GuestUsersGateway:
     def decrement_remaining_trial_requests(self, email: str) -> GuestUser:
         data = self.db_gateway.read('email', email)
         user = GuestUser(**data)
+        if user.remaining_trial_requests == 0:
+            print("User has no remaining trial requests")
+            return user
         user.remaining_trial_requests -= 1
         self.db_gateway.write(user.dict()) # todo: should be update instead of write
         return user
