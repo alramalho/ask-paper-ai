@@ -1,17 +1,26 @@
 import {expect, FileChooser, Page, test} from '@playwright/test';
 import { SNAKE_CASE_PREFIX } from './utils/constants';
+var crypto = require("crypto");
+var id = crypto.randomBytes(20).toString('hex');
 
-const TEST_EMAIL = (process.env.TEST_ID ?? 'local') + '@e2e.test';
+const TEST_EMAIL = (process.env.TEST_ID ?? 'local-' + id ) + '@e2e.test';
 test.describe.configure({mode: 'serial'});
 
 let page: Page
 
+async function loginAsGuest(browser) {
+  page = await browser.newPage()
+
+  await page.goto(process.env.APP_URL)
+
+  await page.getByTestId('guest-login-input').fill(TEST_EMAIL);
+  await page.getByTestId('guest-login-button').click();
+}
 
 test.describe('Normal upload', () => {
   test.beforeAll(async ({browser}) => {
-    page = await browser.newPage()
 
-    await page.goto(process.env.APP_URL)
+    await loginAsGuest(browser);
 
     page.on("filechooser", (fileChooser: FileChooser) => {
       fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
@@ -35,6 +44,10 @@ test.describe('Normal upload', () => {
     })
   })
 
+  test('should have all requests left', async () => {
+    await expect(page.getByTestId('remaining-requests')).toHaveText("5");
+  })
+
   test('should be able ask a question with best results', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.click('text=Best Results');
@@ -46,6 +59,10 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area')).toContainText("fracture");
     await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
   });
+
+  test('should have one less request remaining', async () => {
+    await expect(page.getByTestId('remaining-requests')).toHaveText("4");
+  })
 
   test('should be able ask a question with best speed', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
@@ -130,8 +147,7 @@ test.describe('Normal upload', () => {
 
 test.describe('Upload with URL', () => {
   test('should be able to upload the paper via URL', async ({browser}) => {
-    page = await browser.newPage()
-    await page.goto(process.env.APP_URL)
+    await loginAsGuest(browser);
 
     await page.getByTestId('upload-url-input').fill('https://arxiv.org/pdf/2302.04761.pdf');
     await page.getByTestId('upload-url-button').click();
@@ -140,6 +156,19 @@ test.describe('Upload with URL', () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
     await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Toolformer: Language Models Can Teach Themselves to Use Tools\"")
+  })
+});
+
+test.describe('Upload the demo paper', () => {
+  test('should be able to upload the paper via URL', async ({browser}) => {
+    await loginAsGuest(browser);
+
+    await page.getByTestId('upload-demo-paper').click();
+
+    await expect(page.getByTestId('upload-loading')).toBeVisible();
+    await expect(page.getByTestId('upload-successful')).toBeVisible();
+
+    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison\"")
   })
 });
 

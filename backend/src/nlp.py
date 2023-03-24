@@ -139,7 +139,7 @@ def ask_text(prompt_template: str, completion_tokens=200, **kwargs):
     return chain.run(**kwargs)
 
 
-def top_k_sections(k, text, labels):
+def get_top_k_sections(k, text, labels):
     if len(labels) < k:
         print(f"Already has less than {k} sections, skipping")
         return labels
@@ -178,7 +178,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
         raise ValueError("Invalid valid for speed_acc_trade_off, must be one of " + str(list(switcher.keys())))
     
     if switcher.get(results_speed_trade_off) is not None:
-        selected_sections = top_k_sections(k=top_k_sections, text=f"Question on paper article {paper.title}: {question}", labels=paper.get_sections())
+        selected_sections = get_top_k_sections(k=top_k_sections, text=f"Question on paper article {paper.title}: {question}", labels=paper.get_sections())
         print("Selected sections: " + str(selected_sections))
         paper.filter_sections('include', selected_sections)
 

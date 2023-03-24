@@ -17,7 +17,7 @@ const RemainingRequests = ({value}: {value: number}) => {
       margin: "$4",
       borderRadius: '10px'
     }}>
-      <Text h4>You have <Text as="span" color="warning">{value}</Text> remaining requests!</Text>
+      <Text h4>You have <Text as="span" color="warning" data-testid="remaining-requests">{value}</Text> remaining requests!</Text>
       <Text css={{fontSize: '1.1rem'}}>To unlock unlimited requests, please <a href="https://discord.gg/6zugVKk2sd">join us in
         discord</a></Text>
       <Text css={{fontSize: '0.9rem'}}>

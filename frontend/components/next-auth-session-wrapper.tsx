@@ -109,6 +109,7 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
       <Text b css={{marginBottom: "$2"}}>or</Text>
       <Box>
         <Input
+          data-testid="guest-login-input"
           type={"email"}
           // @ts-ignore
           css={{
@@ -116,7 +117,7 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
             padding: "0",
             margin: "0",
           }} placeholder="Email" initialValue={userEmail} onChange={(e) => setUserEmail(e.target.value)}/>
-        <Button size="lg" auto bordered color="error" css={{
+        <Button data-testid="guest-login-button" size="lg" auto bordered color="error" css={{
           marginTop: "$4",
           backgroundColor: 'transparent',
           textTransform: 'uppercase',
@@ -162,7 +163,7 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
       return (
         <Loading>
           Checking if you're in our server...<br/>
-          If this takes too long try to clear your browsercookies
+          <Text b>If this takes too long try to clear your browser cookies 🍪</Text>
         </Loading>
       )
     } else if (userInDiscord && userWhitelisted) {

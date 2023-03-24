@@ -123,7 +123,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
             <UploadIcon/>
           </Button>
         </Flex>
-        <Button bordered onClick={() => {
+        <Button data-testid='upload-demo-paper'bordered onClick={() => {
           fetchPaperUrl("https://arxiv.org/pdf/1901.07031.pdf")
         }}>Or start with a demo paper</Button>
 

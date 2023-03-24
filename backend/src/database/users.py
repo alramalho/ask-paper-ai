@@ -17,6 +17,7 @@ class UserGateway:
     def get_user_by_email(self, email: str) -> GuestUser:
         data = self.db_gateway.read('email', email)
         if data is None:
+            print("User does not exist")
             raise UserDoesNotExistException()
         return GuestUser(**data)
 
@@ -28,6 +29,7 @@ class UserGateway:
     def create_user(self, email: str) -> GuestUser:
         user = GuestUser(email=email, remaining_trial_requests=5)
         self.db_gateway.write(user.dict())
+        print("User created")
         return user
 
     def decrement_remaining_trial_requests(self, email: str) -> GuestUser:
