@@ -124,6 +124,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                       Recommendation
                       on similar items</StyledRadio>
                     <StyledRadio size="sm" value="batch-paper-upload">⬆️ Upload & ask papers in batch</StyledRadio>
+                    <StyledRadio size="sm" value="browser-extension">💻 Use as browser extension</StyledRadio>
                     <StyledRadio size="sm" value="email-interface"
                                  description="You would interact with the app via direct or CC communication with a designated email">📩
                       Email interface</StyledRadio>
