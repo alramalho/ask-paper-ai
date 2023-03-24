@@ -8,6 +8,7 @@ from database.users import UserGateway
 from database.db import DynamoDBGateway
 import discord
 from discord.ext import commands
+import json
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -91,19 +92,18 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
     body = await get_body(request) if request.headers.get('Content-Type') == 'application/json' else {}
 
     email = body.get('email', request.headers.get('Email', None))
-    question = body.get('question', None)
 
     try:
         response = await call_next(request)
         time_elapsed = str(datetime.datetime.now() - start)
         print(f"Elapsed time for {request.url.path}: {time_elapsed}")
         background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write,
-                                  {'function_path': request.url.path,
+                                  {
                                    'email': email,
                                    'latest_commit_id': LATEST_COMMIT_ID,
                                    'time_elapsed': time_elapsed,
-                                   'question': question,
-                                   'paper_hash': body.get('paper_hash', None)
+                                   'function_path': request.url.path,
+                                   'request_body': json.dumps(body)
                                    })
         return response
     except Exception as e:
