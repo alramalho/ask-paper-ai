@@ -45,7 +45,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should have all requests left', async () => {
-    await expect(page.getByTestId('remaining-requests')).toHaveText("5");
+    await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
   })
 
   test('should be able ask a question with best results', async () => {
@@ -61,7 +61,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should have one less request remaining', async () => {
-    await expect(page.getByTestId('remaining-requests')).toHaveText("4");
+    await expect(page.getByTestId('remaining-requests')).toHaveText("999");
   })
 
   test('should be able ask a question with best speed', async () => {
