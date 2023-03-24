@@ -11,7 +11,7 @@ let page: Page
 async function loginAsGuest(browser) {
   page = await browser.newPage()
 
-  await page.goto(process.env.APP_URL)
+  await page.goto(process.env.APP_URL!)
 
   await page.getByTestId('guest-login-input').fill(TEST_EMAIL);
   await page.getByTestId('guest-login-button').click();
