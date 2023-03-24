@@ -1,12 +1,12 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import {Button, Input, Link, Loading, Spacer, styled, Text} from "@nextui-org/react";
-import {Flex} from "./styles/flex";
+import { Button, Input, Link, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Flex } from "./styles/flex";
 import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
-import {Paper} from "../pages";
-import {Box} from "./layout";
-import {GuestUserContext, useGuestSession} from "../hooks/session";
+import { Paper } from "../pages";
+import { Box } from "./layout";
+import { GuestUserContext, useGuestSession } from "../hooks/session";
 import MarkdownView from "react-showdown";
 import FileInput from "./input";
 import UploadIcon from "./icons/upload-icon";
@@ -16,14 +16,14 @@ interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
 }
 
-const PaperUploader = ({onFinish}: PaperUploaderProps) => {
+const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
   const [underText, setUnderText] = useState<string | undefined>(undefined)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const [pdf, setPdf] = useState<File | undefined>(undefined)
   const [urlInput, setUrlInput] = useState<string | undefined>(undefined)
-  const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
-  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useSession()
+  const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
+  const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
 
   useEffect(() => {
     if (uploadedPaper !== undefined && uploadedPaper !== null && pdf !== undefined) {
@@ -82,22 +82,22 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
             files: [new File(
               [blob],
               'paper.pdf',
-              {type: 'application/pdf'})
+              { type: 'application/pdf' })
             ]
           }
         } as any)
       }).catch(e => {
-      setStatus('error')
-      setUnderText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
-    })
+        setStatus('error')
+        setUnderText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
+      })
   }
 
   useEffect(() => {
     console.log(urlInput)
   }, [urlInput])
   return (
-    <Box css={{margin: '0 $3'}}>
-      <Flex css={{gap: "$5"}} direction={'column'}>
+    <Box css={{ margin: '0 $3' }}>
+      <Flex css={{ gap: "$5" }} direction={'column'}>
         <FileInput
           id="paper-upload"
           type="file"
@@ -105,13 +105,18 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
           accept="application/pdf"
         />
 
-        <Flex css={{gap: "$2"}}>
+        <Flex css={{ gap: "$2" }}>
           <Input
             data-testid={'upload-url-input'}
             type="url"
-            style={{borderRadius: '10px 0 0 10px', width: '300px'}}
-            onChange={e => setUrlInput(e.target.value)}
-            placeholder="Or upload your paper via URL"
+            style={{ borderRadius: '10px 0 0 10px', width: '300px' }}
+            onChange={e => {
+              if (e.target.value.includes('arxiv.org/abs')) {
+                setUrlInput(e.target.value.replace('abs', 'pdf') + '.pdf')
+              } else {
+                setUrlInput(e.target.value)
+            }}}
+          placeholder="Or upload your paper via URL"
           />
           <Button data-testid='upload-url-button' auto css={{}} onClick={() => {
             if (urlInput === undefined) {
@@ -121,27 +126,27 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
             fetchPaperUrl(urlInput)
           }
           }>
-            <UploadIcon/>
+            <UploadIcon />
           </Button>
         </Flex>
-        <Button data-testid='upload-demo-paper'bordered onClick={() => {
+        <Button data-testid='upload-demo-paper' bordered onClick={() => {
           fetchPaperUrl("https://arxiv.org/pdf/1901.07031.pdf")
         }}>Or start with a demo paper</Button>
 
 
-        {status == 'uploading' && <Loading data-testid="upload-loading"/>}
-        {status == 'uploaded' && <CheckIcon data-testid="upload-successful"/>}
-        {status == 'error' && <XIcon data-testid="upload-failed"/>}
+        {status == 'uploading' && <Loading data-testid="upload-loading" />}
+        {status == 'uploaded' && <CheckIcon data-testid="upload-successful" />}
+        {status == 'error' && <XIcon data-testid="upload-failed" />}
       </Flex>
-      <Spacer y={1}/>
+      <Spacer y={1} />
       {underText &&
-          <Box data-testid="under-text" css={{maxWidth: '800px'}}>
-              <MarkdownView
-                  data-testid="upload-undertext"
-                  markdown={underText}
-                  options={{tables: false, emoji: true,}}
-              />
-          </Box>
+        <Box data-testid="under-text" css={{ maxWidth: '800px' }}>
+          <MarkdownView
+            data-testid="upload-undertext"
+            markdown={underText}
+            options={{ tables: false, emoji: true, }}
+          />
+        </Box>
       }
     </Box>
   );
