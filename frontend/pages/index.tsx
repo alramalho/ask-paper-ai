@@ -2,11 +2,11 @@ import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image
 import React, { useContext, useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
-import { Box, Layout } from "../components/layout";
+import { Box } from "../components/layout";
 import { Flex } from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import FeedbackModal, { storeFeedback } from "../components/feedback-modal";
-import useCustomSession, { GuestUserContext, useGuestSession } from "../hooks/session";
+import { GuestUserContext, useGuestSession } from "../hooks/session";
 import dynamic from "next/dynamic";
 import { askPaper, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail } from "../service/service";
 import ProfileInfo from "../components/profile-info";
@@ -14,6 +14,7 @@ import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
 import IconSlider from "../components/slider/slider";
 import Info from "../components/info";
+import { useSession } from "next-auth/react";
 
 
 const PdfViewer = dynamic(
@@ -74,7 +75,7 @@ const Home = () => {
   const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
-  const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
+  const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')

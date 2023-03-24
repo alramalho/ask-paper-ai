@@ -3,8 +3,9 @@ import {Flex} from "./styles/flex";
 import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Paper} from "../pages";
-import useCustomSession, {GuestUserContext, useGuestSession} from "../hooks/session";
+import {GuestUserContext, useGuestSession} from "../hooks/session";
 import {Box} from "./layout";
+import { useSession } from 'next-auth/react';
 
 const StyledRadio = styled(Radio, {
   margin: '0 $5',
@@ -46,7 +47,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
   const [sentiment, setSentiment] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
-  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
+  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useSession()
 
   useEffect(() => {
     if (error != undefined) {

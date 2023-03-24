@@ -34,16 +34,22 @@ class DiscordClient(discord.Client):
         self.role = role
         self.members = server.members
         if len(self.members) > 0:
-            print(self.members[0])
             print("Members loaded")
 
         print("Discord client setup complete.")
 
-    def member_present(self, email: str) -> bool:
+    def member_present_with_needed_role(self, discord_id: str) -> bool:
+        if discord_id is None: return False
         for member in self.members:
-            print(member)
-            if member.email == email and self.role in member.roles:
-                return True
+            if int(member.id) == int(discord_id):
+                if self.role in member.roles:
+                    print(f"Member {member} has role {self.role}")
+                    return True
+                else:
+                    print(f"Member {member} does not have role {self.role}")
+                return False
+            
+        print(f"Member with id {discord_id} not found.")
         return False
 
 

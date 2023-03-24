@@ -9,6 +9,18 @@ from database.db import DynamoDBGateway
 import json
 from discord_client import client
 
+async def get_id_from_token(bearer_token: str):
+    response = requests.get(
+        "https://discord.com/api/users/@me",
+        headers={'Authorization': bearer_token},
+        allow_redirects=True)
+    if response.status_code // 100 == 2:
+        print(response.json())
+        return response.json()['id']
+    else:
+        print(f"Failed to get discord id from token: {response.status_code}")
+        return None
+    
 
 async def verify_login(request: Request, call_next):
     if request.method == 'OPTIONS':
@@ -31,8 +43,9 @@ async def verify_login(request: Request, call_next):
 
     email = request.headers.get('Email', None)
 
-    if client.member_present(email):
-        print(f"User in discord with role {DISCORD_WHITELIST_ROLENAME}")
+    auth_header = request.headers.get('Authorization', None)
+    user_discord_id = await get_id_from_token(auth_header)
+    if client.member_present_with_needed_role(discord_id=user_discord_id):
         return await call_next(request)
 
     user_gateway = UserGateway()  # initialize UserGateway just once

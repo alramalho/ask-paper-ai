@@ -6,10 +6,11 @@ import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
 import {Paper} from "../pages";
 import {Box} from "./layout";
-import useCustomSession, {GuestUserContext, useGuestSession} from "../hooks/session";
+import {GuestUserContext, useGuestSession} from "../hooks/session";
 import MarkdownView from "react-showdown";
 import FileInput from "./input";
 import UploadIcon from "./icons/upload-icon";
+import { useSession } from 'next-auth/react';
 
 interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
@@ -22,7 +23,7 @@ const PaperUploader = ({onFinish}: PaperUploaderProps) => {
   const [pdf, setPdf] = useState<File | undefined>(undefined)
   const [urlInput, setUrlInput] = useState<string | undefined>(undefined)
   const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
-  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useCustomSession()
+  const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useSession()
 
   useEffect(() => {
     if (uploadedPaper !== undefined && uploadedPaper !== null && pdf !== undefined) {
