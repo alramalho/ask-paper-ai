@@ -18,7 +18,7 @@ import middleware
 from botocore.exceptions import ClientError
 import nlp
 from database.db import DynamoDBGateway
-from database.users import UserGateway, UserDoesNotExistException
+from database.users import GuestUsersGateway, UserDoesNotExistException
 import re
 
 app = FastAPI()
@@ -82,7 +82,7 @@ async def guest_login(request: Request, response: Response):
     if not re.match(r"[^@]+@[^@]+\.[^@]+", user_email):
         raise HTTPException(status_code=400, detail="Invalid email")
 
-    users_gateway = UserGateway()
+    users_gateway = GuestUsersGateway()
     try:
         user = users_gateway.get_user_by_email(user_email)
     except UserDoesNotExistException:
@@ -98,7 +98,7 @@ async def get_user_remaining_requests_count(request: Request):
     if user_email is None:
         raise HTTPException(status_code=400, detail="Missing email query param")
 
-    users_gateway = UserGateway()
+    users_gateway = GuestUsersGateway()
     try:
         user = users_gateway.get_user_by_email(user_email)
     except UserDoesNotExistException:
