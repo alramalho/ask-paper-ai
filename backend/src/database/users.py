@@ -52,7 +52,11 @@ class GuestUsersGateway:
         return user.remaining_trial_requests > 0
 
     def create_user(self, email: str) -> GuestUser:
-        user = GuestUser(email=email, remaining_trial_requests=5)
+        if email.endswith('@e2e.test'):
+            demo_requests = 1000
+        else:
+            demo_requests = 5    
+        user = GuestUser(email=email, remaining_trial_requests=demo_requests)
         self.db_gateway.write(user.dict())
         print("User created")
         return user
