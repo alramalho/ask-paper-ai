@@ -7,7 +7,6 @@ from utils.constants import LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS, DISCORD_W
 from database.users import GuestUsersGateway, DiscordUsersGateway
 from database.db import DynamoDBGateway
 import json
-from discord_client import client
 
 async def get_id_from_token(bearer_token: str):
     response = requests.get(
@@ -47,7 +46,7 @@ async def verify_login(request: Request, call_next):
     discord_users_gateway = DiscordUsersGateway()
     
     user_discord_id = await get_id_from_token(auth_header)
-    if client.member_present_with_needed_role(discord_id=user_discord_id):
+    if user_discord_id is not None:
         if discord_users_gateway.get_user_by_email(email, user_discord_id) is None:
             discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.now()))
             
