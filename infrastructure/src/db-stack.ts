@@ -52,5 +52,12 @@ export class DbStack extends cdk.Stack {
       readableBy: props.readableBy,
     })
 
+    new DynamoDbTableConstruct(this, 'DiscordtUsersTable', {
+      name: `${SNAKE_CASE_PREFIX}_discord_users_${props.environment}`,
+      partitionKey: {name: 'discord_id', type: dynamodb.AttributeType.STRING},
+      indexFields: ['email'],
+      writableBy: props.writableBy,
+      readableBy: props.readableBy,
+    })
   }
 }

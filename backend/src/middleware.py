@@ -4,7 +4,7 @@ import datetime
 import requests
 import traceback
 from utils.constants import LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS, DISCORD_WHITELIST_ROLENAME, HIPPOAI_DISCORD_SERVER_ID, DISCORD_CLIENT_BOT_TOKEN
-from database.users import UserGateway
+from database.users import GuestUsersGateway, DiscordUsersGateway
 from database.db import DynamoDBGateway
 import json
 from discord_client import client
@@ -44,12 +44,17 @@ async def verify_login(request: Request, call_next):
     email = request.headers.get('Email', None)
 
     auth_header = request.headers.get('Authorization', None)
+    discord_users_gateway = DiscordUsersGateway()
+    
     user_discord_id = await get_id_from_token(auth_header)
     if client.member_present_with_needed_role(discord_id=user_discord_id):
+        if discord_users_gateway.get_user_by_email(email, user_discord_id) is None:
+            discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.now()))
+            
         return await call_next(request)
 
-    user_gateway = UserGateway()  # initialize UserGateway just once
-    if user_gateway.is_guest_user_allowed(email):
+    guest_users_gateway = GuestUsersGateway()
+    if guest_users_gateway.is_guest_user_allowed(email):
         print("User is an allowed guest")
         response = await call_next(request)
 
@@ -59,7 +64,7 @@ async def verify_login(request: Request, call_next):
             #    requests to ask at once, then he ends up only getting one response or none
             # 2. if ask failed on the backend, we are counting as it was succeeded and
             #    decrements the token anyway
-            user_gateway.decrement_remaining_trial_requests(email)
+            guest_users_gateway.decrement_remaining_trial_requests(email)
         return response
 
     return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})

@@ -15,6 +15,7 @@ DB_EMAILS_SENT = f'{SNAKE_CASE_PREFIX}_emails_sent'
 DB_JSON_PAPERS = f'{SNAKE_CASE_PREFIX}_json_papers'
 DB_FEEDBACK = f'{SNAKE_CASE_PREFIX}_feedback'
 DB_GUEST_USERS = f'{SNAKE_CASE_PREFIX}_guest_users'
+DB_DISCORD_USERS = f'{SNAKE_CASE_PREFIX}_discord_users'
 
 ASK_PAPER_BANNER_IMG = "https://hippoai-assets.s3.eu-central-1.amazonaws.com/askpaperbanner.png"
 
