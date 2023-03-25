@@ -161,7 +161,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                     <Button data-testid="feedback-submit" onClick={() => {
                       if (userEmail && sentiment) {
                         setStatus('sending')
-                        storeFeedback(session!.user!.email, {
+                        storeFeedback(session!.user!.email!, {
                           email: userEmail,
                           was_answer_accurate: wasAnswerAccurate,
                           question,
