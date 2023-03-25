@@ -103,8 +103,4 @@ const config: PlaywrightTestConfig = {
 
 };
 
-if (process.env.ENVIRONMENT == 'dev') {
-  config.projects = config.projects?.filter((project) => project.name == 'chromium')
-}
-
 export default config;
