@@ -61,6 +61,7 @@ class GuestUsersGateway:
         return user
 
     def decrement_remaining_trial_requests(self, email: str) -> GuestUser:
+        print("Decrementing remaining trial requests")
         data = self.db_gateway.read('email', email)
         user = GuestUser(**data)
         if user.remaining_trial_requests == 0:

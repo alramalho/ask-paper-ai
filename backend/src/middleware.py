@@ -75,12 +75,10 @@ async def verify_login(request: Request, call_next):
         print("User is an allowed guest")
         response = await call_next(request)
 
-        if request.url.path in ['/ask', '/summarize', '/extract-datasets']:
+        if request.url.path in ['/ask', '/summarize', '/extract-datasets'] and response.status_code // 100 == 2: 
             # TODO, the following logic isn't the best way due to following reasons:
             # 1. if the user has very low latency, his browser might make several
             #    requests to ask at once, then he ends up only getting one response or none
-            # 2. if ask failed on the backend, we are counting as it was succeeded and
-            #    decrements the token anyway
             guest_users_gateway.decrement_remaining_trial_requests(email)
         return response
 
