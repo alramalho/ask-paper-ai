@@ -1,4 +1,4 @@
-fastapi
+fastapi>=0.87.0
 uvicorn
 openai
 python-dotenv
