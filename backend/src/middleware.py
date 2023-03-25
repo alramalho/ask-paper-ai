@@ -7,6 +7,7 @@ from utils.constants import LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS, DISCORD_W
 from database.users import GuestUsersGateway, DiscordUsersGateway
 from database.db import DynamoDBGateway
 import json
+import uuid
 
 async def get_id_from_token(bearer_token: str):
     response = requests.get(
@@ -96,6 +97,7 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
         time_elapsed = str(datetime.datetime.now() - start)
         print(f"Elapsed time for {request.url.path}: {time_elapsed}")
         background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write, {
+            'id': str(uuid.uuid4()),
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
             'function_path': request.url.path,
@@ -108,6 +110,7 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
         print(e)
         print(traceback.format_exc())
         DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write({
+            'id': str(uuid.uuid4()),
             'email': email,
             'latest_commit_id': LATEST_COMMIT_ID,
             'function_path': request.url.path,

@@ -20,6 +20,7 @@ import nlp
 from database.db import DynamoDBGateway
 from database.users import GuestUsersGateway, UserDoesNotExistException
 import re
+import uuid
 
 app = FastAPI()
 
@@ -130,6 +131,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
         background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
+            'id': str(uuid.uuid4()),
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
@@ -164,6 +166,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
     try:
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
         background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
+            'id': str(uuid.uuid4()),
             'recipient': recipient,
             'subject': subject,
             'body_html': body_html,
@@ -285,6 +288,8 @@ async def store_feedback(request: Request):
         raise HTTPException(status_code=400, detail="Missing table_name")
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data")
+    
+    body['id'] = str(uuid.uuid4())
 
     DynamoDBGateway(DB_FEEDBACK).write(body['data'])
 

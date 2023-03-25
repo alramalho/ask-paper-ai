@@ -1,7 +1,6 @@
 from botocore.exceptions import ClientError
 from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID
 from utils.aws_client import aws_resource, AWSResource
-import uuid
 import datetime
 
 
@@ -31,9 +30,6 @@ class DynamoDBGateway:
 
     def write(self, data: dict):
         print('Writing to dynamo')
-
-        if 'id' not in data:
-            data['id'] = str(uuid.uuid4())
 
         if 'created_at' not in data:
             data['created_at'] = str(datetime.datetime.now())

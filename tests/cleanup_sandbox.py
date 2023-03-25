@@ -15,6 +15,7 @@ table_names = ['ask_paper_emails_sent_sandbox',
                'ask_paper_feedback_sandbox',
                'ask_paper_function_invocations_sandbox',
                'ask_paper_guest_users_sandbox',
+               'ask_paper_discord_users_sandbox',
                'ask_paper_json_papers_sandbox']
 
 
@@ -24,10 +25,16 @@ for table_name in table_names:
     table = dynamodb_resource.Table(table_name)
     response = dynamodb_client.scan(TableName=table_name)
     items = response.get('Items', [])
+    if table_name == "ask_paper_guest_users_sandbox":
+        print(items)
     while items:
         with table.batch_writer() as batch:
             for item in items:
-                item = {'id': item.get('id').get('S')}
+                try:
+                    item = {'id': item.get('id').get('S')}
+                except Exception as e:
+                    print("Couldn't find id, trying email")
+                    item = {'email': item.get('email').get('S')}
                 print(item)
                 batch.delete_item(Key=item)
                 if response.get('LastEvaluatedKey'):
