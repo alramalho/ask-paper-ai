@@ -1,4 +1,4 @@
-# delete all items sandbox dynamo tables. 
+# delete all items sandbox dynamo tables.
 # Dont use sh as it is a pain in the ass
 
 # just setup a project. Try poetry since you're at it
@@ -11,34 +11,30 @@ dynamodb_resource = boto3.resource('dynamodb')
 dynamodb_client = boto3.client('dynamodb')
 
 # Define the table names
-table_names = ['ask_paper_emails_sent_sandbox',
-               'ask_paper_feedback_sandbox',
-               'ask_paper_function_invocations_sandbox',
-               'ask_paper_guest_users_sandbox',
-               'ask_paper_discord_users_sandbox',
-               'ask_paper_json_papers_sandbox']
+tables = [{"name": 'ask_paper_emails_sent_sandbox', "key": "id"},
+          {"name": 'ask_paper_feedback_sandbox', "key": "id"},
+          {"name": 'ask_paper_function_invocations_sandbox', "key": "id"},
+          {"name": 'ask_paper_guest_users_sandbox', "key": "email"},
+          {"name": 'ask_paper_discord_users_sandbox', "key": "email"},
+          {"name": 'ask_paper_json_papers_sandbox', "key": "id"}]
 
 
 # Delete all items in each table
-for table_name in table_names:
-    print(f"Deleting all entries from {table_name}.")
-    table = dynamodb_resource.Table(table_name)
-    response = dynamodb_client.scan(TableName=table_name)
+for table in tables:
+    print(f"Deleting all entries from {table['name']}.")
+    dtable = dynamodb_resource.Table(table['name'])
+    response = dynamodb_client.scan(TableName=table['name'])
     items = response.get('Items', [])
-    if table_name == "ask_paper_guest_users_sandbox":
-        print(items)
     while items:
-        with table.batch_writer() as batch:
+        with dtable.batch_writer() as batch:
             for item in items:
-                try:
-                    item = {'id': item.get('id').get('S')}
-                except Exception as e:
-                    print("Couldn't find id, trying email")
-                    item = {'email': item.get('email').get('S')}
+                key = table['key']
+                item = {key: item.get(key).get('S')}
                 print(item)
                 batch.delete_item(Key=item)
                 if response.get('LastEvaluatedKey'):
-                    response = dynamodb_client.scan(TableName=table_name, ExclusiveStartKey=response.get('LastEvaluatedKey'))
+                    response = dynamodb_client.scan(
+                        TableName=table['name'], ExclusiveStartKey=response.get('LastEvaluatedKey'))
                 else:
-                    response = dynamodb_client.scan(TableName=table_name)
+                    response = dynamodb_client.scan(TableName=table['name'])
         items = response.get('Items', [])
