@@ -23,7 +23,6 @@ export const useGuestSession = (options?: UseSessionOptions<boolean>) => {
   const session: Session = {
     user: {
       name: 'Guest User',
-      // TODO: use TEST_EMAIL instead of TEST_ID
       email: userEmail,
       // @ts-ignore
       accessToken: 'dummy',

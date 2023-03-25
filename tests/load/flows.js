@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const TEST_EMAIL = process.env.TEST_ID + '@e2e.test';
+const TEST_EMAIL = crypto.randomUUID() + '@e2e.test';
 
 async function uploadPaper(path, page) {
     page.on("filechooser", (fileChooser) => {
@@ -9,7 +9,15 @@ async function uploadPaper(path, page) {
 
 }
 
+async function loginAsGuest() {
+    await page.getByTestId('guest-login-input').fill(TEST_EMAIL);
+    await page.getByTestId('guest-login-button').click();
+  }
+
+  
 async function giveFeedback(page) {
+
+    // todo: add login as guest
 
     await page.click('text=Answer was accurate');
     const selectedAccuracy = true;
@@ -59,6 +67,7 @@ async function askQuestion(page) {
 
 async function uploadAskAndGiveFeedbackFlow(page) {
     await page.goto('https://sandbox--hippo-prototype.netlify.app/');
+    await loginAsGuest();
     page.setDefaultTimeout(240000)
 
     await uploadPaper(process.cwd() + '/fixtures/fracnet_paper.pdf', page)

@@ -1,9 +1,7 @@
 import {expect, FileChooser, Page, test} from '@playwright/test';
 import { SNAKE_CASE_PREFIX } from './utils/constants';
 var crypto = require("crypto");
-var id = crypto.randomBytes(20).toString('hex');
 
-const TEST_EMAIL = (process.env.TEST_ID ?? 'local-' + id ) + '@e2e.test';
 test.describe.configure({mode: 'serial'});
 
 let page: Page
@@ -13,7 +11,10 @@ async function loginAsGuest(browser) {
 
   await page.goto(process.env.APP_URL!)
 
-  await page.getByTestId('guest-login-input').fill(TEST_EMAIL);
+  var id = crypto.randomUUID();
+  const test_email = (process.env.ENVIRONMENT ?? 'local' + "-" + id ) + '@e2e.test';
+
+  await page.getByTestId('guest-login-input').fill(test_email);
   await page.getByTestId('guest-login-button').click();
 }
 
