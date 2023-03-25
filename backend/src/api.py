@@ -289,7 +289,7 @@ async def store_feedback(request: Request):
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data")
     
-    body['id'] = str(uuid.uuid4())
+    body['data']['id'] = str(uuid.uuid4())
 
     DynamoDBGateway(DB_FEEDBACK).write(body['data'])
 

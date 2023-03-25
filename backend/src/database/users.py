@@ -42,13 +42,12 @@ class GuestUsersGateway:
     def get_user_by_email(self, email: str) -> GuestUser:
         data = self.db_gateway.read('email', email)
         if data is None:
-            print("User does not exist")
+            print(f"User with email {email} does not exist")
             raise UserDoesNotExistException()
         return GuestUser(**data)
 
     def is_guest_user_allowed(self, email: str) -> bool:
-        data = self.db_gateway.read('email', email)
-        user = GuestUser(**data)
+        user = self.get_user_by_email(email)
         return user.remaining_trial_requests > 0
 
     def create_user(self, email: str) -> GuestUser:

@@ -321,7 +321,7 @@ const Home = () => {
                       '&:hover': { color: 'white', backgroundColor: 'green' },
                     }}
                     onPress={() => {
-                      storeFeedback({
+                      storeFeedback(session!.user!.email!, {
                         email: session!.user!.email,
                         was_answer_accurate: true,
                         question,
@@ -336,7 +336,7 @@ const Home = () => {
                   </Button>
                   <Button ghost auto size="lg" iconRight="👎"
                     onPress={() => {
-                      storeFeedback({
+                      storeFeedback(session!.user!.email!, {
                         email: session!.user!.email,
                         was_answer_accurate: false,
                         question,

@@ -4,10 +4,24 @@ import datetime
 import requests
 import traceback
 from utils.constants import LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS, DISCORD_WHITELIST_ROLENAME, HIPPOAI_DISCORD_SERVER_ID, DISCORD_CLIENT_BOT_TOKEN
-from database.users import GuestUsersGateway, DiscordUsersGateway
+from database.users import GuestUsersGateway, DiscordUsersGateway, UserDoesNotExistException
 from database.db import DynamoDBGateway
 import json
 import uuid
+
+async def set_body(request: Request, body: bytes):
+    async def receive():
+        return {"type": "http.request", "body": body}
+
+    request._receive = receive
+
+
+async def get_body(request: Request) -> bytes:
+    # fast api request.body or .json will hang: https://github.com/tiangolo/fastapi/issues/394#issuecomment-883524819
+    await set_body(request, await request.body())
+    body = await request.json() if request.headers.get('Content-Type') == 'application/json' else {}
+    return body
+
 
 async def get_id_from_token(bearer_token: str):
     response = requests.get(
@@ -41,16 +55,19 @@ async def verify_login(request: Request, call_next):
     if request.url.path == '/user-remaining-requests-count':
         return await call_next(request)
 
-    email = request.headers.get('Email', None)
+    body = await get_body(request) 
+    email = body.get('email', request.headers.get('Email', None))
 
     auth_header = request.headers.get('Authorization', None)
     discord_users_gateway = DiscordUsersGateway()
     
     user_discord_id = await get_id_from_token(auth_header)
     if user_discord_id is not None:
-        if discord_users_gateway.get_user_by_email(email, user_discord_id) is None:
-            discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.now()))
-            
+        try:
+            discord_users_gateway.get_user_by_email(email)
+        except UserDoesNotExistException as e:
+            # todo: should we really be creating the user here?
+            discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.now()))  
         return await call_next(request)
 
     guest_users_gateway = GuestUsersGateway()
@@ -68,27 +85,13 @@ async def verify_login(request: Request, call_next):
         return response
 
     return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
-    
 
-    
-async def set_body(request: Request, body: bytes):
-    async def receive():
-        return {"type": "http.request", "body": body}
-
-    request._receive = receive
-
-
-async def get_body(request: Request) -> bytes:
-    body = await request.json()
-    return body
 
 
 async def log_function_invocation_to_dynamo(request: Request, call_next):
     background_tasks = BackgroundTasks()
     start = datetime.datetime.now()
-    await set_body(request, await request.body())
-    # fast api request.body or .json will hang: https://github.com/tiangolo/fastapi/issues/394#issuecomment-883524819
-    body = await get_body(request) if request.headers.get('Content-Type') == 'application/json' else {}
+    body = await get_body(request) 
 
     email = body.get('email', request.headers.get('Email', None))
 

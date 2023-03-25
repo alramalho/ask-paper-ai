@@ -26,7 +26,7 @@ interface FeedbackProps {
   setVisible: (visible: boolean) => void,
 }
 
-export function storeFeedback(data: any, accessToken: any) {
+export function storeFeedback(email: string, data: any, accessToken: any) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/store-feedback`, {
     "table_name": "HippoPrototypeFeedback",
     "data": data,
@@ -35,6 +35,7 @@ export function storeFeedback(data: any, accessToken: any) {
       'Content-Type': 'application/json',
       // @ts-ignore
       'Authorization': `Bearer ${accessToken}`,
+      'Email': email,
     },
   })
 }
@@ -160,7 +161,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                     <Button data-testid="feedback-submit" onClick={() => {
                       if (userEmail && sentiment) {
                         setStatus('sending')
-                        storeFeedback({
+                        storeFeedback(session!.user!.email, {
                           email: userEmail,
                           was_answer_accurate: wasAnswerAccurate,
                           question,

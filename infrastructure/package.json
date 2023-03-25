@@ -13,7 +13,8 @@
     "predeploy": "yarn synth",
     "deploy": "cdk deploy --require-approval never --all",
     "predeploy-local": "cdklocal bootstrap",
-    "deploy-local": "cdklocal deploy --require-approval never --all"
+    "deploy-local": "cdklocal deploy --require-approval never --all",
+    "start": "cd .. && ./start-infra-local.sh"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
