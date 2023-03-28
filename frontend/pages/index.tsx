@@ -79,7 +79,7 @@ const Home = () => {
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')
-  const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(4)
+  const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(0)
 
   const {
     value: question,
