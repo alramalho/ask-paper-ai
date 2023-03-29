@@ -250,12 +250,14 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
         if merge_at_end:
             summary_prompt = PromptTemplate(
                 input_variables=["responses", "question"],
-                template="""Please append the following responses (denoted by 'Response N:') together in a way that no information is ommited
+                template="""Please merge the following responses (denoted by 'Response N:') together in a way that no information is ommited
                     , duplicated, its sequentiality is kept (i.e 'Response N+1' contents come after 'Response N').
                         All of these different responses were an answer to an initial question
                         (denoted by 'Initial Question')
                         and your job is to put it all together in a way that it still faithfully answers the original question.
                         Do not try to combine web links.
+                        Any response that is not relevant to answering the "initial question" should be ignored, like the ones that
+                        say that "The paper does not contain enough information for answering your question".
                         Again, do not omite any information, do not duplicate any information, and keep the sequentiality of the responses.
                         {responses}
                         Initial Question:
