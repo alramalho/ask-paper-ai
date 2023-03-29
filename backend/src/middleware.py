@@ -29,7 +29,6 @@ async def get_id_from_token(bearer_token: str):
         headers={'Authorization': bearer_token},
         allow_redirects=True)
     if response.status_code // 100 == 2:
-        print(response.json())
         return response.json()['id']
     else:
         print(f"Failed to get discord id from token: {response.status_code}")
