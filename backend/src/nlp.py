@@ -1,7 +1,7 @@
 import concurrent.futures
 import time
 from pydantic import BaseModel
-from typing import List, Union, Set
+from typing import List, Union, Dict, Optional, Literal
 
 from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
 from langchain.llms import OpenAIChat
@@ -11,16 +11,39 @@ from langchain.text_splitter import MarkdownTextSplitter
 import tiktoken
 from copy import deepcopy
 import json
+from bs4 import BeautifulSoup
+
+
+class CiteSpan(BaseModel):
+    start: int
+    end: int
+    text: str
+    ref_id: Optional[str]
 
 class TextBlock(BaseModel):
     text: str
     section: str
     sec_num: Union[int, None, str]
+    cite_spans: List[CiteSpan]
+    ref_spans: List[CiteSpan]
+
+class FigRef(BaseModel):
+    fig_num: Optional[str]
+    text: str
+    type_str: Literal["figure"]
+    uris: Optional[List[str]]
+
+
+class TabRef(BaseModel):
+    text: str
+    type_str: Literal["table"]
+    content: Optional[str]
+    num: Optional[int]
 
 class PdfParse(BaseModel):
     body_text: List[TextBlock]
     back_matter: List[TextBlock]
-
+    ref_entries: Dict[str, Union[FigRef, TabRef]]
 
 class Paper(BaseModel):
     abstract: str
@@ -46,6 +69,19 @@ class Paper(BaseModel):
                         sections.add(text_block.section)
         return list(sections)
     
+
+    def _get_ref_entries_in_text_blocks(self, sections: List[TextBlock]) -> Dict[str, FigRef]:
+        ref_entries = {}
+        for section in sections:
+            for ref_span in section.ref_spans:
+                ref_id = ref_span.ref_id
+                if ref_id is None: continue
+                if ref_id in self.pdf_parse.ref_entries:
+                    ref_entries[ref_id] = self.pdf_parse.ref_entries[ref_id]
+        return ref_entries
+
+
+    
     def filter_sections(self, mode: str, paper_sections_partially_matches: List[str]):
         print(f"Filtering paper sections to {mode} {paper_sections_partially_matches}")
         new_paper = deepcopy(self)
@@ -65,30 +101,29 @@ class Paper(BaseModel):
             if any(match.lower() in block.section.lower() for match in match_set):
                 filtered_back_matters.append(block)
 
-        # Create a new Paper object with the filtered text blocks
-        if mode == "include":
-            filtered_paper = Paper(
-                abstract=new_paper.abstract,
-                title=new_paper.title,
-                pdf_parse=PdfParse(
-                    body_text=filtered_blocks,
-                    back_matter=filtered_back_matters
-                )
-            )
-        else:
-            filtered_paper = Paper(
-                abstract=new_paper.abstract,
-                title=new_paper.title,
-                pdf_parse=PdfParse(
-                    body_text=[block for block in new_paper.pdf_parse.body_text if block not in filtered_blocks],
-                    back_matter=[block for block in new_paper.pdf_parse.back_matter if block not in filtered_back_matters]
-                )
-            )
+        # If we're excluding, we want to inverse the filter
+        if mode == "exclude":
+            filtered_blocks = [block for block in new_paper.pdf_parse.body_text if block not in filtered_blocks]
+            filtered_back_matters = [block for block in new_paper.pdf_parse.back_matter if block not in filtered_back_matters]
 
-        if filtered_paper.pdf_parse.back_matter == filtered_paper.pdf_parse.body_text == []:
+        if filtered_blocks == filtered_back_matters == []:
             print("Filtered was too harsh! Paper went blank! Returning original")
-        else:
-            self.__dict__.update(filtered_paper.__dict__)
+            return
+
+        ref_entries = self._get_ref_entries_in_text_blocks([*filtered_blocks, *filtered_back_matters])
+
+        filtered_paper = Paper(
+            abstract=new_paper.abstract,
+            title=new_paper.title,
+            pdf_parse=PdfParse(
+                body_text=filtered_blocks,
+                back_matter=filtered_back_matters,
+                ref_entries=ref_entries
+            )
+        )
+
+        self.__dict__.update(filtered_paper.__dict__)
+
 
     def to_text(self) -> str:
         sections = set()
@@ -105,8 +140,44 @@ class Paper(BaseModel):
             else:
                 result[-1] += f"\n{text_block.text}"
 
+        
+        figs_and_tables = []
+        for key, ref in self.pdf_parse.ref_entries.items():
+            if ref.type_str == "figure":
+                fig_num = ref.fig_num if ref.fig_num else key.replace("FIGREF", "")
+                if fig_num == "0": fig_num = ""
+                figs_and_tables.append(f"Figure {fig_num}: {ref.text}")
+            elif ref.type_str == "table":
+                table_num = ref.num if ref.num else key.replace("TABREF", "")
+                if table_num == "0": table_num = ""
+                figs_and_tables.append(f"Table {table_num}: {ref.text}\n{html_table_to_markdown(ref.content)}")
+
+        if figs_and_tables != []:
+            result.append(f"#### Figures and Tables")
+            result.extend(figs_and_tables)
+
+
         return '\n\n'.join(result)
 
+def html_table_to_markdown(html: str) -> str:
+    soup = BeautifulSoup(html, "html.parser")
+    table = soup.find("table")
+    headers = [th.get_text().strip() for th in table.find_all("th")]
+    rows = []
+    for tr in table.find_all("tr"):
+        row = [td.get_text().strip() for td in tr.find_all("td")]
+        if row:
+            rows.append(row)
+    md_table = ""
+    md_table += "| " + " | ".join(headers) + " |\n" if headers != [] else ""
+    md_table += "| " + " | ".join(["---" for _ in headers]) + " |\n" if headers != [] else ""
+    for index, row in enumerate(rows):
+        md_table += "| " + " | ".join(row) + " |\n"
+
+        if headers == [] and index == 0:
+            md_table += "| " + " | ".join(["---" for _ in row]) + " |\n"
+
+    return md_table
 
 
 def count_tokens(text) -> int:
@@ -164,7 +235,7 @@ def get_top_k_sections(k, text, labels):
 
 
 
-async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trade_off: int = 1):
+async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trade_off: int = 0):
     print("Asking paper")
     switcher = {
         0: None,
@@ -190,18 +261,18 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
 
     prompt = PromptTemplate(
         input_variables=["context", "request"],
-        template="""Please respond to the following request, denoted by \"'Request'\" in the best way possible with the
-            given paper context that bounded by \"Start paper context\" and \"End paper context\". Everytime \"paper\"
-            is mentioned, it is referring to paper context denoted by \"Start paper context\" and \"End paper context\".
-            If the paper does not enough information for responding to the request, please respond with \"The paper does not contain enough information
-            for answering your question\".
+        template="""Please respond to the following request, denoted by "Request" in the best way possible with the
+            given paper context that bounded by "Start paper context" and "End paper context". Everytime "paper"
+            is mentioned, it is referring to paper context denoted by "Start paper context" and "End paper context".
+            If the paper does not enough information for responding to the request, please respond with "The paper does not contain enough information
+            for answering your question".
             Your answer must only include information that is explicitly present in the paper context.
             Your answer must not include ANY links that are not present in the paper context.
             Start paper context:
             {context}
-            :End paper context.\n
-            Request:\n'{request}'\n
-            Response:\n
+            :End paper context.
+            Request: '{request}'
+            Response:
             """,
     )
 
