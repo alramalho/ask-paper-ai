@@ -21,6 +21,7 @@ from database.db import DynamoDBGateway
 from database.users import GuestUsersGateway, UserDoesNotExistException
 import re
 import uuid
+from utils.constants import ENVIRONMENT
 
 app = FastAPI()
 
@@ -65,10 +66,11 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
         f = json.load(f)
     print(f['title'])
 
-    os.remove(f"{output_location}/{pdf_file_name}.pdf")
-    os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
-    os.remove(f"{output_location}/{pdf_file_name}.json")
-    print("Removed files")
+    if ENVIRONMENT != 'dev':
+        os.remove(f"{output_location}/{pdf_file_name}.pdf")
+        os.remove(f"{output_location}/{pdf_file_name}.tei.xml")
+        os.remove(f"{output_location}/{pdf_file_name}.json")
+        print("Removed files")
 
     return f
 
@@ -251,9 +253,9 @@ async def summarize(request: Request):
     try:
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
-        Please provide me a summary of the paper per section. Sections are denoted by "\n #### {SECTION_NAME} :\n".
-        Each section summary should be as detailed as possible. You should still contain the section headings, and assure they
-        are in the correct order."""
+        Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header.
+        Each section summary should be as detailed as possible. In case you need to include markdown section headers for the sections,
+        include them as "#####"."""
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 

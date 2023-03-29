@@ -7,12 +7,12 @@ from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
 from langchain.llms import OpenAIChat
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.text_splitter import MarkdownTextSplitter
+from langchain.text_splitter import CharacterTextSplitter
 import tiktoken
 from copy import deepcopy
 import json
 from bs4 import BeautifulSoup
-
+from utils.constants import ENVIRONMENT
 
 class CiteSpan(BaseModel):
     start: int
@@ -192,7 +192,7 @@ def decode(tokens) -> str:
 
 
 def split_text(text, chunk_size=3500):
-    text_splitter = MarkdownTextSplitter.from_tiktoken_encoder(chunk_size=chunk_size, chunk_overlap=0)
+    text_splitter = CharacterTextSplitter.from_tiktoken_encoder(chunk_size=chunk_size, chunk_overlap=20, separator="\n")
     texts = text_splitter.split_text(text)
     return texts
 
@@ -262,9 +262,8 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
     prompt = PromptTemplate(
         input_variables=["context", "request"],
         template="""Please respond to the following request, denoted by "Request" in the best way possible with the
-            given paper context that bounded by "Start paper context" and "End paper context". Everytime "paper"
-            is mentioned, it is referring to paper context denoted by "Start paper context" and "End paper context".
-            If the paper does not enough information for responding to the request, please respond with "The paper does not contain enough information
+            given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
+            If the paper context does not enough information for responding to the request, please respond with "The paper does not contain enough information
             for answering your question".
             Your answer must only include information that is explicitly present in the paper context.
             Your answer must not include ANY links that are not present in the paper context.
@@ -281,6 +280,10 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
     print(f"context_max_tokens: {context_max_tokens}")
 
     full_context = paper.to_text()
+
+    if ENVIRONMENT == "dev":
+        with open("paper.txt", "w") as f:
+            f.write(full_context)
 
     while True:
         contexts = split_text(full_context, context_max_tokens)
@@ -341,6 +344,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
             llm = OpenAIChat(temperature=0, max_tokens=max(1000, LLM_MAX_TOKENS - summary_prompt_length))
             chain = LLMChain(llm=llm, prompt=summary_prompt)
             responses = [f"\n Response {i}: \n" + r for i, r in enumerate(responses)]
+
             response = chain.run(responses='\n'.join(responses), question=question)
         else:
             response = "\n".join(responses)
