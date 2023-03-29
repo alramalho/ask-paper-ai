@@ -282,11 +282,6 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
 
     full_context = paper.to_text()
 
-    with open('output.txt', 'w') as f:    
-        print("dafuq")
-        print(paper.title + "\n", file=f)
-        print(full_context, file=f)
-
     while True:
         contexts = split_text(full_context, context_max_tokens)
 
