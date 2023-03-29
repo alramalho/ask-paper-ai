@@ -146,7 +146,7 @@ class Paper(BaseModel):
             if ref.type_str == "figure":
                 fig_num = ref.fig_num if ref.fig_num else key.replace("FIGREF", "")
                 if fig_num == "0": fig_num = ""
-                figs_and_tables.append(f"Figure {fig_num}: {ref.text}")
+                figs_and_tables.append(f"Figure {fig_num}: \"{ref.text}\"")
             elif ref.type_str == "table":
                 table_num = ref.num if ref.num else key.replace("TABREF", "")
                 if table_num == "0": table_num = ""
@@ -281,6 +281,11 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
     print(f"context_max_tokens: {context_max_tokens}")
 
     full_context = paper.to_text()
+
+    with open('output.txt', 'w') as f:    
+        print("dafuq")
+        print(paper.title + "\n", file=f)
+        print(full_context, file=f)
 
     while True:
         contexts = split_text(full_context, context_max_tokens)

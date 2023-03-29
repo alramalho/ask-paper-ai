@@ -49,6 +49,18 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
   })
 
+  test('should be able ask a question with best speed', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.click('text=Best Speed');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  });
+
   test('should be able ask a question with best results', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.click('text=Best Results');
@@ -61,21 +73,33 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
   });
 
-  test('should have one less request remaining', async () => {
-    await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
-  })
-
-  test('should be able ask a question with best speed', async () => {
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
-    await page.click('text=Best Speed');
+  test('should be able ask a question that needs information from a figure caption', async () => {
+    await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
+    await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area')).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+    await expect(page.getByTestId('answer-area')).toContainText("Fig. 3. (a) FROC curves of FracNet detection performance on the RibFrac training, tuning and test cohorts. (b) Illustration of predicted segmentation on RibFrac test cohorts. (c) A comparison of segmentation metrics (IoU and Dice) for rounded and elongated shape. In (b) and (c), the pseudo-color in the 3D shape is only for visualization purpose.");
     await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
   });
+
+  test('should be able ask a question that needs information from a table', async () => {
+    await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2");
+    await page.click('text=Best Results');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area')).toBeVisible();
+
+    await expect(page.getByTestId('answer-area')).toContainText("58.7%");
+    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+  });
+
+  test('should have one less request remaining', async () => {
+    await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
+  })
 
   test('should be able to extract datasets', async () => {
     await page.click('text=Extract Datasets');
