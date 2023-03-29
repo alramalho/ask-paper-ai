@@ -15,7 +15,7 @@ tables = [{"name": 'ask_paper_emails_sent_sandbox', "key": "id"},
           {"name": 'ask_paper_feedback_sandbox', "key": "id"},
           {"name": 'ask_paper_function_invocations_sandbox', "key": "id"},
           {"name": 'ask_paper_guest_users_sandbox', "key": "email"},
-          {"name": 'ask_paper_discord_users_sandbox', "key": "email"},
+          {"name": 'ask_paper_discord_users_sandbox', "key": "discord_id"},
           {"name": 'ask_paper_json_papers_sandbox', "key": "id"}]
 
 
