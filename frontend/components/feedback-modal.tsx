@@ -6,6 +6,7 @@ import {Paper} from "../pages";
 import {GuestUserContext, useGuestSession} from "../hooks/session";
 import {Box} from "./layout";
 import { useSession } from 'next-auth/react';
+import MySlider from './my-slider';
 
 const StyledRadio = styled(Radio, {
   margin: '0 $5',
@@ -45,7 +46,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
   const [error, setError] = useState<string | undefined>(undefined);
   const [nextFeature, setNextFeature] = useState<string | undefined>(undefined);
   const [wasAnswerAccurate, setWasAnswerAccurate] = useState<boolean | undefined>(undefined);
-  const [sentiment, setSentiment] = useState<string | undefined>(undefined);
+  const [nps, setNps] = useState<number | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
   const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useSession()
@@ -93,21 +94,8 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                     />
                   </Flex>
                   <Divider/>
-
-                  <StyledLabel htmlFor='sentiment'>How do you feel about the tool?</StyledLabel>
-                  <Radio.Group
-                    value={sentiment}
-                    onChange={setSentiment}
-                    isRequired
-                    name="sentiment"
-                    id="sentiment"
-                    orientation='horizontal'
-                  >
-                    <StyledRadio size="lg" value="Very bad">😡️</StyledRadio>
-                    <StyledRadio size="lg" value="Good">😕</StyledRadio>
-                    <StyledRadio size="lg" value="Bad">🙂</StyledRadio>
-                    <StyledRadio size="lg" value="Very good">😍</StyledRadio>
-                  </Radio.Group>
+                  <StyledLabel htmlFor='rate'>On a scale from 0 to 10, how likely are you to<br/> recommend this product to a friend or colleague?</StyledLabel>
+                  <MySlider value={nps} onChange={setNps}/>
                   <Divider/>
                   <StyledLabel htmlFor='nextFeature'>What feature would you like to see next?</StyledLabel>
                   <Radio.Group
@@ -159,14 +147,14 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                       Close
                     </Button>
                     <Button data-testid="feedback-submit" onClick={() => {
-                      if (userEmail && sentiment) {
+                      if (userEmail && nps) {
                         setStatus('sending')
                         storeFeedback(session!.user!.email!, {
                           email: userEmail,
                           was_answer_accurate: wasAnswerAccurate,
                           question,
                           answer,
-                          sentiment,
+                          nps,
                           next_feature: nextFeature,
                           message,
                           paper_hash: paper?.hash ?? null,
