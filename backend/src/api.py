@@ -260,7 +260,7 @@ async def summarize(request: Request):
         raise HTTPException(status_code=400, detail="Missing data")
 
     paper.filter_sections('exclude', ['abstract'])
-    response = await nlp.ask_paper(question, paper, merge_at_end=False)
+    response = await nlp.ask_paper(question, paper, merge_at_end=True)
     return {'message': response}
 
 
