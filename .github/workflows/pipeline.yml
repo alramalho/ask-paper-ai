@@ -47,7 +47,6 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
           aws --version
-          aws -h
 
 
       - name: Configure AWS
@@ -106,7 +105,6 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
           aws --version
-          aws -h
 
           yarn
       - name: Install Playwright Browsers
@@ -194,7 +192,6 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
           aws --version
-          aws -h
           
 
       - name: Configure AWS
