@@ -293,7 +293,7 @@ async def store_feedback(request: Request):
     
     body['data']['id'] = str(uuid.uuid4())
 
-    DynamoDBGateway(DB_FEEDBACK).write(body['data'])
+    DynamoDBGateway(DB_FEEDBACK).write(body['data']) # todo: are there security concers here?
 
     return {"message": "success"}
 
