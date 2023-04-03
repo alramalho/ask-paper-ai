@@ -110,3 +110,7 @@ code {
 .react-pdf__Document {
     height: 792px;
 }
+
+::selection, ::-moz-selection {
+    color: black;
+}
