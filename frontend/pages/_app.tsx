@@ -7,6 +7,8 @@ import { SessionProvider } from "next-auth/react";
 import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
 import { Layout } from "../components/layout";
 import { ConfigProvider } from 'antd';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 const primaryColor = "#ff6372"
 export const lightTheme = createTheme({

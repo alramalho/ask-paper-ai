@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {Document, Page, pdfjs} from "react-pdf";
 // import pdf worker as a url, see `next.config.js` and `pdf-worker.js`
 import workerSrc from "../pdf-worker";
@@ -15,6 +15,7 @@ interface PdfViewerProps {
 }
 
 const PdfViewer = ({pdf, css}: PdfViewerProps) => {
+  const [searchText, setSearchText] = useState('');
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -35,6 +36,16 @@ const PdfViewer = ({pdf, css}: PdfViewerProps) => {
     changePage(1);
   }
 
+
+  function highlightPattern(text, pattern) {
+    return text.replace(pattern, (value) => `<mark>${value}</mark>`);
+  }
+
+  const textRenderer = useCallback(
+    (textItem) => highlightPattern(textItem.str, searchText),
+    [searchText]
+  );
+
   return (
     <Box css={css}>
       <Box css={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}>
@@ -42,15 +53,23 @@ const PdfViewer = ({pdf, css}: PdfViewerProps) => {
           style={{height: '800'}}
           file={pdf}
           onLoadSuccess={onDocumentLoadSuccess}
+          options={{
+            cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
+          }}
         >
           <Page
             pageNumber={pageNumber}
             renderAnnotationLayer={false}
-            renderTextLayer={false}
+            renderTextLayer={true}
+            customTextRenderer={textRenderer}
           />
         </Document>
       </Box>
       <Box>
+        <div>
+          <label htmlFor="search">Search:</label>
+          <input type="search" id="search" value={searchText} onChange={event => setSearchText(event.target.value)} />
+        </div>
         <Text>
           Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
         </Text>
