@@ -2,7 +2,7 @@ import {CSS, Image, styled, Text} from '@nextui-org/react';
 import {Flex} from "./styles/flex";
 import {NextSeo} from 'next-seo';
 import {OpenGraphMedia} from 'next-seo/lib/types';
-import {SponsorButton} from "./sponsor-button";
+import {TweetButton} from "./sponsor-button";
 import React from "react";
 
 interface LayoutProps {
@@ -31,7 +31,7 @@ export const Layout = ({children, css, seo}: LayoutProps) => {
   const url = `https://www.askpaper.ai`
   return (
     <>
-      <SponsorButton />
+      <TweetButton />
       <Flex
         justify="center"
         align="center"
@@ -58,7 +58,6 @@ export const Layout = ({children, css, seo}: LayoutProps) => {
                 }}
             />
         }
-        <Image src="hippo.svg" css={{width: "100px"}}/>
         {children}
       </Flex>
     </>

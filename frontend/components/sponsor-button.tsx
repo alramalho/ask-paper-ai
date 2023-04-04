@@ -1,28 +1,13 @@
-import {Button, CSS, Image, styled} from '@nextui-org/react';
-import {HeartIcon} from "./icons/heart-icon";
+import {Button, styled} from '@nextui-org/react';
 import {keyframes} from "@nextui-org/react";
-import {StitchesConfig} from "@nextui-org/react/types/theme/stitches.config";
+import { TwitterIcon } from './icons/twitter-icon';
 
 export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
-const pulse = keyframes({
-  // @ts-ignore
-  "0%": {
-    transform: "scale(1)",
-  },
-  // @ts-ignore
-  "50%": {
-    transform: "scale(1.2)",
-  },
-  // @ts-ignore
-  "100%": {
-    transform: "scale(1)",
-  },
-});
 
-export const SponsorButton = () => {
+export const TweetButton = () => {
   return (
 
     <Button
@@ -41,7 +26,7 @@ export const SponsorButton = () => {
         },
         "&:hover": {
           "& .nextui-button-icon svg": {
-            animation: `${pulse} 1s infinite`,
+            transform: "scale(1.2)",
           },
         },
         position: 'fixed',
@@ -49,14 +34,14 @@ export const SponsorButton = () => {
         left: '10px',
         zIndex: 10,
       }}
-      href="https://www.hippoai.org"
-      icon={<HeartIcon filled fill="red" size={20} />}
+      href="https://twitter.com/intent/tweet?text=%F0%9F%93%9D+askpaper.ai+-+Understand+any+paper%21%0D%0ACheck+out+this+new+AI+tool+that+let%27s+you+ask+open+questions%2C+generate+great+summaries+%26+extract+data+from+papers.+%0D%0APerfect+for+researchers+trying+to+ramp+up+their+paper+reading+game%21"
+      icon={<TwitterIcon filled fill="#1DA1F2" size={24}/>}
       rel="noreferrer"
       target="_blank"
       size="xl"
 
     >
-      Support the foundation
+      Share on Twitter
     </Button>
   )
 };
