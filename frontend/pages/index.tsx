@@ -1,4 +1,4 @@
-import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Link } from "@nextui-org/react";
+import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Link, Collapse, Divider, Card, Grid } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -41,16 +41,16 @@ export type Paper = {
   }
 }
 
-const RobotAnswer = ({children}) => {
+const RobotAnswer = ({ children }) => {
   return (
-    <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'no-wrap' }}>
+    <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start' }}>
       <Box css={{
-        minWidth: "60px",
-        maxWidth: "60px",
+        minWidth: "40px",
+        maxWidth: "40px",
         alignSelf: 'end',
         transform: 'translateY(20px)'
       }}>
-        <Image src="bot.png" />
+        <Image src="hippo.svg" />
       </Box>
       <Box id="answer-area" data-testid="answer-area" css={{
         textAlign: 'left',
@@ -58,7 +58,6 @@ const RobotAnswer = ({children}) => {
         border: '1px solid $gray600',
         padding: '$10',
         borderRadius: '20px 20px 20px 0',
-        maxWidth: '1200px',
       }}>
         {children}
       </Box>
@@ -139,78 +138,214 @@ const Home = () => {
       </>)
   }
   return (<>
-    <Flex>
-      <Text h2>Ask Paper</Text>
-      <Badge color="error" variant="flat">
-        BETA
-      </Badge>
-      <Badge color="warning" variant="flat">
-        v2.2
-      </Badge>
-    </Flex>
-    <PaperUploader onFinish={(paper, pdf) => {
-      setSelectedPaper(paper)
-      setPdf(pdf)
-    }} />
-    {isUserLoggedInAsGuest &&
-      <>
-        <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image} />
-        <RemainingRequests value={remainingTrialRequests} />
-      </>
-    }
-    {selectedPaper &&
-      <>
-        <Flex direction='column' css={{ margin: '$10', gap: '$10' }}>
-          {pdf && <PdfViewer
-            pdf={pdf}
-          />}
-          <Flex direction={'column'}>
-            <Spacer y={3} />
-            <h4>And ask your question</h4>
-            <Flex css={{ gap: "$5" }}>
+    <Box css={{ display: 'flex', flexWrap: 'nowrap', height: '100%', }}>
+      <Box as="main" css={{ overflow: 'auto', paddingRight:"$10" }}>
+        <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
+          <Box>
+            <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
+            <Flex>
+              <Text h2>Ask Paper</Text>
+              <Badge color="error" variant="flat">
+                BETA
+              </Badge>
+              <Badge color="warning" variant="flat">
+                v2.2
+              </Badge>
+            </Flex>
+            <PaperUploader onFinish={(paper, pdf) => {
+              setSelectedPaper(paper)
+              setPdf(pdf)
+            }} />
+          </Box>
+          {isUserLoggedInAsGuest &&
+            <>
+              <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image} />
+              <RemainingRequests value={remainingTrialRequests} />
+            </>
+          }
+          {selectedPaper &&
+            <>
+              <Spacer y={4} />
+              <Flex direction='row' css={{ margin: '$10', gap: '$10', flexWrap: 'wrap', '@sm': { flexWrap: 'nowrap' } }}>
+                {pdf && <PdfViewer pdf={pdf} />}
+              </Flex>
+            </>
+          }
+        </Flex>
+      </Box>
+      {selectedPaper &&
+        <Card as="aside" css={{
+          background: "transparent",
+          backdropFilter: "blur(3px)",
+          textAlign: 'left',
+          borderLeft: "1px solid gray",
+          flex: '1 0 10%'
+        }}>
+          <Box data-testid="chat" css={{ flexGrow: 1 }}>
 
+          </Box>
+          {isRunning
+            && <>
+              <Loading data-testid="loading-answer">{loadingText}</Loading>
+            </>
+          }
+          {LLMResponse &&
+            <>
+              <RobotAnswer>
+                <Box id="answer">
+                  <MarkdownView
+                    markdown={LLMResponse}
+                    options={{ tables: true, emoji: true, }}
+                  />
+                </Box>
+                <Spacer y={2} />
+                <Flex direction="row" css={{ justifyContent: "space-between", gap: "$3" }}>
+                  <Flex css={{ justifyContent: 'flex-start', gap: "$4" }}>
+                    <Button
+                      auto
+                      css={{
+                        border: "2px solid $yellow400",
+                        backgroundColor: "$backgroundLighter",
+                        '&:hover': {
+                          backgroundColor: "$yellow400",
+                        }
+                      }}
+                      onPress={() => {
+                        setEmailStatus('sending')
+                        sendAnswerEmail({
+                          // @ts-ignore # todo: dafuq? Why is this comment needed
+                          email: session!.user!.email,
+                          question: question,
+                          // @ts-ignore
+                          answer: document?.getElementById('answer')?.innerHTML, // to keep the html format
+                          paperTitle: selectedPaper!.title
+                        }).then(() => {
+                          setEmailStatus('done')
+                          setTimeout(() => {
+                            setEmailStatus('idle')
+                          }, 5000)
+                        })
+                          .catch(() => setEmailStatus('error'))
+                      }}
+                    >
+                      <Text>Email me this 📩</Text>
+                    </Button>
+                    {emailStatus == 'sending' && <Text>Sending email...</Text>}
+                    {emailStatus == 'done' &&
+                      <Text data-testid="email-sent">Email sent! ✅</Text>}
+                    {emailStatus == 'error' &&
+                      <Text>There was an error ❌ Please contact support.</Text>}
+                  </Flex>
+                  <Flex css={{ gap: "$7" }}>
+                    <Text>Was it accurate?</Text>
+                    <Button ghost auto color="success"
+                      css={{
+                        color: '"$success"',
+                        '&:hover': { color: 'white', backgroundColor: '"$success"' },
+                      }}
+                      onPress={() => {
+                        storeFeedback(session!.user!.email!, {
+                          email: session!.user!.email,
+                          was_answer_accurate: true,
+                          question,
+                          answer: LLMResponse,
+                          // @ts-ignore
+                        }, session!.accessToken)
+                        setUnderFeedbackText('Thank you! 🙏')
+                        setTimeout(() => setUnderFeedbackText(undefined), 4000)
+                      }}
+                    >
+                      👍
+                    </Button>
+                    <Button ghost auto
+                      onPress={() => {
+                        storeFeedback(session!.user!.email!, {
+                          email: session!.user!.email,
+                          was_answer_accurate: false,
+                          question,
+                          answer: LLMResponse,
+                          // @ts-ignore
+                        }, session!.accessToken)
+                        setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')
+                        setTimeout(() => setUnderFeedbackText(undefined), 8000)
+                      }}
+                    >
+                      👎
+                    </Button>
+                  </Flex>
+                </Flex>
+                <Spacer y={1} />
+              </RobotAnswer>
+              <Spacer y={1} />
+
+              {underFeedbackText && <Text css={{ maxWidth: '400px' }}>{underFeedbackText}</Text>}
+
+            </>
+          }
+          {errorResponse && LLMResponse == undefined &&
+            <RobotAnswer>
+              <MarkdownView
+                markdown={errorResponse + "<br/> Please try again later or contact support."}
+                options={{ tables: true, emoji: true, }}
+              />
+            </RobotAnswer>
+          }
+          <Divider css={{ margin: '$5 0' }} />
+
+          <Card.Footer css={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start'
+          }}>
+            <Flex direction="row" css={{ gap: "$2", flexWrap: 'nowrap', width: '100%' }}>
               <Textarea
                 {...bindings}
                 bordered
                 data-testid="ask-textarea"
                 fullWidth
                 size="lg"
-                minRows={4}
+                minRows={2}
                 maxRows={20}
                 placeholder="Type your question here..."
                 // @ts-ignore
-                css={{ width: "400px", maxWidth: "100%", margin: "$2", background: '$backgroundLighter' }}
+                css={{ marginBottom: "$5", background: '$backgroundLighter' }}
               />
-              <Flex direction="column" align="start" css={{ gap: "$2" }}>
-                <Button
-                  data-testid="ask-button"
-                  iconRight={<SendIcon />}
-                  onPress={() => {
-                    handleSubmit(askPaper, {
-                      question: question ?? '',
-                      paper: JSON.parse(JSON.stringify(selectedPaper)),
-                      // @ts-ignore
-                      email: session!.user!.email,
-                      // @ts-ignore
-                      accessToken: session!.accessToken,
-                      quote: quoteChecked,
-                      // @ts-ignore
-                      paperHash: selectedPaper!.hash,
-                      resultsSpeedTradeoff: resultsSpeedTradeoff
-                    })
-                  }
-                  }> Ask </Button>
-                <Flex css={{ gap: "$2" }}>
-                  <Switch bordered initialChecked checked={quoteChecked}
-                    onChange={() => setQuoteChecked(previous => !previous)}></Switch>
-                  <Text small>Quote paper</Text>
-                </Flex>
-                <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
-              </Flex>
+              <Button
+                data-testid="ask-button"
+                iconRight={<SendIcon />}
+                onPress={() => {
+                  handleSubmit(askPaper, {
+                    question: question ?? '',
+                    paper: JSON.parse(JSON.stringify(selectedPaper)),
+                    // @ts-ignore
+                    email: session!.user!.email,
+                    // @ts-ignore
+                    accessToken: session!.accessToken,
+                    quote: quoteChecked,
+                    // @ts-ignore
+                    paperHash: selectedPaper!.hash,
+                    resultsSpeedTradeoff: resultsSpeedTradeoff
+                  })
+                }
+                }> Ask </Button>
             </Flex>
-            <Spacer y={2} />
+            <Collapse
+              bordered
+              title=""
+              subtitle="ℹ️ Configuration"
+              css={{ width: '100%'}}
+            >
+              <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
+                <Switch bordered initialChecked checked={quoteChecked}
+                  onChange={() => setQuoteChecked(previous => !previous)}></Switch>
+                <Text small>Quote paper</Text>
+              </Flex>
+              <Spacer y={1} />
+              <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+            </Collapse>
+            <Spacer y={1} />
             <h4>Or start with predefined action:</h4>
-            <Flex css={{ gap: '$7' }}>
+            <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
               <Button
                 css={{ backgroundColor: "$blue200", color: "black" }}
                 onPress={() => {
@@ -257,116 +392,12 @@ const Home = () => {
                 <Text>Decide what goes here 🚀✨</Text>
               </Button>
             </Flex>
-            <Info text="Your first request might be exceptionally slower, while the API bootstraps" />
-            <Spacer y={4} />
-            <h3>Answer:</h3>
-            {isRunning
-              && <>
-                <Loading data-testid="loading-answer">{loadingText}</Loading>
-              </>
-            }
-            {LLMResponse &&
-              <>
-                <RobotAnswer>
-                    <Box id="answer">
-                      <MarkdownView
-                        markdown={LLMResponse}
-                        options={{ tables: true, emoji: true, }}
-                      />
-                    </Box>
-                    <Spacer y={2} />
-                    <Flex css={{ justifyContent: 'flex-start', gap: "$4" }}>
-                      <Button
-                        auto
-                        css={{
-                          border: "2px solid $yellow400",
-                          backgroundColor: "$backgroundLighter",
-                          '&:hover': {
-                            backgroundColor: "$yellow400",
-                          }
-                        }}
-                        onPress={() => {
-                          setEmailStatus('sending')
-                          sendAnswerEmail({
-                            // @ts-ignore # todo: dafuq? Why is this comment needed
-                            email: session!.user!.email,
-                            question: question,
-                            // @ts-ignore
-                            answer: document?.getElementById('answer')?.innerHTML, // to keep the html format
-                            paperTitle: selectedPaper!.title
-                          }).then(() => {
-                            setEmailStatus('done')
-                            setTimeout(() => {
-                              setEmailStatus('idle')
-                            }, 5000)
-                          })
-                            .catch(() => setEmailStatus('error'))
-                        }}
-                      >
-                        <Text>Email me this 📩</Text>
-                      </Button>
-                      {emailStatus == 'sending' && <Text>Sending email...</Text>}
-                      {emailStatus == 'done' &&
-                        <Text data-testid="email-sent">Email sent! ✅</Text>}
-                      {emailStatus == 'error' &&
-                        <Text>There was an error ❌ Please contact support.</Text>}
-                    </Flex>
-                </RobotAnswer>
-                <Spacer y={1} />
-                <Flex css={{ gap: "$7" }}>
+            <Spacer y={1} />
+          </Card.Footer>
+        </Card>
+      }
+    </Box>
 
-                  <Button ghost auto color="success" size="lg" iconRight="👍"
-                    css={{
-                      color: 'green',
-                      '&:hover': { color: 'white', backgroundColor: 'green' },
-                    }}
-                    onPress={() => {
-                      storeFeedback(session!.user!.email!, {
-                        email: session!.user!.email,
-                        was_answer_accurate: true,
-                        question,
-                        answer: LLMResponse,
-                        // @ts-ignore
-                      }, session!.accessToken)
-                      setUnderFeedbackText('Thank you! 🙏')
-                      setTimeout(() => setUnderFeedbackText(undefined), 4000)
-                    }}
-                  >
-                    Answer was accurate
-                  </Button>
-                  <Button ghost auto size="lg" iconRight="👎"
-                    onPress={() => {
-                      storeFeedback(session!.user!.email!, {
-                        email: session!.user!.email,
-                        was_answer_accurate: false,
-                        question,
-                        answer: LLMResponse,
-                        // @ts-ignore
-                      }, session!.accessToken)
-                      setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')
-                      setTimeout(() => setUnderFeedbackText(undefined), 8000)
-                    }}
-                  >
-                    Answer was inaccurate
-                  </Button>
-                </Flex>
-                <Spacer y={1} />
-
-                {underFeedbackText && <Text css={{ maxWidth: '400px' }}>{underFeedbackText}</Text>}
-
-              </>
-            }
-            {errorResponse && LLMResponse == undefined && <RobotAnswer>
-              <MarkdownView
-                        markdown={errorResponse + "<br/> Please try again later or contact support."}
-                        options={{ tables: true, emoji: true, }}
-                      />
-              </RobotAnswer>}
-            <Spacer y={4} />
-          </Flex>
-        </Flex>
-      </>
-    }
     {isFeedbackModalVisible &&
       <FeedbackModal paper={selectedPaper ?? null}
         question={question ?? null}
@@ -376,8 +407,9 @@ const Home = () => {
         setVisible={setIsFeedbackModalVisible}
       />
     }
+
     <Box data-testid='feedback-component' css={{
-      position: 'fixed',
+      position: 'absolute',
       bottom: '0',
       right: '10px',
       padding: '$6',
@@ -398,7 +430,7 @@ function fixNewlines(text: string) {
 }
 
 function makeLinksClickable(text: string) {
-  return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
+  return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>link</a>");
 }
 
 export default Home;

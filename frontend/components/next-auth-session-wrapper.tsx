@@ -10,13 +10,13 @@ import {
   styled,
   Text
 } from '@nextui-org/react';
-import {Flex} from "./styles/flex";
-import {signIn, useSession} from "next-auth/react"
-import {useEffect, useState} from "react";
+import { Flex } from "./styles/flex";
+import { signIn, useSession } from "next-auth/react"
+import { useEffect, useState } from "react";
 import axios from "axios";
 import DiscordIcon from "./icons/discord-icon";
-import {Code} from "./layout";
-import {GuestUserContext} from "../hooks/session";
+import { Code } from "./layout";
+import { GuestUserContext } from "../hooks/session";
 import ProfileInfo from "./profile-info";
 import OverviewBlock from "./overview-block";
 
@@ -29,12 +29,12 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
-const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
+const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const [isUserLoggedInAsGuest, setIsUserLoggedInAsGuest] = useState<boolean>(false);
   const [remainingTrialRequests, setRemainingTrialRequests] = useState<number>(0);
   const [userWhitelisted, setUserWhitelisted] = useState<Boolean | undefined>(undefined);
   const [userInDiscord, setUserInDiscord] = useState<Boolean | undefined>(undefined);
-  const {data: session, status} = useSession()
+  const { data: session, status } = useSession()
   const [userEmail, setUserEmail] = useState<string>('');
   const [underText, setUnderText] = useState<string | undefined>(undefined);
 
@@ -48,28 +48,28 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
 
   const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {
-      if (!isUserLoggedInAsGuest && session != undefined && userWhitelisted == undefined) {
-        axios.get("https://discord.com/api/users/@me", {
-          headers: {
-            // @ts-ignore
-            "Authorization": `Bearer ${session?.accessToken}`
-          },
-        }).then((response) => {
-          axios.get(`/api/discord/${requiredRole}?userId=${response.data.id}`)
-            .then(res => {
-              setUserWhitelisted(res.data.hasRole)
-              setUserInDiscord(res.data.inDiscord)
-            })
-            .catch(e => {
-              console.log(e)
-              setUserWhitelisted(false)
-            })
-        })
-          .catch((error) => {
-            console.log(error)
+    if (!isUserLoggedInAsGuest && session != undefined && userWhitelisted == undefined) {
+      axios.get("https://discord.com/api/users/@me", {
+        headers: {
+          // @ts-ignore
+          "Authorization": `Bearer ${session?.accessToken}`
+        },
+      }).then((response) => {
+        axios.get(`/api/discord/${requiredRole}?userId=${response.data.id}`)
+          .then(res => {
+            setUserWhitelisted(res.data.hasRole)
+            setUserInDiscord(res.data.inDiscord)
           })
-      }
-    }, [session, userWhitelisted]
+          .catch(e => {
+            console.log(e)
+            setUserWhitelisted(false)
+          })
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }, [session, userWhitelisted]
   )
 
   if (isUserLoggedInAsGuest) {
@@ -92,21 +92,21 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
   }
   if (session == null && status == "unauthenticated") {
     return (<Flex justify='center' direction='column'>
-
+      <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
       <Text h4>You are not signed in!</Text>
-      <Spacer y={1}/>
-      <Flex css={{gap: "$8"}}>
-        <Button size="lg" css={{backgroundColor: '$discordColor'}} icon={<DiscordIcon/>}
-                onClick={() => signIn("discord")}>
+      <Spacer y={1} />
+      <Flex css={{ gap: "$8" }}>
+        <Button size="lg" css={{ backgroundColor: '$discordColor' }} icon={<DiscordIcon />}
+          onClick={() => signIn("discord")}>
           Join with Discord
         </Button>
-        <Button css={{paddingLeft: "$16"}} size="lg" bordered color="secondary" icon={<DiscordIcon/>}
-                onClick={() => open("https://discord.com/register?redirect_to=https://askpaper.ai", "_self")}>
+        <Button css={{ paddingLeft: "$16" }} size="lg" bordered color="secondary" icon={<DiscordIcon />}
+          onClick={() => open("https://discord.com/register?redirect_to=https://askpaper.ai", "_self")}>
           Create discord account
         </Button>
       </Flex>
-      <Spacer y={2}/>
-      <Text b css={{marginBottom: "$2"}}>or</Text>
+      <Spacer y={2} />
+      <Text b css={{ marginBottom: "$2" }}>or</Text>
       <Box>
         <Input
           data-testid="guest-login-input"
@@ -116,7 +116,7 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
             minWidth: "100%",
             padding: "0",
             margin: "0",
-          }} placeholder="Email" initialValue={userEmail} onChange={(e) => setUserEmail(e.target.value)}/>
+          }} placeholder="Email" initialValue={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
         <Button data-testid="guest-login-button" size="lg" auto bordered color="error" css={{
           marginTop: "$4",
           backgroundColor: 'transparent',
@@ -135,22 +135,22 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
         }>
           {' '}Or login as guest user *
         </Button>
-        <Spacer y={1}/>
+        <Spacer y={1} />
       </Box>
       <Text i>* Guest users have a limited number of requests</Text>
       {underText && <>
-          <Spacer y={1}/>
-          <Text>{underText}</Text>
+        <Spacer y={1} />
+        <Text>{underText}</Text>
       </>}
-      <Spacer y={3}/>
-      <OverviewBlock/>
-      <Spacer y={7}/>
+      <Spacer y={3} />
+      <OverviewBlock />
+      <Spacer y={7} />
       <Box css={{
         position: "fixed",
         bottom: '0',
         paddingBottom: "$9"
       }}>
-        <Divider/>
+        <Divider />
         <Text>By signing in & using our tool, you are accepting our
           <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
             Conditions</Link>
@@ -162,29 +162,24 @@ const NextAuthSessionWrapper = ({children}: ChildrenOnlyProps) => {
     if (userWhitelisted == undefined) {
       return (
         <Loading>
-          Checking if you're in our server...<br/>
+          Checking if you're in our server...<br />
           <Text b>If this takes too long try to clear your browser cookies 🍪</Text>
         </Loading>
       )
     } else if (userInDiscord && userWhitelisted) {
       return (
-        <GuestUserContext.Provider value={{
-          isUserLoggedInAsGuest: false,
-          userEmail: '',
-          remainingTrialRequests: 0,
-          setRemainingTrialRequests: undefined,
-        }}>
-          {session.user &&
-              <ProfileInfo name={session!.user!.name} imageURL={session!.user!.image}/>
-          }
+        <>
+          {/* {session.user &&
+            <ProfileInfo name={session!.user!.name} imageURL={session!.user!.image} />
+          } */}
           {children}
-        </GuestUserContext.Provider>
+        </>
       )
     } else if (userInDiscord && !userWhitelisted) {
       return (
         <Flex>
           <Text>Uh oh! You're succesfully logged in as {session.user?.name}</Text>
-          <Avatar size='sm' src={session.user!.image ?? undefined} css={{marginLeft: '$2'}}/>
+          <Avatar size='sm' src={session.user!.image ?? undefined} css={{ marginLeft: '$2' }} />
           <Text>,</Text>
           <Text>but it appears you don't have the required
             role <Code>{requiredRole}</Code> to access the tool 😕</Text>
