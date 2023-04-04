@@ -1,16 +1,32 @@
-import {Collapse, Text} from "@nextui-org/react";
+import { Collapse, Text } from "@nextui-org/react";
 import DiscordIcon from "./icons/discord-icon";
-import {Box} from "./next-auth-session-wrapper";
+import { Box } from "./next-auth-session-wrapper";
 
 const OverviewBlock = () => {
   return (
-    <Box css={{maxWidth: '700px', textAlign: 'left'}}>
+    <Box css={{ maxWidth: '700px', textAlign: 'left' }}>
       <Collapse.Group shadow>
+        <Collapse
+          title={<Text h4>What is AskPaper?</Text>}
+          subtitle="A tool to ask, extract & help understanding papers"
+          contentLeft={
+            <Text css={{ fontSize: "2.2rem" }}>🤔</Text>
+          }
+        >
+          <Text>Ask Paper allows you to more quickly read and extract information from papers. It allows you to upload
+            papers either
+            by URL or by uploading a PDF file, and then ask natural language questions about the paper (e.g. What is
+            the paper about).
+            You also have predefined actions like <code>Extract Datasets</code> and <code>Generate
+              summary</code>.<br /><br />
+            Plus, it is natively multiligual, so you can ask questions in any language you want!
+          </Text>
+        </Collapse>
         <Collapse
           title={<Text h4>How does this work?</Text>}
           subtitle="Using AI to aid researchers"
           contentLeft={
-            <Text css={{fontSize: "2.2rem"}}>❓</Text>
+            <Text css={{ fontSize: "2.2rem" }}>❓</Text>
           }
         >
           <Text>Ask Paper is a tool powered by a Large Language Model. This is a Neural Network that was trained
@@ -26,26 +42,10 @@ const OverviewBlock = () => {
             minimizing wrong content</Text>
         </Collapse>
         <Collapse
-          title={<Text h4>What can it do?</Text>}
-          subtitle="Ask, extract & understand"
-          contentLeft={
-            <Text css={{fontSize: "2.2rem"}}>🤔</Text>
-          }
-        >
-          <Text>Ask Paper allows you to more quickly read and extract information from papers. It allows you to upload
-            papers either
-            by URL or by uploading a PDF file, and then ask natural language questions about the paper (e.g. What is
-            the paper about).
-            You also have predefined actions like <code>Extract Datasets</code> and <code>Generate
-              summary</code>.<br/><br/>
-            Plus, it is natively multiligual, so you can ask questions in any language you want!
-          </Text>
-        </Collapse>
-        <Collapse
           title={<Text h4>Who can use it?</Text>}
           subtitle="Anyone!"
           contentLeft={
-            <Text css={{fontSize: "2.2rem"}}>🙋</Text>
+            <Text css={{ fontSize: "2.2rem" }}>🙋</Text>
           }
         >
           <Text>Ask paper is free to use for every community member! All you have to do is register in discord and
@@ -57,7 +57,7 @@ const OverviewBlock = () => {
           title={<Text h4>Why discord?</Text>}
           subtitle="Free, community oriented & reliable"
           contentLeft={
-            <DiscordIcon fill="#5865F2" width="35" height="35"/>
+            <DiscordIcon fill="#5865F2" width="35" height="35" />
           }
         >
           <Text>Discord is a communication platform designed for co-creating communities online.
