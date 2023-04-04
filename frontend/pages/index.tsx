@@ -332,7 +332,7 @@ const Home = () => {
             <Collapse
               bordered
               title=""
-              subtitle="ℹ️ Configuration"
+              subtitle="🛠 Configuration"
               css={{ width: '100%'}}
             >
               <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
