@@ -175,7 +175,7 @@ const Home = () => {
       </Box>
       {selectedPaper &&
         <Card as="aside" css={{
-          background: "transparent",
+          background: "rgba(0,0,0,.02)",
           backdropFilter: "blur(3px)",
           textAlign: 'left',
           borderLeft: "1px solid gray",
@@ -295,7 +295,7 @@ const Home = () => {
           <Card.Footer css={{
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'start'
+            alignItems: 'start',
           }}>
             <Flex direction="row" css={{ gap: "$2", flexWrap: 'nowrap', width: '100%' }}>
               <Textarea
