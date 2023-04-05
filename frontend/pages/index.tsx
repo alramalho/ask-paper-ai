@@ -100,7 +100,7 @@ const Home = () => {
 
     func(...args)
       .then(res => {
-        setChatHistory(prev => [...prev, { text: makeLinksClickable(fixNewlines(res.data.message)) , sender: "llm" }]);
+        setChatHistory(prev => [...prev, { text: makeLinksClickable(fixNewlines(res.data.message)), sender: "llm" }]);
         if (isUserLoggedInAsGuest && setRemainingTrialRequests != undefined && session!.user!.email !== null && session!.user!.email !== undefined) {
           getRemainingRequestsFor(session!.user!.email).then(res => {
             setRemainingTrialRequests(res.data.remaining_trial_requests)
@@ -127,11 +127,28 @@ const Home = () => {
       </>)
   }
   return (<>
-    <Box css={{ display: 'flex', flexWrap: 'nowrap', height: '100%'}}>
-      <Box as="main" css={{ overflow: 'auto', paddingRight: "$10"}}>
+    <Box css={{
+      display: 'flex',
+      overflow: 'auto',
+      flexDirection: 'column',
+      height: '100%',
+      '@md': {
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
+        flexDirection: 'row',
+      }
+    }}>
+      <Box as="main" css={{
+        overflow: 'auto',
+        paddingRight: "$10",
+        maxHeight: '50%',
+        '@md': {
+          maxHeight: '100%',
+        }
+      }}>
         <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
           <Box>
-            <Spacer y={3}/>
+            <Spacer y={3} />
             <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
             <Flex>
               <Text h2>Ask Paper</Text>
@@ -165,17 +182,19 @@ const Home = () => {
       </Box>
       {selectedPaper &&
         <Card as="aside" css={{
-          background: "rgba(0,0,0,.02)",
+          background: "rgba(0,0,0,.03)",
           backdropFilter: "blur(3px)",
           textAlign: 'left',
-          borderLeft: "1px solid gray",
+          border: "1px solid gray",
           borderRadius: '0',
-          minHeight: '100%',
-          maxHeight: '100%',
           overflow: 'hidden',
-          flex: '1 0 10%'
+          flex: '1 0 10%',
+          boxShadow: 'rgba(100, 100, 111, 0.4) 0px 7px 29px 0px',
+          '@md': {
+            height: '100%',
+          },
         }}>
-          <Chat data-testid="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto' }} chatHistory={chatHistory} selectedPaper={selectedPaper}/>
+          <Chat data-testid="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto' }} chatHistory={chatHistory} selectedPaper={selectedPaper} />
           <Flex data-testid="chat" css={{ flexGrow: 1, alignContent: 'end' }}>
             {messageStatus === 'loading' &&
               <>
