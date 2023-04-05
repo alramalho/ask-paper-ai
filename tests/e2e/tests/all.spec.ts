@@ -51,6 +51,7 @@ test.describe('Normal upload', () => {
 
   test('should be able ask a question with best speed', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.click('text=Configuration');
     await page.click('text=Best Speed');
     await page.getByTestId('ask-button').click();
 
@@ -63,6 +64,7 @@ test.describe('Normal upload', () => {
 
   test('should be able ask a question with best results', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.click('text=Configuration');
     await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
 
@@ -75,6 +77,7 @@ test.describe('Normal upload', () => {
 
   test('should be able ask a question that needs information from a figure caption', async () => {
     await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
+    await page.click('text=Configuration');
     await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
 
@@ -87,6 +90,7 @@ test.describe('Normal upload', () => {
 
   test('should be able ask a question that needs information from a table', async () => {
     await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2");
+    await page.click('text=Configuration');
     await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
 
