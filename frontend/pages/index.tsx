@@ -202,12 +202,12 @@ const Home = () => {
               </>
             }
             {messageStatus === 'error' &&
-              <RobotAnswer>
+              <Info>
                 <MarkdownView
                   markdown={errorMessage + "<br/> Please try again later or contact support."}
                   options={{ tables: true, emoji: true, }}
                 />
-              </RobotAnswer>
+              </Info>
             }
           </Flex>
 
