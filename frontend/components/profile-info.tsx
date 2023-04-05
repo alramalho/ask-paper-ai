@@ -1,6 +1,7 @@
 import { Flex } from "./styles/flex";
 import { Avatar, Text } from "@nextui-org/react";
-import { TweetButton } from "./sponsor-button";
+import { TweetButton } from "./tweet-button";
+import { GoToCommunityButton } from "./go-to-community-button";
 
 interface ProfileInfoProps {
   name?: string | null;
@@ -22,6 +23,7 @@ const ProfileInfo = ({ name, imageURL }: ProfileInfoProps) => {
       />
       <Text data-testid="discord-username">{name ?? 'Oops..'}</Text>
       <TweetButton />
+      <GoToCommunityButton />
     </Flex>
   );
 }

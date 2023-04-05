@@ -1,8 +1,6 @@
-import { CSS, Image, styled, Text } from '@nextui-org/react';
-import { Flex } from "./styles/flex";
+import { CSS, styled } from '@nextui-org/react';
 import { NextSeo } from 'next-seo';
 import { OpenGraphMedia } from 'next-seo/lib/types';
-import { TweetButton } from "./sponsor-button";
 import React from "react";
 
 interface LayoutProps {

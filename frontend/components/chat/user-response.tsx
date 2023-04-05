@@ -1,6 +1,6 @@
 import { Avatar, Text } from "@nextui-org/react"
 import { useSession } from "next-auth/react"
-import { Box } from "../sponsor-button"
+import { Box } from "../tweet-button"
 import { Flex } from "../styles/flex"
 
 const UserResponse = ({ text }: { text: string }) => {
