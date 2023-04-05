@@ -144,7 +144,7 @@ test.describe('Normal upload', () => {
 
     await page.click('text=Answer was accurate');
     await page.click('text=Feedback?');
-    await page.click('text=7');
+    await page.getByTestId("nps-slider").getByText('7').click();
     const selectedSentiment = "Very good";
     await page.click('text=🔍 Inline data exploration tool');
     const selectedNextFeature = 'data-exploration';

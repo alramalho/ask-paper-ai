@@ -14,7 +14,7 @@ const MySlider = (props) => {
         10: '10',
 
     }
-    return <Slider id='rate' min={1} max={10} defaultValue={8} style={{ width: 250}} marks={marks} {...props}/>
+    return <Slider data-testid="nps-slider" min={1} max={10} defaultValue={8} style={{ width: 250}} marks={marks} {...props}/>
 }
 
 export default MySlider
