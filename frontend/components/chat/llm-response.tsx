@@ -17,7 +17,6 @@ export const RobotAnswer = ({ children }) => {
                 minWidth: "40px",
                 maxWidth: "40px",
                 alignSelf: 'end',
-                transform: 'translateY(20px)'
             }}>
                 <Image src="hippo.svg" />
             </Box>
