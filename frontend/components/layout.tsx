@@ -31,7 +31,6 @@ export const Layout = ({ children, css, seo }: LayoutProps) => {
   const url = `https://www.askpaper.ai`
   return (
     <>
-      <TweetButton />
       {seo &&
         <NextSeo
           title={title}

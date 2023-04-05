@@ -17,8 +17,9 @@ import axios from "axios";
 import DiscordIcon from "./icons/discord-icon";
 import { Code } from "./layout";
 import { GuestUserContext } from "../hooks/session";
-import ProfileInfo from "./profile-info";
 import OverviewBlock from "./overview-block";
+import { TweetButton } from './sponsor-button';
+import ProfileInfo from './profile-info';
 
 
 interface ChildrenOnlyProps {
@@ -169,9 +170,9 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
     } else if (userInDiscord && userWhitelisted) {
       return (
         <>
-          {/* {session.user &&
+          {session.user &&
             <ProfileInfo name={session!.user!.name} imageURL={session!.user!.image} />
-          } */}
+          }
           {children}
         </>
       )
