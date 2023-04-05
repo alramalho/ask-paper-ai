@@ -56,10 +56,10 @@ test.describe('Normal upload', () => {
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("fracture");
-    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able ask a question with best results', async () => {
@@ -69,10 +69,10 @@ test.describe('Normal upload', () => {
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("fracture");
-    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able ask a question that needs information from a figure caption', async () => {
@@ -82,10 +82,10 @@ test.describe('Normal upload', () => {
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("Fig. 3. (a) FROC curves of FracNet detection performance on the RibFrac training, tuning and test cohorts. (b) Illustration of predicted segmentation on RibFrac test cohorts. (c) A comparison of segmentation metrics (IoU and Dice) for rounded and elongated shape. In (b) and (c), the pseudo-color in the 3D shape is only for visualization purpose.");
-    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Fig. 3. (a) FROC curves of FracNet detection performance on the RibFrac training, tuning and test cohorts. (b) Illustration of predicted segmentation on RibFrac test cohorts. (c) A comparison of segmentation metrics (IoU and Dice) for rounded and elongated shape. In (b) and (c), the pseudo-color in the 3D shape is only for visualization purpose.");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able ask a question that needs information from a table', async () => {
@@ -95,10 +95,10 @@ test.describe('Normal upload', () => {
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("58.7%");
-    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("58.7%");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should have one less request remaining', async () => {
@@ -109,20 +109,20 @@ test.describe('Normal upload', () => {
     await page.click('text=Extract Datasets');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("Size",);
-    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able to generate summary', async () => {
     await page.click('text=Generate Summary');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("Size",);
-    await expect(page.getByTestId('answer-area')).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able to receive the results email', async () => {
@@ -130,9 +130,9 @@ test.describe('Normal upload', () => {
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area')).toContainText("fracture");
+    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
 
     await page.click('text=Email me this');
     await expect(page.getByTestId('email-sent')).toBeVisible();
@@ -144,7 +144,7 @@ test.describe('Normal upload', () => {
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
     await page.click('text=Answer was accurate');
     await page.click('text=Feedback?');
