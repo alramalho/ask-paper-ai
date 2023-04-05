@@ -19,7 +19,7 @@ async function loginAsGuest(browser) {
 }
 
 test.describe('Normal upload', () => {
-  test.beforeAll(async ({browser}) => {
+  test.beforeEach(async ({browser}) => {
 
     await loginAsGuest(browser);
 
