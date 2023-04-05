@@ -138,7 +138,7 @@ const Home = () => {
       </>)
   }
   return (<>
-    <Box css={{ display: 'flex', flexWrap: 'nowrap', height: '100%', }}>
+    <Box css={{ display: 'flex', flexWrap: 'nowrap', height: '100%', alignItems: 'center' }}>
       <Box as="main" css={{ overflow: 'auto', paddingRight:"$10" }}>
         <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
           <Box>
@@ -179,6 +179,8 @@ const Home = () => {
           backdropFilter: "blur(3px)",
           textAlign: 'left',
           borderLeft: "1px solid gray",
+          borderRadius: '0',
+          height: '100%',
           flex: '1 0 10%'
         }}>
           <Box data-testid="chat" css={{ flexGrow: 1 }}>
