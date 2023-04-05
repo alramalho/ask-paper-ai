@@ -4,6 +4,7 @@
 div[data-overlay-container="true"]{
     display: contents; /* This is the magic that lets scroll happen in left div*/
 }
+
 html,
 body {
     padding: 0;

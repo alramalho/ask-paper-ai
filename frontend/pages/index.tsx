@@ -13,8 +13,10 @@ import ProfileInfo from "../components/profile-info";
 import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
 import IconSlider from "../components/slider/slider";
-import Info from "../components/info";
 import { useSession } from "next-auth/react";
+import Chat, { ChatMessage } from "../components/chat/chat";
+import LLMResponse, { RobotAnswer } from "../components/chat/llm-response";
+import Info from "../components/info";
 
 
 const PdfViewer = dynamic(
@@ -41,44 +43,20 @@ export type Paper = {
   }
 }
 
-const RobotAnswer = ({ children }) => {
-  return (
-    <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start' }}>
-      <Box css={{
-        minWidth: "40px",
-        maxWidth: "40px",
-        alignSelf: 'end',
-        transform: 'translateY(20px)'
-      }}>
-        <Image src="hippo.svg" />
-      </Box>
-      <Box id="answer-area" data-testid="answer-area" css={{
-        textAlign: 'left',
-        backgroundColor: '$backgroundLighter',
-        border: '1px solid $gray600',
-        padding: '$10',
-        borderRadius: '20px 20px 20px 0',
-      }}>
-        {children}
-      </Box>
-    </Flex>
-  )
-}
+export type Status = 'idle' | 'loading' | 'success' | 'error'
 
 const Home = () => {
-  const [LLMResponse, setLLMResponse] = useState<string | undefined>(undefined)
-  const [errorResponse, setErrorResponse] = useState<string | undefined>(undefined)
-  const [isRunning, setIsRunning] = useState<boolean>(false)
+  const [messageStatus, setMessageStatus] = useState<Status>('idle')
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
-  const [underFeedbackText, setUnderFeedbackText] = useState<string | undefined>(undefined)
   const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
-  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'error' | 'done'>('idle')
   const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(4)
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
   const {
     value: question,
@@ -88,45 +66,56 @@ const Home = () => {
   } = useInput("");
 
   useEffect(() => {
-    if (isRunning) {
+    if (messageStatus == 'loading') {
       if (document.getElementById('loading-answer')) {
         // @ts-ignore
         document.getElementById('loading-answer').scrollIntoView()
       }
     }
-    if (LLMResponse !== undefined) {
+    if (messageStatus !== 'loading' && messageStatus !== 'idle') {
       if (document.getElementById('answer-area')) {
         // @ts-ignore
         document.getElementById('answer-area').scrollIntoView()
       }
     }
-  }, [LLMResponse, isRunning])
+  }, [messageStatus])
+
+  useEffect(() => {
+    if (chatHistory.length > 0) {
+      const chatElement = document.getElementById('chat')
+      if (chatElement) {
+        chatElement.scrollTop = chatElement.scrollHeight
+      }
+    }
+  }, [chatHistory])
+
+  function addUserChatMessage(text: string) {
+    setChatHistory(prev => [...prev, { text: text, sender: "user" }]);
+  }
 
 
   function handleSubmit<T extends any[], R>(func: (...args: T) => Promise<AxiosResponse<any, any>>, ...args: T) {
-    setIsRunning(true)
+    setMessageStatus('loading')
     setLoadingText("Reading paper...")
-    setQuestion(question)
 
     func(...args)
       .then(res => {
-        setLLMResponse(makeLinksClickable(fixNewlines(res.data.message)))
+        setChatHistory(prev => [...prev, { text: makeLinksClickable(fixNewlines(res.data.message)) , sender: "llm" }]);
         if (isUserLoggedInAsGuest && setRemainingTrialRequests != undefined && session!.user!.email !== null && session!.user!.email !== undefined) {
           getRemainingRequestsFor(session!.user!.email).then(res => {
             setRemainingTrialRequests(res.data.remaining_trial_requests)
           })
         }
+        setMessageStatus('success')
       })
       .catch(error => {
         if (error.response) {
-          setErrorResponse("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
+          setErrorMessage("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
         } else {
-          setErrorResponse("Something went wrong...</br>Technical Details: " + error.message)
+          setErrorMessage("Something went wrong...</br>Technical Details: " + error.message)
         }
         console.error(error)
-      })
-      .finally(() => {
-        setIsRunning(false)
+        setMessageStatus('error')
       })
   }
 
@@ -138,10 +127,11 @@ const Home = () => {
       </>)
   }
   return (<>
-    <Box css={{ display: 'flex', flexWrap: 'nowrap', height: '100%', alignItems: 'center' }}>
-      <Box as="main" css={{ overflow: 'auto', paddingRight:"$10" }}>
+    <Box css={{ display: 'flex', flexWrap: 'nowrap', height: '100%'}}>
+      <Box as="main" css={{ overflow: 'auto', paddingRight: "$10"}}>
         <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
           <Box>
+            <Spacer y={3}/>
             <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
             <Flex>
               <Text h2>Ask Paper</Text>
@@ -180,118 +170,28 @@ const Home = () => {
           textAlign: 'left',
           borderLeft: "1px solid gray",
           borderRadius: '0',
-          height: '100%',
+          minHeight: '100%',
+          maxHeight: '100%',
+          overflow: 'hidden',
           flex: '1 0 10%'
         }}>
-          <Box data-testid="chat" css={{ flexGrow: 1 }}>
-
-          </Box>
-          {isRunning
-            && <>
-              <Loading data-testid="loading-answer">{loadingText}</Loading>
-            </>
-          }
-          {LLMResponse &&
-            <>
+          <Chat data-testid="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto' }} chatHistory={chatHistory} selectedPaper={selectedPaper}/>
+          <Flex data-testid="chat" css={{ flexGrow: 1, alignContent: 'end' }}>
+            {messageStatus === 'loading' &&
+              <>
+                <Loading data-testid="loading-answer">{loadingText}</Loading>
+              </>
+            }
+            {messageStatus === 'error' &&
               <RobotAnswer>
-                <Box id="answer">
-                  <MarkdownView
-                    markdown={LLMResponse}
-                    options={{ tables: true, emoji: true, }}
-                  />
-                </Box>
-                <Spacer y={2} />
-                <Flex direction="row" css={{ justifyContent: "space-between", gap: "$3" }}>
-                  <Flex css={{ justifyContent: 'flex-start', gap: "$4" }}>
-                    <Button
-                      auto
-                      css={{
-                        border: "2px solid $yellow400",
-                        backgroundColor: "$backgroundLighter",
-                        '&:hover': {
-                          backgroundColor: "$yellow400",
-                        }
-                      }}
-                      onPress={() => {
-                        setEmailStatus('sending')
-                        sendAnswerEmail({
-                          // @ts-ignore # todo: dafuq? Why is this comment needed
-                          email: session!.user!.email,
-                          question: question,
-                          // @ts-ignore
-                          answer: document?.getElementById('answer')?.innerHTML, // to keep the html format
-                          paperTitle: selectedPaper!.title
-                        }).then(() => {
-                          setEmailStatus('done')
-                          setTimeout(() => {
-                            setEmailStatus('idle')
-                          }, 5000)
-                        })
-                          .catch(() => setEmailStatus('error'))
-                      }}
-                    >
-                      <Text>Email me this 📩</Text>
-                    </Button>
-                    {emailStatus == 'sending' && <Text>Sending email...</Text>}
-                    {emailStatus == 'done' &&
-                      <Text data-testid="email-sent">Email sent! ✅</Text>}
-                    {emailStatus == 'error' &&
-                      <Text>There was an error ❌ Please contact support.</Text>}
-                  </Flex>
-                  <Flex css={{ gap: "$7" }}>
-                    <Text>Was it accurate?</Text>
-                    <Button ghost auto color="success"
-                      css={{
-                        color: '"$success"',
-                        '&:hover': { color: 'white', backgroundColor: '"$success"' },
-                      }}
-                      onPress={() => {
-                        storeFeedback(session!.user!.email!, {
-                          email: session!.user!.email,
-                          was_answer_accurate: true,
-                          question,
-                          answer: LLMResponse,
-                          // @ts-ignore
-                        }, session!.accessToken)
-                        setUnderFeedbackText('Thank you! 🙏')
-                        setTimeout(() => setUnderFeedbackText(undefined), 4000)
-                      }}
-                    >
-                      👍
-                    </Button>
-                    <Button ghost auto
-                      onPress={() => {
-                        storeFeedback(session!.user!.email!, {
-                          email: session!.user!.email,
-                          was_answer_accurate: false,
-                          question,
-                          answer: LLMResponse,
-                          // @ts-ignore
-                        }, session!.accessToken)
-                        setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')
-                        setTimeout(() => setUnderFeedbackText(undefined), 8000)
-                      }}
-                    >
-                      👎
-                    </Button>
-                  </Flex>
-                </Flex>
-                <Spacer y={1} />
+                <MarkdownView
+                  markdown={errorMessage + "<br/> Please try again later or contact support."}
+                  options={{ tables: true, emoji: true, }}
+                />
               </RobotAnswer>
-              <Spacer y={1} />
+            }
+          </Flex>
 
-              {underFeedbackText && <Text css={{ maxWidth: '400px' }}>{underFeedbackText}</Text>}
-
-            </>
-          }
-          {errorResponse && LLMResponse == undefined &&
-            <RobotAnswer>
-              <MarkdownView
-                markdown={errorResponse + "<br/> Please try again later or contact support."}
-                options={{ tables: true, emoji: true, }}
-              />
-            </RobotAnswer>
-          }
           <Divider css={{ margin: '$5 0' }} />
 
           <Card.Footer css={{
@@ -328,14 +228,16 @@ const Home = () => {
                     paperHash: selectedPaper!.hash,
                     resultsSpeedTradeoff: resultsSpeedTradeoff
                   })
+                  addUserChatMessage(question ?? '')
                 }
                 }> Ask </Button>
             </Flex>
+            <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} />
             <Collapse
               bordered
               title=""
               subtitle="🛠 Configuration"
-              css={{ width: '100%'}}
+              css={{ width: '100%' }}
             >
               <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
                 <Switch bordered initialChecked checked={quoteChecked}
@@ -360,6 +262,7 @@ const Home = () => {
                     resultsSpeedTradeoff: resultsSpeedTradeoff
                   })
                   setQuestion("Extract Datasets")
+                  addUserChatMessage("Extract Datasets")
                 }}
               >
                 <Text>Extract datasets</Text>
@@ -375,6 +278,7 @@ const Home = () => {
                     accessToken: session!.accessToken
                   })
                   setQuestion("Generate Summary")
+                  addUserChatMessage("Generate Summary")
                 }}
               >
                 <Text>Generate Summary</Text>
@@ -403,7 +307,7 @@ const Home = () => {
     {isFeedbackModalVisible &&
       <FeedbackModal paper={selectedPaper ?? null}
         question={question ?? null}
-        answer={LLMResponse ?? null}
+        answer={chatHistory[chatHistory.length - 1].text ?? null}
         userEmail={session!.user!.email!}
         visible={isFeedbackModalVisible}
         setVisible={setIsFeedbackModalVisible}
