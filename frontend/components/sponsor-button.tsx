@@ -1,5 +1,4 @@
 import {Button, styled} from '@nextui-org/react';
-import {keyframes} from "@nextui-org/react";
 import { TwitterIcon } from './icons/twitter-icon';
 
 export const Box = styled('div', {
@@ -34,7 +33,7 @@ export const TweetButton = () => {
         left: '10px',
         zIndex: 10,
       }}
-      href="https://twitter.com/intent/tweet?text=%F0%9F%93%9D+askpaper.ai+-+Understand+any+paper%21%0D%0ACheck+out+this+new+AI+tool+that+let%27s+you+ask+open+questions%2C+generate+great+summaries+%26+extract+data+from+papers.+%0D%0APerfect+for+researchers+trying+to+ramp+up+their+paper+reading+game%21"
+      href="https://twitter.com/intent/tweet?text=%F0%9F%93%9D+askpaper.ai+-+Understand+any+paper%21%0D%0ACurrently+in+love+with+this+new+AI+tool.+It+let%27s+you+ask+open+questions%2C+generate+great+summaries+%26+extract+data+from+papers.+%0D%0APerfect+for+researchers+trying+to+ramp+up+their+paper+reading+game%21+"
       icon={<TwitterIcon filled fill="#1DA1F2" size={24}/>}
       rel="noreferrer"
       target="_blank"
