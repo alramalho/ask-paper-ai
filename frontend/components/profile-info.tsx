@@ -14,6 +14,7 @@ const ProfileInfo = ({ name, imageURL }: ProfileInfoProps) => {
       position: 'fixed',
       top: '10px',
       left: '10px',
+      zIndex: 1,
     }}>
       <Avatar
         size="lg"
