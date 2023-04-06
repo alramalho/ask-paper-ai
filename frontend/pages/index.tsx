@@ -286,7 +286,7 @@ const Home = () => {
                         resultsSpeedTradeoff: resultsSpeedTradeoff
                       })
                       setQuestion("Extract Datasets")
-                      addUserChatMessage("Extract Datasets")
+                      addUserChatMessage("Predefined Action: Extract Datasets")
                     }}
                   >
                     <Text>Extract datasets</Text>
@@ -303,7 +303,7 @@ const Home = () => {
                         accessToken: session!.accessToken
                       })
                       setQuestion("Generate Summary")
-                      addUserChatMessage("Generate Summary")
+                      addUserChatMessage("Predefined Action: Generate Summary")
                     }}
                   >
                     <Text>Generate Summary</Text>

@@ -233,7 +233,7 @@ async def extract_datasets(request: Request):
         "Link to Data or Code" must be an URL.
         "Extra Info" must be as succint as possible, preferably only one sentence long.
         Here's a few caveats about how you should build your response:
-            - The resulting table should contain as many entries as possible
+            - The resulting table should contain as many entries as possible, but only of specific datasets.
             - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
             - ALL entries must have it's name SPECIFIED
             - Every resulting table entry must be inferred from the paper context
@@ -253,14 +253,13 @@ async def summarize(request: Request):
     try:
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
-        Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header.
-        Each section summary should be as detailed as possible. In case you need to include markdown section headers for the sections,
-        include them as "#####"."""
+        Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header (denoted by several '#').
+        Each section summary should contain only the main section takeways. You're only allowed to include mardkdown headers that are present in the given paper context."""
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
     paper.filter_sections('exclude', ['abstract'])
-    response = await nlp.ask_paper(question, paper, merge_at_end=True)
+    response = await nlp.ask_paper(question, paper, merge_at_end=False)
     return {'message': response}
 
 
