@@ -149,7 +149,6 @@ const Home = () => {
         resize: 'vertical',
         '@md': {
           maxHeight: '100%',
-          maxWidth: '50%',
         }
       }}>
         <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
@@ -168,7 +167,7 @@ const Home = () => {
             <PaperUploader onFinish={(paper, pdf) => {
               setSelectedPaper(paper)
               setPdf(pdf)
-              addUserChatMessage(`Now reading ${paper.title}`)
+              addUserChatMessage(`Now reading "${paper.title}"`)
             }} />
           </Box>
           {isUserLoggedInAsGuest &&
@@ -263,7 +262,7 @@ const Home = () => {
             </Flex>
             <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} />
             <Collapse size="small" style={{ width: "100%" }} defaultActiveKey={['2']}>
-              <Panel header="🛠 Configuration" key="1">
+              <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
                 <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
                   <Switch bordered initialChecked checked={quoteChecked}
                     onChange={() => setQuoteChecked(previous => !previous)}></Switch>
