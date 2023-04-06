@@ -12,7 +12,7 @@ import { ChatMessage } from "./chat"
 
 export const RobotAnswer = ({ children }) => {
     return (
-        <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start' }}>
+        <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start', '*': {fontSize: "0.86rem"} }}>
             <Box css={{
                 minWidth: "35px",
                 maxWidth: "35px",
@@ -24,7 +24,7 @@ export const RobotAnswer = ({ children }) => {
                 textAlign: 'left',
                 backgroundColor: '$backgroundLighter',
                 border: '1px solid $gray600',
-                padding: '$4 $4',
+                padding: '$4',
                 borderRadius: '20px 20px 20px 0',
             }}>
                 {children}
@@ -67,7 +67,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
 
     return (<>
         <RobotAnswer>
-            <Box id="answer" ref={answerRef}>
+            <Box id="answer" ref={answerRef} css={{padding: "$5"}}>
                 <MarkdownView
                     markdown={text}
                     options={{ tables: true, emoji: true, }}

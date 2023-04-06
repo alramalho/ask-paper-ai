@@ -88,6 +88,7 @@ const Home = () => {
       const chatElement = document.getElementById('chat')
       if (chatElement) {
         chatElement.scrollTop = chatElement.scrollHeight
+        chatElement.scrollLeft = 0
       }
     }
   }, [chatHistory])
@@ -145,6 +146,7 @@ const Home = () => {
         overflow: 'auto',
         paddingRight: "$10",
         maxHeight: '50%',
+        resize: 'vertical',
         '@md': {
           maxHeight: '100%',
         }

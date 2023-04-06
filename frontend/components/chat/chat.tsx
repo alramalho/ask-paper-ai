@@ -13,7 +13,7 @@ export interface ChatMessage {
 interface ChatProps {
   chatHistory: ChatMessage[];
   selectedPaper: Paper;
-  css: CSS;
+  css?: CSS;
   [otherPropName: string]: any;
 }
 
