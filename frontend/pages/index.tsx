@@ -149,6 +149,7 @@ const Home = () => {
         resize: 'vertical',
         '@md': {
           maxHeight: '100%',
+          maxWidth: '50%',
         }
       }}>
         <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
