@@ -1,4 +1,4 @@
-import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Link, Collapse, Divider, Card, Grid } from "@nextui-org/react";
+import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Divider, Card, Grid } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
@@ -17,6 +17,9 @@ import { useSession } from "next-auth/react";
 import Chat, { ChatMessage } from "../components/chat/chat";
 import LLMResponse, { RobotAnswer } from "../components/chat/llm-response";
 import Info from "../components/info";
+import { Collapse } from 'antd';
+
+const { Panel } = Collapse;
 
 
 const PdfViewer = dynamic(
@@ -194,8 +197,8 @@ const Home = () => {
             height: '100%',
           },
         }}>
-          <Chat data-testid="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto' }} chatHistory={chatHistory} selectedPaper={selectedPaper} />
-          <Flex data-testid="chat" css={{ flexGrow: 1, alignContent: 'end' }}>
+          <Chat data-testid="chat" chatHistory={chatHistory} selectedPaper={selectedPaper} />
+          <Flex css={{ flexGrow: 1, alignContent: 'end' }}>
             {messageStatus === 'loading' &&
               <>
                 <Loading data-testid="loading-answer">{loadingText}</Loading>
@@ -229,11 +232,13 @@ const Home = () => {
                 maxRows={20}
                 placeholder="Type your question here..."
                 // @ts-ignore
-                css={{ marginBottom: "$5", background: '$backgroundLighter' }}
+                css={{ marginBottom: "$5", background: '$backgroundLighter', margin: 0 }}
               />
               <Button
                 data-testid="ask-button"
                 iconRight={<SendIcon />}
+                auto
+                css={{ height: "100%" }}
                 onPress={() => {
                   handleSubmit(askPaper, {
                     question: question ?? '',
@@ -252,71 +257,71 @@ const Home = () => {
                 }> Ask </Button>
             </Flex>
             <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} />
-            <Collapse
-              bordered
-              title=""
-              subtitle="🛠 Configuration"
-              css={{ width: '100%' }}
-            >
-              <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
-                <Switch bordered initialChecked checked={quoteChecked}
-                  onChange={() => setQuoteChecked(previous => !previous)}></Switch>
-                <Text small>Quote paper</Text>
-              </Flex>
-              <Spacer y={1} />
-              <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+            <Collapse size="small" style={{ width: "100%" }}>
+              <Panel header="🛠 Configuration" key="1">
+                <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
+                  <Switch bordered initialChecked checked={quoteChecked}
+                    onChange={() => setQuoteChecked(previous => !previous)}></Switch>
+                  <Text small>Quote paper</Text>
+                </Flex>
+                <Spacer y={1} />
+                <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+              </Panel>
+              <Panel header="📦 Or start with predefined action" key="2" >
+                <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
+                  <Button
+                    size="sm"
+                    css={{ backgroundColor: "$blue200", color: "black" }}
+                    onPress={() => {
+                      handleSubmit(extractDatasets, {
+                        paper: JSON.parse(JSON.stringify(selectedPaper)),
+                        // @ts-ignore
+                        email: session!.user!.email,
+                        // @ts-ignore
+                        accessToken: session!.accessToken,
+                        resultsSpeedTradeoff: resultsSpeedTradeoff
+                      })
+                      setQuestion("Extract Datasets")
+                      addUserChatMessage("Extract Datasets")
+                    }}
+                  >
+                    <Text>Extract datasets</Text>
+                  </Button>
+                  <Button
+                    size="sm"
+                    css={{ backgroundColor: "$green200", color: "black" }}
+                    onPress={() => {
+                      handleSubmit(generateSummary, {
+                        paper: JSON.parse(JSON.stringify(selectedPaper)),
+                        // @ts-ignore
+                        email: session!.user!.email,
+                        // @ts-ignore
+                        accessToken: session!.accessToken
+                      })
+                      setQuestion("Generate Summary")
+                      addUserChatMessage("Generate Summary")
+                    }}
+                  >
+                    <Text>Generate Summary</Text>
+                  </Button>
+                  <Button
+                    size="sm"
+                    css={{
+                      border: "2px solid $yellow400",
+                      backgroundColor: "$backgroundLighter",
+                      '&:hover': {
+                        backgroundColor: "$yellow400",
+                      }
+                    }}
+                    onPress={() => {
+                      setIsFeedbackModalVisible(true)
+                    }}
+                  >
+                    <Text>Decide what goes here 🚀✨</Text>
+                  </Button>
+                </Flex>
+              </Panel>
             </Collapse>
-            <Spacer y={1} />
-            <h4>Or start with predefined action:</h4>
-            <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
-              <Button
-                css={{ backgroundColor: "$blue200", color: "black" }}
-                onPress={() => {
-                  handleSubmit(extractDatasets, {
-                    paper: JSON.parse(JSON.stringify(selectedPaper)),
-                    // @ts-ignore
-                    email: session!.user!.email,
-                    // @ts-ignore
-                    accessToken: session!.accessToken,
-                    resultsSpeedTradeoff: resultsSpeedTradeoff
-                  })
-                  setQuestion("Extract Datasets")
-                  addUserChatMessage("Extract Datasets")
-                }}
-              >
-                <Text>Extract datasets</Text>
-              </Button>
-              <Button
-                css={{ backgroundColor: "$green200", color: "black" }}
-                onPress={() => {
-                  handleSubmit(generateSummary, {
-                    paper: JSON.parse(JSON.stringify(selectedPaper)),
-                    // @ts-ignore
-                    email: session!.user!.email,
-                    // @ts-ignore
-                    accessToken: session!.accessToken
-                  })
-                  setQuestion("Generate Summary")
-                  addUserChatMessage("Generate Summary")
-                }}
-              >
-                <Text>Generate Summary</Text>
-              </Button>
-              <Button
-                css={{
-                  border: "2px solid $yellow400",
-                  backgroundColor: "$backgroundLighter",
-                  '&:hover': {
-                    backgroundColor: "$yellow400",
-                  }
-                }}
-                onPress={() => {
-                  setIsFeedbackModalVisible(true)
-                }}
-              >
-                <Text>Decide what goes here 🚀✨</Text>
-              </Button>
-            </Flex>
             <Spacer y={1} />
           </Card.Footer>
         </Card>

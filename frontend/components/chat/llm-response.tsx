@@ -14,8 +14,8 @@ export const RobotAnswer = ({ children }) => {
     return (
         <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start' }}>
             <Box css={{
-                minWidth: "40px",
-                maxWidth: "40px",
+                minWidth: "35px",
+                maxWidth: "35px",
                 alignSelf: 'end',
             }}>
                 <Image src="hippo.svg" />
@@ -24,7 +24,7 @@ export const RobotAnswer = ({ children }) => {
                 textAlign: 'left',
                 backgroundColor: '$backgroundLighter',
                 border: '1px solid $gray600',
-                padding: '$10',
+                padding: '$4 $4',
                 borderRadius: '20px 20px 20px 0',
             }}>
                 {children}
@@ -73,7 +73,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
                     options={{ tables: true, emoji: true, }}
                 />
             </Box>
-            <Spacer y={2} />
+            <Spacer y={1} />
             <Flex direction="row" css={{ justifyContent: "space-between", gap: "$3" }}>
                 <Flex css={{ justifyContent: 'flex-start', gap: "$4" }}>
                     <Button
@@ -147,10 +147,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
                     </Button>
                 </Flex>
             </Flex>
-            <Spacer y={1} />
         </RobotAnswer>
-        <Spacer y={1} />
-
 
     </>)
 }

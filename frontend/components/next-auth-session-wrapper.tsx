@@ -1,6 +1,6 @@
 import {
   Avatar,
-  Button, 
+  Button,
   Divider,
   Image,
   Input,
@@ -169,10 +169,18 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
     } else if (userInDiscord && userWhitelisted) {
       return (
         <>
-          {session.user &&
-            <ProfileInfo name={session!.user!.name} imageURL={session!.user!.image} />
-          }
-          {children}
+          <GuestUserContext.Provider value={{
+            isUserLoggedInAsGuest,
+            userEmail,
+            setUserEmail,
+            remainingTrialRequests,
+            setRemainingTrialRequests
+          }}>
+            {session.user &&
+              <ProfileInfo name={session!.user!.name} imageURL={session!.user!.image} />
+            }
+            {children}
+          </GuestUserContext.Provider>
         </>
       )
     } else if (userInDiscord && !userWhitelisted) {

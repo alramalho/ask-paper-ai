@@ -16,12 +16,11 @@ interface ChatProps {
   css: CSS;
   [otherPropName: string]: any;
 }
- 
+
 const Chat = ({ chatHistory, selectedPaper, css, ...props }: ChatProps) => {
 
-
   return (
-    <Box id="chat" css={css} {...props}>
+    <Box id="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto', ...css }} {...props}>
       {chatHistory.map((msg, index) => {
         if (msg.sender === "llm") {
           return <LLMResponse chatHistory={chatHistory} selectedPaper={selectedPaper} text={msg.text} />
