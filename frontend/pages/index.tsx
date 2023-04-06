@@ -224,6 +224,7 @@ const Home = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'start',
+            flexShrink: 0,
           }}>
             <Flex direction="row" css={{ gap: "$2", flexWrap: 'nowrap', width: '100%' }}>
               <Textarea
