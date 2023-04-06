@@ -10,11 +10,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 interface PdfViewerProps {
   pdf: File,
-  css?: CSS
-
 }
 
-const PdfViewer = ({pdf, css}: PdfViewerProps) => {
+const PdfViewer = ({pdf}: PdfViewerProps) => {
   const [searchText, setSearchText] = useState('');
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -47,10 +45,9 @@ const PdfViewer = ({pdf, css}: PdfViewerProps) => {
   );
 
   return (
-    <Box css={css}>
+    <Box data-testid="pdf">
       <Box css={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}>
         <Document
-          style={{height: '800'}}
           file={pdf}
           onLoadSuccess={onDocumentLoadSuccess}
           options={{

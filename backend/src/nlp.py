@@ -205,18 +205,17 @@ def split_text(text, chunk_size=3500):
     return texts
 
 
-def ask_text(prompt_template: str, completion_tokens=200, **kwargs):
-    if sum([count_tokens(s) for s in [prompt_template, *kwargs.values()]]) > LLM_MAX_TOKENS:
+def ask_text(text, completion_tokens=200):
+    if count_tokens(text) > LLM_MAX_TOKENS:
         raise ValueError("Text is too long, must be less than " +
                          str(LLM_MAX_TOKENS) + " tokens")
 
     llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
 
-    prompt = PromptTemplate(input_variables=list(
-        kwargs.keys()), template=prompt_template)
+    prompt = PromptTemplate(input_variables=[], template=text)
 
     chain = LLMChain(llm=llm, prompt=prompt)
-    return chain.run(**kwargs)
+    return chain.run(irrelevant="")
 
 
 def get_top_k_sections(k, text, labels):
@@ -227,12 +226,12 @@ def get_top_k_sections(k, text, labels):
     print(f"Getting top {k} labels")
     # Fetch it from LLMs since multi-class
     start = time.time()
-    result = ask_text(prompt_template="""
+    result = ask_text(f"""
         Give me a shortened list of the most relevant sections for the following text. 
         Text: {text}
-        Sections: {labels}
+        Sections: {str(labels)}
         Most relevant {k} sections in JSON array format:
-        """, k=str(k), text=text, labels=str(labels))
+        """)
     end = time.time()
     print("Result: " + result)
     print("Time taken to top k labels: " + str(end - start) + " seconds")

@@ -61,6 +61,24 @@ export function generateSummary({paper, email, accessToken}: DefaultEndpointOpti
     }
   })
 }
+
+interface ExplainSelectedTextProps {
+  text: string
+  email: string
+  accessToken: string
+}
+export function explainSelectedText({text, email, accessToken}: ExplainSelectedTextProps) {
+  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/explain`, {
+    text: text,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      // @ts-ignore
+      'Authorization': `Bearer ${accessToken}`,
+      'Email': email
+    }
+  })
+}
 interface AskOptions extends DefaultEndpointOptions {
   paperHash: string,
   accessToken: string,

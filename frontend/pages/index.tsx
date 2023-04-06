@@ -8,7 +8,7 @@ import PaperUploader from "../components/paper-uploader";
 import FeedbackModal, { storeFeedback } from "../components/feedback-modal";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import dynamic from "next/dynamic";
-import { askPaper, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail } from "../service/service";
+import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail } from "../service/service";
 import ProfileInfo from "../components/profile-info";
 import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
@@ -20,7 +20,6 @@ import Info from "../components/info";
 import { Collapse } from 'antd';
 
 const { Panel } = Collapse;
-
 
 const PdfViewer = dynamic(
   // @ts-ignore
@@ -60,6 +59,8 @@ const Home = () => {
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(4)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [selectedText, setSelectedText] = useState('');
+
 
   const {
     value: question,
@@ -96,6 +97,19 @@ const Home = () => {
   function addUserChatMessage(text: string) {
     setChatHistory(prev => [...prev, { text: text, sender: "user" }]);
   }
+
+  const handleSelection = () => {
+    let selectedText = '';
+    if (window.getSelection) {
+      //@ts-ignore
+      selectedText = window.getSelection().toString();
+      //@ts-ignore
+    } else if (document.selection && document.selection.type != "Control") {
+      //@ts-ignore
+      selectedText = document.selection.createRange().text;
+    }
+    setSelectedText(selectedText);
+  };  
 
 
   function handleSubmit<T extends any[], R>(func: (...args: T) => Promise<AxiosResponse<any, any>>, ...args: T) {
@@ -180,7 +194,7 @@ const Home = () => {
             <>
               <Spacer y={4} />
               <Flex direction='row' css={{ margin: '$10', gap: '$10', flexWrap: 'wrap', '@sm': { flexWrap: 'nowrap' } }}>
-                {pdf && <PdfViewer pdf={pdf} />}
+                {pdf && <div onMouseUp={handleSelection}><PdfViewer pdf={pdf} /></div>}
               </Flex>
             </>
           }
@@ -307,6 +321,23 @@ const Home = () => {
                     }}
                   >
                     <Text>Generate Summary</Text>
+                  </Button>
+                  <Button
+                    size="sm"
+                    css={{ backgroundColor: "$pink200", color: "black" }}
+                    onPress={() => {
+                      handleSubmit(explainSelectedText, {
+                        text: selectedText,
+                        // @ts-ignore
+                        email: session!.user!.email,
+                        // @ts-ignore
+                        accessToken: session!.accessToken,
+                      })
+                      setQuestion("Explain selected text")
+                      addUserChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"")
+                    }}
+                  >
+                    <Text>Explain selected text</Text>
                   </Button>
                   <Button
                     size="sm"

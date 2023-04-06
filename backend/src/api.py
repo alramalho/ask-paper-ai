@@ -281,6 +281,17 @@ async def ask(request: Request):
     return {'message': response}
 
 
+@app.post("/explain")
+async def explain(request: Request):
+    data = await request.json()
+    try:
+        text = data['text']
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data")
+
+    response = nlp.ask_text("Please explain the following text: " + text, 1000)
+    return {'message': response}
+
 @app.post("/store-feedback")
 async def store_feedback(request: Request):
     body = await request.json()

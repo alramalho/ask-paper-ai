@@ -125,6 +125,18 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
+  test("should be able to explain selected text", async () => {
+    await page.getByTestId('pdf').scrollIntoViewIfNeeded()
+    await page.dblclick('text=Background')
+    await page.click('text=Explain Selected Text');
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("The term \"background\" refers",);
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  })
+
   test('should be able to receive the results email', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.getByTestId('ask-button').click();
