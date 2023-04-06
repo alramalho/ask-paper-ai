@@ -168,6 +168,7 @@ const Home = () => {
             <PaperUploader onFinish={(paper, pdf) => {
               setSelectedPaper(paper)
               setPdf(pdf)
+              addUserChatMessage(`Now reading ${paper.title}`)
             }} />
           </Box>
           {isUserLoggedInAsGuest &&
