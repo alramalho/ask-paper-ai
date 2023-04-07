@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Button, Input, Link, Loading, Spacer, styled, Text } from "@nextui-org/react";
 import { Flex } from "./styles/flex";
 import XIcon from "./icons/x-icon";
@@ -68,6 +68,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
     } catch (error) {
       setUploadedPaper(null)
       setStatus('error')
+      setUnderText("Somethign went wrong! Please try again later or open a support request. 🙏")
       console.log(error);
     }
   }
