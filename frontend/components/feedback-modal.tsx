@@ -46,7 +46,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
   const [error, setError] = useState<string | undefined>(undefined);
   const [nextFeature, setNextFeature] = useState<string | undefined>(undefined);
   const [wasAnswerAccurate, setWasAnswerAccurate] = useState<boolean | undefined>(undefined);
-  const [nps, setNps] = useState<number | undefined>(undefined);
+  const [nps, setNps] = useState<number>(8);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
   const {data: session} = isUserLoggedInAsGuest ? useGuestSession() : useSession()
@@ -95,7 +95,7 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                   </Flex>
                   <Divider/>
                   <StyledLabel htmlFor='rate'>On a scale from 0 to 10, how likely are you to<br/> recommend this product to a friend or colleague?</StyledLabel>
-                  <MySlider value={nps} onChange={setNps}/>
+                  <MySlider value={nps} onChange={setNps} defaultValue={nps}/>
                   <Divider/>
                   <StyledLabel htmlFor='nextFeature'>What feature would you like to see next?</StyledLabel>
                   <Radio.Group
