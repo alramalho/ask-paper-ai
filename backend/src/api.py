@@ -260,6 +260,12 @@ async def summarize(request: Request):
 
     paper.filter_sections('exclude', ['abstract'])
     response = await nlp.ask_paper(question, paper, merge_at_end=False)
+    to_remove = [
+        'The paper context does not contain enough information for answering your question.',
+        'The paper does not contain enough information for answering your question',
+    ]
+    for s in to_remove:
+        response = response.replace(s, '')
     return {'message': response}
 
 
