@@ -151,7 +151,7 @@ test.describe('Normal upload', () => {
     // await verifyEmailSentInLastXMinutes(1);
   })
 
-  test.only('should be able to store feedback', async () => {
+  test('should be able to store feedback', async () => {
     await page.click('text=Feedback?');
     // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
     await page.click('text=🔍 Inline data exploration tool');
