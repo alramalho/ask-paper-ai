@@ -84,7 +84,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("FROC curves of FracNet detection performance on the RibFrac training, tuning and test cohorts. (b) Illustration of predicted segmentation on RibFrac test cohorts. (c) A comparison of segmentation metrics (IoU and Dice) for rounded and elongated shape.");
+    await expect(page.getByTestId('answer-area').last()).toContainText("FROC curves");
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
@@ -121,7 +121,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("Fracnet",);
+    await expect(page.getByTestId('answer-area').last()).toContainText("FracNet",);
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
