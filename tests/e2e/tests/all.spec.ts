@@ -158,7 +158,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await page.click('text=Answer was accurate');
+    await page.click('text=👍');
     await page.click('text=Feedback?');
     await page.getByTestId("nps-slider").getByText('7').click();
     const selectedSentiment = "Very good";
