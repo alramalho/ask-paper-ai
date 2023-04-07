@@ -145,7 +145,7 @@ const Home = () => {
       </>)
   }
   return (<>
-    <Box css={{
+    <Box onMouseUp={handleSelection} css={{
       display: 'flex',
       overflow: 'auto',
       flexDirection: 'column',
@@ -194,7 +194,7 @@ const Home = () => {
             <>
               <Spacer y={4} />
               <Flex direction='row' css={{ margin: '$10', gap: '$10', flexWrap: 'wrap', '@sm': { flexWrap: 'nowrap' } }}>
-                {pdf && <div onMouseUp={handleSelection}><PdfViewer pdf={pdf} /></div>}
+                {pdf && <PdfViewer pdf={pdf} />}
               </Flex>
             </>
           }
