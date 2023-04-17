@@ -335,6 +335,11 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
 
     responses = [f.result() for f in futures]
 
+    if ENVIRONMENT == "dev":
+        with open("responses.txt", "w") as f:
+            f.write("\n".join(["\nResponse nr " + str(i) + ": " + response + '\n' for i, response in enumerate(responses)]))
+            
+
     if (len(responses) > 1):
         if merge_at_end:
             summary_prompt = PromptTemplate(
