@@ -347,8 +347,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
                         - You keep its sequentiality (i.e 'Response N+1' contents come after 'Response N').
                         - You must keep the style of the original responses (if for example they are all markdown tables, your response should be a markdown table too)
                         - If you include web links they must be exactely matching the link in it's original response.
-                        Lastly, it is fundamental that the generated answer does not sound like a merge of the original responses.
-                        In other words, your task is to agreggate these responses together in what you think is the best way possible.
+                        Your final answer must be a single response that answers the initial question, uninteligible that it is a merge of multiple responses.
                         {responses}
                         Initial Question:
                         {question}
