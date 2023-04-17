@@ -74,7 +74,7 @@ async def verify_login(request: Request, call_next):
         print("User is an allowed guest")
         response = await call_next(request)
 
-        if request.url.path in ['/ask', '/summarize', '/extract-datasets'] and response.status_code // 100 == 2: 
+        if request.url.path in ['/ask', '/summarize', '/extract-datasets', '/explain'] and response.status_code // 100 == 2: 
             # TODO, the following logic isn't the best way due to following reasons:
             # 1. if the user has very low latency, his browser might make several
             #    requests to ask at once, then he ends up only getting one response or none
