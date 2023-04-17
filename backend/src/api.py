@@ -284,6 +284,12 @@ async def ask(request: Request):
         question += "Please include at least one EXACT quote from the original paper."
 
     response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
+    negative_prompts = [
+        'The paper context does not contain enough information for answering your question.',
+        'The paper does not contain enough information for answering your question',
+    ]
+    if any([s in response for s in negative_prompts]):
+        response += " Maybe try to configure for best results?"
     return {'message': response}
 
 
