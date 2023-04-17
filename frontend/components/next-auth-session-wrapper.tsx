@@ -176,9 +176,6 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
             remainingTrialRequests,
             setRemainingTrialRequests
           }}>
-            {session.user &&
-              <ProfileInfo name={session!.user!.name} imageURL={session!.user!.image} />
-            }
             {children}
           </GuestUserContext.Provider>
         </>

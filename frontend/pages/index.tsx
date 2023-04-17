@@ -109,7 +109,7 @@ const Home = () => {
       selectedText = document.selection.createRange().text;
     }
     setSelectedText(selectedText);
-  };  
+  };
 
 
   function handleSubmit<T extends any[], R>(func: (...args: T) => Promise<AxiosResponse<any, any>>, ...args: T) {
@@ -140,11 +140,12 @@ const Home = () => {
   if (isUserLoggedInAsGuest && remainingTrialRequests !== undefined && remainingTrialRequests <= 0) {
     return (
       <>
-        <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image} />
         <RemainingRequests value={remainingTrialRequests} />
       </>)
   }
   return (<>
+    <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image} />
+
     <Box onMouseUp={handleSelection} css={{
       display: 'flex',
       overflow: 'auto',
@@ -186,7 +187,6 @@ const Home = () => {
           </Box>
           {isUserLoggedInAsGuest &&
             <>
-              <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image} />
               <RemainingRequests value={remainingTrialRequests} />
             </>
           }
