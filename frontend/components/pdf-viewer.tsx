@@ -1,10 +1,10 @@
-import React, {useCallback, useState} from "react";
-import {Document, Page, pdfjs} from "react-pdf";
+import React, { useCallback, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
 // import pdf worker as a url, see `next.config.js` and `pdf-worker.js`
 import workerSrc from "../pdf-worker";
-import {Box} from "./layout";
-import {Button, CSS, Text} from "@nextui-org/react";
-import {Flex} from "./styles/flex";
+import { Box } from "./layout";
+import { Button, CSS, Spacer, Text } from "@nextui-org/react";
+import { Flex } from "./styles/flex";
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
@@ -12,12 +12,12 @@ interface PdfViewerProps {
   pdf: File,
 }
 
-const PdfViewer = ({pdf}: PdfViewerProps) => {
+const PdfViewer = ({ pdf }: PdfViewerProps) => {
   const [searchText, setSearchText] = useState('');
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
-  function onDocumentLoadSuccess({numPages}) {
+  function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     setPageNumber(1);
   }
@@ -46,7 +46,12 @@ const PdfViewer = ({pdf}: PdfViewerProps) => {
 
   return (
     <Box data-testid="pdf">
-      <Box css={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}>
+      <div>
+        <label htmlFor="search">Search:</label>
+        <input type="search" id="search" value={searchText} onChange={event => setSearchText(event.target.value)} />
+      </div>
+      <Spacer y={1} />
+      <Box>
         <Document
           file={pdf}
           onLoadSuccess={onDocumentLoadSuccess}
@@ -54,42 +59,23 @@ const PdfViewer = ({pdf}: PdfViewerProps) => {
             cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
           }}
         >
-          <Page
-            pageNumber={pageNumber}
-            renderAnnotationLayer={false}
-            renderTextLayer={true}
-            customTextRenderer={textRenderer}
-          />
+
+          {Array.from(
+            new Array(numPages),
+            (el, index) => (
+              <>
+                <Page
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                  renderAnnotationLayer={false}
+                  renderTextLayer={true}
+                  customTextRenderer={textRenderer}
+                />
+                <Spacer y={1} />
+              </>
+            ),
+          )}
         </Document>
-      </Box>
-      <Box>
-        <div>
-          <label htmlFor="search">Search:</label>
-          <input type="search" id="search" value={searchText} onChange={event => setSearchText(event.target.value)} />
-        </div>
-        <Text>
-          Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
-        </Text>
-        <Flex css={{gap: "$2"}}>
-          <Button
-            auto
-            size={'sm'}
-            type="button"
-            disabled={pageNumber <= 1}
-            onClick={previousPage}
-          >
-            Previous
-          </Button>
-          <Button
-            auto
-            size={'sm'}
-            type="button"
-            disabled={pageNumber >= (numPages ?? 0)}
-            onClick={nextPage}
-          >
-            Next
-          </Button>
-        </Flex>
       </Box>
     </Box>
   )

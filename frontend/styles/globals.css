@@ -1,8 +1,11 @@
 #__next {
-    display: contents; /* This is the magic that lets scroll happen in left div*/
+    display: contents;
+    /* This is the magic that lets scroll happen in left div*/
 }
-div[data-overlay-container="true"]{
-    display: contents; /* This is the magic that lets scroll happen in left div*/
+
+div[data-overlay-container="true"] {
+    display: contents;
+    /* This is the magic that lets scroll happen in left div*/
 }
 
 html,
@@ -116,13 +119,14 @@ code {
     z-index: 1;
 }
 
-.react-pdf__Document {
-    height: 792px;
+.react-pdf__Page {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
 }
 
-::selection{
+::selection {
     color: black;
 }
-::-moz-selection  {
+
+::-moz-selection {
     color: black;
 }
