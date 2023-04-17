@@ -152,6 +152,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to store feedback', async () => {
+    await page.click('text=👍');
     await page.click('text=Feedback?');
     // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
     await page.click('text=🔍 Inline data exploration tool');
@@ -170,7 +171,7 @@ test.describe('Normal upload', () => {
       was_answer_accurate: true,
     });
     await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
-      nps: '8',
+      nps: 8,
       next_feature: selectedNextFeature,
       message: writtenMessage,
     });
@@ -214,10 +215,12 @@ function verifyEmailSentInLastXMinutes(minutes: number) {
 // todo: missing test cases
 // - should be able to upload the same paper without doubling storage
 
-function verifyIfInDynamo(tableName: string, indexField: string, indexValue: string, extraAttributes: {[key: string]: string | boolean}) {
+function verifyIfInDynamo(tableName: string, indexField: string, indexValue: string, extraAttributes: {[key: string]: string | boolean | number}) {
   const query = `--index-name ${indexField}-index --key-condition-expression "${indexField} = :${indexField}" --expression-attribute-values '{":${indexField}":{"S":"${indexValue}"}}' | jq '.Items[] | select(${formatAttributes(extraAttributes)})' | grep '"${indexField}":' || (echo "No item found with requested charactersitics" && exit 1)`
   if (process.env.ENVIRONMENT === 'dev') {
-    require('child_process').execSync(`aws --endpoint-url=http://localhost:4566 dynamodb query --table-name ${tableName} ${query}`);
+    const command = `aws --endpoint-url=http://localhost:4566 dynamodb query --table-name ${tableName} ${query}`
+    console.log(command);
+    require('child_process').execSync(command);
   } else {
     require('child_process').execSync(`aws dynamodb query --table-name ${tableName} ${query}`);
   }
@@ -226,9 +229,11 @@ function verifyIfInDynamo(tableName: string, indexField: string, indexValue: str
 function formatAttributes(obj: {[key: string]: string | boolean}): string {
   return Object.entries(obj).map(([key, value]) => {
     let formattedValue: string;
+    formattedValue = `"${value}"`;
     if (typeof value === 'string') {
-      formattedValue = `"${value}"`;
       return `.${key}.S == ${formattedValue}`;
+    } else if (typeof value === 'number') {
+      return `.${key}.N == ${formattedValue}`;
     } else if (typeof value === 'boolean') {
       return `.${key}.BOOL == ${value}`;
     }

@@ -231,13 +231,14 @@ const Home = () => {
             }
           </Flex>
 
-          <Divider css={{ margin: '$5 0' }} />
+          <Divider css={{ margin: '$5 0 0 0' }} />
 
           <Card.Footer css={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'start',
             flexShrink: 0,
+            bg: 'rgba(255,255,255,0.86)',
           }}>
             <Flex direction="row" css={{ gap: "$2", flexWrap: 'nowrap', width: '100%' }}>
               <Textarea
