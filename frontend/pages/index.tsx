@@ -274,7 +274,7 @@ const Home = () => {
                 }
                 }> Ask </Button>
             </Flex>
-            <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} />
+            <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} css={{justifyContent: 'flex-start', width: '100%'}} />
             <Collapse size="small" style={{ width: "100%" }} defaultActiveKey={['2']}>
               <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
                 <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
