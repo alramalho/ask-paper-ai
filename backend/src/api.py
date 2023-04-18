@@ -257,11 +257,11 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     paper.filter_sections('include', ['data', 'inclusion criteria'])
     response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
 
-    user_discord_id = request.state.user_discord_id
-    print(f"User discord id: {user_discord_id}")
-    if user_discord_id is not None:
-        background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
-
+    if hasattr(request.state, 'user_discord_id'):
+        user_discord_id = request.state.user_discord_id
+        print(f"User discord id: {user_discord_id}")
+        if user_discord_id is not None:
+            background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
 
     return {'message': response}
 
