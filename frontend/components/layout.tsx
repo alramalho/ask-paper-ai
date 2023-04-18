@@ -24,7 +24,7 @@ export const Box = styled('div', {
 });
 
 export const Layout = ({ children, css, seo }: LayoutProps) => {
-  const siteName = seo?.siteName ?? 'Ask Paper BETA'
+  const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights from Papers'
   const title = [siteName, seo?.title].join(" ")
   const url = `https://www.askpaper.ai`
   return (
