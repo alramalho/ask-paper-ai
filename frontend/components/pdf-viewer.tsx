@@ -44,6 +44,13 @@ const PdfViewer = ({ pdf }: PdfViewerProps) => {
     [searchText]
   );
 
+  useEffect(() => {
+    const links = document.querySelectorAll('a');
+    links.forEach(link => {
+      link.setAttribute('target', '_blank');
+    });
+  }, [pageNumber]);
+
   return (
     <Box data-testid="pdf">
       <div>
@@ -67,7 +74,7 @@ const PdfViewer = ({ pdf }: PdfViewerProps) => {
                 <Page
                   key={`page_${index + 1}`}
                   pageNumber={index + 1}
-                  renderAnnotationLayer={false}
+                  renderAnnotationLayer={true}
                   renderTextLayer={true}
                   customTextRenderer={textRenderer}
                 />
