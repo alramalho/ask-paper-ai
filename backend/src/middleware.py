@@ -62,6 +62,7 @@ async def verify_login(request: Request, call_next):
     
     user_discord_id = await get_id_from_token(auth_header)
     if user_discord_id is not None:
+        request.state.user_discord_id = user_discord_id
         try:
             discord_users_gateway.get_user_by_email(email)
         except UserDoesNotExistException as e:

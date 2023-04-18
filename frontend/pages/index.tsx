@@ -2,14 +2,13 @@ import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image
 import React, { useContext, useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
 import SendIcon from "../components/icons/send-icon";
-import { Box } from "../components/layout";
+import { Box, FeedbackVisibleContext } from "../components/layout";
 import { Flex } from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
-import FeedbackModal, { storeFeedback } from "../components/feedback-modal";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import dynamic from "next/dynamic";
 import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail } from "../service/service";
-import ProfileInfo from "../components/profile-info";
+import Navbar from "../components/navbar";
 import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
 import IconSlider from "../components/slider/slider";
@@ -56,7 +55,7 @@ const Home = () => {
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
-  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
+  const setIsFeedbackModalVisible = useContext(FeedbackVisibleContext)
   const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(4)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
@@ -144,7 +143,7 @@ const Home = () => {
       </>)
   }
   return (<>
-    <ProfileInfo name={session!.user!.email} imageURL={session!.user!.image} />
+    <Navbar name={session!.user!.name} imageURL={session!.user!.image} />
 
     <Box onMouseUp={handleSelection} css={{
       display: 'flex',
@@ -168,7 +167,7 @@ const Home = () => {
       }}>
         <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
           <Box>
-            <Spacer y={3} />
+            <Spacer y={4} />
             <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
             <Flex>
               <Text h2>Ask Paper</Text>
@@ -300,7 +299,6 @@ const Home = () => {
                         accessToken: session!.accessToken,
                         resultsSpeedTradeoff: resultsSpeedTradeoff
                       })
-                      setQuestion("Extract Datasets")
                       addUserChatMessage("Predefined Action: Extract Datasets")
                     }}
                   >
@@ -317,7 +315,6 @@ const Home = () => {
                         // @ts-ignore
                         accessToken: session!.accessToken
                       })
-                      setQuestion("Generate Summary")
                       addUserChatMessage("Predefined Action: Generate Summary")
                     }}
                   >
@@ -334,7 +331,6 @@ const Home = () => {
                         // @ts-ignore
                         accessToken: session!.accessToken,
                       })
-                      setQuestion("Explain selected text")
                       addUserChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"")
                     }}
                   >
@@ -364,30 +360,6 @@ const Home = () => {
       }
     </Box>
 
-    {isFeedbackModalVisible &&
-      <FeedbackModal paper={selectedPaper ?? null}
-        question={question ?? null}
-        answer={chatHistory[chatHistory.length - 1].text ?? null}
-        userEmail={session!.user!.email!}
-        visible={isFeedbackModalVisible}
-        setVisible={setIsFeedbackModalVisible}
-      />
-    }
-
-    <Box data-testid='feedback-component' css={{
-      position: 'absolute',
-      bottom: '0',
-      right: '10px',
-      padding: '$4',
-      backgroundColor: '$primary',
-      border: "1px solid $primaryLightContrast",
-      zIndex: 50,
-      color: 'white',
-      borderRadius: '15px 15px 0 0',
-      cursor: 'pointer',
-    }} onClick={() => setIsFeedbackModalVisible(true)}>
-      <Text b css={{ color: 'inherit' }}>👋 Feedback?</Text>
-    </Box>
   </>
   )
 };
@@ -396,7 +368,7 @@ function fixNewlines(text: string) {
   return text.replace(/\\n/g, '\n').replace(/  /g, '')
 }
 
-function makeLinksClickable(text: string) {
+export function makeLinksClickable(text: string) {
   return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>link</a>");
 }
 

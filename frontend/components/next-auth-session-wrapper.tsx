@@ -18,7 +18,7 @@ import DiscordIcon from "./icons/discord-icon";
 import { Code } from "./layout";
 import { GuestUserContext } from "../hooks/session";
 import OverviewBlock from "./overview-block";
-import ProfileInfo from './profile-info';
+import Navbar from './navbar';
 
 
 interface ChildrenOnlyProps {

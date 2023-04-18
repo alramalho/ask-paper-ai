@@ -110,3 +110,13 @@ export function getRemainingRequestsFor(email: string) {
     }
   })
 }
+
+export function loadDatasetsForUser(email: string, accessToken: string) {
+  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/user-datasets`, {
+    headers: {
+      'Test': 'test',
+      'Email': email,
+      'Authorization': `Bearer ${accessToken}`, // todo: we should have the user ID in the frontend. this is weird
+    }
+  })
+}

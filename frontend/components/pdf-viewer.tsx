@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 // import pdf worker as a url, see `next.config.js` and `pdf-worker.js`
 import workerSrc from "../pdf-worker";

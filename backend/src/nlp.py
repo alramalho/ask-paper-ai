@@ -205,10 +205,13 @@ def split_text(text, chunk_size=3500):
     return texts
 
 
-def ask_text(text, completion_tokens=200):
+def ask_text(text, completion_tokens=None):
     if count_tokens(text) > LLM_MAX_TOKENS:
         raise ValueError("Text is too long, must be less than " +
                          str(LLM_MAX_TOKENS) + " tokens")
+    
+    if completion_tokens is None:
+        completion_tokens = LLM_MAX_TOKENS - count_tokens(text)
 
     llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
 

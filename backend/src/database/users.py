@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from database.db import DynamoDBGateway
 from utils.constants import DB_GUEST_USERS, DB_DISCORD_USERS
+from nlp import ask_text
 
 class GuestUser(BaseModel):
     email: str
@@ -11,6 +12,7 @@ class DiscordUser(BaseModel):
     email: str
     discord_id: str
     created_at: str
+    datasets: str = None
 
 
 class UserDoesNotExistException(Exception):
@@ -20,6 +22,13 @@ class UserDoesNotExistException(Exception):
 class DiscordUsersGateway:
     def __init__(self):
         self.db_gateway = DynamoDBGateway(table_name=DB_DISCORD_USERS)
+
+    def get_user_by_id(self, id: str) -> DiscordUser:
+        data = self.db_gateway.read('discord_id', id)
+        if data is None:
+            print("Discord user does not exist")
+            raise UserDoesNotExistException()
+        return DiscordUser(**data)
 
     def get_user_by_email(self, email: str) -> DiscordUser:
         data = self.db_gateway.read('email', email)
@@ -33,6 +42,20 @@ class DiscordUsersGateway:
         self.db_gateway.write(user.dict())
         print(f"Discord user created for email {email}")
         return user
+    
+    def update_user_datasets(self, discord_id: str, new_datasets: str, paper_title) -> DiscordUser:
+        print("Updating user datasets")
+        user = self.get_user_by_id(discord_id)
+        prompt = f"""Increment the following markdown dataset table:
+        {user.datasets}
+        With the new datasets:
+        {new_datasets}
+        Note: In the new datasets table, you must include the column "Found In" with the paper title {paper_title} for all entries.
+        Take into account that there should not be repeated datasets. If there are repeated datasets, you must merge them."""
+        user.datasets = ask_text(prompt)
+        self.db_gateway.write(user.dict())
+        print("User datasets updated")
+
     
     
 class GuestUsersGateway:

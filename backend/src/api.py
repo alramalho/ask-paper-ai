@@ -18,7 +18,7 @@ import middleware
 from botocore.exceptions import ClientError
 import nlp
 from database.db import DynamoDBGateway
-from database.users import GuestUsersGateway, UserDoesNotExistException
+from database.users import GuestUsersGateway, UserDoesNotExistException, DiscordUsersGateway
 import re
 import uuid
 from utils.constants import ENVIRONMENT
@@ -93,6 +93,19 @@ async def guest_login(request: Request, response: Response):
         response.status_code = 201
 
     return {'remaining_trial_requests': user.remaining_trial_requests}
+
+
+@app.get('/user-datasets')
+async def get_user_datasets(request: Request):
+    user_discord_id = request.state.user_discord_id
+
+    users_gateway = DiscordUsersGateway()
+    try:
+        user = users_gateway.get_user_by_id(user_discord_id)
+    except UserDoesNotExistException:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {'datasets': user.datasets}
 
 
 @app.get('/user-remaining-requests-count')
@@ -218,7 +231,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
 
 @app.post("/extract-datasets")
-async def extract_datasets(request: Request):
+async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     data = await request.json()
     try:
         results_speed_trade_off = data.get('results_speed_trade_off', None)
@@ -243,6 +256,12 @@ async def extract_datasets(request: Request):
 
     paper.filter_sections('include', ['data', 'inclusion criteria'])
     response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
+
+    user_discord_id = request.state.user_discord_id
+    print(f"User discord id: {user_discord_id}")
+    if user_discord_id is not None:
+        background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
+
 
     return {'message': response}
 
