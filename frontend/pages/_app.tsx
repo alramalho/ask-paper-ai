@@ -58,13 +58,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
               },
             }}
           >
-            <Layout seo={{
-              description: "Ask questions & Extract datasets from papers."
-            }}>
-              <NextAuthSessionWrapper>
+            <NextAuthSessionWrapper>
+              <Layout seo={{
+                description: "Ask questions & Extract datasets from papers."
+              }}>
                 <Component {...pageProps} />
-              </NextAuthSessionWrapper>
-            </Layout>
+              </Layout>
+            </NextAuthSessionWrapper>
           </ConfigProvider>
         </NextUIProvider>
       </NextThemesProvider>

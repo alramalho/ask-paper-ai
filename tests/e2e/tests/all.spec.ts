@@ -151,13 +151,22 @@ test.describe('Normal upload', () => {
     // await verifyEmailSentInLastXMinutes(1);
   })
 
-  test('should be able to store feedback', async () => {
+  test('should be able to store accurate feedback', async () => {
     await page.click('text=👍');
+
+    await page.getByText('Thank you')
+
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+      was_answer_accurate: true,
+    });
+  })
+
+  test('should be able to store feedback', async () => {
+    
     await page.click('text=Feedback?');
     // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
     await page.click('text=🔍 Inline data exploration tool');
     const selectedNextFeature = 'data-exploration';
-
 
     const writtenMessage = "dummy";
     await page.getByTestId("message").fill(writtenMessage);
@@ -167,9 +176,6 @@ test.describe('Normal upload', () => {
 
     await expect(page.getByTestId('feedback-successful')).toBeVisible();
 
-    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
-      was_answer_accurate: true,
-    });
     await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
       nps: 8,
       next_feature: selectedNextFeature,
