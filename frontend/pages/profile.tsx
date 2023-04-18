@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react"
 import { GuestUserContext, useGuestSession } from "../hooks/session"
 import { useSession } from "next-auth/react"
 import { Flex } from "../components/styles/flex"
-import { Avatar, Button, Spacer, Text } from "@nextui-org/react"
+import { Avatar, Spacer, Text } from "@nextui-org/react"
 import Info from "../components/info"
 import MarkdownView from "react-showdown"
 import { loadDatasetsForUser } from "../service/service"
 import { makeLinksClickable } from "."
+import Link from "next/link"
 
 const Profile = () => {
     const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
@@ -37,10 +38,10 @@ const Profile = () => {
                 <Text>{session!.user!.email}</Text>
             </Flex>
             <Spacer y={2} />
-            <Flex direction='column' css={{margin: "$3"}}>
+            <Flex direction='column' css={{margin: "$3"}} data-testid="profile-dataset-area">
                 <Text h4>📊 My Extracted Datasets</Text>
                 {isUserLoggedInAsGuest
-                    ? <Info>Login with discord to access your datasets</Info>
+                    ? <Info>This feature is only available to Community Members</Info>
                     : <MarkdownView
                         markdown={makeLinksClickable(userDatasets ?? 'No datasets found') }
                         options={{ tables: true, emoji: true }}
@@ -49,7 +50,7 @@ const Profile = () => {
             </Flex>
 
             <Spacer y={2} />
-            <Button as="a" css={{color: "black", borderColor: "black"}} bordered auto href={"/"}>← Go back to app</Button>
+            <Link href="/">← Go back to app</Link>
         </Flex>
     </>)
 }

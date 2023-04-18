@@ -23,10 +23,7 @@ test.describe('Normal upload', () => {
 
     await loginAsGuest(browser);
 
-    page.on("filechooser", (fileChooser: FileChooser) => {
-      fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
-    });
-    await page.getByTestId('file-upload').click();
+    
 
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
@@ -36,7 +33,7 @@ test.describe('Normal upload', () => {
     await page.close();
   });
 
-  test('should be able to upload a paper', async () => {
+  test.only('should be able to upload a paper', async () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
     await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
 
@@ -105,7 +102,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
   })
 
-  test('should be able to extract datasets', async () => {
+  test.only('should be able to extract datasets', async () => {
     await page.click('text=Extract Datasets');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
@@ -204,6 +201,38 @@ test.describe('Upload the demo paper', () => {
 
     await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison\"")
   })
+});
+
+test.describe('Profile pagee', () => {
+  test.only('Should be able to go the profile page and see the contents', async ({browser}) => {
+    await loginAsGuest(browser);
+    await page.click("text=Dashboard")
+
+    await expect(page.getByText(TEST_EMAIL)).toBeVisible();
+
+    await page.getByTestId('profile-dataset-area').toHaveText("RibFrac")
+    
+  });
+
+  test.only("Should be able to increment the datasets present on the page", async ({browser}) => {
+    await loginAsGuest(browser);
+
+    page.on("filechooser", (fileChooser: FileChooser) => {
+      fileChooser.setFiles([process.cwd() + '/tests/fixtures/chexpert_paper.pdf']);
+    });
+    await page.getByTestId('file-upload').click();
+    await page.click('text=Extract Datasets');
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await page.click("text=Dashboard")
+
+    await expect(page.getByText(TEST_EMAIL)).toBeVisible();
+
+    await expect(page.getByTestId('profile-dataset-area')).toHaveText("RibFrac")
+    await expect(page.getByTestId('profile-dataset-area')).toHaveText("CheXpert")
+  });
 });
 
 
