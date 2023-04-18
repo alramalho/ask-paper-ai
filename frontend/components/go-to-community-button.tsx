@@ -35,7 +35,6 @@ export const GoToCommunityButton = () => {
         size="sm"
 
       >
-        Go To Community
     </Button>
   )
 };

@@ -1,7 +1,10 @@
-import { CSS, styled } from '@nextui-org/react';
+import { CSS, Text, styled } from '@nextui-org/react';
 import { NextSeo } from 'next-seo';
 import { OpenGraphMedia } from 'next-seo/lib/types';
-import React from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import FeedbackModal from './feedback-modal';
+import { GuestUserContext, useGuestSession } from '../hooks/session';
+import { useSession } from 'next-auth/react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,10 +26,16 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
+export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateAction<boolean>>>(() => {})
+
 export const Layout = ({ children, css, seo }: LayoutProps) => {
-  const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights from Papers'
+  const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights '
   const title = [siteName, seo?.title].join(" ")
   const url = `https://www.askpaper.ai`
+
+  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
+  const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
+  const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   return (
     <>
       {seo &&
@@ -43,7 +52,31 @@ export const Layout = ({ children, css, seo }: LayoutProps) => {
           }}
         />
       }
-      {children}
+      <FeedbackVisibleContext.Provider value={setIsFeedbackModalVisible}>
+        {children}
+      </FeedbackVisibleContext.Provider>
+
+      {isFeedbackModalVisible &&
+        <FeedbackModal
+          userEmail={session!.user!.email!}
+          visible={isFeedbackModalVisible}
+          setVisible={setIsFeedbackModalVisible}
+        />
+      }
+      <Box data-testid='feedback-component' css={{
+        position: 'absolute',
+        bottom: '0',
+        right: '10px',
+        padding: '$4',
+        backgroundColor: '$primary',
+        border: "1px solid $primaryLightContrast",
+        zIndex: 50,
+        color: 'white',
+        borderRadius: '15px 15px 0 0',
+        cursor: 'pointer',
+      }} onClick={() => setIsFeedbackModalVisible(true)}>
+        <Text b css={{ color: 'inherit' }}>👋 Feedback?</Text>
+      </Box>
     </>
   )
 };

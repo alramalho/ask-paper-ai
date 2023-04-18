@@ -18,9 +18,6 @@ const StyledLabel = styled('label', {
 })
 
 interface FeedbackProps {
-  paper: Paper | null,
-  answer?: string | null,
-  question?: string | null,
   userEmail: string
   css?: CSS,
   visible: boolean,
@@ -41,11 +38,10 @@ export function storeFeedback(email: string, data: any, accessToken: any) {
   })
 }
 
-const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVisible}: FeedbackProps) => {
+const FeedbackModal = ({css, userEmail, visible, setVisible}: FeedbackProps) => {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [error, setError] = useState<string | undefined>(undefined);
   const [nextFeature, setNextFeature] = useState<string | undefined>(undefined);
-  const [wasAnswerAccurate, setWasAnswerAccurate] = useState<boolean | undefined>(undefined);
   const [nps, setNps] = useState<number>(8);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const {isUserLoggedInAsGuest} = useContext(GuestUserContext)
@@ -151,13 +147,9 @@ const FeedbackModal = ({css, userEmail, paper, answer, question, visible, setVis
                         setStatus('sending')
                         storeFeedback(session!.user!.email!, {
                           email: userEmail,
-                          was_answer_accurate: wasAnswerAccurate,
-                          question,
-                          answer,
                           nps,
                           next_feature: nextFeature,
                           message,
-                          paper_hash: paper?.hash ?? null,
                           // @ts-ignore
                         }, session!.accessToken)
                           .then(() => setStatus('success'))

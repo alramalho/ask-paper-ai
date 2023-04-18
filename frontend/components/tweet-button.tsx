@@ -37,7 +37,6 @@ export const TweetButton = () => {
       size="sm"
 
     >
-      Share on Twitter
     </Button>
   )
 };
