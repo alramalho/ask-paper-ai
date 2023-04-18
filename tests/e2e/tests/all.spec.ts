@@ -23,7 +23,10 @@ test.describe('Normal upload', () => {
 
     await loginAsGuest(browser);
 
-    
+    page.on("filechooser", (fileChooser: FileChooser) => {
+      fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
+    });
+    await page.getByTestId('file-upload').click();
 
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
