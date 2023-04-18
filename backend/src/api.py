@@ -249,7 +249,7 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
             - The resulting table should contain as many entries as possible, but only of specific datasets.
             - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
             - ALL entries must have it's name SPECIFIED
-            - Every resulting table entry must be inferred from the paper context
+            - Every resulting table entry and their contents must be present from the paper context
         """
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
