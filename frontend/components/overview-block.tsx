@@ -50,7 +50,7 @@ const OverviewBlock = () => {
         >
           <Text>Ask paper is free to use for every community member! All you have to do is register in discord and
             join our server.
-            If you want further help, just click the button above to receive an email with the instructions.
+            If you need further help, login as a guest and there's in an option to receive instructions via email on how to use the tool.
           </Text>
         </Collapse>
         <Collapse
