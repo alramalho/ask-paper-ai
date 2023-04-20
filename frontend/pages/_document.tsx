@@ -39,7 +39,6 @@ class MyDocument extends Document {
             />
             <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
             <Head>
-               <meta name="_foundr" content="717b93aeb0bdd6c8035b5463993d0513"/>
                {CssBaseline.flush()}
             </Head>
 
