@@ -7,7 +7,7 @@ import Document, {
    DocumentContext,
    DocumentInitialProps,
 } from 'next/document';
-import {CssBaseline} from '@nextui-org/react';
+import { CssBaseline } from '@nextui-org/react';
 
 class MyDocument extends Document {
    static async getInitialProps(
@@ -37,8 +37,11 @@ class MyDocument extends Document {
                href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap"
                rel="stylesheet"
             />
-            <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet"/>
-            <Head>{CssBaseline.flush()}</Head>
+            <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
+            <Head>
+               <meta name="_foundr" content="717b93aeb0bdd6c8035b5463993d0513"/>
+               {CssBaseline.flush()}
+            </Head>
 
             <body>
                <Main />
