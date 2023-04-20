@@ -34,9 +34,6 @@ class DynamoDBGateway:
         if 'created_at' not in data:
             data['created_at'] = str(datetime.datetime.now())
 
-        if 'created_at_date' not in data:
-            data['created_at_date'] = str(datetime.datetime.now().date())
-
         data['latest_commit_id'] = LATEST_COMMIT_ID
         try:
             response = self.table.put_item(

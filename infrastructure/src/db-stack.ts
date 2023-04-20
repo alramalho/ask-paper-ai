@@ -33,7 +33,7 @@ export class DbStack extends cdk.Stack {
 
     new DynamoDbTableConstruct(this, 'InvocationsTable', {
       name: `${SNAKE_CASE_PREFIX}_function_invocations_${props.environment}`,
-      indexFields: ['created_at_date'],
+      indexFields: [],
       writableBy: props.writableBy,
       readableBy: props.readableBy,
     })
