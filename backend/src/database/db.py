@@ -29,7 +29,7 @@ class DynamoDBGateway:
         return result
 
     def write(self, data: dict):
-        print('Writing to dynamo')
+        print('Writing to dynamo', self.table.name)
 
         if 'created_at' not in data:
             data['created_at'] = str(datetime.datetime.now())

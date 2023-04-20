@@ -87,7 +87,6 @@ async def verify_login(request: Request, call_next):
 
 
 async def log_function_invocation_to_dynamo(request: Request, call_next):
-    background_tasks = BackgroundTasks()
     start = datetime.datetime.now()
     body = await get_body(request) 
 
@@ -97,6 +96,7 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
         response = await call_next(request)
         time_elapsed = str(datetime.datetime.now() - start)
         print(f"Elapsed time for {request.url.path}: {time_elapsed}")
+        background_tasks = BackgroundTasks()
         background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write, {
             'id': str(uuid.uuid4()),
             'email': email,
@@ -105,6 +105,7 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
             'request_body': json.dumps(body),
             'time_elapsed': time_elapsed,
         })
+        response.background = background_tasks
         return response
     except Exception as e:
         print("Caught by middleware")
