@@ -6,7 +6,7 @@ import {Paper} from "../pages";
 import {GuestUserContext, useGuestSession} from "../hooks/session";
 import {Box} from "./layout";
 import { useSession } from 'next-auth/react';
-import Nps from './my-slider';
+import Nps from './nps';
 
 const StyledRadio = styled(Radio, {
   margin: '0 $5',

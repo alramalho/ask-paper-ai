@@ -165,6 +165,7 @@ test.describe('Normal upload', () => {
     
     await page.click('text=Feedback?');
     // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
+    await page.getByTestId('nps-select').getByText('8').click();
     await page.click('text=🔍 Inline data exploration tool');
     const selectedNextFeature = 'data-exploration';
 
