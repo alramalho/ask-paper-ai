@@ -68,7 +68,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
     } catch (error) {
       setUploadedPaper(null)
       setStatus('error')
-      setUnderText("Somethign went wrong! Please try again later or open a support request. 🙏")
+      setUnderText("Something went wrong! Please try again later or open a support request. 🙏")
       console.log(error);
     }
   }
