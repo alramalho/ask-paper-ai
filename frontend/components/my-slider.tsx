@@ -1,6 +1,9 @@
-import {Slider} from 'antd'
+import { Button, Slider } from 'antd'
+import { Flex } from './styles/flex'
+import { Text } from '@nextui-org/react'
+import { Box } from './layout'
 
-const MySlider = (props) => {
+const Nps = (props) => {
     const marks = {
         1: '1',
         2: '2',
@@ -14,7 +17,18 @@ const MySlider = (props) => {
         10: '10',
 
     }
-    return <Slider data-testid="nps-slider" min={1} max={10} defaultValue={8} style={{ width: 250}} marks={marks} {...props}/>
+    return <>
+        <Flex direction='column'>
+            <Text h6>How likely are you to recommend Ask Paper to friends or?</Text>
+            <Flex css={{gap: "$4"}}>
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                    <Button key={value} type={props.value === value ? 'primary' : undefined} onClick={() => props.onChange(value)}>
+                        {value}
+                    </Button>
+                ))}
+            </Flex>
+        </Flex>
+    </>
 }
 
-export default MySlider
+export default Nps
