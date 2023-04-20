@@ -13,8 +13,10 @@ const StyledRadio = styled(Radio, {
   fontSize: '0.8rem',
 })
 
-const StyledLabel = styled('label', {
-  borderBottom: '1px solid $gray500',
+export const StyledLabel = styled('label', {
+  fontSize: '0.88rem',
+  fontWeight: '600',
+  marginBottom: "$6"
 })
 
 interface FeedbackProps {

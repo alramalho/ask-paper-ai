@@ -1,7 +1,6 @@
 import { Button, Slider } from 'antd'
 import { Flex } from './styles/flex'
-import { Text } from '@nextui-org/react'
-import { Box } from './layout'
+import { StyledLabel } from './feedback-modal'
 
 const Nps = (props) => {
     const marks = {
@@ -19,7 +18,8 @@ const Nps = (props) => {
     }
     return <>
         <Flex direction='column'>
-            <Text h6>How likely are you to recommend Ask Paper to friends or?</Text>
+            {/* todo: can we make this more accessbile? */}
+            <StyledLabel>How likely are you to recommend Ask Paper to friends or colleagues?</StyledLabel>
             <Flex css={{gap: "$4"}}>
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
                     <Button key={value} type={props.value === value ? 'primary' : undefined} onClick={() => props.onChange(value)}>
