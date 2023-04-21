@@ -56,7 +56,7 @@ const Home = () => {
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const setIsFeedbackModalVisible = useContext(FeedbackVisibleContext)
-  const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(4)
+  const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(0)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
 
