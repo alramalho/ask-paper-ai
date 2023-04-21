@@ -61,7 +61,7 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     output_file = process_pdf_file(input_file=f'{output_location}/{pdf_file_name}.pdf',
                                    temp_dir=output_location, output_dir=output_location,
                                    grobid_config={
-                                       'grobid_url': os.getenv('GROBID_URL', 'https://kermitt2-grobid-crf.hf.space')})
+                                       'grobid_url': os.getenv('GROBID_URL', 'https://kermitt2-grobid.hf.space')})
     with open(os.path.abspath(output_file), 'r') as f:
         f = json.load(f)
     print(f['title'])
