@@ -23,16 +23,17 @@ async def get_body(request: Request) -> bytes:
     return body
 
 
-async def get_id_from_token(bearer_token: str):
+async def get_id_and_email_from_token(bearer_token: str):
     response = requests.get(
         "https://discord.com/api/users/@me",
         headers={'Authorization': bearer_token},
         allow_redirects=True)
     if response.status_code // 100 == 2:
-        return response.json()['id']
+        print(response.json())
+        return response.json()['id'], response.json()['email']
     else:
         print(f"Failed to get discord id from token: {response.status_code}")
-        return None
+        return None, None
     
 
 async def verify_login(request: Request, call_next):
@@ -60,7 +61,11 @@ async def verify_login(request: Request, call_next):
     auth_header = request.headers.get('Authorization', None)
     discord_users_gateway = DiscordUsersGateway()
     
-    user_discord_id = await get_id_from_token(auth_header)
+    user_discord_id, discord_email = await get_id_and_email_from_token(auth_header)
+    
+    if email is None:
+        email = discord_email
+
     if user_discord_id is not None:
         request.state.user_discord_id = user_discord_id
         try:
