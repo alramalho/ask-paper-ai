@@ -1,9 +1,6 @@
 import {
   Avatar,
-  Button,
-  Divider,
   Image,
-  Input,
   Link,
   Loading,
   Spacer,
@@ -15,10 +12,14 @@ import { signIn, useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DiscordIcon from "./icons/discord-icon";
-import { Code } from "./layout";
+import { Code, Div } from "./layout";
 import { GuestUserContext } from "../hooks/session";
 import OverviewBlock from "./overview-block";
 import Navbar from './navbar';
+import { Button, Input, Space, Divider, Card, Alert } from 'antd';
+import Icon, { DownloadOutlined, LoginOutlined, MailOutlined } from '@ant-design/icons';
+import { useMyToken } from '../pages/_app';
+
 
 
 interface ChildrenOnlyProps {
@@ -29,6 +30,7 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
+
 const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const [isUserLoggedInAsGuest, setIsUserLoggedInAsGuest] = useState<boolean>(false);
   const [remainingTrialRequests, setRemainingTrialRequests] = useState<number>(0);
@@ -37,6 +39,8 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const { data: session, status } = useSession()
   const [userEmail, setUserEmail] = useState<string>('');
   const [underText, setUnderText] = useState<string | undefined>(undefined);
+  const { token } = useMyToken();
+
 
   function loginAsGuest(email) {
     return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/guest-login`, {}, {
@@ -92,70 +96,47 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   }
   if (session == null && status == "unauthenticated") {
     return (<Flex justify='center' direction='column'>
-      <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
-      <Text h4>You are not signed in!</Text>
-      <Spacer y={1} />
-      <Flex css={{ gap: "$8" }}>
-        <Button size="lg" css={{ backgroundColor: '$discordColor' }} icon={<DiscordIcon />}
-          onClick={() => signIn("discord")}>
-          Join with Discord
-        </Button>
-        <Button css={{ paddingLeft: "$16" }} size="lg" bordered color="secondary" icon={<DiscordIcon />}
-          onClick={() => open("https://discord.com/register?redirect_to=https://askpaper.ai", "_self")}>
-          Create discord account
-        </Button>
-      </Flex>
-      <Spacer y={2} />
-      <Text b css={{ marginBottom: "$2" }}>or</Text>
-      <Box>
-        <Input
-          data-testid="guest-login-input"
-          type={"email"}
-          // @ts-ignore
-          css={{
-            minWidth: "100%",
-            padding: "0",
-            margin: "0",
-          }} placeholder="Email" initialValue={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
-        <Button data-testid="guest-login-button" size="lg" auto bordered color="error" css={{
-          marginTop: "$4",
-          backgroundColor: 'transparent',
-          textTransform: 'uppercase',
-        }} icon={<Text>📩</Text>} onClick={() => {
-          setUnderText("Verifying login...")
-          loginAsGuest(userEmail)
-            .then(res => {
-              setIsUserLoggedInAsGuest(true)
-              setRemainingTrialRequests(res.data.remaining_trial_requests)
-            })
-            .catch((e) => {
-              setUnderText(`Something went wrong 😕` + (e.response?.data?.detail ? ` (${e.response.data.detail})` : ''))
-            })
-        }
-        }>
-          {' '}Or login as guest user *
-        </Button>
+      <Card style={{ padding: "2rem" }}>
+        <h1>Ask Paper 📝</h1>
+        <Text h4>You are not signed in!</Text>
         <Spacer y={1} />
-      </Box>
-      <Text i>* Guest users have a limited number of requests</Text>
+        <Flex css={{ gap: "$8" }}>
+          <Button type="primary" size="large" style={{ background: token.discordColor }} icon={<Icon component={DiscordIcon} />}
+            onClick={() => signIn("discord")}>
+            Join with Discord
+          </Button>
+          <Button size="large" icon={<Icon component={DiscordIcon} />}
+            onClick={() => open("https://discord.com/register?redirect_to=https://askpaper.ai", "_self")}>
+            Create discord account
+          </Button>
+        </Flex>
+        <Divider>or login as guest</Divider>
+        <Space.Compact size="large">
+          <Input placeholder={"your@email.com "} value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
+          <Button type="primary" data-testid="guest-login-button" icon={<LoginOutlined />} onClick={() => {
+            setUnderText("Verifying login...")
+            loginAsGuest(userEmail)
+              .then(res => {
+                setIsUserLoggedInAsGuest(true)
+                setRemainingTrialRequests(res.data.remaining_trial_requests)
+              })
+              .catch((e) => {
+                setUnderText(`Something went wrong 😕` + (e.response?.data?.detail ? ` (${e.response.data.detail})` : ''))
+              })
+          }
+          }>Guest Login </Button>
+
+        </Space.Compact>
+        <p style={{marginTop: "1rem"}}><em>By signing in & using our tool, you are accepting our <a href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
+          Conditions</a></em></p>
+      </Card>
+
       {underText && <>
         <Spacer y={1} />
-        <Text>{underText}</Text>
+        <p>{underText}</p>
       </>}
       <Spacer y={3} />
       <OverviewBlock />
-      <Spacer y={7} />
-      <Box css={{
-        position: "fixed",
-        bottom: '0',
-        paddingBottom: "$9"
-      }}>
-        <Divider />
-        <Text>By signing in & using our tool, you are accepting our
-          <Link href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
-            Conditions</Link>
-        </Text>
-      </Box>
     </Flex>)
   }
   if (session != null && status == "authenticated") {
@@ -163,7 +144,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
       return (
         <Loading>
           Checking if you're in our server...<br />
-          <Text b>If this takes too long try to clear your browser cookies 🍪</Text>
+          <p><strong>If this takes too long try to clear your browser cookies 🍪</strong></p>
         </Loading>
       )
     } else if (userInDiscord && userWhitelisted) {

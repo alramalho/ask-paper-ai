@@ -7,10 +7,12 @@ import { SessionProvider } from "next-auth/react";
 import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
 import { Layout } from "../components/layout";
 import { ConfigProvider } from 'antd';
+import { theme } from "antd"
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 const primaryColor = "#ff6372"
+const discordColor = "#5865F2"
 export const lightTheme = createTheme({
   type: 'light',
   theme: {
@@ -18,7 +20,7 @@ export const lightTheme = createTheme({
       backgroundLighter: '#fcfcfc',
       background: '#f2f2f2',
       backgroundDarker: '#efefef',
-      discordColor: "#5865F2",
+      discordColor: discordColor,
       primary: primaryColor,
       primaryLight: '#ffccd1',
       primaryLightHover: '#f8b2b9', // commonly used on hover state
@@ -38,6 +40,16 @@ export const lightTheme = createTheme({
     },
   },
 });
+
+export const useMyToken = () => {
+  const { token } = theme.useToken();
+  return {
+    token: {
+      ...token,
+      discordColor
+    }
+  };
+}
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) {
 

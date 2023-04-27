@@ -26,6 +26,7 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
+export const Div = styled('div')
 export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateAction<boolean>>>(() => { })
 
 export const Layout = ({ children, css, seo }: LayoutProps) => {
