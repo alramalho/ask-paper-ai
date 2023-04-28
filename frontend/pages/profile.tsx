@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { GuestUserContext, useGuestSession } from "../hooks/session"
 import { useSession } from "next-auth/react"
 import { Flex } from "../components/styles/flex"
-import { Spacer, Text, styled } from "@nextui-org/react"
+import { Loading, Spacer, Text, styled } from "@nextui-org/react"
 import Info from "../components/info"
 import MarkdownView from "react-showdown"
 import { loadDatasetsForUser } from "../service/service"
@@ -21,23 +21,26 @@ const Profile = () => {
     const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
     const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
     const [userDatasets, setUserDatasets] = useState<string | undefined>(undefined)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
+        setIsLoading(true)
         // @ts-ignore 
         if (!session!.accessToken || !session!.user!.email) return
         // @ts-ignore 
         loadDatasetsForUser(session!.user!.email, session!.accessToken)
             .then(res => {
                 setUserDatasets(res.data.datasets)
+                setIsLoading(false)
             })
     }, [session])
 
     return (<>
-        <Flex direction='column' css={{ overflow: 'scroll', alignItems: 'flex-start', padding: '1rem'}}>
+        <Flex direction='column' css={{ overflow: 'scroll', alignItems: 'flex-start', padding: '1rem' }}>
             <Flex css={{ gap: "$4" }}>
                 <Avatar
                     size="large"
-                    src={<img src={session!.user!.image ?? undefined} alt={session!.user!.name!}/>}
+                    src={<img src={session!.user!.image ?? undefined} alt={session!.user!.name!} />}
                 />
                 <Text>{session!.user!.email}</Text>
             </Flex>
@@ -46,10 +49,12 @@ const Profile = () => {
                 <Text h4>📊 My Extracted Datasets</Text>
                 {isUserLoggedInAsGuest
                     ? <Info>This feature is only available to Community Members</Info>
-                    : <MarkdownView
-                        markdown={makeLinksClickable(userDatasets ?? 'No datasets found.')}
-                        options={{ tables: true, emoji: true }}
-                    />
+                    : isLoading
+                        ? <Loading >Loading your datasets</Loading>
+                        : <MarkdownView
+                            markdown={makeLinksClickable(userDatasets ?? 'No datasets found.')}
+                            options={{ tables: true, emoji: true }}
+                        />
                 }
             </Flex>
         </Flex>

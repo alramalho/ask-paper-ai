@@ -106,6 +106,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to extract datasets', async () => {
+    await page.getByTestId("predefined-actions-panel").click();
     await page.click('text=Extract Datasets');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();

@@ -10,9 +10,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 interface PdfViewerProps {
   pdf: File,
+  [key: string]: any
 }
 
-const PdfViewer = ({ pdf }: PdfViewerProps) => {
+const PdfViewer = ({ pdf, ...props }: PdfViewerProps) => {
   const [numPages, setNumPages] = useState(null);
 
   function onDocumentLoadSuccess({ numPages }) {
@@ -27,7 +28,7 @@ const PdfViewer = ({ pdf }: PdfViewerProps) => {
   }, [numPages]);
 
   return (
-    <Box data-testid="pdf">
+    <Box data-testid="pdf" {...props}>
       <Box>
         <Document
           file={pdf}

@@ -155,7 +155,7 @@ const Home = () => {
         {selectedPaper &&
           <>
             <Spacer y={4} />
-            {pdf && <PdfViewer pdf={pdf} />}
+            {pdf && <PdfViewer pdf={pdf} onMouseUp={handleSelection}/>}
           </>
         }
       </Content >
@@ -238,7 +238,7 @@ const Home = () => {
               <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
               <Info css={{ width: "100%" }}>The chat interface does not support referencing to older messages yet! We are working on it :)</Info>
             </Panel>
-            <Panel header="📦 Predefined actions" key="2" >
+            <Panel data-testid="predefined-actions-panel" header="📦 Predefined actions" key="2" >
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
                 <Button
                   onClick={() => {
@@ -305,18 +305,6 @@ const Home = () => {
         </Flex>
       </Sider>
     }
-    <Box onMouseUp={handleSelection} css={{
-      display: 'flex',
-      overflow: 'auto',
-      flexDirection: 'column',
-      height: '100%',
-      '@md': {
-        flexWrap: 'nowrap',
-        overflow: 'hidden',
-        flexDirection: 'row',
-      }
-    }}>
-    </Box>
 
   </>
   )
