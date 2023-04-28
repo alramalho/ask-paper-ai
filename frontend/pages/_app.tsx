@@ -5,7 +5,7 @@ import { createTheme, NextUIProvider, Text } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { SessionProvider } from "next-auth/react";
 import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
-import { Layout } from "../components/layout";
+import { MyLayout } from "../components/layout";
 import { ConfigProvider } from 'antd';
 import { theme } from "antd"
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
           light: lightTheme.className,
         }}
       >
-        <NextUIProvider>
+        {/* <NextUIProvider> */}
           <ConfigProvider
             theme={{
               token: {
@@ -71,14 +71,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
             }}
           >
             <NextAuthSessionWrapper>
-              <Layout seo={{
+              <MyLayout seo={{
                 description: "Ask questions & Extract datasets from papers."
               }}>
                 <Component {...pageProps} />
-              </Layout>
+              </MyLayout>
             </NextAuthSessionWrapper>
           </ConfigProvider>
-        </NextUIProvider>
+        {/* </NextUIProvider> */}
       </NextThemesProvider>
     </SessionProvider>
   )

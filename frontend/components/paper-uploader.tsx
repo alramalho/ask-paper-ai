@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import { Button, Input, Link, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Link, Loading, Spacer, styled, Text } from "@nextui-org/react";
 import { Flex } from "./styles/flex";
 import XIcon from "./icons/x-icon";
 import CheckIcon from "./icons/check-icon";
@@ -11,6 +11,8 @@ import MarkdownView from "react-showdown";
 import FileInput from "./input";
 import UploadIcon from "./icons/upload-icon";
 import { useSession } from 'next-auth/react';
+import { Input, Button, Space, Card, Divider } from 'antd'
+import { DoubleRightOutlined, UploadOutlined } from '@ant-design/icons';
 
 interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
@@ -106,7 +108,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
           accept="application/pdf"
         />
 
-        <Flex css={{ gap: "$2" }}>
+        <Space.Compact size="large">
           <Input
             data-testid={'upload-url-input'}
             type="url"
@@ -116,23 +118,35 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
                 setUrlInput(e.target.value.replace('abs', 'pdf') + '.pdf')
               } else {
                 setUrlInput(e.target.value)
-            }}}
-          placeholder="Or upload your paper via URL"
+              }
+            }}
+            placeholder="Or upload your paper via URL"
           />
-          <Button data-testid='upload-url-button' auto css={{}} onClick={() => {
+          <Button type="primary" data-testid='upload-url-button' onClick={() => {
             if (urlInput === undefined) {
               setUnderText("<i>Please enter a URL ❌</i>")
               return
             }
             fetchPaperUrl(urlInput)
           }
-          }>
-            <UploadIcon />
-          </Button>
-        </Flex>
-        <Button data-testid='upload-demo-paper' bordered onClick={() => {
-          fetchPaperUrl("https://arxiv.org/pdf/1901.07031.pdf")
-        }}>Or start with a demo paper</Button>
+          } icon={<UploadOutlined />} />
+
+        </Space.Compact>
+        {status == 'idle' &&
+          <>
+            <Divider > or start with a demo paper</Divider>
+            <Card
+              data-tetsid="upload-demo-paper"
+              hoverable
+              onClick={() => {
+                fetchPaperUrl("https://arxiv.org/pdf/1901.07031.pdf")
+              }}
+              title="ChexPert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison"
+              style={{ width: 300, marginTop: 16, borderWidth: '2px' }}
+              cover={<img alt="example" src="chexpert.png" />}
+            />
+          </>
+        }
 
 
         {status == 'uploading' && <Loading data-testid="upload-loading" />}

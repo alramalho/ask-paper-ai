@@ -1,46 +1,20 @@
-import {styled} from "@nextui-org/react";
-import UploadIcon from "./icons/upload-icon";
+import { styled } from "@nextui-org/react";
+import { UploadOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { message, Upload } from 'antd';
+import { Flex } from "./styles/flex";
 
-const Area = styled('div', {
-  position: 'relative',
-  width: '400px',
-})
+const { Dragger } = Upload;
 
-const Input = styled('input', {
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  top: '0',
-  left: '0',
-  right: '0',
-  bottom: '0',
-  opacity: '0',
-  cursor: 'pointer',
 
-})
-
-const Outer = styled('div', {
-  width: '100%',
-  padding: '30px',
-  background: '$red100',
-  border: '2px dashed $hippo1light',
-  textAlign: 'center',
-  transition: 'background 0.3s ease-in-out',
-  borderRadius: '0.5rem',
-  color: "$gray800",
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: "$4",
-})
-const FileInput = ({...props}) => {
+const FileInput = ({ ...props }) => {
   return (
-    <Area data-testid='file-upload'>
-      <Input type="file" {...props} />
-      <Outer  className='file-helper'>
-        {props.children ? props.children : <><UploadIcon/>Click to upload or drag your paper here</>}
-      </Outer>
-    </Area>
+    <Dragger {...props} style={{ padding: "1rem 2rem" }}>
+      <p className="ant-upload-drag-icon">
+        <UploadOutlined />
+      </p>
+      <p className="ant-upload-text">Click or drag file to this area to upload</p>
+    </Dragger>
   )
 }
 

@@ -1,22 +1,23 @@
-import { Badge, Button, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Divider, Card, Grid } from "@nextui-org/react";
+import { Badge, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Divider, Card, Grid } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
-import SendIcon from "../components/icons/send-icon";
 import { Box, FeedbackVisibleContext } from "../components/layout";
 import { Flex } from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import dynamic from "next/dynamic";
 import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail } from "../service/service";
-import Navbar from "../components/navbar";
 import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
 import IconSlider from "../components/slider/slider";
 import { useSession } from "next-auth/react";
 import Chat, { ChatMessage } from "../components/chat/chat";
-import LLMResponse, { RobotAnswer } from "../components/chat/llm-response";
 import Info from "../components/info";
-import { Collapse } from 'antd';
+import { Breadcrumb, Button, Collapse, Layout, Space } from 'antd';
+import type { MenuProps } from 'antd';
+import { DotChartOutlined, FileTextTwoTone, HighlightOutlined } from "@ant-design/icons";
+const { Header, Sider, Content, Footer } = Layout;
+type MenuItem = Required<MenuProps>['items'][number];
 
 const { Panel } = Collapse;
 
@@ -142,64 +143,30 @@ const Home = () => {
         <RemainingRequests value={remainingTrialRequests} />
       </>)
   }
-  return (<>
-    <Navbar name={session!.user!.name} imageURL={session!.user!.image} />
 
-    <Box onMouseUp={handleSelection} css={{
-      display: 'flex',
-      overflow: 'auto',
-      flexDirection: 'column',
-      height: '100%',
-      '@md': {
-        flexWrap: 'nowrap',
-        overflow: 'hidden',
-        flexDirection: 'row',
+  return (<>
+    <Content >
+      <PaperUploader onFinish={(paper, pdf) => {
+        setSelectedPaper(paper)
+        setPdf(pdf)
+        addUserChatMessage(`Now reading "${paper.title}"`)
+      }} />
+      {isUserLoggedInAsGuest &&
+        <>
+          <RemainingRequests value={remainingTrialRequests} />
+        </>
       }
-    }}>
-      <Box as="main" css={{
-        overflow: 'auto',
-        paddingRight: "$10",
-        maxHeight: '50%',
-        resize: 'vertical',
-        '@md': {
-          maxHeight: '100%',
-        }
-      }}>
-        <Flex css={{ flexWrap: 'nowrap', flexDirection: "column" }}>
-          <Box>
-            <Spacer y={4} />
-            <Image src="hippo.svg" css={{ width: "100px", margin: '0 auto' }} />
-            <Flex>
-              <Text h2>Ask Paper</Text>
-              <Badge color="error" variant="flat">
-                BETA
-              </Badge>
-              <Badge color="warning" variant="flat">
-                v2.3
-              </Badge>
-            </Flex>
-            <PaperUploader onFinish={(paper, pdf) => {
-              setSelectedPaper(paper)
-              setPdf(pdf)
-              addUserChatMessage(`Now reading "${paper.title}"`)
-            }} />
-          </Box>
-          {isUserLoggedInAsGuest &&
-            <>
-              <RemainingRequests value={remainingTrialRequests} />
-            </>
-          }
-          {selectedPaper &&
-            <>
-              <Spacer y={4} />
-              <Flex direction='row' css={{ margin: '$10', gap: '$10', flexWrap: 'wrap', '@sm': { flexWrap: 'nowrap' } }}>
-                {pdf && <PdfViewer pdf={pdf} />}
-              </Flex>
-            </>
-          }
-        </Flex>
-      </Box>
       {selectedPaper &&
+        <>
+          <Spacer y={4} />
+          {/* <Flex direction='row' css={{ margin: '$10', gap: '$10', flexWrap: 'wrap', '@sm': { flexWrap: 'nowrap' } }}> */}
+          {pdf && <PdfViewer pdf={pdf} />}
+          {/* </Flex> */}
+        </>
+      }
+    </Content >
+    {/* {selectedPaper &&
+      <Sider theme="light">
         <Card as="aside" css={{
           background: "rgba(0,0,0,.03)",
           backdropFilter: "blur(3px)",
@@ -254,10 +221,7 @@ const Home = () => {
               />
               <Button
                 data-testid="ask-button"
-                iconRight={<SendIcon />}
-                auto
-                css={{ height: "100%" }}
-                onPress={() => {
+                onClick={() => {
                   handleSubmit(askPaper, {
                     question: question ?? '',
                     paper: JSON.parse(JSON.stringify(selectedPaper)),
@@ -274,7 +238,7 @@ const Home = () => {
                 }
                 }> Ask </Button>
             </Flex>
-            <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} css={{justifyContent: 'flex-start', width: '100%'}} />
+            <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} css={{ justifyContent: 'flex-start', width: '100%' }} />
             <Collapse size="small" style={{ width: "100%" }} defaultActiveKey={['2']}>
               <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
                 <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
@@ -288,9 +252,7 @@ const Home = () => {
               <Panel header="📦 Or start with predefined action" key="2" >
                 <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
                   <Button
-                    size="sm"
-                    css={{ backgroundColor: "$blue200", color: "black" }}
-                    onPress={() => {
+                    onClick={() => {
                       handleSubmit(extractDatasets, {
                         paper: JSON.parse(JSON.stringify(selectedPaper)),
                         // @ts-ignore
@@ -301,13 +263,12 @@ const Home = () => {
                       })
                       addUserChatMessage("Predefined Action: Extract Datasets")
                     }}
+                    icon={<DotChartOutlined />}
                   >
                     <Text>Extract datasets</Text>
                   </Button>
                   <Button
-                    size="sm"
-                    css={{ backgroundColor: "$green200", color: "black" }}
-                    onPress={() => {
+                    onClick={() => {
                       handleSubmit(generateSummary, {
                         paper: JSON.parse(JSON.stringify(selectedPaper)),
                         // @ts-ignore
@@ -317,13 +278,12 @@ const Home = () => {
                       })
                       addUserChatMessage("Predefined Action: Generate Summary")
                     }}
+                    icon={<FileTextTwoTone />}
                   >
-                    <Text>Generate Summary</Text>
+                    <p>Generate Summary</p>
                   </Button>
                   <Button
-                    size="sm"
-                    css={{ backgroundColor: "$pink200", color: "black" }}
-                    onPress={() => {
+                    onClick={() => {
                       handleSubmit(explainSelectedText, {
                         text: selectedText,
                         // @ts-ignore
@@ -333,23 +293,16 @@ const Home = () => {
                       })
                       addUserChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"")
                     }}
+                    icon={<HighlightOutlined twoToneColor="#FFC400" />}
                   >
-                    <Text>Explain selected text</Text>
+                    <p>Explain selected text</p>
                   </Button>
                   <Button
-                    size="sm"
-                    css={{
-                      border: "2px solid $yellow400",
-                      backgroundColor: "$backgroundLighter",
-                      '&:hover': {
-                        backgroundColor: "$yellow400",
-                      }
-                    }}
-                    onPress={() => {
+                    onClick={() => {
                       setIsFeedbackModalVisible(true)
                     }}
                   >
-                    <Text>Decide what goes here 🚀✨</Text>
+                    <p> 🚀✨ Decide what goes here</p>
                   </Button>
                 </Flex>
               </Panel>
@@ -357,7 +310,19 @@ const Home = () => {
             <Spacer y={1} />
           </Card.Footer>
         </Card>
+      </Sider>
+    } */}
+    <Box onMouseUp={handleSelection} css={{
+      display: 'flex',
+      overflow: 'auto',
+      flexDirection: 'column',
+      height: '100%',
+      '@md': {
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
+        flexDirection: 'row',
       }
+    }}>
     </Box>
 
   </>

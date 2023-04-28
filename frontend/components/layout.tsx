@@ -5,14 +5,24 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from
 import FeedbackModal from './feedback-modal';
 import { GuestUserContext, useGuestSession } from '../hooks/session';
 import { useSession } from 'next-auth/react';
+import { Avatar, Layout, Menu, MenuProps } from 'antd';
+const { Sider, Content, Footer, Header } = Layout;
+import Icon, { BulbFilled, BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined, UserOutlined } from "@ant-design/icons";
+import Link from 'next/link';
+import DiscordIcon from './icons/discord-icon';
+import { Flex } from './styles/flex';
 
-interface LayoutProps {
+type MenuItem = Required<MenuProps>['items'][number];
+
+const twitterLink = "https://twitter.com/intent/tweet?text=%F0%9F%93%9D+askpaper.ai+-+Understand+any+paper%21%0D%0ACurrently+in+love+with+this+new+AI+tool.+It+let%27s+you+ask+open+questions%2C+generate+great+summaries+%26+extract+data+from+papers.+%0D%0APerfect+for+researchers+trying+to+ramp+up+their+paper+reading+game%21+"
+
+interface MyLayoutProps {
   children: React.ReactNode;
   css?: CSS
-  seo?: LayoutSEO
+  seo?: MyLayoutSEO
 }
 
-interface LayoutSEO {
+interface MyLayoutSEO {
   siteName?: string
   title?: string
   description: string
@@ -27,9 +37,19 @@ export const Box = styled('div', {
 });
 
 export const Div = styled('div')
+export const A = styled('a', {
+  color: 'inherit',
+  textDecoration: 'underline',
+  '&:hover': {
+    textDecoration: 'none',
+    color: 'inherit',
+  },
+})
 export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateAction<boolean>>>(() => { })
 
-export const Layout = ({ children, css, seo }: LayoutProps) => {
+export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
+  const [collapsed, setCollapsed] = useState(false);
+
   const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights '
   const title = [siteName, seo?.title].join(" ")
   const url = `https://www.askpaper.ai`
@@ -37,6 +57,45 @@ export const Layout = ({ children, css, seo }: LayoutProps) => {
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
   const { data: session, status } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
+
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    onClick?: string | (() => void),
+  ): MenuItem {
+    if (typeof onClick == "string") {
+      return {
+        key,
+        icon,
+        label: (
+          <Link href={onClick} >{label}</Link>
+        )
+      } as MenuItem;
+    } else if (typeof onClick == "function") {
+      return {
+        key,
+        icon,
+        label: (
+          <span onClick={onClick} >{label}</span>
+        )
+      } as MenuItem;
+    }
+    return {
+      key,
+      icon,
+      label,
+    } as MenuItem;
+  }
+
+  const items: MenuItem[] = [
+    getItem('App', '1', <ExperimentOutlined />, "/"),
+    getItem('My Dashboard', '2', <DotChartOutlined />, "/profile"),
+    getItem('Go To Community', '3', <Icon component={DiscordIcon} />),
+    getItem('Share on Twittter', '4', <TwitterOutlined />, twitterLink),
+    getItem('Feedback?', '5', <BulbTwoTone twoToneColor={"orange"} />, () => setIsFeedbackModalVisible(true)),
+  ];
+
 
   return (
     <>
@@ -55,7 +114,35 @@ export const Layout = ({ children, css, seo }: LayoutProps) => {
         />
       }
       <FeedbackVisibleContext.Provider value={setIsFeedbackModalVisible}>
-        {children}
+      <Layout style={{ minHeight: "100vh" }}>
+        <Header className="header" style={{ backgroundColor: "white" }} >
+          {/* todo: get rid of this flex bullshit. supposedly isnt' needed */}
+          <Flex direction="row" css={{flexWrap: "nowrap", maxHeight: "100%", justifyContent: "space-between"}}>
+            <h4>Ask Paper 📝</h4>
+
+            <Menu mode="horizontal" defaultSelectedKeys={['2']} items={items} style={{ float: "right" }} />
+          </Flex>
+        </Header>
+        <Content style={{ padding: '0 50px' }}>
+          <Layout style={{ padding: '24px 0', margin: '24px 0', backgroundColor: "white" }}>
+            <Sider width={200}>
+              <Menu
+                mode="inline"
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                style={{ height: '100%' }}
+                items={items}
+              />
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
+              <div style={{ padding: 24, textAlign: 'center' }}>
+                {children}
+              </div>
+            </Content>
+          </Layout>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>An <A href="https://hippoai.dev">hippoai.dev</A> product</Footer>
+      </Layout>
       </FeedbackVisibleContext.Provider>
       {session != null && status == "authenticated" &&
         <>
@@ -66,22 +153,8 @@ export const Layout = ({ children, css, seo }: LayoutProps) => {
               setVisible={setIsFeedbackModalVisible}
             />
           }
-          <Box data-testid='feedback-component' css={{
-            position: 'absolute',
-            bottom: '0',
-            right: '10px',
-            padding: '$4',
-            backgroundColor: '$primary',
-            border: "1px solid $primaryLightContrast",
-            zIndex: 50,
-            color: 'white',
-            borderRadius: '15px 15px 0 0',
-            cursor: 'pointer',
-          }} onClick={() => setIsFeedbackModalVisible(true)}>
-            <Text b css={{ color: 'inherit' }}>👋 Feedback?</Text>
-          </Box>
         </>
-      }
+      }/
     </>
   )
 };
