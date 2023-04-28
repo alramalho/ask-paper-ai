@@ -126,8 +126,13 @@ code {
     z-index: 1;
 }
 
+.react-pdf__Document {
+    max-width: fit-content;
+}
+
 .react-pdf__Page {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    max-width: fit-content;
 }
 
 ::selection {

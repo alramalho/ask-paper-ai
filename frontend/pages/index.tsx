@@ -13,10 +13,11 @@ import IconSlider from "../components/slider/slider";
 import { useSession } from "next-auth/react";
 import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
-import { Breadcrumb, Button, Collapse, Layout, Space } from 'antd';
+import { Breadcrumb, Button, Collapse, Layout, Space, Input } from 'antd';
 import type { MenuProps } from 'antd';
-import { DotChartOutlined, FileTextTwoTone, HighlightOutlined } from "@ant-design/icons";
+import { DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
 const { Header, Sider, Content, Footer } = Layout;
+const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
 
 const { Panel } = Collapse;
@@ -60,14 +61,9 @@ const Home = () => {
   const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(0)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
+  const [question, setQuestion] = useState('');
 
 
-  const {
-    value: question,
-    setValue: setQuestion,
-    reset: resetQuestion,
-    bindings,
-  } = useInput("");
 
   useEffect(() => {
     if (messageStatus == 'loading') {
@@ -145,7 +141,7 @@ const Home = () => {
   }
 
   return (<>
-    <Content >
+    <Content>
       <PaperUploader onFinish={(paper, pdf) => {
         setSelectedPaper(paper)
         setPdf(pdf)
@@ -165,20 +161,18 @@ const Home = () => {
         </>
       }
     </Content >
-    {/* {selectedPaper &&
-      <Sider theme="light">
-        <Card as="aside" css={{
-          background: "rgba(0,0,0,.03)",
-          backdropFilter: "blur(3px)",
-          textAlign: 'left',
-          border: "1px solid gray",
-          borderRadius: '0',
-          overflow: 'hidden',
-          flex: '1 0 10%',
-          boxShadow: 'rgba(100, 100, 111, 0.4) 0px 7px 29px 0px',
-          '@md': {
-            height: '100%',
-          },
+    {selectedPaper &&
+      <Sider width="50%" style={{
+        maxHeight: "100vh",
+        position: "sticky",
+        top: "0",
+        right: "0",
+        bottom: "0",
+        padding: "1rem",
+        borderLeft: "2px solid whitesmoke",
+      }} theme="light">
+        <Flex direction="column" css={{
+          height: "100%",
         }}>
           <Chat data-testid="chat" chatHistory={chatHistory} selectedPaper={selectedPaper} />
           <Flex css={{ flexGrow: 1, alignContent: 'end' }}>
@@ -199,119 +193,107 @@ const Home = () => {
 
           <Divider css={{ margin: '$5 0 0 0' }} />
 
-          <Card.Footer css={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            flexShrink: 0,
-            bg: 'rgba(255,255,255,0.86)',
-          }}>
-            <Flex direction="row" css={{ gap: "$2", flexWrap: 'nowrap', width: '100%' }}>
-              <Textarea
-                {...bindings}
-                bordered
-                data-testid="ask-textarea"
-                fullWidth
-                size="lg"
-                minRows={2}
-                maxRows={20}
-                placeholder="Type your question here..."
-                // @ts-ignore
-                css={{ marginBottom: "$5", background: '$backgroundLighter', margin: 0 }}
-              />
-              <Button
-                data-testid="ask-button"
-                onClick={() => {
-                  handleSubmit(askPaper, {
-                    question: question ?? '',
-                    paper: JSON.parse(JSON.stringify(selectedPaper)),
-                    // @ts-ignore
-                    email: session!.user!.email,
-                    // @ts-ignore
-                    accessToken: session!.accessToken,
-                    quote: quoteChecked,
-                    // @ts-ignore
-                    paperHash: selectedPaper!.hash,
-                    resultsSpeedTradeoff: resultsSpeedTradeoff
-                  })
-                  addUserChatMessage(question ?? '')
-                }
-                }> Ask </Button>
-            </Flex>
-            <Info text={"The chat interface does not support referencing to older messages yet! We are working on it :)"} css={{ justifyContent: 'flex-start', width: '100%' }} />
-            <Collapse size="small" style={{ width: "100%" }} defaultActiveKey={['2']}>
-              <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
-                <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
-                  <Switch bordered initialChecked checked={quoteChecked}
-                    onChange={() => setQuoteChecked(previous => !previous)}></Switch>
-                  <Text small>Quote paper</Text>
-                </Flex>
-                <Spacer y={1} />
-                <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
-              </Panel>
-              <Panel header="📦 Or start with predefined action" key="2" >
-                <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
-                  <Button
-                    onClick={() => {
-                      handleSubmit(extractDatasets, {
-                        paper: JSON.parse(JSON.stringify(selectedPaper)),
-                        // @ts-ignore
-                        email: session!.user!.email,
-                        // @ts-ignore
-                        accessToken: session!.accessToken,
-                        resultsSpeedTradeoff: resultsSpeedTradeoff
-                      })
-                      addUserChatMessage("Predefined Action: Extract Datasets")
-                    }}
-                    icon={<DotChartOutlined />}
-                  >
-                    <Text>Extract datasets</Text>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleSubmit(generateSummary, {
-                        paper: JSON.parse(JSON.stringify(selectedPaper)),
-                        // @ts-ignore
-                        email: session!.user!.email,
-                        // @ts-ignore
-                        accessToken: session!.accessToken
-                      })
-                      addUserChatMessage("Predefined Action: Generate Summary")
-                    }}
-                    icon={<FileTextTwoTone />}
-                  >
-                    <p>Generate Summary</p>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleSubmit(explainSelectedText, {
-                        text: selectedText,
-                        // @ts-ignore
-                        email: session!.user!.email,
-                        // @ts-ignore
-                        accessToken: session!.accessToken,
-                      })
-                      addUserChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"")
-                    }}
-                    icon={<HighlightOutlined twoToneColor="#FFC400" />}
-                  >
-                    <p>Explain selected text</p>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setIsFeedbackModalVisible(true)
-                    }}
-                  >
-                    <p> 🚀✨ Decide what goes here</p>
-                  </Button>
-                </Flex>
-              </Panel>
-            </Collapse>
-            <Spacer y={1} />
-          </Card.Footer>
-        </Card>
+          <div style={{ position: 'relative', width: "100%", padding: "0.85rem" }}>
+            <TextArea
+              placeholder="Write your question here..."
+              autoSize={{ minRows: 3, maxRows: 5 }}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              style={{ paddingRight: "40px" }}
+            />
+            <Button
+              size="large"
+              shape="circle"
+              type="text"
+              data-testid="ask-button"
+              icon={<SendOutlined />}
+              style={{ position: 'absolute', right: '0.85rem', bottom: '0.85rem' }}
+              onClick={() => {
+                handleSubmit(askPaper, {
+                  question: question ?? '',
+                  paper: JSON.parse(JSON.stringify(selectedPaper)),
+                  // @ts-ignore
+                  email: session!.user!.email,
+                  // @ts-ignore
+                  accessToken: session!.accessToken,
+                  quote: quoteChecked,
+                  // @ts-ignore
+                  paperHash: selectedPaper!.hash,
+                  resultsSpeedTradeoff: resultsSpeedTradeoff
+                })
+                addUserChatMessage(question ?? '')
+              }
+              } />
+          </div>
+
+          <Collapse size="small" style={{ width: "100%" }}>
+            <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
+              <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
+                <Switch bordered initialChecked checked={quoteChecked}
+                  onChange={() => setQuoteChecked(previous => !previous)}></Switch>
+                <Text small>Quote paper</Text>
+              </Flex>
+              <Spacer y={1} />
+              <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+            </Panel>
+            <Panel header="📦 Predefined actions" key="2" >
+              <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
+                <Button
+                  onClick={() => {
+                    handleSubmit(extractDatasets, {
+                      paper: JSON.parse(JSON.stringify(selectedPaper)),
+                      // @ts-ignore
+                      email: session!.user!.email,
+                      // @ts-ignore
+                      accessToken: session!.accessToken,
+                      resultsSpeedTradeoff: resultsSpeedTradeoff
+                    })
+                    addUserChatMessage("Predefined Action: Extract Datasets")
+                  }}
+                  icon={<DotChartOutlined />}
+                >Extract datasets</Button>
+                <Button
+                  onClick={() => {
+                    handleSubmit(generateSummary, {
+                      paper: JSON.parse(JSON.stringify(selectedPaper)),
+                      // @ts-ignore
+                      email: session!.user!.email,
+                      // @ts-ignore
+                      accessToken: session!.accessToken
+                    })
+                    addUserChatMessage("Predefined Action: Generate Summary")
+                  }}
+                  icon={<FileTextTwoTone />}
+                >Generate Summary
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleSubmit(explainSelectedText, {
+                      text: selectedText,
+                      // @ts-ignore
+                      email: session!.user!.email,
+                      // @ts-ignore
+                      accessToken: session!.accessToken,
+                    })
+                    addUserChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"")
+                  }}
+                  icon={<HighlightTwoTone twoToneColor="#FFC400" />}
+                >Explain selected text
+                </Button>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    setIsFeedbackModalVisible(true)
+                  }}
+                >🚀 Decide what goes here
+                </Button>
+              </Flex>
+            </Panel>
+          </Collapse>
+          <Spacer y={1} />
+        </Flex>
       </Sider>
-    } */}
+    }
     <Box onMouseUp={handleSelection} css={{
       display: 'flex',
       overflow: 'auto',

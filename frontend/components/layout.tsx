@@ -114,35 +114,22 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
         />
       }
       <FeedbackVisibleContext.Provider value={setIsFeedbackModalVisible}>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Header className="header" style={{ backgroundColor: "white" }} >
-          {/* todo: get rid of this flex bullshit. supposedly isnt' needed */}
-          <Flex direction="row" css={{flexWrap: "nowrap", maxHeight: "100%", justifyContent: "space-between"}}>
-            <h4>Ask Paper 📝</h4>
+        <Layout style={{ minHeight: "100vh" }}>
+          <Header className="header" style={{ backgroundColor: "white" }} >
+            {/* todo: get rid of this flex bullshit. supposedly isnt' needed */}
+            <Flex direction="row" css={{ flexWrap: "nowrap", maxHeight: "100%", justifyContent: "space-between" }}>
+              <h4>Ask Paper 📝</h4>
 
-            <Menu mode="horizontal" defaultSelectedKeys={['2']} items={items} style={{ float: "right" }} />
-          </Flex>
-        </Header>
-        <Content style={{ padding: '0 50px' }}>
-          <Layout style={{ padding: '24px 0', margin: '24px 0', backgroundColor: "white" }}>
-            <Sider width={200}>
-              <Menu
-                mode="inline"
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                style={{ height: '100%' }}
-                items={items}
-              />
-            </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <div style={{ padding: 24, textAlign: 'center' }}>
-                {children}
-              </div>
-            </Content>
-          </Layout>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>An <A href="https://hippoai.dev">hippoai.dev</A> product</Footer>
-      </Layout>
+              <Menu mode="horizontal" defaultSelectedKeys={['1']} items={items} style={{ float: "right" }} />
+            </Flex>
+          </Header>
+          <Content style={{ padding: '0 50px' }}>
+            <Layout style={{ padding: '24px 0', margin: '24px 0', backgroundColor: "white" }}>
+              {children}
+            </Layout>
+          </Content>
+          <Footer style={{ textAlign: 'center' }}>An <A href="https://hippoai.dev">hippoai.dev</A> product</Footer>
+        </Layout>
       </FeedbackVisibleContext.Provider>
       {session != null && status == "authenticated" &&
         <>
