@@ -30,6 +30,14 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
+const AbsoluteCenter = styled('div', {
+  width: '100vw',
+  height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+})
+
 
 const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const [isUserLoggedInAsGuest, setIsUserLoggedInAsGuest] = useState<boolean>(false);
@@ -89,18 +97,18 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   }
   if (session == null && status == "loading") {
     return (
-      <>
+      <AbsoluteCenter>
         <Loading>Checking if you're signed in...</Loading>
-      </>
+      </AbsoluteCenter>
     )
   }
   if (session == null && status == "unauthenticated") {
     return (<Flex justify='center' direction='column'>
-      <Card style={{ padding: "2rem" }}>
-        <h1>Ask Paper 📝</h1>
+      <Card style={{ padding: "2rem", margin: "2rem" }}>
+        <h1 style={{marginTop: '1rem'}}>Ask Paper 📝</h1>
         <Text h4>You are not signed in!</Text>
         <Spacer y={1} />
-        <Flex css={{ gap: "$8" }}>
+        <Flex css={{ gap: "$8" , justifyContent: "flex-start"}}>
           <Button type="primary" size="large" style={{ background: token.discordColor }} icon={<Icon component={DiscordIcon} />}
             onClick={() => signIn("discord")}>
             Join with Discord
@@ -110,9 +118,9 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
             Create discord account
           </Button>
         </Flex>
-        <Divider>or login as guest</Divider>
+        <Text h4>or login as guest</Text>
         <Space.Compact size="large">
-          <Input placeholder={"your@email.com "} value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
+          <Input data-testid="guest-login-input" placeholder={"your@email.com "} value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
           <Button type="primary" data-testid="guest-login-button" icon={<LoginOutlined />} onClick={() => {
             setUnderText("Verifying login...")
             loginAsGuest(userEmail)
@@ -127,7 +135,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
           }>Guest Login </Button>
 
         </Space.Compact>
-        <p style={{marginTop: "1rem"}}><em>By signing in & using our tool, you are accepting our <a href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
+        <p style={{ marginTop: "1rem" }}><em>By signing in & using our tool, you are accepting our <a href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
           Conditions</a></em></p>
       </Card>
 
@@ -142,10 +150,12 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   if (session != null && status == "authenticated") {
     if (userWhitelisted == undefined) {
       return (
-        <Loading>
-          Checking if you're in our server...<br />
-          <p><strong>If this takes too long try to clear your browser cookies 🍪</strong></p>
-        </Loading>
+        <AbsoluteCenter>
+          <Loading>
+            Checking if you're in our server...<br />
+            <p><strong>If this takes too long try to clear your browser cookies 🍪</strong></p>
+          </Loading>
+        </AbsoluteCenter >
       )
     } else if (userInDiscord && userWhitelisted) {
       return (
@@ -163,22 +173,24 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
       )
     } else if (userInDiscord && !userWhitelisted) {
       return (
-        <Flex>
-          <Text>Uh oh! You're succesfully logged in as {session.user?.name}</Text>
-          <Avatar size='sm' src={session.user!.image ?? undefined} css={{ marginLeft: '$2' }} />
-          <Text>,</Text>
-          <Text>but it appears you don't have the required
-            role <Code>{requiredRole}</Code> to access the tool 😕</Text>
-          <Text>Head to this <a href="https://discord.com/channels/1022781602893414410/1022836524410220554">discord
-            channel</a> to get it!</Text>
-        </Flex>
+        <AbsoluteCenter>
+          <Flex>
+            <Text>Uh oh! You're succesfully logged in as {session.user?.name}</Text>
+            <Avatar size='sm' src={session.user!.image ?? undefined} css={{ marginLeft: '$2' }} />
+            <Text>,</Text>
+            <Text>but it appears you don't have the required
+              role <Code>{requiredRole}</Code> to access the tool 😕</Text>
+            <Text>Head to this <a href="https://discord.com/channels/1022781602893414410/1022836524410220554">discord
+              channel</a> to get it!</Text>
+          </Flex>
+        </AbsoluteCenter>
       )
     } else if (!userInDiscord) {
       return (
-        <>
-          <Text>You're not in our discord community!</Text>
-          <Text><a href="https://discord.gg/6zugVKk2sd">Click here</a> to join us! </Text>
-        </>
+        <AbsoluteCenter>
+          <p>You're not in our discord community!</p>
+          <p><a href="https://discord.gg/6rVU4hrc9f">Click here</a> to join us! </p>
+        </AbsoluteCenter>
       )
     }
   }

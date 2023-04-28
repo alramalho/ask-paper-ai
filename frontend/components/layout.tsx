@@ -11,6 +11,9 @@ import Icon, { BulbFilled, BulbTwoTone, DotChartOutlined, ExperimentOutlined, Tw
 import Link from 'next/link';
 import DiscordIcon from './icons/discord-icon';
 import { Flex } from './styles/flex';
+import Router from "next/router";
+
+
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -45,11 +48,20 @@ export const A = styled('a', {
     color: 'inherit',
   },
 })
+
+export const isMobile = () => {
+  if (typeof window !== 'undefined') {
+    return window.innerWidth < 768
+  }
+  return false
+}
+
 export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateAction<boolean>>>(() => { })
 
-export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
-  const [collapsed, setCollapsed] = useState(false);
+export const layoutMargin = 24
+export const headerHeight = 64
 
+export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
   const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights '
   const title = [siteName, seo?.title].join(" ")
   const url = `https://www.askpaper.ai`
@@ -58,26 +70,26 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
   const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
   const { data: session, status } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
 
-  function getItem(
+  function getItem( 
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
-    onClick?: string | (() => void),
+    click?: string | (() => void),
   ): MenuItem {
-    if (typeof onClick == "string") {
+    if (typeof click == "string") {
       return {
         key,
         icon,
         label: (
-          <Link href={onClick} >{label}</Link>
+          <span onClick={() => Router.push(click)} >{label}</span>
         )
       } as MenuItem;
-    } else if (typeof onClick == "function") {
+    } else if (typeof click == "function") {
       return {
         key,
         icon,
         label: (
-          <span onClick={onClick} >{label}</span>
+          <span onClick={click} >{label}</span>
         )
       } as MenuItem;
     }
@@ -89,11 +101,11 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
   }
 
   const items: MenuItem[] = [
-    getItem('App', '1', <ExperimentOutlined />, "/"),
-    getItem('My Dashboard', '2', <DotChartOutlined />, "/profile"),
-    getItem('Go To Community', '3', <Icon component={DiscordIcon} />),
-    getItem('Share on Twittter', '4', <TwitterOutlined />, twitterLink),
+    getItem('App', '/', <ExperimentOutlined />, "/"),
+    getItem('My Dashboard', '/profile', <DotChartOutlined />, "/profile"),
     getItem('Feedback?', '5', <BulbTwoTone twoToneColor={"orange"} />, () => setIsFeedbackModalVisible(true)),
+    getItem('Community', '3', <Icon component={DiscordIcon} />, "https://discord.gg/6rVU4hrc9f"),
+    getItem('Share', '4', <TwitterOutlined />, twitterLink),
   ];
 
 
@@ -115,16 +127,19 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
       }
       <FeedbackVisibleContext.Provider value={setIsFeedbackModalVisible}>
         <Layout style={{ minHeight: "100vh" }}>
-          <Header className="header" style={{ backgroundColor: "white" }} >
+          <Header className="header" style={{
+            overflow: 'auto',
+            backgroundColor: "white", position: "fixed", width: "100%", zIndex: 100, height: `${headerHeight}px`,
+            borderBottom: "1px solid gainsboro"
+          }} >
             {/* todo: get rid of this flex bullshit. supposedly isnt' needed */}
             <Flex direction="row" css={{ flexWrap: "nowrap", maxHeight: "100%", justifyContent: "space-between" }}>
-              <h4>Ask Paper 📝</h4>
-
-              <Menu mode="horizontal" defaultSelectedKeys={['1']} items={items} style={{ float: "right" }} />
+              {!isMobile() && <h4>Ask Paper 📝</h4>}
+              <Menu mode="horizontal" selectedKeys={[window.location.pathname]} items={items} style={{ float: "right", borderColor: "gainsboro", minWidth: '600px' }} />
             </Flex>
           </Header>
-          <Content style={{ padding: '0 50px' }}>
-            <Layout style={{ padding: '24px 0', margin: '24px 0', backgroundColor: "white" }}>
+          <Content style={{ padding: `0 ${isMobile() ? '0' : '24'}px`, marginTop: "64px" }}>
+            <Layout style={{ margin: `${layoutMargin}px 0` }}>
               {children}
             </Layout>
           </Content>

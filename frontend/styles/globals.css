@@ -65,7 +65,7 @@ table {
     box-sizing: border-box;
     border-spacing: 0;
     border-radius: 20px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border: 1px solid gainsboro;
     font-size: small;
 }
 
@@ -118,6 +118,10 @@ pre {
 code {
     word-wrap: break-word;
     word-break: break-all;
+    background-color: #F0F0F0;
+    border-radius: 5px;
+    padding: 2px 5px;
+    color: tomato
 }
 
 /* https://stackoverflow.com/questions/72363509/react-pdf-changing-page-on-a-pdf-cause-the-page-to-scroll-all-up */
@@ -128,6 +132,8 @@ code {
 
 .react-pdf__Document {
     max-width: fit-content;
+    margin: 0 auto;
+    overflow: auto;
 }
 
 .react-pdf__Page {
@@ -135,10 +141,13 @@ code {
     max-width: fit-content;
 }
 
+
 ::selection {
+    background-color: hsla(52,100%,57%,0.65);
     color: black;
 }
 
 ::-moz-selection {
+    background-color: hsla(52,100%,57%,0.65);
     color: black;
 }

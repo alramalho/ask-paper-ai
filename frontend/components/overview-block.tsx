@@ -10,7 +10,7 @@ const OverviewBlock = () => {
           title={<Text h4>What is AskPaper?</Text>}
           subtitle="A tool to ask, extract & help understanding papers"
           contentLeft={
-            <Text css={{ fontSize: "2.2rem" }}>🤔</Text>
+            <span style={{ fontSize: "2.2rem" }}>🤔</span>
           }
         >
           <Text>Ask Paper allows you to more quickly read and extract information from papers. It allows you to upload
@@ -26,7 +26,7 @@ const OverviewBlock = () => {
           title={<Text h4>How does this work?</Text>}
           subtitle="Using AI to aid researchers"
           contentLeft={
-            <Text css={{ fontSize: "2.2rem" }}>❓</Text>
+            <span style={{ fontSize: "2.2rem" }}>❓</span>
           }
         >
           <Text>Ask Paper is a tool powered by a Large Language Model. This is a Neural Network that was trained
@@ -45,7 +45,7 @@ const OverviewBlock = () => {
           title={<Text h4>Who can use it?</Text>}
           subtitle="Anyone!"
           contentLeft={
-            <Text css={{ fontSize: "2.2rem" }}>🙋</Text>
+            <span style={{ fontSize: "2.2rem" }}>🙋</span>
           }
         >
           <Text>Ask paper is free to use for every community member! All you have to do is register in discord and

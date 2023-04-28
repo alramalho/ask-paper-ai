@@ -38,7 +38,7 @@ test.describe('Normal upload', () => {
 
   test('should be able to upload a paper', async () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
-    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet\"")
+    await expect(page.getByTestId("pdf")).toContainText("Deep-learning-assisted detection and segmentation of rib fractures from")
 
     verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
       paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
@@ -196,7 +196,7 @@ test.describe('Upload with URL', () => {
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"Toolformer: Language Models Can Teach Themselves to Use Tools\"")
+    await expect(page.getByTestId("pdf")).toHaveText("Selected \"Toolformer: Language Models Can Teach Themselves to Use Tools\"")
   })
 });
 
@@ -209,7 +209,7 @@ test.describe('Upload the demo paper', () => {
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-    await expect(page.getByTestId("upload-undertext")).toHaveText("Selected \"CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison\"")
+    await expect(page.getByTestId("pdf")).toHaveText("CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison")
   })
 });
 

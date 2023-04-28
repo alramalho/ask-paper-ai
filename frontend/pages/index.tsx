@@ -1,7 +1,7 @@
 import { Badge, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Divider, Card, Grid } from "@nextui-org/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import MarkdownView from "react-showdown";
-import { Box, FeedbackVisibleContext } from "../components/layout";
+import { Box, FeedbackVisibleContext, headerHeight, isMobile, } from "../components/layout";
 import { Flex } from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
@@ -62,8 +62,6 @@ const Home = () => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
   const [question, setQuestion] = useState('');
-
-
 
   useEffect(() => {
     if (messageStatus == 'loading') {
@@ -141,38 +139,40 @@ const Home = () => {
   }
 
   return (<>
-    <Content>
-      <PaperUploader onFinish={(paper, pdf) => {
-        setSelectedPaper(paper)
-        setPdf(pdf)
-        addUserChatMessage(`Now reading "${paper.title}"`)
-      }} />
-      {isUserLoggedInAsGuest &&
-        <>
-          <RemainingRequests value={remainingTrialRequests} />
-        </>
-      }
-      {selectedPaper &&
-        <>
-          <Spacer y={4} />
-          {/* <Flex direction='row' css={{ margin: '$10', gap: '$10', flexWrap: 'wrap', '@sm': { flexWrap: 'nowrap' } }}> */}
-          {pdf && <PdfViewer pdf={pdf} />}
-          {/* </Flex> */}
-        </>
-      }
-    </Content >
+    {true &&
+      <Content style={{ backgroundColor: "transparent" }}>
+        <Spacer y={2} />
+        <PaperUploader onFinish={(paper, pdf) => {
+          setSelectedPaper(paper)
+          setPdf(pdf)
+          addUserChatMessage(`Now reading "${paper.title}"`)
+        }} />
+        {isUserLoggedInAsGuest &&
+          <>
+            <RemainingRequests value={remainingTrialRequests} />
+          </>
+        }
+        {selectedPaper &&
+          <>
+            <Spacer y={4} />
+            {pdf && <PdfViewer pdf={pdf} />}
+          </>
+        }
+      </Content >
+    }
     {selectedPaper &&
-      <Sider width="50%" style={{
-        maxHeight: "100vh",
+      <Sider width={isMobile() ? "100%" : "50%"} style={{
+        maxHeight: 'calc(100vh - ' + headerHeight + 'px)',
         position: "sticky",
-        top: "0",
+        top: `${headerHeight}px`,
         right: "0",
         bottom: "0",
         padding: "1rem",
-        borderLeft: "2px solid whitesmoke",
+        border: "1px solid gainsboro",
       }} theme="light">
         <Flex direction="column" css={{
           height: "100%",
+          flexWrap: 'nowrap'
         }}>
           <Chat data-testid="chat" chatHistory={chatHistory} selectedPaper={selectedPaper} />
           <Flex css={{ flexGrow: 1, alignContent: 'end' }}>
@@ -195,6 +195,7 @@ const Home = () => {
 
           <div style={{ position: 'relative', width: "100%", padding: "0.85rem" }}>
             <TextArea
+              data-testid="ask-textarea"
               placeholder="Write your question here..."
               autoSize={{ minRows: 3, maxRows: 5 }}
               value={question}
@@ -235,6 +236,7 @@ const Home = () => {
               </Flex>
               <Spacer y={1} />
               <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+              <Info css={{ width: "100%" }}>The chat interface does not support referencing to older messages yet! We are working on it :)</Info>
             </Panel>
             <Panel header="📦 Predefined actions" key="2" >
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
@@ -289,6 +291,15 @@ const Home = () => {
                 </Button>
               </Flex>
             </Panel>
+            {isMobile() &&
+              <Panel header="⬆️ Upload another paper" key="3">
+                <PaperUploader alternative onFinish={(paper, pdf) => {
+                  setSelectedPaper(paper)
+                  setPdf(pdf)
+                  addUserChatMessage(`Now reading "${paper.title}"`)
+                }} />
+              </Panel>
+            }
           </Collapse>
           <Spacer y={1} />
         </Flex>

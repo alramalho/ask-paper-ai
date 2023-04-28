@@ -8,18 +8,20 @@ import { Paper } from "../pages";
 import { Box } from "./layout";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import MarkdownView from "react-showdown";
-import FileInput from "./input";
+import FileInput, { MinimalFileInput } from "./input";
 import UploadIcon from "./icons/upload-icon";
 import { useSession } from 'next-auth/react';
 import { Input, Button, Space, Card, Divider } from 'antd'
-import { DoubleRightOutlined, UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 
 interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
+  alternative?: boolean
 }
 
-const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
+const PaperUploader = ({ onFinish, alternative }: PaperUploaderProps) => {
   const [underText, setUnderText] = useState<string | undefined>(undefined)
+  const [errorText, setErrorText] = useState<string | undefined>(undefined)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle')
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
   const [pdf, setPdf] = useState<File | undefined>(undefined)
@@ -43,8 +45,8 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
     }
     if (!file) return;
     if (file.size > 4_500_000) {
-      setUnderText("Sorry! But currently we only support pdf up to 4.5MB.<br/> Please use a pdf compressor (<a target='_blank' href='https://www.ilovepdf.com/compress_pdf'>like this one</a>) before uploading 🙏<br/>")
       setStatus('error')
+      setErrorText("Sorry! But currently we only support pdf up to 4.5MB.<br/> Please use a pdf compressor (<a target='_blank' href='https://www.ilovepdf.com/compress_pdf'>like this one</a>) before uploading 🙏<br/>")
       return
     }
     const formData = new FormData();
@@ -59,18 +61,13 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
           'Authorization': `Bearer ${session!.accessToken}`,
         },
       });
-      if (res.data.title.length > 0) {
-        setUnderText(`Selected \"${res.data.title}\"`)
-      } else {
-        setUnderText(`There was a problem reading the paper title. Everything should still work though!`)
-      }
       setUploadedPaper(res.data as Paper)
       setPdf(file)
       setStatus('uploaded')
     } catch (error) {
       setUploadedPaper(null)
       setStatus('error')
-      setUnderText("Something went wrong! Please try again later or open a support request. 🙏")
+      setErrorText("Something went wrong! Please try again later or open a support request. 🙏")
       console.log(error);
     }
   }
@@ -91,22 +88,27 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
         } as any)
       }).catch(e => {
         setStatus('error')
-        setUnderText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
+        setErrorText("Sorry! But we couldn't find a paper at that link.<br/> Please make sure the link is correct and try again.")
       })
   }
 
-  useEffect(() => {
-    console.log(urlInput)
-  }, [urlInput])
   return (
-    <Box css={{ margin: '0 $3' }}>
-      <Flex css={{ gap: "$5" }} direction={'column'}>
-        <FileInput
-          id="paper-upload"
-          type="file"
-          onChange={handlePaperSubmit}
-          accept="application/pdf"
-        />
+    <Box css={{ margin: '0 $3', textAlign: "center" }}>
+      <Flex css={{ gap: "$5" }} direction={alternative ? 'row' : 'column'}>
+        {alternative
+          ? <MinimalFileInput
+            id="paper-upload"
+            type="file"
+            onChange={handlePaperSubmit}
+            accept="application/pdf"
+          />
+          : <FileInput
+            id="paper-upload"
+            type="file"
+            onChange={handlePaperSubmit}
+            accept="application/pdf"
+          />
+        }
 
         <Space.Compact size="large">
           <Input
@@ -120,7 +122,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
                 setUrlInput(e.target.value)
               }
             }}
-            placeholder="Or upload your paper via URL"
+            placeholder="Upload via URL"
           />
           <Button type="primary" data-testid='upload-url-button' onClick={() => {
             if (urlInput === undefined) {
@@ -132,7 +134,7 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
           } icon={<UploadOutlined />} />
 
         </Space.Compact>
-        {status == 'idle' &&
+        {status == 'idle' && !alternative &&
           <>
             <Divider > or start with a demo paper</Divider>
             <Card
@@ -151,17 +153,20 @@ const PaperUploader = ({ onFinish }: PaperUploaderProps) => {
 
         {status == 'uploading' && <Loading data-testid="upload-loading" />}
         {status == 'uploaded' && <CheckIcon data-testid="upload-successful" />}
-        {status == 'error' && <XIcon data-testid="upload-failed" />}
+        {status == 'error' && <>
+          <XIcon data-testid="upload-failed" />
+          <MarkdownView
+            markdown={errorText ?? ''}
+            options={{ tables: false, emoji: true, }}
+          /></>}
       </Flex>
       <Spacer y={1} />
       {underText &&
-        <Box data-testid="under-text" css={{ maxWidth: '800px' }}>
-          <MarkdownView
-            data-testid="upload-undertext"
-            markdown={underText}
-            options={{ tables: false, emoji: true, }}
-          />
-        </Box>
+        <MarkdownView
+          data-testid="upload-undertext"
+          markdown={underText}
+          options={{ tables: false, emoji: true, }}
+        />
       }
     </Box>
   );
