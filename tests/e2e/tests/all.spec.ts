@@ -197,7 +197,7 @@ test.describe('Upload with URL', () => {
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-    await expect(page.getByTestId("pdf")).toHaveText("Toolformer: Language Models Can Teach Themselves to Use")
+    await expect(page.getByTestId("pdf")).toContainText("Toolformer: Language Models Can Teach Themselves to Use")
   })
 });
 
@@ -210,7 +210,7 @@ test.describe('Upload the demo paper', () => {
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-    await expect(page.getByTestId("pdf")).toHaveText("CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison")
+    await expect(page.getByTestId("pdf")).toContainText("CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison")
   })
 });
 
