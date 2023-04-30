@@ -156,7 +156,7 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
             />
           }
         </>
-      }/
+      }
     </>
   )
 };
