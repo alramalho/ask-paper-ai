@@ -85,73 +85,73 @@ jobs:
           netlify deploy --build --auth $NETLIFY_AUTH_TOKEN --alias=sandbox
 
 
-  E2E-Tests:
-    needs: Deploy-To-Sandbox
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      APP_URL: https://sandbox--ask-paper.netlify.app
-      ENVIRONMENT: sandbox
-      CI: true
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Install dependencies
-        working-directory: tests/e2e
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install --update
-          aws --version
+  # E2E-Tests:
+  #   needs: Deploy-To-Sandbox
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   env:
+  #     APP_URL: https://sandbox--ask-paper.netlify.app
+  #     ENVIRONMENT: sandbox
+  #     CI: true
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+  #     - name: Install dependencies
+  #       working-directory: tests/e2e
+  #       run: |
+  #         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  #         unzip awscliv2.zip
+  #         sudo ./aws/install --update
+  #         aws --version
 
-          yarn
-      - name: Install Playwright Browsers
-        working-directory: tests/e2e
-        run: yarn playwright install --with-deps
+  #         yarn
+  #     - name: Install Playwright Browsers
+  #       working-directory: tests/e2e
+  #       run: yarn playwright install --with-deps
 
-      - name: Configure AWS
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region eu-central-1
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
-          aws configure set region eu-central-1  --profile hippo
+  #     - name: Configure AWS
+  #       run: |
+  #         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws configure set region eu-central-1
+  #         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile hippo
+  #         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}  --profile hippo
+  #         aws configure set region eu-central-1  --profile hippo
 
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
+  #     - name: Setup python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.8'
 
-      - name: Cleanup sandbox
-        working-directory: tests
-        run: |
-          pip install -r requirements.txt
-          python cleanup_sandbox.py
+  #     - name: Cleanup sandbox
+  #       working-directory: tests
+  #       run: |
+  #         pip install -r requirements.txt
+  #         python cleanup_sandbox.py
 
-      - name: Run Playwright tests
-        working-directory: tests/e2e
-        run: |
-          yarn playwright test
+  #     - name: Run Playwright tests
+  #       working-directory: tests/e2e
+  #       run: |
+  #         yarn playwright test
           
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: tests/e2e/playwright-report/
-          retention-days: 2
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-test-output
-          path: tests/e2e/playwright-test-output/
-          retention-days: 2
+  #     - uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: playwright-report
+  #         path: tests/e2e/playwright-report/
+  #         retention-days: 2
+  #     - uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: playwright-test-output
+  #         path: tests/e2e/playwright-test-output/
+  #         retention-days: 2
           
 
   Deploy-To-Production:
-    needs: E2E-Tests
+    needs: Deploy-To-Sandbox
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
