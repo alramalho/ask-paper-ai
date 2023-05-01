@@ -58,7 +58,7 @@ export const isMobile = () => {
 
 export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateAction<boolean>>>(() => { })
 
-export const layoutMargin = 24
+export const layoutMargin = 0
 export const headerHeight = 64
 
 export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
@@ -135,7 +135,7 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
             {/* todo: get rid of this flex bullshit. supposedly isnt' needed */}
             <Flex direction="row" css={{ flexWrap: "nowrap", maxHeight: "100%", justifyContent: "space-between" }}>
               {!isMobile() && <h4>Ask Paper 📝</h4>}
-              <Menu mode="horizontal" selectedKeys={[window.location.pathname]} items={items} style={{ float: "right", borderColor: "gainsboro", minWidth: '600px' }} />
+              <Menu mode="horizontal" selectedKeys={[window.location.pathname]} items={items} style={{ float: "right", borderColor: "gainsboro", minWidth: '600px', borderBottom: 0 }} />
             </Flex>
           </Header>
           <Content style={{ padding: `0 ${isMobile() ? '0' : '24'}px`, marginTop: "64px" }}>

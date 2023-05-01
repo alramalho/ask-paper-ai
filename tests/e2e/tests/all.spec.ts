@@ -89,7 +89,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able ask a question that needs information from a table', async () => {
-    await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2");
+    await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2. (Hint: is below 60% and above 56%)    ");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
