@@ -102,7 +102,7 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
 
   const items: MenuItem[] = [
     getItem('App', '/', <ExperimentOutlined />, "/"),
-    getItem('My Assistant', '/profile', <DotChartOutlined />, "/profile"),
+    getItem('My Dashboard', '/profile', <DotChartOutlined />, "/profile"),
     getItem('Feedback?', '5', <BulbTwoTone twoToneColor={"orange"} />, () => setIsFeedbackModalVisible(true)),
     getItem('Community', '3', <Icon component={DiscordIcon} />, "https://discord.gg/6rVU4hrc9f"),
     getItem('Share', '4', <TwitterOutlined />, twitterLink),

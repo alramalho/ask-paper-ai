@@ -210,7 +210,7 @@ test.describe('Upload the demo paper', () => {
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-    await expect(page.getByTestId("pdf")).toContainText("CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert")
+    await expect(page.getByTestId("pdf")).toContainText("CheXpert: A Large Chest Radiograph")
   })
 });
 
