@@ -315,7 +315,7 @@ function fixNewlines(text: string) {
 }
 
 export function makeLinksClickable(text: string) {
-  return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>link</a>");
+  return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
 }
 
 export default Home;

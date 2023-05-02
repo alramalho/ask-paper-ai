@@ -14,6 +14,6 @@ export const MyDashboardButton = () => {
   const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   return (
-      <Link href="/profile">My Dashboard</Link>
+      <Link href="/profile">My Assistant</Link>
   )
 };

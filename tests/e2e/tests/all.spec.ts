@@ -202,7 +202,7 @@ test.describe('Upload with URL', () => {
 });
 
 test.describe('Upload the demo paper', () => {
-  test('should be able to upload the paper via URL', async ({browser}) => {
+  test('should be able to upload the demo paper', async ({browser}) => {
     await loginAsGuest(browser);
 
     await page.getByTestId('upload-demo-paper').click();

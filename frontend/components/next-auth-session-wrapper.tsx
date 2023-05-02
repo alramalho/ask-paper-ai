@@ -8,14 +8,13 @@ import {
   Text
 } from '@nextui-org/react';
 import { Flex } from "./styles/flex";
-import { signIn, useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DiscordIcon from "./icons/discord-icon";
 import { Code, Div } from "./layout";
 import { GuestUserContext } from "../hooks/session";
 import OverviewBlock from "./overview-block";
-import Navbar from './navbar';
 import { Button, Input, Space, Divider, Card, Alert } from 'antd';
 import Icon, { DownloadOutlined, LoginOutlined, MailOutlined } from '@ant-design/icons';
 import { useMyToken } from '../pages/_app';
@@ -36,6 +35,7 @@ const AbsoluteCenter = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  textAlign: 'center',
 })
 
 
@@ -105,7 +105,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   if (session == null && status == "unauthenticated") {
     return (<Flex justify='center' direction='column'>
       <Card style={{ padding: "2rem", margin: "2rem" }}>
-        <h1 style={{marginTop: '1rem'}}>Ask Paper 📝</h1>
+        <h1 style={{marginTop: '1rem', lineHeight: '5.5rem'}}>Ask Paper 📝</h1>
         <Text h4>You are not signed in!</Text>
         <Spacer y={1} />
         <Flex css={{ gap: "$8" , justifyContent: "flex-start"}}>
@@ -153,7 +153,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
         <AbsoluteCenter>
           <Loading>
             Checking if you're in our server...<br />
-            <p><strong>If this takes too long try to clear your browser cookies 🍪</strong></p>
+            <p><strong>If this takes too long <Button type="text" onClick={() => signOut()}>click here</Button> to clear your browser cookies 🍪</strong></p>
           </Loading>
         </AbsoluteCenter >
       )

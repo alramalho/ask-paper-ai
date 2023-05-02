@@ -59,10 +59,10 @@ export const isMobile = () => {
 export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateAction<boolean>>>(() => { })
 
 export const layoutMargin = 0
-export const headerHeight = 64
+export const headerHeight = 66
 
 export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
-  const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights '
+  const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights from papers'
   const title = [siteName, seo?.title].join(" ")
   const url = `https://www.askpaper.ai`
 
@@ -102,7 +102,7 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
 
   const items: MenuItem[] = [
     getItem('App', '/', <ExperimentOutlined />, "/"),
-    getItem('My Dashboard', '/profile', <DotChartOutlined />, "/profile"),
+    getItem('My Assistant', '/profile', <DotChartOutlined />, "/profile"),
     getItem('Feedback?', '5', <BulbTwoTone twoToneColor={"orange"} />, () => setIsFeedbackModalVisible(true)),
     getItem('Community', '3', <Icon component={DiscordIcon} />, "https://discord.gg/6rVU4hrc9f"),
     getItem('Share', '4', <TwitterOutlined />, twitterLink),

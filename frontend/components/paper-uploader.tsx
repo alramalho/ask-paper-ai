@@ -138,7 +138,7 @@ const PaperUploader = ({ onFinish, alternative }: PaperUploaderProps) => {
           <>
             <Divider > or start with a demo paper</Divider>
             <Card
-              data-tetsid="upload-demo-paper"
+              data-testid="upload-demo-paper"
               hoverable
               onClick={() => {
                 fetchPaperUrl("https://arxiv.org/pdf/1901.07031.pdf")
