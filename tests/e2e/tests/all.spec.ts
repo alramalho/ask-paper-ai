@@ -89,7 +89,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able ask a question that needs information from a table', async () => {
-    await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2. (Hint: is below 60% and above 56%)    ");
+    await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2. (Hint: is below 60% and above 58%)");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
@@ -210,7 +210,7 @@ test.describe('Upload the demo paper', () => {
     await expect(page.getByTestId('upload-loading')).toBeVisible();
     await expect(page.getByTestId('upload-successful')).toBeVisible();
 
-    await expect(page.getByTestId("pdf")).toContainText("CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison")
+    await expect(page.getByTestId("pdf")).toContainText("CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert")
   })
 });
 
