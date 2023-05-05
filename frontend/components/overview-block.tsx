@@ -5,7 +5,7 @@ import { Box } from "./next-auth-session-wrapper";
 const OverviewBlock = () => {
   return (
     <Box css={{ maxWidth: '700px', textAlign: 'left' }}>
-      <Collapse.Group bordered>
+      <Collapse.Group bordered css={{background: "white"}}>
         <Collapse
           title={<Text h4>What is AskPaper?</Text>}
           subtitle="A tool to ask, extract & help understanding papers"

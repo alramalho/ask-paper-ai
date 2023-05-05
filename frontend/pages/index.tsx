@@ -62,6 +62,7 @@ const Home = () => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
   const [question, setQuestion] = useState('');
+  const [activePanelKeys, setActivePanelKeys] = useState<string[] | string | undefined>(undefined);
 
   useEffect(() => {
     if (messageStatus == 'loading') {
@@ -109,6 +110,7 @@ const Home = () => {
   function handleSubmit<T extends any[], R>(func: (...args: T) => Promise<AxiosResponse<any, any>>, ...args: T) {
     setMessageStatus('loading')
     setLoadingText("Reading paper...")
+    setActivePanelKeys(undefined)
 
     func(...args)
       .then(res => {
@@ -227,7 +229,7 @@ const Home = () => {
               } />
           </div>
 
-          <Collapse size="small" style={{ width: "100%" }}>
+          <Collapse size="small" style={{ width: "100%" }} activeKey={activePanelKeys} onChange={key => setActivePanelKeys(key)}>
             <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
               <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
                 <Switch bordered initialChecked checked={quoteChecked}
