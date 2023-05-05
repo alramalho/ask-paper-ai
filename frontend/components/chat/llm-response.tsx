@@ -124,6 +124,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
                                 was_answer_accurate: true,
                                 question: question,
                                 answer: text,
+                                paper_hash: selectedPaper?.hash ?? '',
                                 // @ts-ignore
                             }, session!.accessToken)
                             setUnderFeedbackText('Thank you! 🙏')
@@ -138,6 +139,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
                                 was_answer_accurate: false,
                                 question: question,
                                 answer: text,
+                                paper_hash: selectedPaper?.hash ?? '',
                                 // @ts-ignore
                             }, session!.accessToken)
                             setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')
