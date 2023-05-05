@@ -141,7 +141,7 @@ const Home = () => {
   }
 
   return (<>
-    {true &&
+    {!selectedPaper &&
       <Content style={{ backgroundColor: "transparent" }}>
         <Spacer y={2} />
         <PaperUploader onFinish={(paper, pdf) => {

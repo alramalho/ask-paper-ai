@@ -43,7 +43,7 @@ const Profile = () => {
                     src={<img src={session!.user!.image ?? undefined} alt={session!.user!.name!} />}
                 />
                 <Text>{session!.user!.email}</Text>
-                <Button onClick={signOut}>Log out</Button>
+                <Button onClick={() => signOut()}>Log out</Button>
             </Flex>
             <Spacer y={2} />
             <Flex direction='column' css={{ margin: "$3", alignItems: 'flex-start' }} data-testid="profile-dataset-area">
