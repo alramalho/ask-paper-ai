@@ -117,6 +117,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able to generate summary', async () => {
+    await page.getByTestId("predefined-actions-panel").click();
     await page.click('text=Generate Summary');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
@@ -129,6 +130,7 @@ test.describe('Normal upload', () => {
   test("should be able to explain selected text", async () => {
     await page.getByTestId('pdf').scrollIntoViewIfNeeded()
     await page.dblclick('text=Background')
+    await page.getByTestId("predefined-actions-panel").click();
     await page.click('text=Explain Selected Text');
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
@@ -220,7 +222,8 @@ function verifyEmailSentInLastXMinutes(minutes: number) {
 
 
 // todo: missing test cases
-// - should be able to upload the same paper without doubling storage
+// - test secondary upload in mobile
+
 
 function verifyIfInDynamo(tableName: string, indexField: string, indexValue: string, extraAttributes: {[key: string]: string | boolean | number}) {
   const query = `--index-name ${indexField}-index --key-condition-expression "${indexField} = :${indexField}" --expression-attribute-values '{":${indexField}":{"S":"${indexValue}"}}' | jq '.Items[] | select(${formatAttributes(extraAttributes)})' | grep '"${indexField}":' || (echo "No item found with requested charactersitics" && exit 1)`
