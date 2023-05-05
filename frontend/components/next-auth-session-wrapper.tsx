@@ -18,6 +18,7 @@ import OverviewBlock from "./overview-block";
 import { Button, Input, Space, Divider, Card, Alert } from 'antd';
 import Icon, { DownloadOutlined, LoginOutlined, MailOutlined } from '@ant-design/icons';
 import { useMyToken } from '../pages/_app';
+import Info from './info';
 
 
 
@@ -105,10 +106,10 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   if (session == null && status == "unauthenticated") {
     return (<Flex justify='center' direction='column'>
       <Card style={{ padding: "2rem", margin: "2rem" }}>
-        <h1 style={{marginTop: '1rem', lineHeight: '5.5rem'}}>Ask Paper 📝</h1>
+        <h1 style={{ marginTop: '1rem', lineHeight: '5.5rem' }}>Ask Paper 📝</h1>
         <Text h4>You are not signed in!</Text>
         <Spacer y={1} />
-        <Flex css={{ gap: "$8" , justifyContent: "flex-start"}}>
+        <Flex css={{ gap: "$8", justifyContent: "flex-start" }}>
           <Button type="primary" size="large" style={{ background: token.discordColor }} icon={<Icon component={DiscordIcon} />}
             onClick={() => signIn("discord")}>
             Join with Discord
@@ -133,16 +134,17 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
               })
           }
           }>Guest Login </Button>
-
         </Space.Compact>
+
+        {underText && <>
+          <Spacer y={1} />
+          <p><em>{underText}</em></p>
+        </>}
+
         <p style={{ marginTop: "1rem" }}><em>By signing in & using our tool, you are accepting our <a href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
           Conditions</a></em></p>
       </Card>
 
-      {underText && <>
-        <Spacer y={1} />
-        <p>{underText}</p>
-      </>}
       <Spacer y={3} />
       <OverviewBlock />
       <Spacer y={3} />
