@@ -164,6 +164,7 @@ const Home = () => {
     }
     {selectedPaper &&
       <Sider width={isMobile() ? "100%" : "50%"} style={{
+        overflow: "auto",
         maxHeight: 'calc(100vh - ' + headerHeight + 'px)',
         position: "sticky",
         top: `${headerHeight}px`,
@@ -193,9 +194,7 @@ const Home = () => {
             }
           </Flex>
 
-          <Divider css={{ margin: '$5 0 0 0' }} />
-
-          <div style={{ position: 'relative', width: "100%", padding: "0.85rem" }}>
+          <div style={{ position: 'relative', width: "100%", padding: "0.85rem", borderTop: "1px solid rgba(0, 0, 0, 0.15)" }}>
             <TextArea
               data-testid="ask-textarea"
               placeholder="Write your question here..."

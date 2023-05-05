@@ -20,7 +20,7 @@ interface ChatProps {
 const Chat = ({ chatHistory, selectedPaper, css, ...props }: ChatProps) => {
 
   return (
-    <Box id="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto', ...css }} {...props}>
+    <Box id="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto', maxWidth: "100%", ...css }} {...props}>
       {chatHistory.map((msg, index) => {
         if (msg.sender === "llm") {
           return <LLMResponse chatHistory={chatHistory} selectedPaper={selectedPaper} text={msg.text} />
