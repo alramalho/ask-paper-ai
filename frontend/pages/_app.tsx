@@ -10,6 +10,7 @@ import { ConfigProvider } from 'antd';
 import { theme } from "antd"
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { SEO } from '../components/seo';
 
 const primaryColor = "#ff6372"
 const discordColor = "#5865F2"
@@ -63,21 +64,20 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
         }}
       >
         {/* <NextUIProvider> */}
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: primaryColor,
-              },
-            }}
-          >
-            <NextAuthSessionWrapper>
-              <MyLayout seo={{
-                description: "Ask questions & Extract datasets from papers."
-              }}>
-                <Component {...pageProps} />
-              </MyLayout>
-            </NextAuthSessionWrapper>
-          </ConfigProvider>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: primaryColor,
+            },
+          }}
+        >
+          <SEO />
+          <NextAuthSessionWrapper>
+            <MyLayout >
+              <Component {...pageProps} />
+            </MyLayout>
+          </NextAuthSessionWrapper>
+        </ConfigProvider>
         {/* </NextUIProvider> */}
       </NextThemesProvider>
     </SessionProvider>

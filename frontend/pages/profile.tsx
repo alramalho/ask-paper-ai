@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { GuestUserContext, useGuestSession } from "../hooks/session"
-import { useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { Flex } from "../components/styles/flex"
 import { Loading, Spacer, Text, styled } from "@nextui-org/react"
 import Info from "../components/info"
@@ -8,7 +8,7 @@ import MarkdownView from "react-showdown"
 import { loadDatasetsForUser } from "../service/service"
 import { makeLinksClickable } from "."
 import Link from "next/link"
-import { Avatar } from "antd"
+import { Avatar, Button } from "antd"
 
 
 const Div = styled('div', {
@@ -43,6 +43,7 @@ const Profile = () => {
                     src={<img src={session!.user!.image ?? undefined} alt={session!.user!.name!} />}
                 />
                 <Text>{session!.user!.email}</Text>
+                <Button onClick={signOut}>Log out</Button>
             </Flex>
             <Spacer y={2} />
             <Flex direction='column' css={{ margin: "$3", alignItems: 'flex-start' }} data-testid="profile-dataset-area">

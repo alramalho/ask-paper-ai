@@ -7,30 +7,16 @@ import { GuestUserContext, useGuestSession } from '../hooks/session';
 import { useSession } from 'next-auth/react';
 import { Avatar, Layout, Menu, MenuProps } from 'antd';
 const { Sider, Content, Footer, Header } = Layout;
-import Icon, { BulbFilled, BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined, UserOutlined } from "@ant-design/icons";
+import Icon, { BulbFilled, BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
 import Link from 'next/link';
 import DiscordIcon from './icons/discord-icon';
 import { Flex } from './styles/flex';
 import Router from "next/router";
 
 
-
 type MenuItem = Required<MenuProps>['items'][number];
 
 const twitterLink = "https://twitter.com/intent/tweet?text=%F0%9F%93%9D+askpaper.ai+-+Understand+any+paper%21%0D%0ACurrently+in+love+with+this+new+AI+tool.+It+let%27s+you+ask+open+questions%2C+generate+great+summaries+%26+extract+data+from+papers.+%0D%0APerfect+for+researchers+trying+to+ramp+up+their+paper+reading+game%21+"
-
-interface MyLayoutProps {
-  children: React.ReactNode;
-  css?: CSS
-  seo?: MyLayoutSEO
-}
-
-interface MyLayoutSEO {
-  siteName?: string
-  title?: string
-  description: string
-  images?: ReadonlyArray<OpenGraphMedia>
-}
 
 export const Code = styled('code', {
 
@@ -61,10 +47,7 @@ export const FeedbackVisibleContext = React.createContext<Dispatch<SetStateActio
 export const layoutMargin = 0
 export const headerHeight = 66
 
-export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
-  const siteName = seo?.siteName ?? 'Ask Paper – Extract Data & Insights from papers'
-  const title = [siteName, seo?.title].join(" ")
-  const url = `https://www.askpaper.ai`
+export const MyLayout = ({ children }) => {
 
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
@@ -111,20 +94,6 @@ export const MyLayout = ({ children, css, seo }: MyLayoutProps) => {
 
   return (
     <>
-      {seo &&
-        <NextSeo
-          title={title}
-          description={seo.description}
-          canonical={url}
-          openGraph={{
-            url,
-            title: title,
-            description: seo.description,
-            images: seo.images ?? [{ url: `${url}/demo.png` }, { url: `${url}/hippo.png` }],
-            site_name: siteName,
-          }}
-        />
-      }
       <FeedbackVisibleContext.Provider value={setIsFeedbackModalVisible}>
         <Layout style={{ minHeight: "100vh" }}>
           <Header className="header" style={{
