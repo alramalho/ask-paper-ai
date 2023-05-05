@@ -145,6 +145,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
       </>}
       <Spacer y={3} />
       <OverviewBlock />
+      <Spacer y={3} />
     </Flex>)
   }
   if (session != null && status == "authenticated") {
