@@ -31,3 +31,5 @@ HIPPOAI_DISCORD_SERVER_ID=os.environ["HIPPOAI_DISCORD_SERVER_ID"]
 DISCORD_WHITELIST_ROLENAME="Ask Paper Pilot"
 MAX_CONTEXTS = 7
 LLM_MAX_TOKENS = 4097
+
+NOT_ENOUGH_INFO_ANSWER = "The paper does not contain enough information for answering your question"

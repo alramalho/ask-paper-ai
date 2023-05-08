@@ -49,7 +49,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
   })
 
-  test('should be able ask a question with best speed', async () => {
+  test('should be able to ask a question with best speed', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Speed');
@@ -62,7 +62,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
-  test('should be able ask a question with best results', async () => {
+  test('should be able to ask a question with best results', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Results');

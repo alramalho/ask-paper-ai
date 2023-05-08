@@ -11,7 +11,7 @@ import json
 from mangum import Mangum
 from utils.constants import (
     FILESYSTEM_BASE, EMAIL_SENDER, ASK_PAPER_BANNER_IMG,
-    DB_EMAILS_SENT, DB_JSON_PAPERS, DB_FEEDBACK
+    DB_EMAILS_SENT, DB_JSON_PAPERS, DB_FEEDBACK, NOT_ENOUGH_INFO_ANSWER
 )
 import aws
 import middleware
@@ -306,7 +306,7 @@ async def ask(request: Request):
     response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
     negative_prompts = [
         'The paper context does not contain enough information for answering your question.',
-        'The paper does not contain enough information for answering your question',
+        NOT_ENOUGH_INFO_ANSWER,
     ]
     if any([s in response for s in negative_prompts]):
         response += " Maybe try to configure for best results?"

@@ -3,7 +3,7 @@ import time
 from pydantic import BaseModel
 from typing import List, Union, Dict, Optional, Literal
 
-from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS
+from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS, NOT_ENOUGH_INFO_ANSWER
 from langchain.llms import OpenAIChat
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
@@ -276,7 +276,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
         template="""Please respond to the following request, denoted by "Request" in the best way possible with the
             given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
             The context you're receiving is only a part of the paper, so, if the partial paper context does not enough information for confidently respond to the request, please respond with "The paper does not contain enough information
-            for answering your question".
+            for answering your question.".
             Your answer must only include information that is explicitly present in the paper context.
             Your answer must not include ANY links that are not present in the paper context.
             Start paper context:
@@ -377,4 +377,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
             response = "\n".join(responses)
         responses.append(response)
 
+    if NOT_ENOUGH_INFO_ANSWER in responses[-1] and results_speed_trade_off > 0:
+        return await ask_paper(question, paper, results_speed_trade_off - 1, merge_at_end)
+    
     return responses[-1]
