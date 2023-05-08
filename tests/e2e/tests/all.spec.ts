@@ -190,7 +190,7 @@ test.describe('Normal upload', () => {
 
 });
 
-test.only('should be able to extract all 5 datasets from chexPert', async ({browser}) => {
+test('should be able to extract all 5 datasets from chexPert', async ({browser}) => {
   await loginAsGuest(browser);
 
   page.on("filechooser", (fileChooser: FileChooser) => {
