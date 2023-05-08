@@ -32,7 +32,7 @@ class DynamoDBGateway:
         print('Writing to dynamo', self.table.name)
 
         if 'created_at' not in data:
-            data['created_at'] = str(datetime.datetime.now())
+            data['created_at'] = str(datetime.datetime.utcnow())
 
         data['latest_commit_id'] = LATEST_COMMIT_ID
         try:

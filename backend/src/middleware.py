@@ -72,7 +72,7 @@ async def verify_login(request: Request, call_next):
             discord_users_gateway.get_user_by_email(email)
         except UserDoesNotExistException as e:
             # todo: should we really be creating the user here?
-            discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.now()))  
+            discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.utcnow()))  
         return await call_next(request)
 
     guest_users_gateway = GuestUsersGateway()
@@ -92,14 +92,14 @@ async def verify_login(request: Request, call_next):
 
 
 async def log_function_invocation_to_dynamo(request: Request, call_next):
-    start = datetime.datetime.now()
+    start = datetime.datetime.utcnow()
     body = await get_body(request) 
 
     email = body.get('email', request.headers.get('Email', None))
 
     try:
         response = await call_next(request)
-        time_elapsed = str(datetime.datetime.now() - start)
+        time_elapsed = str(datetime.datetime.utcnow() - start)
         print(f"Elapsed time for {request.url.path}: {time_elapsed}")
         background_tasks = BackgroundTasks()
         background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write, {
@@ -124,6 +124,6 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
             'request_body': json.dumps(body),
             'error': str(e),
             'traceback': traceback.format_exc(),
-            'time_elapsed': str(datetime.datetime.now() - start)
+            'time_elapsed': str(datetime.datetime.utcnow() - start)
         })
         return JSONResponse(status_code=500, content="Internal Server Error: \n" + str(e))

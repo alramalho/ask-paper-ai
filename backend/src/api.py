@@ -153,7 +153,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
             'body_html': body_html,
             'sender': EMAIL_SENDER,
             'type': 'instructions',
-            'sent_at': str(datetime.datetime.now())
+            'sent_at': str(datetime.datetime.utcnow())
         })
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
@@ -188,7 +188,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
             'body_html': body_html,
             'sender': EMAIL_SENDER,
             'type': 'answer',
-            'sent_at': str(datetime.datetime.now())
+            'sent_at': str(datetime.datetime.utcnow())
         })
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
