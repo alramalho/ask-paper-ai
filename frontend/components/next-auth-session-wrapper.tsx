@@ -37,6 +37,7 @@ const AbsoluteCenter = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
+  flexDirection: 'column',
 })
 
 
@@ -193,6 +194,8 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
         <AbsoluteCenter>
           <p>You're not in our discord community!</p>
           <p><a href="https://discord.gg/6rVU4hrc9f">Click here</a> to join us! </p>
+          <br/>
+          <p>If you believe this is an error, <Button type="text" onClick={() => signOut()}>click here</Button></p>
         </AbsoluteCenter>
       )
     }
