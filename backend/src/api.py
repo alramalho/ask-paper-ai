@@ -57,6 +57,7 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
         f.write(pdf_file_content)
         print("created file")
 
+    pdf_file_name = pdf_file_name.lower()
     pdf_file_name = pdf_file_name.replace('.pdf', '')
     output_file = process_pdf_file(input_file=f'{output_location}/{pdf_file_name}.pdf',
                                    temp_dir=output_location, output_dir=output_location,
