@@ -239,19 +239,18 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
-        Please summarize the following text on a markdown table. 
+        Please extract the datasets present in the text into a markdown table. 
         The text will contain possibly repeated information about the characteristics of one or more DATASETS. 
         I want you to summarize the whole text into a markdown table that represents the characteristics of all the DATASETS. 
-        The resulting table should be easy to read and contain any information that might be useful for researchers 
-        thinking about using any of those DATASETS. Some example fields would be "Name", "Size", "Demographic information", 
+        Some example fields would be "Name", "Size", "Demographic information", 
         "Origin", "Link to Data or Code", "Extra Info".
         "Link to Data or Code" must be an URL.
         "Extra Info" must be as succint as possible, preferably only one sentence long.
         Here's a few caveats about how you should build your response:
-            - The resulting table should contain as many entries as possible, but only of specific datasets.
+            - Every resulting table entry and their contents must be present from the paper context
             - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
             - ALL entries must have it's name SPECIFIED
-            - Every resulting table entry and their contents must be present from the paper context
+            - The resulting table should contain as many datasets as possible.
         """
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")

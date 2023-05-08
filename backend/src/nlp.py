@@ -190,8 +190,7 @@ def count_tokens(text) -> int:
     if text is None:
         return 0
     enc = tiktoken.get_encoding("gpt2")
-    return int(len(enc.encode(text, disallowed_special=())))
-
+    return int(len(enc.encode(text, disallowed_special=())) * 1.1) # 1.1 is to account for the underestimation of tiktoken
 
 def decode(tokens) -> str:
     enc = tiktoken.get_encoding("gpt2")
@@ -273,16 +272,16 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
 
     prompt = PromptTemplate(
         input_variables=["context", "request"],
-        template="""Please respond to the following request, denoted by "Request" in the best way possible with the
+        template=f"""Please respond to the following request, denoted by "Request" in the best way possible with the
             given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
-            The context you're receiving is only a part of the paper, so, if the partial paper context does not enough information for confidently respond to the request, please respond with "The paper does not contain enough information
-            for answering your question.".
+            The context you're receiving is only a part of the paper, so, if the partial paper context does not enough information for confidently respond to the request, please respond with 
+            {NOT_ENOUGH_INFO_ANSWER}.
             Your answer must only include information that is explicitly present in the paper context.
             Your answer must not include ANY links that are not present in the paper context.
             Start paper context:
-            {context}
+            {{context}}
             :End paper context.
-            Request: '{request}'
+            Request: '{{request}}'
             Response:
             """,
     )
