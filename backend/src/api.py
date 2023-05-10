@@ -321,7 +321,7 @@ async def explain(request: Request):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    response = nlp.ask_text("Please explain the following text: " + text, 1000)
+    response = nlp.ask_text("Please explain the following text in simpler words. Make paralellisms with other paper passages if necessary. " + text, 1000)
     return {'message': response}
 
 @app.post("/store-feedback")

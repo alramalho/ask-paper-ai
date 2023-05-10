@@ -3,8 +3,8 @@ import { NextSeo } from 'next-seo';
 
 export const SEO = () => {
     const siteName = '📝 Ask Paper – Your AI Paper Assistant'
-    const description = "Ask questions & Extract datasets from papers."
-    const title = "Ask Paper"
+    const description = "Leverage AI to understand and organize papers."
+    const title = "Ask Paper 📝 – Your AI Paper Assistant"
     const url = `https://www.askpaper.ai`
 
     return (
