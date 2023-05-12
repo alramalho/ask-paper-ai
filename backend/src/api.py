@@ -138,7 +138,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
         <br/>
         <h2>How to use Ask Paper</h2>
         <ul style="list-style: none">
-            <li>1️⃣. First, you need to create a Discord account. <a href="https://discord.com/register?redirect_to=https://askpaper.ai">Click here to register</a></li>
+            <li>1️⃣. First, if you don't have already, you need to create a Discord account. <a href="https://discord.com/register?redirect_to=https://askpaper.ai">Click here to register</a></li>
             <li>2️⃣. Next, you need to join the Ask Paper Discord server. <a href="https://discord.gg/6zugVKk2sd">Click here to join</a></li>
             <li>3️⃣. Once you have joined the server, you can use the <a href="https://askpaper.ai">web app</a> normally to ask questions about the paper you uploaded.</li>
         </ul>
