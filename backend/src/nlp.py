@@ -189,11 +189,12 @@ def html_table_to_markdown(html: str) -> str:
 def count_tokens(text) -> int:
     if text is None:
         return 0
-    enc = tiktoken.get_encoding("gpt2")
-    return int(len(enc.encode(text, disallowed_special=())) * 1.1) # 1.1 is to account for the underestimation of tiktoken
+    enc = tiktoken.encoding_for_model("gpt3-3.5-turbo-0301")
+    result = int(len(enc.encode(text, disallowed_special=())))
+    return result
 
 def decode(tokens) -> str:
-    enc = tiktoken.get_encoding("gpt2")
+    enc = tiktoken.encoding_for_model("gpt3-3.5-turbo-0301")
     return enc.decode(tokens)
 
 
