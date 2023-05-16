@@ -200,7 +200,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
           <p><a href="https://discord.gg/6rVU4hrc9f">Click here</a> to join us! </p>
           <br/>
           <p>If you believe this is an error, <Button type="text" onClick={() => signOut()}>click here</Button></p>
-          <p><small>> If the error persists, please open a support ticket</small></p>
+          <p><small> If the error persists, please open a support ticket</small></p>
         </AbsoluteCenter>
       )
     }
