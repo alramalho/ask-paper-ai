@@ -13,13 +13,13 @@ const OverviewBlock = () => {
             <span style={{ fontSize: "2.2rem" }}>🤔</span>
           }
         >
-          <Text>Ask Paper allows you to more quickly read and extract information from papers. It allows you to upload
-            papers either
+          <Text>Ask Paper helps you doing your research, especially when it comes to finding datasets. It comes with a smart dashboard that gets updated with your own usage data.
+            By uploading papers either
             by URL or by uploading a PDF file, and then ask natural language questions about the paper (e.g. What is
             the paper about).
             You also have predefined actions like <code>Extract Datasets</code> and <code>Generate
               summary</code>.<br /><br />
-            Plus, it is natively multiligual, so you can ask questions in any language you want!
+            Plus, it is natively multiligual (beta), so you can ask questions in any language you want!
           </Text>
         </Collapse>
         <Collapse
