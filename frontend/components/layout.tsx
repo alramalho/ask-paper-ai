@@ -112,7 +112,7 @@ export const MyLayout = ({ children }) => {
               {children}
             </Layout>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>An <A href="https://hippoai.dev">hippoai.dev</A> product</Footer>
+          <Footer style={{ textAlign: 'center' }}>This product is donated by the <A href="https://hippoai.org">Hippo AI Foundation</A></Footer>
         </Layout>
       </FeedbackVisibleContext.Provider>
       {session != null && status == "authenticated" &&
