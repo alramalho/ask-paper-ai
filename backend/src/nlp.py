@@ -49,10 +49,27 @@ class PdfParse(BaseModel):
     back_matter: List[TextBlock]
     ref_entries: Dict[str, Union[FigRef, TabRef]]
 
+class Location(BaseModel):
+    settlement: Optional[str]
+    country: Optional[str]
+
+class Affiliation(BaseModel):
+    laboratory: Optional[str]
+    institution: Optional[str]
+    location: Optional[Location]
+
+class Author(BaseModel):
+    first: str
+    middle: List[str]
+    last: str
+    suffix: str
+    affiliation: Optional[Affiliation]
+    email: Optional[str]
 
 class Paper(BaseModel):
     abstract: str
     title: str
+    authors: Optional[List[Author]]
     pdf_parse: PdfParse
 
     def get_sections(self) -> List[str]:
@@ -118,9 +135,10 @@ class Paper(BaseModel):
         ref_entries = self._get_ref_entries_in_text_blocks(
             [*filtered_blocks, *filtered_back_matters])
 
+        del self.pdf_parse
+
         filtered_paper = Paper(
-            abstract=new_paper.abstract,
-            title=new_paper.title,
+            **self.dict(),
             pdf_parse=PdfParse(
                 body_text=filtered_blocks,
                 back_matter=filtered_back_matters,
@@ -130,9 +148,28 @@ class Paper(BaseModel):
 
         self.__dict__.update(filtered_paper.__dict__)
 
+    def format_authors(self) -> str:
+        result = []
+        for author in self.authors:
+            author_s = f"{author.first} {author.last}"
+            if 'affiliation' in author and 'institution' in author.affiliation :
+                author_s += f", {author.affiliation.institution}"
+            if 'affliation' in author and 'location' in author.affiliation and 'country' in author.affiliation.location:
+                author_s += f", {author.affiliation.location.country}"
+            
+            result.append(author_s)
+
+        return "\n".join(result)
+    
+
     def to_text(self) -> str:
         sections = set()
         result = []
+
+        result.append(f"# {self.title}")
+
+        if self.authors:
+            result.append(f"Authors: {self.format_authors()}")
 
         for text_block in self.pdf_parse.body_text + self.pdf_parse.back_matter:
             section = f"#### {text_block.sec_num or ''} {text_block.section}"
@@ -324,7 +361,6 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
     def wrapper(request, context, index):
         print("Running chain nr " + str(index))
         start = time.time()
-        print("\nSIZE: " + str(count_tokens(context + request + prompt.template) + completion_tokens))
         result = chain.run(request=request, context=context)
         elapsed_time = time.time() - start
         print(

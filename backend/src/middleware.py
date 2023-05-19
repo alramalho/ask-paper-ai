@@ -124,6 +124,5 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
             'request_body': json.dumps(body),
             'error': str(e),
             'traceback': traceback.format_exc(),
-            'time_elapsed': str(datetime.datetime.utcnow() - start)
         })
         return JSONResponse(status_code=500, content="Internal Server Error: \n" + str(e))

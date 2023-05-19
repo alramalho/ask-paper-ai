@@ -50,7 +50,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to ask a question with best speed', async () => {
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.getByTestId("ask-textarea").fill("What are the authors?");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Speed');
     await page.getByTestId('ask-button').click();
@@ -58,9 +58,27 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Jiancheng");
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
+
+  test('should be able to ask a follow up question', async () => {
+    await page.getByTestId("ask-textarea").fill("Which sections did you get that from?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("section");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Jiancheng");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
+  test('should be able to clear the conversation', async () => {
+    await page.getByTestId('clear-button').click();
+    await expect(page.getByTestId("ask-textarea")).not.toContainText("Which sections did you get that from?");
+  });
+  
 
   test('should be able to ask a question with best results', async () => {
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
@@ -72,17 +90,6 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
     await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-  });
-
-  test('should be able to ask a follow up question', async () => {
-    await page.getByTestId("ask-textarea").fill("Which sections did you get that from?");
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("sections");
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 

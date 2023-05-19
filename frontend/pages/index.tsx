@@ -15,7 +15,7 @@ import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
 import { Breadcrumb, Button, Collapse, Layout, Space, Input } from 'antd';
 import type { MenuProps } from 'antd';
-import { DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
+import { ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
 import { get } from "http";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
@@ -29,10 +29,28 @@ const PdfViewer = dynamic(
   { ssr: false }
 );
 
+type Author = {
+  first: string
+  middle: string[]
+  last: string
+  suffix: string
+  affiliation: {
+    laboratory: string
+    institution: string
+    location: {
+      settlement: string
+      country: string
+    }
+  }
+  email: string
+}
+
+
 export type Paper = {
   hash: string
   abstract: string
   title: string
+  authors: Author[]
   pdf_parse: {
     body_text: {
       text: string
@@ -97,24 +115,24 @@ const Home = () => {
     const messages = chatHistory;
 
     let lastSystemIndex = -1;
-  
+
     for (let i = messages.length - 1; i >= 0; i--) {
       if (messages[i].sender === "system") {
         lastSystemIndex = i;
         break;
       }
     }
-  
+
     if (lastSystemIndex === -1 || lastSystemIndex === messages.length - 1) {
       // No system messages found or the last message is a system message
       return [];
     }
-  
+
     const messagesAfterLastSystem = messages.slice(lastSystemIndex + 1);
-  
+
     return messagesAfterLastSystem.filter(message => message.sender === "user" || message.sender === "llm").map(message => (message.sender + ": " + message.text));
   }
-  
+
   const handleSelection = () => {
     let selectedText = '';
     if (window.getSelection) {
@@ -179,7 +197,7 @@ const Home = () => {
         {selectedPaper &&
           <>
             <Spacer y={4} />
-            {pdf && <PdfViewer pdf={pdf} onMouseUp={handleSelection}/>}
+            {pdf && <PdfViewer pdf={pdf} onMouseUp={handleSelection} />}
           </>
         }
       </Content >
@@ -225,6 +243,17 @@ const Home = () => {
               onChange={(e) => setQuestion(e.target.value)}
               style={{ paddingRight: "40px" }}
             />
+            <Button
+              size="large"
+              shape="circle"
+              type="text"
+              data-testid="clear-button"
+              icon={<ClearOutlined />}
+              style={{ position: 'absolute', right: '3rem', bottom: '0.85rem' }}
+              onClick={() => {
+                setChatHistory(previous => previous.filter(e => e.sender == "system"))
+              }
+              } />
             <Button
               size="large"
               shape="circle"
