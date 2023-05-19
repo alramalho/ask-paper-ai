@@ -76,7 +76,7 @@ test.describe('Normal upload', () => {
 
   test('should be able to clear the conversation', async () => {
     await page.getByTestId('clear-button').click();
-    await expect(page.getByTestId("answer-area")).not.toContainText("Which sections did you get that from?");
+    await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
   });
   
 
