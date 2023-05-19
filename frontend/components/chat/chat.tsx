@@ -4,10 +4,11 @@ import { Paper } from "../../pages";
 import { Box } from "../next-auth-session-wrapper";
 import LLMResponse from "./llm-response";
 import UserResponse from "./user-response";
+import SystemResponse from "./system-response";
 
 export interface ChatMessage {
   text: string;
-  sender: "user" | "llm";
+  sender: "user" | "llm" | "system";
 }
 
 interface ChatProps {
@@ -24,8 +25,10 @@ const Chat = ({ chatHistory, selectedPaper, css, ...props }: ChatProps) => {
       {chatHistory.map((msg, index) => {
         if (msg.sender === "llm") {
           return <LLMResponse chatHistory={chatHistory} selectedPaper={selectedPaper} text={msg.text} />
-        } else {
+        } else if (msg.sender === "user") {
           return <UserResponse text={msg.text} />
+        } else{
+          return <SystemResponse text={msg.text} />
         }
 
       })}

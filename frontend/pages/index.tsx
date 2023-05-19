@@ -16,6 +16,7 @@ import Info from "../components/info";
 import { Breadcrumb, Button, Collapse, Layout, Space, Input } from 'antd';
 import type { MenuProps } from 'antd';
 import { DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
+import { get } from "http";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -89,10 +90,31 @@ const Home = () => {
     }
   }, [chatHistory])
 
-  function addUserChatMessage(text: string) {
-    setChatHistory(prev => [...prev, { text: text, sender: "user" }]);
+  function addChatMessage(text: string, sender: ChatMessage['sender']) {
+    setChatHistory(prev => [...prev, { text: text, sender: sender }]);
   }
+  function getChatHistory(): string[] {
+    const messages = chatHistory;
 
+    let lastSystemIndex = -1;
+  
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].sender === "system") {
+        lastSystemIndex = i;
+        break;
+      }
+    }
+  
+    if (lastSystemIndex === -1 || lastSystemIndex === messages.length - 1) {
+      // No system messages found or the last message is a system message
+      return [];
+    }
+  
+    const messagesAfterLastSystem = messages.slice(lastSystemIndex + 1);
+  
+    return messagesAfterLastSystem.filter(message => message.sender === "user" || message.sender === "llm").map(message => (message.sender + ": " + message.text));
+  }
+  
   const handleSelection = () => {
     let selectedText = '';
     if (window.getSelection) {
@@ -114,7 +136,7 @@ const Home = () => {
 
     func(...args)
       .then(res => {
-        setChatHistory(prev => [...prev, { text: makeLinksClickable(fixNewlines(res.data.message)), sender: "llm" }]);
+        addChatMessage(makeLinksClickable(fixNewlines(res.data.message)), "llm")
         if (isUserLoggedInAsGuest && setRemainingTrialRequests != undefined && session!.user!.email !== null && session!.user!.email !== undefined) {
           getRemainingRequestsFor(session!.user!.email).then(res => {
             setRemainingTrialRequests(res.data.remaining_trial_requests)
@@ -147,7 +169,7 @@ const Home = () => {
         <PaperUploader onFinish={(paper, pdf) => {
           setSelectedPaper(paper)
           setPdf(pdf)
-          addUserChatMessage(`Now reading "${paper.title}"`)
+          addChatMessage(`Now reading "${paper.title}"`, "system")
         }} />
         {isUserLoggedInAsGuest &&
           <>
@@ -213,6 +235,7 @@ const Home = () => {
               onClick={() => {
                 handleSubmit(askPaper, {
                   question: question ?? '',
+                  history: getChatHistory(),
                   paper: JSON.parse(JSON.stringify(selectedPaper)),
                   // @ts-ignore
                   email: session!.user!.email,
@@ -223,7 +246,7 @@ const Home = () => {
                   paperHash: selectedPaper!.hash,
                   resultsSpeedTradeoff: resultsSpeedTradeoff
                 })
-                addUserChatMessage(question ?? '')
+                addChatMessage(question ?? '', "user")
               }
               } />
           </div>
@@ -251,7 +274,7 @@ const Home = () => {
                       accessToken: session!.accessToken,
                       resultsSpeedTradeoff: resultsSpeedTradeoff
                     })
-                    addUserChatMessage("Predefined Action: Extract Datasets")
+                    addChatMessage("Predefined Action: Extract Datasets", "user")
                   }}
                   icon={<DotChartOutlined />}
                 >Extract datasets</Button>
@@ -264,7 +287,7 @@ const Home = () => {
                       // @ts-ignore
                       accessToken: session!.accessToken
                     })
-                    addUserChatMessage("Predefined Action: Generate Summary")
+                    addChatMessage("Predefined Action: Generate Summary", "user")
                   }}
                   icon={<FileTextTwoTone />}
                 >Generate Summary
@@ -273,12 +296,13 @@ const Home = () => {
                   onClick={() => {
                     handleSubmit(explainSelectedText, {
                       text: selectedText,
+                      paper: JSON.parse(JSON.stringify(selectedPaper)),
                       // @ts-ignore
                       email: session!.user!.email,
                       // @ts-ignore
                       accessToken: session!.accessToken,
                     })
-                    addUserChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"")
+                    addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user")
                   }}
                   icon={<HighlightTwoTone twoToneColor="#FFC400" />}
                 >Explain selected text
@@ -297,7 +321,7 @@ const Home = () => {
                 <PaperUploader alternative onFinish={(paper, pdf) => {
                   setSelectedPaper(paper)
                   setPdf(pdf)
-                  addUserChatMessage(`Now reading "${paper.title}"`)
+                  addChatMessage(`Now reading "${paper.title}"`, "system")
                 }} />
               </Panel>
             }

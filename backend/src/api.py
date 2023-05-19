@@ -300,6 +300,10 @@ async def ask(request: Request):
     data = await request.json()
     try:
         question = data['question']
+        history = data['history']
+        history = "\n".join(history)
+        history.replace('llm', 'AI')
+        history.replace('user', 'User')
         paper = nlp.Paper(**json.loads(data['paper']))
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         quote = data['quote']
@@ -309,7 +313,8 @@ async def ask(request: Request):
     if quote:
         question += "Please include at least one EXACT quote from the original paper."
 
-    response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
+    prompt = f"""{history}\nUser: {question}\nAI:"""
+    response = await nlp.ask_paper(prompt, paper, results_speed_trade_off=results_speed_trade_off)
     negative_prompts = [
         'The paper context does not contain enough information for answering your question.',
         NOT_ENOUGH_INFO_ANSWER,

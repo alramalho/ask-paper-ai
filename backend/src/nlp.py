@@ -190,8 +190,8 @@ def count_tokens(text) -> int:
     if text is None:
         return 0
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")
-    result = int(len(enc.encode(text, disallowed_special=())))
-    return result
+    result = int(len(enc.encode(text, disallowed_special=())))# Add % as apparently the tokenizer is not 100% accurate
+    return result 
 
 def decode(tokens) -> str:
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")

@@ -75,6 +75,17 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
+  test('should be able to ask a follow up question', async () => {
+    await page.getByTestId("ask-textarea").fill("Where did you get that from?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("sections");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
   test('should be able ask a question that needs information from a figure caption', async () => {
     await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
     await page.getByTestId("configuration-panel").click();
@@ -115,7 +126,6 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
-
 
   test('should be able to generate summary', async () => {
     await page.getByTestId("predefined-actions-panel").click();

@@ -64,12 +64,14 @@ export function generateSummary({paper, email, accessToken}: DefaultEndpointOpti
 
 interface ExplainSelectedTextProps {
   text: string
+  paper: Paper
   email: string
   accessToken: string
 }
-export function explainSelectedText({text, email, accessToken}: ExplainSelectedTextProps) {
+export function explainSelectedText({text, paper, email, accessToken}: ExplainSelectedTextProps) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/explain`, {
     text: text,
+    paper: JSON.stringify(paper),
   }, {
     headers: {
       'Content-Type': 'application/json',
@@ -80,15 +82,17 @@ export function explainSelectedText({text, email, accessToken}: ExplainSelectedT
   })
 }
 interface AskOptions extends DefaultEndpointOptions {
+  history: string[],
   paperHash: string,
   accessToken: string,
   question: string,
   quote: boolean
 }
 
-export function askPaper({question, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions) {
+export function askPaper({question, history, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
     question,
+    history,
     paper: JSON.stringify(paper),
     paper_hash: paperHash,
     quote,
