@@ -13,7 +13,7 @@ const SystemResponse = ({ text }: { text: string }) => {
                 padding: '$4 $8',
                 borderRadius: '20px 20px 20px 0',
             }}>
-                <Text i b css={{ color: "black", fontSize: 'small' }}>{text}</Text>
+                <Text i css={{ color: "black", fontSize: 'small' }}>{text}</Text>
             </Box>
             <Avatar
                 size="md"

@@ -235,7 +235,7 @@ const Home = () => {
               onClick={() => {
                 handleSubmit(askPaper, {
                   question: question ?? '',
-                  history: getChatHistory(),
+                  history: getChatHistory().slice(-6),
                   paper: JSON.parse(JSON.stringify(selectedPaper)),
                   // @ts-ignore
                   email: session!.user!.email,
