@@ -220,12 +220,18 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
     else:
         json_paper = json.loads(existing_paper['paper_json'])
 
-    background_tasks.add_task(DynamoDBGateway(DB_JSON_PAPERS).write, {
-        'id': paper_hash,
-        'paper_title': json_paper['title'],
-        'paper_json': json.dumps(json_paper),
-        'email': email,
-    })
+    def safe_write():
+        try:
+            DynamoDBGateway(DB_JSON_PAPERS).write({
+                'id': paper_hash,
+                'paper_title': json_paper['title'],
+                'paper_json': json.dumps(json_paper),
+                'email': email,
+            })
+        except ClientError as e:
+            print(f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
+
+    background_tasks.add_task(safe_write)
 
     json_paper['hash'] = paper_hash
 
