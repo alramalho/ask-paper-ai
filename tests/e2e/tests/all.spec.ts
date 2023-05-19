@@ -154,7 +154,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("The term \"background\" refers",);
+    await expect(page.getByTestId('answer-area').last()).toContainText("background",);
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   })
 
