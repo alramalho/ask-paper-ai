@@ -81,6 +81,7 @@ test.describe('Normal upload', () => {
   
 
   test('should be able to ask a question with best results', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Results');
@@ -94,6 +95,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able ask a question that needs information from a figure caption', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Results');
@@ -107,6 +109,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able ask a question that needs information from a table', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2.");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Results');
@@ -124,6 +127,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to extract datasets', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("predefined-actions-panel").click();
     await page.click('text=Extract Datasets');
 
@@ -135,6 +139,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able to generate summary', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("predefined-actions-panel").click();
     await page.click('text=Generate Summary');
 
@@ -146,6 +151,7 @@ test.describe('Normal upload', () => {
   });
 
   test("should be able to explain selected text", async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId('pdf').scrollIntoViewIfNeeded()
     await page.dblclick('text=Background')
     await page.getByTestId("predefined-actions-panel").click();
@@ -159,6 +165,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to receive the results email', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.getByTestId('ask-button').click();
 
@@ -183,7 +190,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to store feedback', async () => {
-
+    
     await page.click('text=Feedback?');
     // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
     await page.getByTestId('nps-select').getByText('8').click();
