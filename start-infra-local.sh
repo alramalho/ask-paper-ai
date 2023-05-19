@@ -8,10 +8,10 @@ NOCOLOR='\033[0m'
 
 set -e
 
-build=true
+build=false
 for arg in "$@"; do
-  if [[ "$arg" == "--no-build" ]]; then
-    build=false
+  if [[ "$arg" == "--build" ]]; then
+    build=true
     break
   fi
 done
