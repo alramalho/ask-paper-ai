@@ -301,7 +301,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
         print("Context sizes: ", context_sizes)
 
         sequence_sizes = [context_size + count_tokens(
-            prompt.template) + completion_tokens for context_size in context_sizes]
+            prompt.template + question) + completion_tokens for context_size in context_sizes]
         print("Sequence sizes: ", sequence_sizes)
 
         if max(sequence_sizes) > LLM_MAX_TOKENS:
@@ -324,6 +324,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
     def wrapper(request, context, index):
         print("Running chain nr " + str(index))
         start = time.time()
+        print("\nSIZE: " + str(count_tokens(context + request + prompt.template) + completion_tokens))
         result = chain.run(request=request, context=context)
         elapsed_time = time.time() - start
         print(
