@@ -324,10 +324,10 @@ async def explain(request: Request):
     data = await request.json()
     try:
         text = data['text']
+        paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
-
-    response = nlp.ask_text("Please explain the following text in simpler words. Make paralellisms with other paper passages if necessary. " + text, 1000)
+    response = await nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, results_speed_trade_off=4)
     return {'message': response}
 
 @app.post("/store-feedback")
