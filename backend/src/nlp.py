@@ -316,6 +316,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
             {NOT_ENOUGH_INFO_ANSWER}.
             Your answer must only include information that is explicitly present in the paper context.
             Your answer must not include ANY links that are not present in the paper context.
+            Your answer must not include ANY numbers that are not exactly present in the paper context.
             Start paper context:
             {{context}}
             :End paper context.
