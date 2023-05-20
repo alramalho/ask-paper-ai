@@ -217,24 +217,37 @@ const Home = () => {
           height: "100%",
           flexWrap: 'nowrap'
         }}>
-          <Chat data-testid="chat" chatHistory={chatHistory} selectedPaper={selectedPaper} />
-          <Flex css={{ flexGrow: 1, alignContent: 'end' }}>
-            {messageStatus === 'loading' &&
-              <>
-                <Loading data-testid="loading-answer">{loadingText}</Loading>
-              </>
-            }
-            {messageStatus === 'error' &&
-              <Info>
-                <MarkdownView
-                  markdown={errorMessage + "<br/> Please try again later or contact support."}
-                  options={{ tables: true, emoji: true, }}
-                />
-              </Info>
-            }
-          </Flex>
+          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} />
+
+          {(messageStatus === 'loading' || messageStatus === 'error') &&
+            <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
+              {messageStatus === 'loading' &&
+                <>
+                  <Loading data-testid="loading-answer">{loadingText}</Loading>
+                </>
+              }
+              {messageStatus === 'error' &&
+                <Info>
+                  <MarkdownView
+                    markdown={errorMessage + "<br/> Please try again later or contact support."}
+                    options={{ tables: true, emoji: true, }}
+                  />
+                </Info>
+              }
+            </Flex>
+          }
 
           <div style={{ position: 'relative', width: "100%", padding: "0.85rem", borderTop: "1px solid rgba(0, 0, 0, 0.15)" }}>
+            <Button
+              size="large"
+              shape="circle"
+              data-testid="clear-button"
+              icon={<ClearOutlined />}
+              style={{ position: 'absolute', right: '0.85rem', top: '-3rem', zIndex: 1 }}
+              onClick={() => {
+                setChatHistory(previous => previous.filter((e: any) => e.sender == "system"))
+              }
+              } />
             <TextArea
               data-testid="ask-textarea"
               placeholder="Write your question here..."
@@ -243,17 +256,6 @@ const Home = () => {
               onChange={(e) => setQuestion(e.target.value)}
               style={{ paddingRight: "40px" }}
             />
-            <Button
-              size="large"
-              shape="circle"
-              type="text"
-              data-testid="clear-button"
-              icon={<ClearOutlined />}
-              style={{ position: 'absolute', right: '3rem', bottom: '0.85rem' }}
-              onClick={() => {
-                setChatHistory(previous => previous.filter(e => e.sender == "system"))
-              }
-              } />
             <Button
               size="large"
               shape="circle"
