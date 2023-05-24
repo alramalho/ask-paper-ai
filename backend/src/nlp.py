@@ -171,8 +171,10 @@ class Paper(BaseModel):
         if self.authors:
             result.append(f"Authors: {self.format_authors()}")
 
+        encode_section_header = lambda x: "#" * (x.count(".") + 1) if x and x[-1] != "." else "-"
+
         for text_block in self.pdf_parse.body_text + self.pdf_parse.back_matter:
-            section = f"#### {text_block.sec_num or ''} {text_block.section}"
+            section = f"{encode_section_header(text_block.sec_num)} {text_block.sec_num or ''} {text_block.section}"
             if section not in sections:
                 result.append(f"{section}\n{text_block.text}")
                 sections.add(section)
@@ -313,7 +315,7 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
         template=f"""Please respond to the following request, denoted by "Request" in the best way possible with the
             given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
             The context you're receiving is only a part of the paper, so, if the partial paper context does not enough information for confidently respond to the request, please respond with 
-            {NOT_ENOUGH_INFO_ANSWER}.
+            \"{NOT_ENOUGH_INFO_ANSWER}\".
             Your answer must only include information that is explicitly present in the paper context.
             Your answer must not include ANY links that are not present in the paper context.
             Your answer must not include ANY numbers that are not exactly present in the paper context.
@@ -376,10 +378,6 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
 
     responses = [f.result() for f in futures]
 
-    if ENVIRONMENT == "dev":
-        with open("responses.txt", "w") as f:
-            f.write("\n".join(["\nResponse nr " + str(i) + ": " + response + '\n' for i, response in enumerate(responses)]))
-            
 
     if (len(responses) > 1):
         if merge_at_end:
@@ -417,5 +415,9 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
 
     if NOT_ENOUGH_INFO_ANSWER in responses[-1] and results_speed_trade_off > 0:
         return await ask_paper(question, paper, results_speed_trade_off - 1, merge_at_end)
+    
+    if ENVIRONMENT == "dev":
+        with open("responses.txt", "w") as f:
+            f.write("\n".join(["\nResponse nr " + str(i) + ": " + response + '\n' for i, response in enumerate(responses)]))
     
     return responses[-1]

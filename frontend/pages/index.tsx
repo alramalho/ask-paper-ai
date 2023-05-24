@@ -291,7 +291,6 @@ const Home = () => {
               </Flex>
               <Spacer y={1} />
               <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
-              <Info css={{ width: "100%" }}>The chat interface does not support referencing to older messages yet! We are working on it :)</Info>
             </Panel>
             <Panel data-testid="predefined-actions-panel" header="📦 Predefined actions" key="2" >
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>

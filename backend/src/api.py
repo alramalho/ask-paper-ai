@@ -278,7 +278,7 @@ async def summarize(request: Request):
     try:
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
-        Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header (denoted by several '#').
+        Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header (denoted by several '#') or a dash.
         Each section summary should contain only the main section takeways. You're only allowed to include mardkdown headers that are present in the given paper context."""
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
