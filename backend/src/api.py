@@ -264,7 +264,7 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    if results_speed_trade_off is not None:
+    if results_speed_trade_off is not None and results_speed_trade_off > 0:
         paper.filter_sections('include', ['data', 'inclusion criteria'])
         
     response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
