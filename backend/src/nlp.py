@@ -174,7 +174,7 @@ class Paper(BaseModel):
         encode_section_header = lambda x: "#" * (x.count(".") + 1) if x and x[-1] != "." else "-"
 
         for text_block in self.pdf_parse.body_text + self.pdf_parse.back_matter:
-            section = f"{encode_section_header(text_block.sec_num)} {text_block.sec_num or ''} {text_block.section}"
+            section = f"{encode_section_header(str(text_block.sec_num))} {text_block.sec_num or ''} {text_block.section}"
             if section not in sections:
                 result.append(f"{section}\n{text_block.text}")
                 sections.add(section)
