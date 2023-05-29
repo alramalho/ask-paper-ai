@@ -63,7 +63,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able to ask a follow up question', async () => {
-    await page.getByTestId("ask-textarea").fill("Which sections did you get that from?");
+    await page.getByTestId("ask-textarea").fill("Which sections did you get that from? You have to mention the section name.");
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
