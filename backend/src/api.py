@@ -3,7 +3,7 @@ import os.path
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Union
+from typing import Union, Tuple
 
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
@@ -47,6 +47,10 @@ def generate_hash(content: Union[str, bytes]):
     sha256.update(content)
     return sha256.hexdigest()
 
+def get_paper_from_url(url: str) -> bytes:
+    import requests
+    response = requests.get(url)
+    return response.content
 
 def process_paper(pdf_file_content, pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.lower()
@@ -260,7 +264,9 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
-    paper.filter_sections('include', ['data', 'inclusion criteria'])
+    if results_speed_trade_off is not None:
+        paper.filter_sections('include', ['data', 'inclusion criteria'])
+        
     response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
 
     if hasattr(request.state, 'user_discord_id'):
@@ -303,7 +309,10 @@ async def ask(request: Request):
         history = "\n".join(history)
         history.replace('llm', 'AI')
         history.replace('user', 'User')
-        paper = nlp.Paper(**json.loads(data['paper']))
+        if data.get("paper", None) is None:
+            paper = nlp.Paper(**process_paper(get_paper_from_url(data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
+        else:
+            paper = nlp.Paper(**json.loads(data['paper']))
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         quote = data['quote']
     except KeyError as ed:
