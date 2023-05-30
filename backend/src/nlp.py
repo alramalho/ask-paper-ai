@@ -407,8 +407,11 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
             responses = [f"\n Response {i}: \n" +
                          r for i, r in enumerate(responses)]
 
+            start = time.time()
             response = chain.run(responses='\n'.join(
                 responses), question=question)
+            end = time.time()
+            print("Time taken to merge responses: " + str(end - start) + " seconds")
         else:
             response = "\n".join(responses)
         responses.append(response)

@@ -250,11 +250,11 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
         Please extract the into a markdown table all the datasets mentioned in the following text.
-        The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Section" and "Extra Info".
+        The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
         Here's a few caveats about how you should build your response:
             - "Link to Data or Code" must be an URL.
             - "Extra Info" must be as succint as possible, preferably only one sentence long.
-            - "Section" must be the section of the paper where the dataset was mentioned.
+            - "Passage" must be the passage (phrase) of the paper where the dataset was mentioned. This can't be N/A or undefined.
             - Every resulting table entry and their contents must be present from the paper context
             - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
             - ALL entries must have it's name SPECIFIED
@@ -274,7 +274,6 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
         print(f"User discord id: {user_discord_id}")
         if user_discord_id is not None:
             background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
-
     return {'message': response}
 
 

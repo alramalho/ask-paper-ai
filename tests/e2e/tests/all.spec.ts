@@ -1,16 +1,16 @@
 import { expect, FileChooser, Page, test } from '@playwright/test';
 import { SNAKE_CASE_PREFIX } from './utils/constants';
 var crypto = require("crypto");
+var fs = require('fs')
 var id = crypto.randomUUID();
 const TEST_EMAIL = ((process.env.ENVIRONMENT ?? 'local') + "-" + id) + '@e2e.test';
-
 
 test.describe.configure({ mode: 'serial' });
 
 let page: Page
 
 async function loginAsGuest(browser) {
-  page = await browser.newPage()
+  page = await browser.newPage({acceptDownloads: true})
 
   await page.goto(process.env.APP_URL!)
 
@@ -78,7 +78,7 @@ test.describe('Normal upload', () => {
     await page.getByTestId('clear-button').click();
     await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
   });
-  
+
 
   test('should be able to ask a question with best results', async () => {
     await page.getByTestId('clear-button').click();
@@ -138,6 +138,46 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
+  test('should download the datasets CSV file', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByTestId('export-dropdown').click()
+    await page.waitForSelector('[data-menu-id$="csv"]');
+    await page.click('[data-menu-id$="csv"]')
+
+    // await prepareDownload(page);
+
+    const download = await downloadPromise;
+
+    const filePath = await download.path();
+
+    expect(download.suggestedFilename()).toContain('.csv');
+    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
+    // Add assertions to test the file contents
+    expect(fileContents).toContain('Size');
+
+  });
+
+  test('should download the datasets JSON file', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByTestId('export-dropdown').click()
+    await page.waitForSelector('[data-menu-id$="json"]');
+    await page.click('[data-menu-id$="json"]')
+
+    // await prepareDownload(page);
+
+    const download = await downloadPromise;
+
+    const filePath = await download.path();
+
+    expect(download.suggestedFilename()).toContain('.json');
+    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
+    // Add assertions to test the file contents
+    expect(fileContents).toContain('Size');
+
+  });
+
   test('should be able to generate summary', async () => {
     await page.getByTestId('clear-button').click();
     await page.getByTestId("predefined-actions-panel").click();
@@ -190,7 +230,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to store feedback', async () => {
-    
+
     await page.click('text=Feedback?');
     // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
     await page.getByTestId('nps-select').getByText('8').click();
@@ -214,7 +254,7 @@ test.describe('Normal upload', () => {
 
 });
 
-test('should be able to extract all 5 datasets from chexPert', async ({browser}) => {
+test('should be able to extract all 5 datasets from chexPert', async ({ browser }) => {
   await loginAsGuest(browser);
 
   page.on("filechooser", (fileChooser: FileChooser) => {

@@ -9,10 +9,12 @@ import { storeFeedback } from "../feedback-modal"
 import { Box } from "../layout"
 import { Flex } from "../styles/flex"
 import { ChatMessage } from "./chat"
+import { Button as AntButton, Dropdown, Space } from "antd"
+import { DownOutlined, FileTextOutlined } from "@ant-design/icons"
 
 export const RobotAnswer = ({ children }) => {
     return (
-        <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start', '*': {fontSize: "0.86rem"} }}>
+        <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start', '*': { fontSize: "0.86rem" } }}>
             <Box css={{
                 minWidth: "35px",
                 maxWidth: "35px",
@@ -45,29 +47,40 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
     const [emailStatus, setEmailStatus] = useState<Status>('idle')
     const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
     const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
+
     const answerRef = useRef(null)
+
+    const markdownTable = useMemo(() => extractMarkdownTable(text), [text])
+
+    function handleExportClick({ key }) {
+        if (key == 'csv') {
+            downloadMarkdownTableAsCSV(markdownTable, 'table.csv')
+        } else if (key == 'json') {
+            downloadJSONFromMarkdownTable(markdownTable)
+        }
+    }
 
     const question = useMemo(() => {
         function findPreviousMessage(messageContent: string, messages: ChatMessage[]): ChatMessage | undefined {
             const index = messages.findIndex(msg => msg.text === messageContent);
             if (index === -1) {
-              return undefined;
+                return undefined;
             }
-          
+
             const previousIndex = index - 1;
             if (previousIndex < 0) {
-              return undefined;
+                return undefined;
             }
-          
-            return messages[previousIndex];
-          }
 
-          return findPreviousMessage(text, chatHistory)?.text ?? ""
+            return messages[previousIndex];
+        }
+
+        return findPreviousMessage(text, chatHistory)?.text ?? ""
     }, [chatHistory, text])
 
     return (<>
         <RobotAnswer>
-            <Box id="answer" ref={answerRef} css={{padding: "$5"}}>
+            <Box id="answer" ref={answerRef} css={{ padding: "$5" }}>
                 <MarkdownView
                     markdown={text}
                     options={{ tables: true, emoji: true, }}
@@ -105,6 +118,28 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
                     >
                         <Text>Email me this 📩</Text>
                     </Button>
+                    {markdownTable != null && <>
+                        <Dropdown menu={{
+                            items: [{
+                                label: 'CSV',
+                                key: 'csv',
+                                icon: <FileTextOutlined />,
+                            },
+                            {
+                                label: 'JSON',
+                                key: 'json',
+                                icon: <FileTextOutlined />,
+                            }]
+                            , onClick: handleExportClick
+                        }}>
+                            <AntButton data-testid="export-dropdown" >
+                                <Space>
+                                    Export table as
+                                    <DownOutlined />
+                                </Space>
+                            </AntButton>
+                        </Dropdown>
+                    </>}
                     {emailStatus == 'loading' && <Text>Sending email...</Text>}
                     {emailStatus == 'success' &&
                         <Text data-testid="email-sent">Email sent! ✅</Text>}
@@ -153,5 +188,114 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
 
     </>)
 }
+
+function extractMarkdownTable(text: string): string | null {
+    const lines = text.split('\n');
+    let startIndex = -1;
+    let endIndex = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
+            if (startIndex === -1) {
+                // A markdown table should at least have a header and a separator line
+                if (lines.length > i + 1 && lines[i + 1].trim().match(/^\|(:?-+:?\|)+$/)) {
+                    startIndex = i;
+                }
+            } else if (endIndex === -1 && !lines[i + 1]?.trim().startsWith('|')) {
+                endIndex = i;
+                break;
+            }
+        }
+    }
+
+    if (startIndex !== -1 && endIndex !== -1) {
+        return lines.slice(startIndex, endIndex + 1).join('\n');
+    }
+
+    return null;
+}
+
+type TableJson = Record<string, string>[];
+
+function downloadMarkdownTableAsCSV(markdownTable: string | null, fileName: string) {
+    if (markdownTable === null) {
+        console.warn("No table found to convert to CSV.");
+        return;
+    }
+
+    // Remove leading/trailing whitespace and split the markdown table by rows
+    const rows = markdownTable.trim().split('\n');
+
+    // Process each row to extract the cells
+    const csvRows = rows.map((row) => {
+        // Remove leading/trailing '|' characters and split the row by '|'
+        const cells = row.trim().slice(1, -1).split('|');
+
+        // Process each cell to remove leading/trailing whitespace and handle special characters
+        return cells.map((cell) => {
+            // Remove leading/trailing whitespace and unescape special characters
+            let processedCell = cell.trim().replace(/\\(.)/g, '$1');
+
+            // If the cell contains a comma or newline, wrap it in double quotes
+            if (processedCell.includes(',') || processedCell.includes('\n')) {
+                processedCell = `"${processedCell}"`;
+            }
+
+            return processedCell;
+        }).join(',');
+    });
+
+    // Create a CSV content string by joining the rows with newlines
+    const csvContent = csvRows.join('\n');
+
+    // Create a Blob object with the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+
+    // Create a temporary anchor element to trigger the download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+
+    // Programmatically trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up the temporary anchor element
+    document.body.removeChild(link);
+}
+
+
+function downloadJSONFromMarkdownTable(mdTable: string | null): void {
+    if (mdTable === null) {
+        console.warn("No table found to convert to JSON.");
+        return;
+    }
+
+    const lines = mdTable.split('\n').filter((_, i) => i !== 1); // Skip separator line
+    const headers = lines[0].split('|').map(header => header.trim());
+    const rows = lines.slice(1).map(line => line.split('|').map(cell => cell.trim()));
+
+    const tableJson: TableJson = rows.map(row => {
+        let rowObj: Record<string, string> = {};
+        row.forEach((cell, index) => {
+            if (headers[index]) rowObj[headers[index]] = cell;
+        });
+        return rowObj;
+    });
+
+    const jsonString = JSON.stringify(tableJson, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'table.json';
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 
 export default LLMResponse
