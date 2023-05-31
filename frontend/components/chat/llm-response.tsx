@@ -56,7 +56,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
         if (key == 'csv') {
             downloadMarkdownTableAsCSV(markdownTable, 'table.csv')
         } else if (key == 'json') {
-            downloadJSONFromMarkdownTable(markdownTable)
+            downloadMarkdownTableAsJSON(markdownTable)
         }
     }
 
@@ -147,7 +147,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
                         <Text>There was an error ❌ Please contact support.</Text>}
                 </Flex>
                 <Flex css={{ gap: "$7" }}>
-                    {<Text css={{ maxWidth: '400px' }}>{underFeedbackText ? underFeedbackText : "Was it accurate?"}</Text>}
+                    {<Text css={{ maxWidth: '400px', fontSize: "small" }}>{underFeedbackText ? underFeedbackText : "Was it accurate?"}</Text>}
                     <Button ghost auto color="success"
                         css={{
                             color: '"$success"',
@@ -265,7 +265,7 @@ function downloadMarkdownTableAsCSV(markdownTable: string | null, fileName: stri
 }
 
 
-function downloadJSONFromMarkdownTable(mdTable: string | null): void {
+function downloadMarkdownTableAsJSON(mdTable: string | null): void {
     if (mdTable === null) {
         console.warn("No table found to convert to JSON.");
         return;
