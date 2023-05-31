@@ -353,5 +353,8 @@ async def store_feedback(request: Request):
 
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
+    import asyncio
+    from hypercorn.config import Config
+    from hypercorn.asyncio import serve
+    asyncio.run(serve(app, Config()))
+    # trying out hypercorn instead of uvicorn – https://github.com/encode/httpx/issues/96
