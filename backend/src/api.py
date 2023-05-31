@@ -22,6 +22,8 @@ from database.users import GuestUsersGateway, UserDoesNotExistException, Discord
 import re
 import uuid
 from utils.constants import ENVIRONMENT
+from fastapi.responses import StreamingResponse
+
 
 app = FastAPI()
 
@@ -252,14 +254,14 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
         Please extract the into a markdown table all the datasets mentioned in the following text.
         The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
         Here's a few caveats about how you should build your response:
-            - "Link to Data or Code" must be an URL.
-            - "Extra Info" must be as succint as possible, preferably only one sentence long.
-            - "Passage" must be the passage (phrase) of the paper where the dataset was mentioned. This can't be N/A or undefined.
-            - Every resulting table entry and their contents must be present from the paper context
-            - The resulting table should NOT contain any duplicates (entries with the same "Name" column)
-            - ALL entries must have it's name SPECIFIED
             - The resulting table should contain as many datasets as possible.
             - The resulting table should contain only actionable datasets, meaning datasets that were already agreggated and put together.
+            - Every resulting table entry contents must be explictly present from the paper context
+            - "Link to Data or Code" must be an URL.
+            - "Extra Info" must be as succint as possible.
+            - "Passage" must be the passage (phrase) of the paper where the dataset was explicitly mentioned.
+            - "Name" and "Passage" must not be N/A or undefined.
+            - "Name" must be unique. 
         """
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
@@ -267,14 +269,15 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     if results_speed_trade_off is not None and results_speed_trade_off > 0:
         paper.filter_sections('include', ['data', 'inclusion criteria'])
         
-    response = await nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off)
+    return StreamingResponse(nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
-    if hasattr(request.state, 'user_discord_id'):
-        user_discord_id = request.state.user_discord_id
-        print(f"User discord id: {user_discord_id}")
-        if user_discord_id is not None:
-            background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
-    return {'message': response}
+    # TODO: move this to separate endpoint to be called in frontend after /extract-datasets
+    # if hasattr(request.state, 'user_discord_id'):
+    #     user_discord_id = request.state.user_discord_id
+    #     print(f"User discord id: {user_discord_id}")
+    #     if user_discord_id is not None:
+    #         background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
+    # return {'message': response}
 
 
 @app.post("/summarize")
@@ -296,7 +299,7 @@ async def summarize(request: Request):
     ]
     for s in to_remove:
         response = response.replace(s, '')
-    return {'message': response}
+    return response
 
 
 @app.post("/ask")
@@ -321,15 +324,7 @@ async def ask(request: Request):
         question += "Please include at least one EXACT quote from the original paper."
 
     prompt = f"""{history}\nUser: {question}\nAI:"""
-    response = await nlp.ask_paper(prompt, paper, results_speed_trade_off=results_speed_trade_off)
-    negative_prompts = [
-        'The paper context does not contain enough information for answering your question.',
-        NOT_ENOUGH_INFO_ANSWER,
-    ]
-    if any([s in response for s in negative_prompts]):
-        response += " Maybe try to configure for best results?"
-    return {'message': response}
-
+    return StreamingResponse(content=nlp.ask_paper(question=prompt, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 @app.post("/explain")
 async def explain(request: Request):
@@ -339,8 +334,7 @@ async def explain(request: Request):
         paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
-    response = await nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, results_speed_trade_off=4)
-    return {'message': response}
+    return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, results_speed_trade_off=4), media_type="text/plain")
 
 @app.post("/store-feedback")
 async def store_feedback(request: Request):

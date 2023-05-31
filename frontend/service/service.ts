@@ -1,5 +1,7 @@
 import axios from "axios";
 import {Paper} from "../pages";
+import http, { ClientRequest, IncomingMessage } from 'http';
+import { parse } from 'url';
 
 export function sendInstructionsEmail(recipient) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
@@ -34,53 +36,57 @@ interface DefaultEndpointOptions {
   accessToken: string
 }
 
-export function extractDatasets({paper, email, accessToken, resultsSpeedTradeoff}: DefaultEndpointOptions) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/extract-datasets`, {
-    paper: JSON.stringify(paper),
-    results_speed_trade_off: resultsSpeedTradeoff
-  }, {
+export function extractDatasets({ paper, email, accessToken, resultsSpeedTradeoff }: DefaultEndpointOptions) {
+  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/extract-datasets`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // @ts-ignore
       'Authorization': `Bearer ${accessToken}`,
       'Email': email
-    }
+    },
+    body: JSON.stringify({
+      paper: JSON.stringify(paper),
+      results_speed_trade_off: resultsSpeedTradeoff
+    })
   })
 }
 
-
-export function generateSummary({paper, email, accessToken}: DefaultEndpointOptions) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
-    paper: JSON.stringify(paper),
-  }, {
+export function generateSummary({ paper, email, accessToken }: DefaultEndpointOptions) {
+  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // @ts-ignore
       'Authorization': `Bearer ${accessToken}`,
       'Email': email
-    }
+    },
+    body: JSON.stringify({
+      paper: JSON.stringify(paper)
+    })
   })
 }
 
 interface ExplainSelectedTextProps {
-  text: string
-  paper: Paper
-  email: string
-  accessToken: string
+  text: string;
+  paper: Paper;
+  email: string;
+  accessToken: string;
 }
-export function explainSelectedText({text, paper, email, accessToken}: ExplainSelectedTextProps) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/explain`, {
-    text: text,
-    paper: JSON.stringify(paper),
-  }, {
+
+export function explainSelectedText({ text, paper, email, accessToken }: ExplainSelectedTextProps) {
+  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/explain`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // @ts-ignore
       'Authorization': `Bearer ${accessToken}`,
       'Email': email
-    }
+    },
+    body: JSON.stringify({
+      text: text,
+      paper: JSON.stringify(paper)
+    })
   })
 }
+
 interface AskOptions extends DefaultEndpointOptions {
   history: string[],
   paperHash: string,
@@ -90,22 +96,24 @@ interface AskOptions extends DefaultEndpointOptions {
 }
 
 export function askPaper({question, history, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
-    question,
-    history,
-    paper: JSON.stringify(paper),
-    paper_hash: paperHash,
-    quote,
-    results_speed_trade_off: resultsSpeedTradeoff
-  }, {
+  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // @ts-ignore
       'Authorization': `Bearer ${accessToken}`,
       'Email': email
-    }
-  })
+    },
+    body: JSON.stringify({
+      question,
+      history,
+      paper: JSON.stringify(paper),
+      paper_hash: paperHash,
+      quote,
+      results_speed_trade_off: resultsSpeedTradeoff
+    })
+  });
 }
+
 
 export function getRemainingRequestsFor(email: string) {
   return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/user-remaining-requests-count`, {

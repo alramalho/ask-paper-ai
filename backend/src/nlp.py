@@ -1,18 +1,37 @@
 import concurrent.futures
 import time
 from pydantic import BaseModel
-from typing import List, Union, Dict, Optional, Literal
+from typing import List, Union, Dict, Optional, Literal, Generator, Callable, Any
 
 from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS, NOT_ENOUGH_INFO_ANSWER
-from langchain.llms import OpenAIChat
+from langchain.chat_models import ChatOpenAI
+from langchain.callbacks.streaming_stdout import BaseCallbackHandler
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
+from langchain.schema import ChatMessage
 from langchain.text_splitter import CharacterTextSplitter
 import tiktoken
 from copy import deepcopy
 import json
 from bs4 import BeautifulSoup
 from utils.constants import ENVIRONMENT
+from queue import Queue, Empty
+from threading import Thread
+from time import sleep
+
+
+
+class QueueCallback(BaseCallbackHandler):
+    """Callback handler for streaming LLM responses to a queue."""
+
+    def __init__(self, q):
+        self.q = q
+
+    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
+        self.q.put(token)
+
+    def on_llm_end(self, *args, **kwargs: Any) -> None:
+        return self.q.empty()
 
 
 class CiteSpan(BaseModel):
@@ -49,14 +68,17 @@ class PdfParse(BaseModel):
     back_matter: List[TextBlock]
     ref_entries: Dict[str, Union[FigRef, TabRef]]
 
+
 class Location(BaseModel):
     settlement: Optional[str]
     country: Optional[str]
+
 
 class Affiliation(BaseModel):
     laboratory: Optional[str]
     institution: Optional[str]
     location: Optional[Location]
+
 
 class Author(BaseModel):
     first: str
@@ -65,6 +87,7 @@ class Author(BaseModel):
     suffix: str
     affiliation: Optional[Affiliation]
     email: Optional[str]
+
 
 class Paper(BaseModel):
     abstract: str
@@ -152,15 +175,18 @@ class Paper(BaseModel):
         result = []
         for author in self.authors:
             author_s = f"{author.first} {author.last}"
-            if 'affiliation' in author and 'institution' in author.affiliation :
+            if 'affiliation' in author and 'institution' in author.affiliation:
                 author_s += f", {author.affiliation.institution}"
             if 'affliation' in author and 'location' in author.affiliation and 'country' in author.affiliation.location:
                 author_s += f", {author.affiliation.location.country}"
-            
+
             result.append(author_s)
 
         return "\n".join(result)
     
+    
+
+
 
     def to_text(self) -> str:
         sections = set()
@@ -171,7 +197,8 @@ class Paper(BaseModel):
         if self.authors:
             result.append(f"Authors: {self.format_authors()}")
 
-        encode_section_header = lambda x: "#" * (x.count(".") + 1) if x and x[-1] != "." else "-"
+        def encode_section_header(
+            x): return "#" * (x.count(".") + 1) if x and x[-1] != "." else "-"
 
         for text_block in self.pdf_parse.body_text + self.pdf_parse.back_matter:
             section = f"{encode_section_header(str(text_block.sec_num))} {text_block.sec_num or ''} {text_block.section}"
@@ -188,7 +215,8 @@ class Paper(BaseModel):
                     "FIGREF", "")
                 if fig_num == "0":
                     fig_num = ""
-                figs_and_tables.append(f"Figure {fig_num} caption: \"{ref.text}\"")
+                figs_and_tables.append(
+                    f"Figure {fig_num} caption: \"{ref.text}\"")
             elif ref.type_str == "table":
                 table_num = ref.num if ref.num else key.replace("TABREF", "")
                 if table_num == "0":
@@ -229,8 +257,10 @@ def count_tokens(text) -> int:
     if text is None:
         return 0
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")
-    result = int(len(enc.encode(text, disallowed_special=())))# Add % as apparently the tokenizer is not 100% accurate
-    return result 
+    # Add % as apparently the tokenizer is not 100% accurate
+    result = int(len(enc.encode(text, disallowed_special=())))
+    return result
+
 
 def decode(tokens) -> str:
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")
@@ -248,11 +278,11 @@ def ask_text(text, completion_tokens=None):
     if count_tokens(text) > LLM_MAX_TOKENS:
         raise ValueError("Text is too long, must be less than " +
                          str(LLM_MAX_TOKENS) + " tokens")
-    
+
     if completion_tokens is None:
         completion_tokens = LLM_MAX_TOKENS - count_tokens(text)
 
-    llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
+    llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
 
     prompt = PromptTemplate(input_variables=[], template=text)
 
@@ -284,7 +314,8 @@ def get_top_k_sections(k, text, labels):
         return labels
 
 
-async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trade_off: int = 0):
+# todo: question currently contains chat_history, could lead to worse results
+def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trade_off: int = 0) -> Union[str, Generator[str, None, None]]:
     print("Asking paper")
     switcher = {
         0: None,
@@ -355,10 +386,10 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
         with open("paper.txt", "w") as f:
             f.write(full_context)
         with open("contexts.txt", "w") as f:
-            f.write("\n".join(["\nContext nr " + str(i) + ": " + context + '\n' for i, context in enumerate(contexts)]))
+            f.write("\n".join(["\nContext nr " + str(i) + ": " +
+                    context + '\n' for i, context in enumerate(contexts)]))
 
-
-    llm = OpenAIChat(temperature=0, max_tokens=completion_tokens)
+    llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
     chain = LLMChain(llm=llm, prompt=prompt)
 
     def wrapper(request, context, index):
@@ -377,7 +408,6 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
                 wrapper, request=question, context=context, index=index))
 
     responses = [f.result() for f in futures]
-
 
     if (len(responses) > 1):
         if merge_at_end:
@@ -401,26 +431,42 @@ async def ask_paper(question: str, paper: Paper, merge_at_end=True, results_spee
             summary_prompt_length = count_tokens(summary_prompt.template) + sum(
                 [count_tokens(response) for response in responses]) + count_tokens(question)
             print("Summary prompt length: ",  + summary_prompt_length)
-            llm = OpenAIChat(temperature=0, max_tokens=max(
-                1000, LLM_MAX_TOKENS - summary_prompt_length))
-            chain = LLMChain(llm=llm, prompt=summary_prompt)
-            responses = [f"\n Response {i}: \n" +
-                         r for i, r in enumerate(responses)]
+            max_tokens = max(1000, LLM_MAX_TOKENS - summary_prompt_length)
+            # assuming this is inside your function associated with the chatbot
 
-            start = time.time()
-            response = chain.run(responses='\n'.join(
-                responses), question=question)
-            end = time.time()
-            print("Time taken to merge responses: " + str(end - start) + " seconds")
+            # in the queue we will store our streamed tokens
+            q = Queue()
+            # let's create our default chat
+            llm = ChatOpenAI(
+                temperature=0,
+                max_tokens=max_tokens,
+                streaming=True,
+                callbacks=([QueueCallback(q)]),
+            )
+            chain = LLMChain(llm=llm, prompt=summary_prompt)
+
+            job_done = object()
+
+            def task():
+                chain.run(responses=responses, question=question)
+                q.put(job_done)
+
+
+            t = Thread(target=task)
+            t.start()
+
+            while True:
+                sleep(0.1)
+                try:
+                    next_token = q.get(True, timeout=1)
+                    if next_token is job_done:
+                        break
+                    print(next_token, end="")
+                    yield next_token
+                except Empty:
+                    continue
         else:
             response = "\n".join(responses)
-        responses.append(response)
+            responses.append(response)
 
-    if NOT_ENOUGH_INFO_ANSWER in responses[-1] and results_speed_trade_off > 0:
-        return await ask_paper(question, paper, results_speed_trade_off - 1, merge_at_end)
-    
-    if ENVIRONMENT == "dev":
-        with open("responses.txt", "w") as f:
-            f.write("\n".join(["\nResponse nr " + str(i) + ": " + response + '\n' for i, response in enumerate(responses)]))
-    
     return responses[-1]

@@ -108,9 +108,11 @@ const Home = () => {
     }
   }, [chatHistory])
 
+
   function addChatMessage(text: string, sender: ChatMessage['sender']) {
     setChatHistory(prev => [...prev, { text: text, sender: sender }]);
   }
+
   function getChatHistory(): string[] {
     const messages = chatHistory;
 
@@ -147,20 +149,60 @@ const Home = () => {
   };
 
 
-  function handleSubmit<T extends any[], R>(func: (...args: T) => Promise<AxiosResponse<any, any>>, ...args: T) {
+  function handleStreamResponse(response, onData) {
+    const stream = response.data;
+
+    // Process the stream data
+    stream.on('data', (chunk) => {
+      const data = chunk.toString('utf-8');
+      // Process the received data
+      console.log('Received data:', data);
+      onData(data)
+      // Update the state or perform any other desired actions with the received data
+    });
+
+    // Handle the stream end event
+    stream.on('end', () => {
+      console.log('Stream ended');
+    });
+  }
+
+  const [streaming, setStreaming] = useState<boolean>(false)
+
+  function handleMessage<T extends any[], R>(func: (...args: T) => Promise<Response>, ...args: T) {
     setMessageStatus('loading')
     setLoadingText("Reading paper...")
     setActivePanelKeys(undefined)
 
     func(...args)
-      .then(res => {
-        addChatMessage(makeLinksClickable(fixNewlines(res.data.message)), "llm")
-        if (isUserLoggedInAsGuest && setRemainingTrialRequests != undefined && session!.user!.email !== null && session!.user!.email !== undefined) {
-          getRemainingRequestsFor(session!.user!.email).then(res => {
-            setRemainingTrialRequests(res.data.remaining_trial_requests)
-          })
+      .then(response => {
+        const reader = response!.body!.getReader();
+        let messageCreated = false
+
+        function readStream() {
+          setStreaming(true)
+          return reader.read().then(({ done, value }) => {
+            if (done) {
+              setMessageStatus('success')
+              setStreaming(false)
+              return;
+            }
+
+            const chunk: string = new TextDecoder().decode(value);
+            console.log('Received chunk:', chunk);
+            if (!messageCreated) {
+              addChatMessage(chunk, "llm")
+              messageCreated = true
+            } else {
+              setChatHistory(prev => [...prev.slice(0, -1), {text: prev[prev.length - 1].text + chunk, sender: "llm"}])
+            }
+
+            // Continue reading the stream
+            return readStream();
+          });
         }
-        setMessageStatus('success')
+
+        return readStream();
       })
       .catch(error => {
         if (error.response) {
@@ -264,20 +306,22 @@ const Home = () => {
               icon={<SendOutlined />}
               style={{ position: 'absolute', right: '0.85rem', bottom: '0.85rem' }}
               onClick={() => {
-                handleSubmit(askPaper, {
-                  question: question ?? '',
-                  history: getChatHistory().slice(-6),
-                  paper: JSON.parse(JSON.stringify(selectedPaper)),
-                  // @ts-ignore
-                  email: session!.user!.email,
-                  // @ts-ignore
-                  accessToken: session!.accessToken,
-                  quote: quoteChecked,
-                  // @ts-ignore
-                  paperHash: selectedPaper!.hash,
-                  resultsSpeedTradeoff: resultsSpeedTradeoff
-                })
-                addChatMessage(question ?? '', "user")
+                if (!streaming) {
+                  addChatMessage(question ?? '', "user")
+                  handleMessage(askPaper, {
+                    question: question ?? '',
+                    history: getChatHistory().slice(-6),
+                    paper: JSON.parse(JSON.stringify(selectedPaper)),
+                    // @ts-ignore
+                    email: session!.user!.email,
+                    // @ts-ignore
+                    accessToken: session!.accessToken,
+                    quote: quoteChecked,
+                    // @ts-ignore
+                    paperHash: selectedPaper!.hash,
+                    resultsSpeedTradeoff: resultsSpeedTradeoff
+                  })
+                }
               }
               } />
           </div>
@@ -296,43 +340,49 @@ const Home = () => {
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
                 <Button
                   onClick={() => {
-                    handleSubmit(extractDatasets, {
-                      paper: JSON.parse(JSON.stringify(selectedPaper)),
-                      // @ts-ignore
-                      email: session!.user!.email,
-                      // @ts-ignore
-                      accessToken: session!.accessToken,
-                      resultsSpeedTradeoff: resultsSpeedTradeoff
-                    })
-                    addChatMessage("Predefined Action: Extract Datasets", "user")
+                    if (!streaming) {
+                      addChatMessage("Predefined Action: Extract Datasets", "user")
+                      handleMessage(extractDatasets, {
+                        paper: JSON.parse(JSON.stringify(selectedPaper)),
+                        // @ts-ignore
+                        email: session!.user!.email,
+                        // @ts-ignore
+                        accessToken: session!.accessToken,
+                        resultsSpeedTradeoff: resultsSpeedTradeoff
+                      })
+                    }
                   }}
                   icon={<DotChartOutlined />}
                 >Extract datasets</Button>
                 <Button
                   onClick={() => {
-                    handleSubmit(generateSummary, {
-                      paper: JSON.parse(JSON.stringify(selectedPaper)),
-                      // @ts-ignore
-                      email: session!.user!.email,
-                      // @ts-ignore
-                      accessToken: session!.accessToken
-                    })
-                    addChatMessage("Predefined Action: Generate Summary", "user")
+                    if (!streaming) {
+                      handleMessage(generateSummary, {
+                        paper: JSON.parse(JSON.stringify(selectedPaper)),
+                        // @ts-ignore
+                        email: session!.user!.email,
+                        // @ts-ignore
+                        accessToken: session!.accessToken
+                      })
+                      addChatMessage("Predefined Action: Generate Summary", "user")
+                    }
                   }}
                   icon={<FileTextTwoTone />}
                 >Generate Summary
                 </Button>
                 <Button
                   onClick={() => {
-                    handleSubmit(explainSelectedText, {
-                      text: selectedText,
-                      paper: JSON.parse(JSON.stringify(selectedPaper)),
-                      // @ts-ignore
-                      email: session!.user!.email,
-                      // @ts-ignore
-                      accessToken: session!.accessToken,
-                    })
-                    addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user")
+                    if (!streaming) {
+                      handleMessage(explainSelectedText, {
+                        text: selectedText,
+                        paper: JSON.parse(JSON.stringify(selectedPaper)),
+                        // @ts-ignore
+                        email: session!.user!.email,
+                        // @ts-ignore
+                        accessToken: session!.accessToken,
+                      })
+                      addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user")
+                    }
                   }}
                   icon={<HighlightTwoTone twoToneColor="#FFC400" />}
                 >Explain selected text
