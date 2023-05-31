@@ -205,6 +205,7 @@ const Home = () => {
         return readStream();
       })
       .catch(error => {
+        setStreaming(false)
         if (error.response) {
           setErrorMessage("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
         } else {

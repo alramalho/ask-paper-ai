@@ -18,7 +18,7 @@ from utils.constants import ENVIRONMENT
 from queue import Queue, Empty
 from threading import Thread
 from time import sleep
-
+import asyncio
 
 
 class QueueCallback(BaseCallbackHandler):
@@ -183,10 +183,6 @@ class Paper(BaseModel):
             result.append(author_s)
 
         return "\n".join(result)
-    
-    
-
-
 
     def to_text(self) -> str:
         sections = set()
@@ -274,7 +270,7 @@ def split_text(text, chunk_size=3500):
     return texts
 
 
-def ask_text(text, completion_tokens=None):
+def ask_text(text, completion_tokens=None) -> str:
     if count_tokens(text) > LLM_MAX_TOKENS:
         raise ValueError("Text is too long, must be less than " +
                          str(LLM_MAX_TOKENS) + " tokens")
@@ -282,12 +278,45 @@ def ask_text(text, completion_tokens=None):
     if completion_tokens is None:
         completion_tokens = LLM_MAX_TOKENS - count_tokens(text)
 
-    llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
+    result = next(ask_prompt(PromptTemplate(template=text, input_variables=[]), {"irrelevant": ""}, completion_tokens, stream=False))
+    return result
 
-    prompt = PromptTemplate(input_variables=[], template=text)
 
-    chain = LLMChain(llm=llm, prompt=prompt)
-    return chain.run(irrelevant="")
+def ask_prompt(prompt: PromptTemplate, input_variables: dict, completion_tokens, stream=True) -> Generator[str, None, None]:
+    if stream:
+        q = Queue()
+        llm = ChatOpenAI(
+            temperature=0,
+            max_tokens=completion_tokens,
+            streaming=True,
+            callbacks=([QueueCallback(q)]),
+        )
+        chain = LLMChain(llm=llm, prompt=prompt)
+
+        job_done = object()
+
+        def task():
+            chain.run(**input_variables)
+            q.put(job_done)
+
+        t = Thread(target=task)
+        t.start()
+
+        while True:
+            try:
+                next_token = q.get(True, timeout=1)
+                if next_token is job_done:
+                    break
+                print(next_token, end="")
+                yield next_token
+                asyncio.sleep(0.1)
+            except Empty:
+                continue
+    else:
+        llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
+
+        chain = LLMChain(llm=llm, prompt=prompt)
+        yield chain.run(**input_variables) #workaround as Union[Generator[str, None, None], str] was not working
 
 
 def get_top_k_sections(k, text, labels):
@@ -389,25 +418,27 @@ def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trad
             f.write("\n".join(["\nContext nr " + str(i) + ": " +
                     context + '\n' for i, context in enumerate(contexts)]))
 
-    llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
-    chain = LLMChain(llm=llm, prompt=prompt)
-
-    def wrapper(request, context, index):
+    def multi_context_wrapper(request, context, index):
         print("Running chain nr " + str(index))
         start = time.time()
-        result = chain.run(request=request, context=context)
+        result = ask_prompt(prompt, {"request": request, "context": context}, completion_tokens, stream=False)
         elapsed_time = time.time() - start
         print(
             f"Elapsed time for chain nr {str(index)}: {elapsed_time:.2f} seconds")
         return result
 
-    futures = []
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        for index, context in enumerate(contexts[:MAX_CONTEXTS]):
-            futures.append(executor.submit(
-                wrapper, request=question, context=context, index=index))
+    if (len(contexts) > 1):
+        print("Running multi-context")
+        futures = []
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            for index, context in enumerate(contexts[:MAX_CONTEXTS]):
+                futures.append(executor.submit(
+                    multi_context_wrapper, request=question, context=context, index=index))
 
-    responses = [f.result() for f in futures]
+        responses = [f.result() for f in futures]
+    else:
+        print("Running single-context")
+        return ask_prompt(prompt, {"request": question, "context": contexts[0]}, completion_tokens, stream=True)
 
     if (len(responses) > 1):
         if merge_at_end:
@@ -434,37 +465,8 @@ def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trad
             max_tokens = max(1000, LLM_MAX_TOKENS - summary_prompt_length)
             # assuming this is inside your function associated with the chatbot
 
-            # in the queue we will store our streamed tokens
-            q = Queue()
-            # let's create our default chat
-            llm = ChatOpenAI(
-                temperature=0,
-                max_tokens=max_tokens,
-                streaming=True,
-                callbacks=([QueueCallback(q)]),
-            )
-            chain = LLMChain(llm=llm, prompt=summary_prompt)
+            return ask_prompt(summary_prompt, {"responses": responses, "question": question}, completion_tokens=max_tokens, stream=True)
 
-            job_done = object()
-
-            def task():
-                chain.run(responses=responses, question=question)
-                q.put(job_done)
-
-
-            t = Thread(target=task)
-            t.start()
-
-            while True:
-                sleep(0.1)
-                try:
-                    next_token = q.get(True, timeout=1)
-                    if next_token is job_done:
-                        break
-                    print(next_token, end="")
-                    yield next_token
-                except Empty:
-                    continue
         else:
             response = "\n".join(responses)
             responses.append(response)
