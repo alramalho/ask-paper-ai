@@ -19,7 +19,7 @@ from queue import Queue, Empty
 from threading import Thread
 from time import sleep
 import asyncio
-
+import openai
 
 class QueueCallback(BaseCallbackHandler):
     """Callback handler for streaming LLM responses to a queue."""
@@ -271,15 +271,35 @@ def split_text(text, chunk_size=3500):
 
 
 def ask_text(text, completion_tokens=None) -> str:
-    if count_tokens(text) > LLM_MAX_TOKENS:
-        raise ValueError("Text is too long, must be less than " +
-                         str(LLM_MAX_TOKENS) + " tokens")
+    token_length = count_tokens(text)
+    if token_length > LLM_MAX_TOKENS:
+        raise ValueError(
+            f"Text {token_length} tokens long, must be less than " + str(LLM_MAX_TOKENS) + " tokens")
 
     if completion_tokens is None:
-        completion_tokens = LLM_MAX_TOKENS - count_tokens(text)
+        completion_tokens = LLM_MAX_TOKENS - token_length
 
-    result = next(ask_prompt(PromptTemplate(template=text, input_variables=[]), {"irrelevant": ""}, completion_tokens, stream=False))
-    return result
+    retries_remaining = 3
+    while retries_remaining > 0:
+        try:
+            response = openai.ChatCompletion.create(
+                max_tokens=int(completion_tokens),
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "user", "content": text},
+                ]
+            )
+            response = response.choices[0].message.content
+            break
+        except Exception as e:
+            print("Error: " + str(e))
+            retries_remaining -= 1
+            if retries_remaining == 0:
+                raise e
+            else:
+                print("Retrying...")
+
+    return response
 
 
 def ask_prompt(prompt: PromptTemplate, input_variables: dict, completion_tokens, stream=True) -> Generator[str, None, None]:
@@ -309,7 +329,7 @@ def ask_prompt(prompt: PromptTemplate, input_variables: dict, completion_tokens,
                     break
                 print(next_token, end="")
                 yield next_token
-                asyncio.sleep(0.1)
+                asyncio.sleep(0.25)
             except Empty:
                 continue
     else:

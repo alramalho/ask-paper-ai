@@ -1,27 +1,20 @@
-import { useContext, useEffect, useState } from "react"
+import { ReactNode, useContext, useEffect, useMemo, useState } from "react"
 import { GuestUserContext, useGuestSession } from "../hooks/session"
 import { signOut, useSession } from "next-auth/react"
 import { Flex } from "../components/styles/flex"
-import { Loading, Spacer, Text, styled } from "@nextui-org/react"
+import { Loading, Spacer, Text } from "@nextui-org/react"
 import Info from "../components/info"
-import MarkdownView from "react-showdown"
 import { loadDatasetsForUser } from "../service/service"
-import { makeLinksClickable } from "."
-import Link from "next/link"
-import { Avatar, Button } from "antd"
+import { Avatar, Button, Table } from "antd"
 
-
-const Div = styled('div', {
-    width: '100vw',
-    height: '100vh',
-    overflow: 'scroll',
-})
 
 const Profile = () => {
     const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
     const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
     const [userDatasets, setUserDatasets] = useState<string | undefined>(undefined)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const datasetsAsJson = useMemo(() => JSON.parse(userDatasets ?? "[]"), [userDatasets])
 
     useEffect(() => {
         setIsLoading(true)
@@ -36,7 +29,7 @@ const Profile = () => {
     }, [session])
 
     return (<>
-        <Flex direction='column' css={{ overflow: 'scroll', alignItems: 'flex-start', padding: '1rem' }}>
+        <Flex direction='column' css={{ overflow: 'auto', alignItems: 'flex-start', padding: '1rem' }}>
             <Flex css={{ gap: "$4" }}>
                 <Avatar
                     size="large"
@@ -52,13 +45,61 @@ const Profile = () => {
                     ? <Info>This feature is only available to Community Members</Info>
                     : isLoading
                         ? <Loading >Loading your datasets</Loading>
-                        : <MarkdownView
-                            markdown={makeLinksClickable(userDatasets ?? 'No datasets found.')}
-                            options={{ tables: true, emoji: true }}
-                        />
+                        : userDatasets != undefined ? <Table columns={generateColumnDefinitions(datasetsAsJson)} dataSource={datasetsAsJson.map((e, i) => ({ key: i, ...snakeCaseKeys(e) }))} scroll={{ x: 1500, y: 1500 }} /> : <Info>You have no datasets yet</Info>
                 }
             </Flex>
         </Flex>
     </>)
 }
+interface KeyDefinition {
+    title: string;
+    dataIndex: string;
+    key: string;
+    width: number;
+    render?: (value: any, record: object, index: number) => ReactNode | undefined
+}
+
+
+function generateColumnDefinitions(data: any[]): KeyDefinition[] {
+    const keyDefinitions: KeyDefinition[] = [];
+
+    data.forEach((item, index) => {
+        Object.keys(item).forEach((key) => {
+            const snakeCasedKey = key.replace(/ /g, '_').toLowerCase();
+            if (!keyDefinitions.find((e) => e.title === key)) {
+                const newElement: KeyDefinition = {
+                    title: key,
+                    dataIndex: snakeCasedKey,
+                    width: 150,
+                    key: 'irrelevant',
+                }
+                if (snakeCasedKey === 'link_to_data_or_code') {
+                    newElement['render'] = (text, record, index) => text.startsWith("http") ? <a href={text} target="__blank">{text}</a> : text
+                    
+                }
+                keyDefinitions.push(newElement)
+
+            }
+        });
+    });
+
+    keyDefinitions.map((keyDefinition, index) => {
+        keyDefinition.key = index.toString();
+    });
+
+    return keyDefinitions;
+}
+
+function snakeCaseKeys(obj: any): any {
+    const result: any = {};
+
+    for (const key in obj) {
+        const snakeCaseKey = key.replace(/ /g, '_').toLowerCase();
+        result[snakeCaseKey] = obj[key];
+    }
+
+    return result;
+}
+
+
 export default Profile

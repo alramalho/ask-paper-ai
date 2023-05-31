@@ -43,15 +43,16 @@ class DiscordUsersGateway:
         print(f"Discord user created for email {email}")
         return user
     
-    def update_user_datasets(self, discord_id: str, new_datasets: str, paper_title) -> DiscordUser:
+    def update_user_datasets(self, discord_id: str, new_datasets: str) -> DiscordUser:
         print("Updating user datasets")
         user = self.get_user_by_id(discord_id)
-        prompt = f"""Increment the following markdown dataset table:
+        if user.datasets is None or user.datasets == '':
+            user.datasets = new_datasets
+        prompt = f"""Here's a JSON file representing several datasets and their charactersitics:
         {user.datasets}
-        With the new datasets:
+        Your task is to update that JSON information with these new datasets entries:
         {new_datasets}
-        Note: In the new datasets table, you must include the column "Found In" with the paper title {paper_title} for all entries.
-        Take into account that there should not be repeated datasets. If there are repeated datasets, you must merge them."""
+        """
         user.datasets = ask_text(prompt)
         self.db_gateway.write(user.dict())
         print("User datasets updated")

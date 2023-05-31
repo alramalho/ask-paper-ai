@@ -16,7 +16,6 @@ import Info from "../components/info";
 import { Breadcrumb, Button, Collapse, Layout, Space, Input } from 'antd';
 import type { MenuProps } from 'antd';
 import { ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
-import { get } from "http";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -82,6 +81,7 @@ const Home = () => {
   const [selectedText, setSelectedText] = useState('');
   const [question, setQuestion] = useState('');
   const [activePanelKeys, setActivePanelKeys] = useState<string[] | string | undefined>(undefined);
+  const [streaming, setStreaming] = useState<boolean>(false)
 
   useEffect(() => {
     if (messageStatus == 'loading') {
@@ -149,26 +149,6 @@ const Home = () => {
   };
 
 
-  function handleStreamResponse(response, onData) {
-    const stream = response.data;
-
-    // Process the stream data
-    stream.on('data', (chunk) => {
-      const data = chunk.toString('utf-8');
-      // Process the received data
-      console.log('Received data:', data);
-      onData(data)
-      // Update the state or perform any other desired actions with the received data
-    });
-
-    // Handle the stream end event
-    stream.on('end', () => {
-      console.log('Stream ended');
-    });
-  }
-
-  const [streaming, setStreaming] = useState<boolean>(false)
-
   function handleMessage<T extends any[], R>(func: (...args: T) => Promise<Response>, ...args: T) {
     setMessageStatus('loading')
     setLoadingText("Reading paper...")
@@ -189,7 +169,6 @@ const Home = () => {
             }
 
             const chunk: string = new TextDecoder().decode(value);
-            console.log('Received chunk:', chunk);
             if (!messageCreated) {
               addChatMessage(chunk, "llm")
               messageCreated = true
@@ -260,7 +239,7 @@ const Home = () => {
           height: "100%",
           flexWrap: 'nowrap'
         }}>
-          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} />
+          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} messageStatus={messageStatus}/>
 
           {(messageStatus === 'loading' || messageStatus === 'error') &&
             <Flex css={{ flexShrink: 1, alignContent: 'end' }}>

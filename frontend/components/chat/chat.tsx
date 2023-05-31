@@ -24,7 +24,7 @@ const Chat = ({ chatHistory, selectedPaper, css, ...props }: ChatProps) => {
     <Box id="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto', minWidth: "100%", maxWidth: "100%", ...css }} {...props}>
       {chatHistory.map((msg, index) => {
         if (msg.sender === "llm") {
-          return <LLMResponse chatHistory={chatHistory} selectedPaper={selectedPaper} text={msg.text} />
+          return <LLMResponse chatHistory={chatHistory} selectedPaper={selectedPaper} messageStatus={props.messageStatus} text={msg.text} />
         } else if (msg.sender === "user") {
           return <UserResponse text={msg.text} />
         } else{

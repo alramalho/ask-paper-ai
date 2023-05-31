@@ -3,7 +3,7 @@ import os.path
 
 from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Union, Tuple
+from typing import Union, Tuple, List, Dict
 
 from doc2json.grobid2json.process_pdf import process_pdf_file
 import os
@@ -187,6 +187,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
         </div>
     """
     try:
+
         response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
         background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
             'id': str(uuid.uuid4()),
@@ -271,13 +272,27 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
         
     return StreamingResponse(nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
+
+@app.put("/save-datasets")
+async def save_datasets(request: Request):
+    data = await request.json()
+    try:
+        paper_title = data["paper_title"]
+        datasets = json.loads(data['datasets'])
+        for dataset in datasets:
+            dataset['Found In'] = paper_title
+
+        if hasattr(request.state, 'user_discord_id'):
+            user_discord_id = request.state.user_discord_id
+            print(f"User discord id: {user_discord_id}")
+            if user_discord_id is not None:
+                DiscordUsersGateway().update_user_datasets(request.state.user_discord_id, datasets)
+        return {'message': "done"}
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data")
+        
     # TODO: move this to separate endpoint to be called in frontend after /extract-datasets
-    # if hasattr(request.state, 'user_discord_id'):
-    #     user_discord_id = request.state.user_discord_id
-    #     print(f"User discord id: {user_discord_id}")
-    #     if user_discord_id is not None:
-    #         background_tasks.add_task(DiscordUsersGateway().update_user_datasets, request.state.user_discord_id, response, paper.title)
-    # return {'message': response}
+    
 
 
 @app.post("/summarize")
