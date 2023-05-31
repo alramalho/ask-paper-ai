@@ -421,7 +421,7 @@ def ask_paper(question: str, paper: Paper, merge_at_end=True, results_speed_trad
     def multi_context_wrapper(request, context, index):
         print("Running chain nr " + str(index))
         start = time.time()
-        result = ask_prompt(prompt, {"request": request, "context": context}, completion_tokens, stream=False)
+        result = next(ask_prompt(prompt, {"request": request, "context": context}, completion_tokens, stream=False))
         elapsed_time = time.time() - start
         print(
             f"Elapsed time for chain nr {str(index)}: {elapsed_time:.2f} seconds")
