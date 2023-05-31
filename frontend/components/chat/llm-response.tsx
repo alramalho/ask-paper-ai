@@ -54,7 +54,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text }: LLMResponseProps) => 
 
     function handleExportClick({ key }) {
         if (key == 'csv') {
-            downloadMarkdownTableAsCSV(markdownTable, 'table.csv')
+            downloadMarkdownTableAsCSV(markdownTable)
         } else if (key == 'json') {
             downloadMarkdownTableAsJSON(markdownTable)
         }
@@ -217,7 +217,7 @@ function extractMarkdownTable(text: string): string | null {
 
 type TableJson = Record<string, string>[];
 
-function downloadMarkdownTableAsCSV(markdownTable: string | null, fileName: string) {
+function downloadMarkdownTableAsCSV(markdownTable: string | null) {
     if (markdownTable === null) {
         console.warn("No table found to convert to CSV.");
         return;
@@ -254,7 +254,7 @@ function downloadMarkdownTableAsCSV(markdownTable: string | null, fileName: stri
     // Create a temporary anchor element to trigger the download
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = fileName;
+    link.download = 'table.csv';
 
     // Programmatically trigger the download
     document.body.appendChild(link);
