@@ -14,10 +14,11 @@ import tiktoken
 from copy import deepcopy
 import json
 from bs4 import BeautifulSoup
+from utils import json_utils
 from utils.constants import ENVIRONMENT
 from queue import Queue, Empty
 from threading import Thread
-from time import sleep
+import time
 import asyncio
 import openai
 
@@ -253,7 +254,6 @@ def count_tokens(text) -> int:
     if text is None:
         return 0
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")
-    # Add % as apparently the tokenizer is not 100% accurate
     result = int(len(enc.encode(text, disallowed_special=())))
     return result
 
@@ -270,7 +270,38 @@ def split_text(text, chunk_size=3500):
     return texts
 
 
-def ask_text(text, completion_tokens=None) -> str:
+
+def ask_json(text, completion_tokens=None) -> dict:
+    num_attempts=3
+    message_history = []
+    last_exception = None
+    for i , _ in enumerate(range(num_attempts)):
+        text += "\n---\nYour answer must be only a valid JSON object. No other text is allowed, before or after the JSON object."
+        response = ask_text(text, completion_tokens, message_history)
+        try:
+            response = json_utils.correct_json(response)
+            return json.loads(response)
+        except json.decoder.JSONDecodeError as e:
+            try:
+                response = response[response.find("{"):response.rfind("}") + 1]
+                return json.loads(response)
+            except json.decoder.JSONDecodeError as e:
+                last_exception = e
+                message_history.append(OpenAIMessage(role="assistant", content=response))
+                message_history.append(OpenAIMessage(role="user", content=f"Not a Valid JSON Object. Error: \"{e}\""))
+                print(f"Attempt {i} failed: Response is not a valid JSON object")
+                print(f"Response: \n{response}")
+                raise e.message
+                
+    raise last_exception
+
+
+class OpenAIMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
+def ask_text(text, completion_tokens=None, message_history: List[OpenAIMessage] = []) -> str:
     token_length = count_tokens(text)
     if token_length > LLM_MAX_TOKENS:
         raise ValueError(
@@ -287,6 +318,7 @@ def ask_text(text, completion_tokens=None) -> str:
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "user", "content": text},
+                    *message_history
                 ]
             )
             response = response.choices[0].message.content

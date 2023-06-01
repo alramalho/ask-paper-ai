@@ -49,10 +49,12 @@ def generate_hash(content: Union[str, bytes]):
     sha256.update(content)
     return sha256.hexdigest()
 
+
 def get_paper_from_url(url: str) -> bytes:
     import requests
     response = requests.get(url)
     return response.content
+
 
 def process_paper(pdf_file_content, pdf_file_name) -> dict:
     pdf_file_name = pdf_file_name.lower()
@@ -103,24 +105,12 @@ async def guest_login(request: Request, response: Response):
     return {'remaining_trial_requests': user.remaining_trial_requests}
 
 
-@app.get('/user-datasets')
-async def get_user_datasets(request: Request):
-    user_discord_id = request.state.user_discord_id
-
-    users_gateway = DiscordUsersGateway()
-    try:
-        user = users_gateway.get_user_by_id(user_discord_id)
-    except UserDoesNotExistException:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return {'datasets': user.datasets}
-
-
 @app.get('/user-remaining-requests-count')
 async def get_user_remaining_requests_count(request: Request):
     user_email = request.headers.get('Email')
     if user_email is None:
-        raise HTTPException(status_code=400, detail="Missing email query param")
+        raise HTTPException(
+            status_code=400, detail="Missing email query param")
 
     users_gateway = GuestUsersGateway()
     try:
@@ -152,7 +142,8 @@ async def send_instructions_email(request: Request, background_tasks: Background
         </div>
     """
     try:
-        response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
+        response = aws.ses_send_email(
+            recipient, subject, body_html, EMAIL_SENDER)
         background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
             'id': str(uuid.uuid4()),
             'recipient': recipient,
@@ -163,7 +154,8 @@ async def send_instructions_email(request: Request, background_tasks: Background
             'sent_at': str(datetime.datetime.utcnow())
         })
     except ClientError as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
     return {'message': f"Email sent! Message ID: {response['MessageId']}"}
 
@@ -188,7 +180,8 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
     """
     try:
 
-        response = aws.ses_send_email(recipient, subject, body_html, EMAIL_SENDER)
+        response = aws.ses_send_email(
+            recipient, subject, body_html, EMAIL_SENDER)
         background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
             'id': str(uuid.uuid4()),
             'recipient': recipient,
@@ -199,7 +192,8 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
             'sent_at': str(datetime.datetime.utcnow())
         })
     except ClientError as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to send email: {e.response['Error']['Message']}")
     print(response)
     return {'message': f"Email sent! Message ID: {response['MessageId']}"}
 
@@ -211,7 +205,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
         email = request.headers['Email']
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
-
 
     pdf_file_name = pdf_file.filename
     pdf_file_content = await pdf_file.read()
@@ -236,7 +229,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
                 'email': email,
             })
         except ClientError as e:
-            print(f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
+            print(
+                f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
 
     background_tasks.add_task(safe_write)
 
@@ -262,19 +256,38 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
             - "Extra Info" must be as succint as possible.
             - "Passage" must be the passage (phrase) of the paper where the dataset was explicitly mentioned.
             - "Name" and "Passage" must not be N/A or undefined.
-            - "Name" must be unique. 
+            - "Name" must be unique.
         """
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
 
     if results_speed_trade_off is not None and results_speed_trade_off > 0:
         paper.filter_sections('include', ['data', 'inclusion criteria'])
-        
+
     return StreamingResponse(nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 
-@app.put("/save-datasets")
+@app.post("/save-datasets")
 async def save_datasets(request: Request):
+    data = await request.json()
+    try:
+        datasets = json.loads(data['datasets'])
+        changes = json.loads(data['changes']) #todo: this is unused. only for analytics purposes
+        if hasattr(request.state, 'user_discord_id'):
+            user_discord_id = request.state.user_discord_id
+            print(f"User discord id: {user_discord_id}")
+            if user_discord_id is not None:
+                DiscordUsersGateway().override_user_datasets(
+                    request.state.user_discord_id, datasets)
+        else:
+            raise HTTPException(status_code=401, detail="Discord Auth failed, please contact support")
+        return {'message': "done"}
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data")
+
+
+@app.put("/update-datasets")
+async def update_datasets(request: Request):
     data = await request.json()
     try:
         paper_title = data["paper_title"]
@@ -286,13 +299,27 @@ async def save_datasets(request: Request):
             user_discord_id = request.state.user_discord_id
             print(f"User discord id: {user_discord_id}")
             if user_discord_id is not None:
-                DiscordUsersGateway().update_user_datasets(request.state.user_discord_id, datasets)
+                DiscordUsersGateway().update_user_datasets(
+                    request.state.user_discord_id, datasets)
+        else:
+            raise HTTPException(status_code=401, detail="Discord Auth failed, please contact support")
+        
         return {'message': "done"}
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
-        
-    # TODO: move this to separate endpoint to be called in frontend after /extract-datasets
-    
+
+
+@app.get('/get-datasets')
+async def user_datasets(request: Request):
+    user_discord_id = request.state.user_discord_id
+
+    users_gateway = DiscordUsersGateway()
+    try:
+        user = users_gateway.get_user_by_id(user_discord_id)
+    except UserDoesNotExistException:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {'datasets': json.dumps(user.datasets)}
 
 
 @app.post("/summarize")
@@ -327,7 +354,8 @@ async def ask(request: Request):
         history.replace('llm', 'AI')
         history.replace('user', 'User')
         if data.get("paper", None) is None:
-            paper = nlp.Paper(**process_paper(get_paper_from_url(data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
+            paper = nlp.Paper(**process_paper(get_paper_from_url(
+                data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
         else:
             paper = nlp.Paper(**json.loads(data['paper']))
         results_speed_trade_off = data.get('results_speed_trade_off', None)
@@ -341,6 +369,7 @@ async def ask(request: Request):
     prompt = f"""{history}\nUser: {question}\nAI:"""
     return StreamingResponse(content=nlp.ask_paper(question=prompt, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
+
 @app.post("/explain")
 async def explain(request: Request):
     data = await request.json()
@@ -351,6 +380,7 @@ async def explain(request: Request):
         raise HTTPException(status_code=400, detail="Missing data")
     return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, results_speed_trade_off=4), media_type="text/plain")
 
+
 @app.post("/store-feedback")
 async def store_feedback(request: Request):
     body = await request.json()
@@ -359,10 +389,10 @@ async def store_feedback(request: Request):
         raise HTTPException(status_code=400, detail="Missing table_name")
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data")
-    
+
     body['data']['id'] = str(uuid.uuid4())
 
-    DynamoDBGateway(DB_FEEDBACK).write(body['data']) # todo: are there security concers here?
+    DynamoDBGateway(DB_FEEDBACK).write(body['data'])  # todo: are there security concers here?
 
     return {"message": "success"}
 

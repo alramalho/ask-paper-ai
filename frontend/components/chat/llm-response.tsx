@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react"
 import { useContext, useMemo, useRef, useState } from "react"
 import MarkdownView from "react-showdown"
 import { GuestUserContext, useGuestSession } from "../../hooks/session"
-import { Paper, Status } from "../../pages"
-import { saveDatasets, sendAnswerEmail } from "../../service/service"
+import { Paper, Status, makeLinksClickable } from "../../pages"
+import { updateDatasets, sendAnswerEmail } from "../../service/service"
 import { storeFeedback } from "../feedback-modal"
 import { Box } from "../layout"
 import { Flex } from "../styles/flex"
@@ -87,7 +87,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
         <RobotAnswer id="llm-response">
             <Box id="answer" ref={answerRef} css={{ padding: "$5" }}>
                 <MarkdownView
-                    markdown={text}
+                    markdown={makeLinksClickable(text)}
                     options={{ tables: true, emoji: true, }}
                 />
             </Box>
@@ -99,7 +99,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                         {markdownTable != null &&
                             <AntButton onClick={() => {
                                 setSaveStatus('loading')
-                                saveDatasets({
+                                updateDatasets({
                                     paperTitle: selectedPaper!.title,
                                     datasets: markdownTableToJSON(markdownTable),
                                     email: session!.user!.email!,
@@ -245,8 +245,6 @@ function extractMarkdownTable(text: string): string | null {
     return null;
 }
 
-type TableJson = Record<string, string>[];
-
 function downloadMarkdownTableAsCSV(markdownTable: string | null) {
     if (markdownTable === null) {
         console.warn("No table found to convert to CSV.");
@@ -299,7 +297,7 @@ function markdownTableToJSON(mdTable: string) {
     const headers = lines[0].split('|').map(header => header.trim());
     const rows = lines.slice(1).map(line => line.split('|').map(cell => cell.trim()));
 
-    const tableJson: TableJson = rows.map(row => {
+    const tableJson: Record<string, string>[] = rows.map(row => {
         let rowObj: Record<string, string> = {};
         row.forEach((cell, index) => {
             if (headers[index]) rowObj[headers[index]] = cell;
@@ -316,12 +314,18 @@ function downloadMarkdownTableAsJSON(mdTable: string | null): void {
     const tableJson = markdownTableToJSON(mdTable);
 
     const jsonString = JSON.stringify(tableJson, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    downloadJson(jsonString, 'table.json');
+}
 
+export function downloadJson(json: string, filename: string) {
+    if (!filename.includes('.json')) {
+        filename += '.json'
+    }
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'table.json';
+    link.download = filename;
     link.style.visibility = 'hidden';
 
     document.body.appendChild(link);

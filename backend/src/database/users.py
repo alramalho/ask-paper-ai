@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from database.db import DynamoDBGateway
 from utils.constants import DB_GUEST_USERS, DB_DISCORD_USERS
-from nlp import ask_text
+from nlp import ask_text, ask_json
+from typing import List, Dict, Optional
 
 class GuestUser(BaseModel):
     email: str
@@ -12,7 +13,7 @@ class DiscordUser(BaseModel):
     email: str
     discord_id: str
     created_at: str
-    datasets: str = None
+    datasets: Optional[List[Dict]]
 
 
 class UserDoesNotExistException(Exception):
@@ -43,7 +44,23 @@ class DiscordUsersGateway:
         print(f"Discord user created for email {email}")
         return user
     
-    def update_user_datasets(self, discord_id: str, new_datasets: str) -> DiscordUser:
+    
+    def override_user_datasets(self, discord_id: str, new_datasets: List[Dict]) -> DiscordUser:
+        print("Overriding user datasets")
+        user = self.get_user_by_id(discord_id)
+        if user.datasets is None or user.datasets == '':
+            user.datasets = new_datasets
+        prompt = f"""Here's a JSON file representing several datasets and their charactersitics:
+        {user.datasets}
+        Your task is to update that JSON information with these new datasets entries:
+        {new_datasets}
+        """
+        user.datasets = ask_json(prompt)
+        self.db_gateway.write(user.dict())
+        print("User datasets updated")
+
+
+    def update_user_datasets(self, discord_id: str, new_datasets: List[Dict]) -> DiscordUser:
         print("Updating user datasets")
         user = self.get_user_by_id(discord_id)
         if user.datasets is None or user.datasets == '':
@@ -53,7 +70,7 @@ class DiscordUsersGateway:
         Your task is to update that JSON information with these new datasets entries:
         {new_datasets}
         """
-        user.datasets = ask_text(prompt)
+        user.datasets = ask_json(prompt)
         self.db_gateway.write(user.dict())
         print("User datasets updated")
 

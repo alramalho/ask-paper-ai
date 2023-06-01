@@ -7,6 +7,7 @@ import datetime
 class DynamoDBGateway:
 
     def __init__(self, table_name: str):
+        self.table_name = table_name
 
         if ENVIRONMENT.lower() not in table_name.lower():
             table_name = f"{table_name}_{ENVIRONMENT}"
@@ -42,10 +43,10 @@ class DynamoDBGateway:
             print(response)
         except ClientError as e:
             print('Fail putting item on dynamodb')
-            raise e   
+            raise e
 
     def _read_from_dynamo_key(self, key_name: str, key_value: str):
-        print('Reading from dynamo key')
+        print(self.table_name, ': Reading from dynamo key')
         try:
             result = self.table.get_item(
                 Key={
@@ -54,12 +55,12 @@ class DynamoDBGateway:
             )
             return result
         except ClientError as e:
-            print(f"fail reading from dynamodb via key {e.response['Error']['Message']}")
+            print(
+                f"fail reading from dynamodb via key {e.response['Error']['Message']}")
             return
 
     def _read_from_dynamo_index(self, key_name: str, key_value: str):
-        print('Reading from dynamo index')
-
+        print(self.table_name, ': Reading from dynamo index')
         try:
             result = self.table.query(
                 IndexName=f"{key_name}-index",
@@ -70,5 +71,6 @@ class DynamoDBGateway:
             )
             return result
         except ClientError as e:
-            print(f"fail reading from dynamodb via index {e.response['Error']['Message']}")
+            print(
+                f"fail reading from dynamodb via index {e.response['Error']['Message']}")
             return

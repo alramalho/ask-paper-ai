@@ -1,7 +1,5 @@
 import axios from "axios";
 import {Paper} from "../pages";
-import http, { ClientRequest, IncomingMessage } from 'http';
-import { parse } from 'url';
 
 export function sendInstructionsEmail(recipient) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
@@ -30,13 +28,17 @@ export function sendAnswerEmail({email, question, paperTitle, answer}: SendAnswe
 }
 
 interface DefaultEndpointOptions {
-  resultsSpeedTradeoff: number
-  paper: Paper
   email: string
   accessToken: string
 }
 
-export function extractDatasets({ paper, email, accessToken, resultsSpeedTradeoff }: DefaultEndpointOptions) {
+interface ExtractDatasetsEndpointOptions extends DefaultEndpointOptions {
+  paper: Paper
+  resultsSpeedTradeoff: number
+}
+
+
+export function extractDatasets({ paper, email, accessToken, resultsSpeedTradeoff }: ExtractDatasetsEndpointOptions) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/extract-datasets`, {
     method: 'POST',
     headers: {
@@ -51,7 +53,11 @@ export function extractDatasets({ paper, email, accessToken, resultsSpeedTradeof
   })
 }
 
-export function generateSummary({ paper, email, accessToken }: DefaultEndpointOptions) {
+interface GenerateSummaryEndpointOptions extends DefaultEndpointOptions {
+  paper: Paper
+}
+
+export function generateSummary({ paper, email, accessToken }: GenerateSummaryEndpointOptions) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
     method: 'POST',
     headers: {
@@ -65,11 +71,9 @@ export function generateSummary({ paper, email, accessToken }: DefaultEndpointOp
   })
 }
 
-interface ExplainSelectedTextProps {
+interface ExplainSelectedTextProps extends DefaultEndpointOptions {
   text: string;
   paper: Paper;
-  email: string;
-  accessToken: string;
 }
 
 export function explainSelectedText({ text, paper, email, accessToken }: ExplainSelectedTextProps) {
@@ -90,7 +94,8 @@ export function explainSelectedText({ text, paper, email, accessToken }: Explain
 interface AskOptions extends DefaultEndpointOptions {
   history: string[],
   paperHash: string,
-  accessToken: string,
+  paper: Paper,
+  resultsSpeedTradeoff: number,
   question: string,
   quote: boolean
 }
@@ -124,7 +129,7 @@ export function getRemainingRequestsFor(email: string) {
 }
 
 export function loadDatasetsForUser(email: string, accessToken: string) {
-  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/user-datasets`, {
+  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/get-datasets`, {
     headers: {
       'Email': email,
       'Authorization': `Bearer ${accessToken}`, // todo: we should have the user ID in the frontend. this is weird
@@ -132,24 +137,42 @@ export function loadDatasetsForUser(email: string, accessToken: string) {
   })
 }
 
-interface SaveDatasetsOptions {
+interface UpdateDatasetsOptions {
   datasets: object,
   paperTitle: string,
   email: string,
   accessToken: string
 }
 
-export function saveDatasets({ datasets, paperTitle, email, accessToken }: SaveDatasetsOptions) {
-  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/save-datasets`, {
-    method: 'PUT',
+
+export function updateDatasets({ datasets, paperTitle, email, accessToken }) {
+  return axios.put(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/update-datasets`, {
+    datasets: JSON.stringify(datasets),
+    paper_title: paperTitle
+  }, {
     headers: {
       'Content-Type': 'application/json',
       'Email': email,
-      'Authorization': `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      datasets: JSON.stringify(datasets),
-      paper_title: paperTitle
-    })
-  })
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+}
+
+
+interface SaveDatasetsOptions extends DefaultEndpointOptions {
+  datasets: object,
+  changes: object
+}
+
+export function saveDatasets({ datasets, changes, email, accessToken }: SaveDatasetsOptions) {
+  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/save-datasets`, {
+    datasets: JSON.stringify(datasets),
+    changes: JSON.stringify(changes)
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Email': email,
+      'Authorization': `Bearer ${accessToken}`
+    }
+  }).then(res => res.data);
 }
