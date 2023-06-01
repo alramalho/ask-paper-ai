@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import { Session } from "next-auth";
 import { createTheme, NextUIProvider, Text } from '@nextui-org/react';

@@ -24,7 +24,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-pdf": "^6.2.2",
-    "react-showdown": "^2.3.1"
+    "react-showdown": "^2.3.1",
+    "sass": "^1.62.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

@@ -12,9 +12,9 @@ import { ChatMessage } from "./chat"
 import { Button as AntButton, Dropdown, Space, notification } from "antd"
 import { DownOutlined, FileTextOutlined, MailOutlined, SaveOutlined } from "@ant-design/icons"
 
-export const RobotAnswer = ({ children }) => {
+export const RobotAnswer = ({ children, ...props }) => {
     return (
-        <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start', '*': { fontSize: "0.86rem" } }}>
+        <Flex css={{ margin: '$6', gap: "$5", flexWrap: 'nowrap', overflow: 'visible', justifyContent: 'flex-start', '*': { fontSize: "0.86rem" } }} {...props}>
             <Box css={{
                 minWidth: "35px",
                 maxWidth: "35px",
@@ -84,7 +84,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
 
     return (<>
         {contextHolder}
-        <RobotAnswer>
+        <RobotAnswer id="llm-response">
             <Box id="answer" ref={answerRef} css={{ padding: "$5" }}>
                 <MarkdownView
                     markdown={text}
