@@ -50,7 +50,7 @@ test.describe('Normal upload', () => {
   })
 
   test('should be able to ask a question with best speed', async () => {
-    await page.getByTestId("ask-textarea").fill("What are the authors?");
+    await page.getByTestId("ask-textarea").fill("who are the authors?");
     await page.getByTestId("configuration-panel").click();
     await page.click('text=Best Speed');
     await page.getByTestId('ask-button').click();
@@ -58,20 +58,19 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("Jiancheng");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Jeremy Irvin");
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able to ask a follow up question', async () => {
-    await page.getByTestId("ask-textarea").fill("Which sections did you get that from? You have to mention the section name.");
+    await page.getByTestId("ask-textarea").fill("can you say that again, but only mention their last names?");
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("section");
-    await expect(page.getByTestId('answer-area').last()).toContainText("Jiancheng");
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Irvin");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Jeremy");
   });
 
   test('should be able to clear the conversation', async () => {

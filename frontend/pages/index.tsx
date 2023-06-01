@@ -355,6 +355,7 @@ const Home = () => {
                     if (!streaming) {
                       handleMessage(explainSelectedText, {
                         text: selectedText,
+                        history: getChatHistory().slice(-6),
                         paper: JSON.parse(JSON.stringify(selectedPaper)),
                         // @ts-ignore
                         email: session!.user!.email,

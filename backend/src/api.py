@@ -84,6 +84,11 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
 
     return f
 
+def stringify_history(history: List) -> str:
+    history = "\n".join(history)
+    history.replace('llm', 'Assistant')
+    history.replace('user', 'User')
+    return history
 
 @app.post('/guest-login')
 async def guest_login(request: Request, response: Response):
@@ -245,6 +250,8 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     try:
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         paper = nlp.Paper(**json.loads(data['paper']))
+        history = data['history']
+        history = stringify_history(history)
         question = """
         Please extract the into a markdown table all the datasets mentioned in the following text.
         The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
@@ -264,7 +271,7 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     if results_speed_trade_off is not None and results_speed_trade_off > 0:
         paper.filter_sections('include', ['data', 'inclusion criteria'])
 
-    return StreamingResponse(nlp.ask_paper(question, paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+    return StreamingResponse(nlp.ask_paper(question, history, paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 
 @app.post("/save-datasets")
@@ -350,9 +357,7 @@ async def ask(request: Request):
     try:
         question = data['question']
         history = data['history']
-        history = "\n".join(history)
-        history.replace('llm', 'AI')
-        history.replace('user', 'User')
+        history = stringify_history(history)
         if data.get("paper", None) is None:
             paper = nlp.Paper(**process_paper(get_paper_from_url(
                 data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
@@ -367,7 +372,7 @@ async def ask(request: Request):
         question += "Please include at least one EXACT quote from the original paper."
 
     prompt = f"""{history}\nUser: {question}\nAI:"""
-    return StreamingResponse(content=nlp.ask_paper(question=prompt, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+    return StreamingResponse(content=nlp.ask_paper(question=prompt, history=history ,paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 
 @app.post("/explain")
@@ -375,10 +380,12 @@ async def explain(request: Request):
     data = await request.json()
     try:
         text = data['text']
+        history = data['history']
+        history = stringify_history(history)
         paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data")
-    return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, results_speed_trade_off=4), media_type="text/plain")
+    return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, history=history, results_speed_trade_off=4), media_type="text/plain")
 
 
 @app.post("/store-feedback")

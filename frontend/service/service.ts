@@ -74,6 +74,7 @@ export function generateSummary({ paper, email, accessToken }: GenerateSummaryEn
 interface ExplainSelectedTextProps extends DefaultEndpointOptions {
   text: string;
   paper: Paper;
+  history: string[]
 }
 
 export function explainSelectedText({ text, paper, email, accessToken }: ExplainSelectedTextProps) {
@@ -85,7 +86,8 @@ export function explainSelectedText({ text, paper, email, accessToken }: Explain
       'Email': email
     },
     body: JSON.stringify({
-      text: text,
+      text,
+      history,
       paper: JSON.stringify(paper)
     })
   })

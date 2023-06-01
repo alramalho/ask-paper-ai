@@ -6,7 +6,7 @@ import LLMResponse from "./llm-response";
 import UserResponse from "./user-response";
 import SystemResponse from "./system-response";
 
-export interface ChatMessage {
+export type ChatMessage = {
   text: string;
   sender: "user" | "llm" | "system";
 }
