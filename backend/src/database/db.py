@@ -37,10 +37,9 @@ class DynamoDBGateway:
 
         data['latest_commit_id'] = LATEST_COMMIT_ID
         try:
-            response = self.table.put_item(
+            self.table.put_item(
                 ReturnConsumedCapacity='TOTAL',
                 Item=data)
-            print(response)
         except ClientError as e:
             print('Fail putting item on dynamodb')
             raise e
