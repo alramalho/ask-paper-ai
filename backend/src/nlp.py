@@ -254,7 +254,7 @@ def count_tokens(text) -> int:
     if text is None:
         return 0
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")
-    result = int(len(enc.encode(text, disallowed_special=())))
+    result = int(len(enc.encode(text, disallowed_special=())) * 1.05) # Add 5% for safety
     return result
 
 
@@ -396,8 +396,10 @@ def get_top_k_sections(k, text, labels):
 
 
 # todo: question currently contains chat_history, could lead to worse results
-def ask_paper(question: str, paper: Paper, history: str = "", merge_at_end=True, results_speed_trade_off: int = 0) -> Union[str, Generator[str, None, None]]:
-    if history != "":
+def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=True, results_speed_trade_off: int = 0) ->Generator[str, None, None]:
+    if history is None:
+        history = " "
+    else:
         history = f"Conversation history: \n{history}\n"
 
     print("Asking paper")
@@ -496,7 +498,7 @@ def ask_paper(question: str, paper: Paper, history: str = "", merge_at_end=True,
         responses = [f.result() for f in futures]
     else:
         print("Running single-context")
-        return ask_prompt(prompt, {"request": question, "context": contexts[0]}, completion_tokens, stream=True)
+        return ask_prompt(prompt, {"request": question, "conversation_history": history, "context": contexts[0]}, completion_tokens, stream=True)
 
     if (len(responses) > 1):
         if merge_at_end:
@@ -531,4 +533,7 @@ def ask_paper(question: str, paper: Paper, history: str = "", merge_at_end=True,
             response = "\n".join(responses)
             responses.append(response)
 
-    return responses[-1]
+    def string_as_generator(string):
+        yield string
+        
+    return string_as_generator(responses[-1])

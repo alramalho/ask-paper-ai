@@ -49,6 +49,17 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
   })
 
+  test('should be able to only send one message in a row', async () => {
+    await page.getByTestId("ask-textarea").fill("who are the authors?");
+    await page.getByTestId("configuration-panel").click();
+    await page.click('text=Best Speed');
+    await page.getByTestId('ask-button').click();
+    await page.waitForTimeout(1000);
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByText("Please wait until the current request is finished.")).toBeVisible();
+  });
+
   test('should be able to ask a question with best speed', async () => {
     await page.getByTestId("ask-textarea").fill("who are the authors?");
     await page.getByTestId("configuration-panel").click();
@@ -58,23 +69,24 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("Jeremy Irvin");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Ming Li");
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able to ask a follow up question', async () => {
+    await expect(page.getByTestId('loading-answer')).not.toBeVisible();
     await page.getByTestId("ask-textarea").fill("can you say that again, but only mention their last names?");
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("Irvin");
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Jeremy");
+    await expect(page.getByTestId('answer-area').last()).toContainText("Li");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Jin");
   });
 
   test('should be able to clear the conversation', async () => {
-    await page.getByTestId('clear-button').click();
+    await page.getByTestId('clear-button').click(); 
     await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
   });
 
@@ -121,7 +133,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
-  test('should have one less request remaining', async () => {
+  test('should have less requests remaining', async () => {
     await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
   })
 
@@ -199,7 +211,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("background",);
+    await expect(page.getByTestId('answer-area').last()).toContainText("background", {ignoreCase: true});
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   })
 

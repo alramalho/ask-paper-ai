@@ -6,16 +6,17 @@ import { Flex } from "../components/styles/flex";
 import PaperUploader from "../components/paper-uploader";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import dynamic from "next/dynamic";
-import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail } from "../service/service";
+import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail, updateDatasets } from "../service/service";
 import RemainingRequests from "../components/remaining-requests";
 import { AxiosResponse } from "axios";
 import IconSlider from "../components/slider/slider";
 import { useSession } from "next-auth/react";
 import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
-import { Breadcrumb, Button, Collapse, Layout, Space, Input } from 'antd';
+import { Breadcrumb, Button, Collapse, Layout, Space, Input, notification } from 'antd';
 import type { MenuProps } from 'antd';
 import { ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
+import { create } from "domain";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -68,7 +69,7 @@ export type Status = 'idle' | 'loading' | 'success' | 'error'
 
 const Home = () => {
   const [messageStatus, setMessageStatus] = useState<Status>('idle')
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
   const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
   const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
@@ -82,6 +83,9 @@ const Home = () => {
   const [question, setQuestion] = useState('');
   const [activePanelKeys, setActivePanelKeys] = useState<string[] | string | undefined>(undefined);
   const [streaming, setStreaming] = useState<boolean>(false)
+  const [requestControllers, setRequestControllers] = useState<AbortController[]>([])
+  const [notificationApi, contextHolder] = notification.useNotification();
+
 
   useEffect(() => {
     if (messageStatus == 'loading') {
@@ -107,6 +111,25 @@ const Home = () => {
       }
     }
   }, [chatHistory])
+
+
+  function updateRemainingRequests() {
+    if (isUserLoggedInAsGuest) {
+      getRemainingRequestsFor(session!.user!.email!).then((response: AxiosResponse) => {
+        if (response.data.remaining_trial_requests !== undefined && setRemainingTrialRequests !== undefined) {
+          setRemainingTrialRequests(response.data.remaining_trial_requests)
+        } else {
+          console.log("Error while updating remaining requests. Response:")
+          console.log(response)
+        }
+      }
+      ).catch((error) => {
+        console.log(error)
+      }
+      )
+    }
+  }
+
 
 
   function addChatMessage(text: string, sender: ChatMessage['sender']) {
@@ -149,50 +172,79 @@ const Home = () => {
   };
 
 
-  function handleMessage<T extends any[], R>(func: (...args: T) => Promise<Response>, ...args: T) {
-    setMessageStatus('loading')
-    setLoadingText("Reading paper...")
-    setActivePanelKeys(undefined)
+  function createAbortController() {
+    const abortController = new AbortController();
+    setRequestControllers(prev => [...prev, abortController])
+    return abortController
+  }
 
-    func(...args)
-      .then(response => {
-        const reader = response!.body!.getReader();
-        let messageCreated = false
+  function cancelAllRequests() {
+    requestControllers.forEach(controller => controller.abort())
+    setRequestControllers([])
+  }
 
-        function readStream() {
-          setStreaming(true)
-          return reader.read().then(({ done, value }) => {
-            if (done) {
-              setMessageStatus('success')
-              setStreaming(false)
-              return;
-            }
+  useEffect(() => { console.log(messageStatus) }, [messageStatus])
 
-            const chunk: string = new TextDecoder().decode(value);
-            if (!messageCreated) {
-              addChatMessage(chunk, "llm")
-              messageCreated = true
-            } else {
-              setChatHistory(prev => [...prev.slice(0, -1), {text: prev[prev.length - 1].text + chunk, sender: "llm"}])
-            }
+  function handleMessage<T extends any[], R>(
+    func: (...args: T) => Promise<Response>,
+    initializationCallback: () => void,
+    ...args: T
+  ) {
+    if (messageStatus !== 'loading') {
+      setMessageStatus('loading')
+      setLoadingText("Reading paper...")
+      setInfoMessage(undefined)
+      setActivePanelKeys(undefined)
+      initializationCallback()
 
-            // Continue reading the stream
-            return readStream();
-          });
-        }
+      func(...args)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Response status ${response.status}: ${response.statusText}`);
+          }
+          const reader = response!.body!.getReader();
+          let messageCreated = false
 
-        return readStream();
-      })
-      .catch(error => {
-        setStreaming(false)
-        if (error.response) {
-          setErrorMessage("Something went wrong with server's response...</br>Details: " + error.response.data.detail)
-        } else {
-          setErrorMessage("Something went wrong...</br>Technical Details: " + error.message)
-        }
-        console.error(error)
-        setMessageStatus('error')
-      })
+          function readStream() {
+            setStreaming(true)
+            return reader.read().then(({ done, value }) => {
+              if (done) {
+                setMessageStatus('success')
+                setStreaming(false)
+                updateRemainingRequests()
+                return;
+              }
+
+              const chunk: string = new TextDecoder().decode(value);
+              if (!messageCreated) {
+                addChatMessage(chunk, "llm")
+                messageCreated = true
+              } else {
+                setChatHistory(prev => [...prev.slice(0, -1), { text: prev[prev.length - 1].text + chunk, sender: "llm" }])
+              }
+
+              // Continue reading the stream
+              return readStream();
+            });
+          }
+
+          return readStream();
+        })
+        .catch(error => {
+          setStreaming(false)
+          if (error.response) {
+            setInfoMessage("Something went wrong with server's response...</br>Details: " + error.response.data.detail + "<br/> Please try again later or contact support")
+          } else {
+            setInfoMessage("Something went wrong...</br>Technical Details: " + error.message + "<br/> Please try again later or contact support")
+          }
+          console.error(error)
+          setMessageStatus('error')
+        })
+    } else {
+      notificationApi['info']({
+        message: "Please wait until the current request is finished.",
+      });
+    }
   }
 
   if (isUserLoggedInAsGuest && remainingTrialRequests !== undefined && remainingTrialRequests <= 0) {
@@ -203,6 +255,7 @@ const Home = () => {
   }
 
   return (<>
+    {contextHolder}
     {(!isMobile() || selectedPaper === undefined) &&
       <Content style={{ backgroundColor: "transparent" }}>
         <Spacer y={2} />
@@ -239,25 +292,23 @@ const Home = () => {
           height: "100%",
           flexWrap: 'nowrap'
         }}>
-          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} messageStatus={messageStatus}/>
+          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} messageStatus={messageStatus} />
 
-          {(messageStatus === 'loading' || messageStatus === 'error') &&
-            <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
-              {messageStatus === 'loading' &&
-                <>
-                  <Loading data-testid="loading-answer">{loadingText}</Loading>
-                </>
-              }
-              {messageStatus === 'error' &&
-                <Info>
-                  <MarkdownView
-                    markdown={errorMessage + "<br/> Please try again later or contact support."}
-                    options={{ tables: true, emoji: true, }}
-                  />
-                </Info>
-              }
-            </Flex>
-          }
+          <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
+            {messageStatus === 'loading' &&
+              <>
+                <Loading data-testid="loading-answer">{loadingText}</Loading>
+              </>
+            }
+            {infoMessage &&
+              <Info data-testid="info">
+                <MarkdownView
+                  markdown={infoMessage}
+                  options={{ tables: true, emoji: true, }}
+                />
+              </Info>
+            }
+          </Flex>
 
           <div style={{ position: 'relative', width: "100%", padding: "0.85rem", borderTop: "1px solid rgba(0, 0, 0, 0.15)" }}>
             <Button
@@ -267,6 +318,7 @@ const Home = () => {
               icon={<ClearOutlined />}
               style={{ position: 'absolute', right: '0.85rem', top: '-3rem', zIndex: 1 }}
               onClick={() => {
+                cancelAllRequests()
                 setChatHistory(previous => previous.filter((e: any) => e.sender == "system"))
               }
               } />
@@ -287,8 +339,7 @@ const Home = () => {
               style={{ position: 'absolute', right: '0.85rem', bottom: '0.85rem' }}
               onClick={() => {
                 if (!streaming) {
-                  addChatMessage(question ?? '', "user")
-                  handleMessage(askPaper, {
+                  handleMessage(askPaper, () => addChatMessage(question ?? '', "user"), {
                     question: question ?? '',
                     history: getChatHistory().slice(-6),
                     paper: JSON.parse(JSON.stringify(selectedPaper)),
@@ -300,6 +351,8 @@ const Home = () => {
                     // @ts-ignore
                     paperHash: selectedPaper!.hash,
                     resultsSpeedTradeoff: resultsSpeedTradeoff
+                  }, {
+                    signal: createAbortController().signal,
                   })
                 }
               }
@@ -321,15 +374,19 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     if (!streaming) {
-                      addChatMessage("Predefined Action: Extract Datasets", "user")
-                      handleMessage(extractDatasets, {
-                        paper: JSON.parse(JSON.stringify(selectedPaper)),
-                        // @ts-ignore
-                        email: session!.user!.email,
-                        // @ts-ignore
-                        accessToken: session!.accessToken,
-                        resultsSpeedTradeoff: resultsSpeedTradeoff
-                      })
+                      handleMessage(extractDatasets, () => addChatMessage("Predefined Action: Extract Datasets", "user"),
+                        {
+                          paper: JSON.parse(JSON.stringify(selectedPaper)),
+                          history: getChatHistory().slice(-6),
+                          // @ts-ignore
+                          email: session!.user!.email,
+                          // @ts-ignore
+                          accessToken: session!.accessToken,
+                          resultsSpeedTradeoff: resultsSpeedTradeoff
+                        },
+                        {
+                          signal: createAbortController().signal,
+                        })
                     }
                   }}
                   icon={<DotChartOutlined />}
@@ -337,14 +394,18 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     if (!streaming) {
-                      handleMessage(generateSummary, {
-                        paper: JSON.parse(JSON.stringify(selectedPaper)),
-                        // @ts-ignore
-                        email: session!.user!.email,
-                        // @ts-ignore
-                        accessToken: session!.accessToken
-                      })
-                      addChatMessage("Predefined Action: Generate Summary", "user")
+                      handleMessage(generateSummary,
+                        () => addChatMessage("Predefined Action: Generate Summary", "user"),
+                        {
+                          paper: JSON.parse(JSON.stringify(selectedPaper)),
+                          // @ts-ignore
+                          email: session!.user!.email,
+                          // @ts-ignore
+                          accessToken: session!.accessToken
+                        },
+                        {
+                          signal: createAbortController().signal,
+                        })
                     }
                   }}
                   icon={<FileTextTwoTone />}
@@ -353,16 +414,20 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     if (!streaming) {
-                      handleMessage(explainSelectedText, {
-                        text: selectedText,
-                        history: getChatHistory().slice(-6),
-                        paper: JSON.parse(JSON.stringify(selectedPaper)),
-                        // @ts-ignore
-                        email: session!.user!.email,
-                        // @ts-ignore
-                        accessToken: session!.accessToken,
+                      handleMessage(explainSelectedText,
+                        () => addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user"),
+                        {
+                          text: selectedText,
+                          history: getChatHistory().slice(-6),
+                          paper: JSON.parse(JSON.stringify(selectedPaper)),
+                          // @ts-ignore
+                          email: session!.user!.email,
+                          // @ts-ignore
+                          accessToken: session!.accessToken,
+                        }, {
+                        signal: createAbortController().signal,
                       })
-                      addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user")
+
                     }
                   }}
                   icon={<HighlightTwoTone twoToneColor="#FFC400" />}

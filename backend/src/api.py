@@ -84,11 +84,13 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
 
     return f
 
+
 def stringify_history(history: List) -> str:
     history = "\n".join(history)
     history.replace('llm', 'Assistant')
     history.replace('user', 'User')
     return history
+
 
 @app.post('/guest-login')
 async def guest_login(request: Request, response: Response):
@@ -209,7 +211,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
     try:
         email = request.headers['Email']
     except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     pdf_file_name = pdf_file.filename
     pdf_file_content = await pdf_file.read()
@@ -266,12 +268,12 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
             - "Name" must be unique.
         """
     except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     if results_speed_trade_off is not None and results_speed_trade_off > 0:
         paper.filter_sections('include', ['data', 'inclusion criteria'])
 
-    return StreamingResponse(nlp.ask_paper(question, history, paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+    return StreamingResponse(nlp.ask_paper(question, paper, history, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 
 @app.post("/save-datasets")
@@ -279,7 +281,8 @@ async def save_datasets(request: Request):
     data = await request.json()
     try:
         datasets = json.loads(data['datasets'])
-        changes = json.loads(data['changes']) #todo: this is unused. only for analytics purposes
+        # todo: this is unused. only for analytics purposes
+        changes = json.loads(data['changes'])
         if hasattr(request.state, 'user_discord_id'):
             user_discord_id = request.state.user_discord_id
             print(f"User discord id: {user_discord_id}")
@@ -287,10 +290,11 @@ async def save_datasets(request: Request):
                 DiscordUsersGateway().override_user_datasets(
                     request.state.user_discord_id, datasets)
         else:
-            raise HTTPException(status_code=401, detail="Discord Auth failed, please contact support")
+            raise HTTPException(
+                status_code=401, detail="Discord Auth failed, please contact support")
         return {'message': "done"}
     except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
 
 @app.put("/update-datasets")
@@ -309,11 +313,12 @@ async def update_datasets(request: Request):
                 DiscordUsersGateway().update_user_datasets(
                     request.state.user_discord_id, datasets)
         else:
-            raise HTTPException(status_code=401, detail="Discord Auth failed, please contact support")
-        
+            raise HTTPException(
+                status_code=401, detail="Discord Auth failed, please contact support")
+
         return {'message': "done"}
     except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
 
 @app.get('/get-datasets')
@@ -336,19 +341,13 @@ async def summarize(request: Request):
         paper = nlp.Paper(**json.loads(data['paper']))
         question = """
         Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header (denoted by several '#') or a dash.
-        Each section summary should contain only the main section takeways. You're only allowed to include mardkdown headers that are present in the given paper context."""
+        Each section summary should contain only the main section takeways. You're only allowed to include mardkdown headers that are present in the given paper context.
+        """
     except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     paper.filter_sections('exclude', ['abstract'])
-    response = await nlp.ask_paper(question, paper, merge_at_end=False)
-    to_remove = [
-        'The paper context does not contain enough information for answering your question.',
-        'The paper does not contain enough information for answering your question',
-    ]
-    for s in to_remove:
-        response = response.replace(s, '')
-    return response
+    return StreamingResponse(content=nlp.ask_paper(question, paper, merge_at_end=False), media_type="text/plain")
 
 
 @app.post("/ask")
@@ -366,13 +365,13 @@ async def ask(request: Request):
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         quote = data['quote']
     except KeyError as ed:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     if quote:
         question += "Please include at least one EXACT quote from the original paper."
 
     prompt = f"""{history}\nUser: {question}\nAI:"""
-    return StreamingResponse(content=nlp.ask_paper(question=prompt, history=history ,paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+    return StreamingResponse(content=nlp.ask_paper(question=prompt, history=history, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 
 @app.post("/explain")
@@ -384,7 +383,7 @@ async def explain(request: Request):
         history = stringify_history(history)
         paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
     return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, history=history, results_speed_trade_off=4), media_type="text/plain")
 
 
@@ -395,11 +394,12 @@ async def store_feedback(request: Request):
     if 'table_name' not in body:
         raise HTTPException(status_code=400, detail="Missing table_name")
     if 'data' not in body:
-        raise HTTPException(status_code=400, detail="Missing data")
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     body['data']['id'] = str(uuid.uuid4())
 
-    DynamoDBGateway(DB_FEEDBACK).write(body['data'])  # todo: are there security concers here?
+    # todo: are there security concers here?
+    DynamoDBGateway(DB_FEEDBACK).write(body['data'])
 
     return {"message": "success"}
 

@@ -26,7 +26,7 @@ export const useGuestSession = (options?: UseSessionOptions<boolean>) => {
       email: userEmail,
       // @ts-ignore
       accessToken: 'dummy',
-      image: 'dummy',
+      image: 'guest-user.png',
     },
     expires: 'never'
   }

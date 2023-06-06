@@ -112,9 +112,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     });
                                 }).catch(() => {
                                     setSaveStatus('error')
-                                    notificationApi['error']({
-                                        message: 'There was an error saving the datasets. Please contact support.',
-                                    });
+c
                                 })
                             }
                             }

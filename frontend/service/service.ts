@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import {Paper} from "../pages";
 
 export function sendInstructionsEmail(recipient) {
@@ -35,10 +35,11 @@ interface DefaultEndpointOptions {
 interface ExtractDatasetsEndpointOptions extends DefaultEndpointOptions {
   paper: Paper
   resultsSpeedTradeoff: number
+  history: string[]
 }
 
 
-export function extractDatasets({ paper, email, accessToken, resultsSpeedTradeoff }: ExtractDatasetsEndpointOptions) {
+export function extractDatasets({ history, paper, email, accessToken, resultsSpeedTradeoff }: ExtractDatasetsEndpointOptions, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/extract-datasets`, {
     method: 'POST',
     headers: {
@@ -47,9 +48,11 @@ export function extractDatasets({ paper, email, accessToken, resultsSpeedTradeof
       'Email': email
     },
     body: JSON.stringify({
+      history,
       paper: JSON.stringify(paper),
       results_speed_trade_off: resultsSpeedTradeoff
-    })
+    }),
+    ...options
   })
 }
 
@@ -57,7 +60,7 @@ interface GenerateSummaryEndpointOptions extends DefaultEndpointOptions {
   paper: Paper
 }
 
-export function generateSummary({ paper, email, accessToken }: GenerateSummaryEndpointOptions) {
+export function generateSummary({ paper, email, accessToken }: GenerateSummaryEndpointOptions, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
     method: 'POST',
     headers: {
@@ -67,7 +70,8 @@ export function generateSummary({ paper, email, accessToken }: GenerateSummaryEn
     },
     body: JSON.stringify({
       paper: JSON.stringify(paper)
-    })
+    }),
+    ...options
   })
 }
 
@@ -77,7 +81,7 @@ interface ExplainSelectedTextProps extends DefaultEndpointOptions {
   history: string[]
 }
 
-export function explainSelectedText({ text, paper, email, accessToken }: ExplainSelectedTextProps) {
+export function explainSelectedText({ text, history, paper, email, accessToken }: ExplainSelectedTextProps, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/explain`, {
     method: 'POST',
     headers: {
@@ -89,7 +93,8 @@ export function explainSelectedText({ text, paper, email, accessToken }: Explain
       text,
       history,
       paper: JSON.stringify(paper)
-    })
+    }),
+    ...options
   })
 }
 
@@ -102,7 +107,7 @@ interface AskOptions extends DefaultEndpointOptions {
   quote: boolean
 }
 
-export function askPaper({question, history, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions) {
+export function askPaper({question, history, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
     method: 'POST',
     headers: {
@@ -117,7 +122,8 @@ export function askPaper({question, history, paper, email, accessToken, paperHas
       paper_hash: paperHash,
       quote,
       results_speed_trade_off: resultsSpeedTradeoff
-    })
+    }),
+    ...options
   });
 }
 
@@ -147,7 +153,7 @@ interface UpdateDatasetsOptions {
 }
 
 
-export function updateDatasets({ datasets, paperTitle, email, accessToken }) {
+export function updateDatasets({ datasets, paperTitle, email, accessToken }: UpdateDatasetsOptions): Promise<AxiosResponse>{
   return axios.put(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/update-datasets`, {
     datasets: JSON.stringify(datasets),
     paper_title: paperTitle
