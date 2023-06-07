@@ -112,7 +112,9 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     });
                                 }).catch(() => {
                                     setSaveStatus('error')
-c
+                                    notificationApi['error']({
+                                        message: 'There was an error updating the dashboard.',
+                                    });
                                 })
                             }
                             }
@@ -252,6 +254,12 @@ function downloadMarkdownTableAsCSV(markdownTable: string | null) {
     // Remove leading/trailing whitespace and split the markdown table by rows
     const rows = markdownTable.trim().split('\n');
 
+    // Check for the existence of a header separator
+    if (rows[1] && rows[1].startsWith('|--')) {
+        // If it exists, remove the header separator row
+        rows.splice(1, 1);
+    }
+
     // Process each row to extract the cells
     const csvRows = rows.map((row) => {
         // Remove leading/trailing '|' characters and split the row by '|'
@@ -262,8 +270,8 @@ function downloadMarkdownTableAsCSV(markdownTable: string | null) {
             // Remove leading/trailing whitespace and unescape special characters
             let processedCell = cell.trim().replace(/\\(.)/g, '$1');
 
-            // If the cell contains a comma or newline, wrap it in double quotes
-            if (processedCell.includes(',') || processedCell.includes('\n')) {
+            if (processedCell.includes(',') || processedCell.includes('\n') || processedCell.includes('"')) {
+                processedCell = processedCell.replace(/"/g, '""');
                 processedCell = `"${processedCell}"`;
             }
 
