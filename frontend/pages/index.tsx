@@ -257,9 +257,9 @@ const Home = () => {
     {selectedPaper &&
       <Sider width={isMobile() ? "100%" : "50%"} style={{
         overflow: "auto",
-        height: '100vh',
+        maxHeight: 'calc(100vh - ' + headerHeight + 'px)',
         position: "sticky",
-        top: 0,
+        top: `${headerHeight}px`,
         right: "0",
         bottom: "0",
         padding: "1rem",

@@ -5,7 +5,7 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from
 import FeedbackModal from './feedback-modal';
 import { GuestUserContext, useGuestSession } from '../hooks/session';
 import { useSession } from 'next-auth/react';
-import { Avatar, Divider, Layout, Menu, MenuProps, } from 'antd';
+import { Avatar, Layout, Menu, MenuProps } from 'antd';
 const { Sider, Content, Footer, Header } = Layout;
 import Icon, { BulbFilled, BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
 import Link from 'next/link';
@@ -65,10 +65,9 @@ export const MyLayout = ({ children }) => {
 
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState<boolean>(false)
   const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
-  const [collapsed, setCollapsed] = useState(false)
   const { data: session, status } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
 
-  function getItem(
+  function getItem( 
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
@@ -110,29 +109,24 @@ export const MyLayout = ({ children }) => {
   return (
     <>
       <FeedbackVisibleContext.Provider value={setIsFeedbackModalVisible}>
-        <Layout style={{ minHeight: "100vh" }} hasSider>
-          <Sider theme='light' collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+        <Layout style={{ minHeight: "100vh" }}>
+          <Header className="header" style={{
             overflow: 'auto',
-            height: '100vh',
-            position: 'fixed',
-            left: 0,
-            top: 0,
-            bottom: 0,
-          }}>
+            backgroundColor: "white", position: "fixed", width: "100%", zIndex: 100, height: `${headerHeight}px`,
+            borderBottom: "1px solid gainsboro"
+          }} >
             {/* todo: get rid of this flex bullshit. supposedly isnt' needed */}
-            <Flex direction="column" css={{ flexWrap: "nowrap", maxWidth: "100%", height: "100%", maxHeight: "100%", justifyContent: "space-between" }}>
-              {isDesktop() && <h3 style={{ padding: "10px" }}>{collapsed ? "" : "Ask Paper"} 📝</h3>}
-              <Menu mode="vertical" selectedKeys={[window.location.pathname]} items={items} style={{ width: '100%', borderTop: "1px solid gainsboro" }} />
+            <Flex direction="row" css={{ flexWrap: "nowrap", maxHeight: "100%", justifyContent: "space-between" }}>
+              {isDesktop() && <h4>Ask Paper 📝</h4>}
+              <Menu mode="horizontal" selectedKeys={[window.location.pathname]} items={items} style={{ justifyContent: "flex-end", float: "right", borderColor: "gainsboro", minWidth: '600px', borderBottom: 0 }} />
             </Flex>
-          </Sider>
-          <Layout style={{ marginLeft: collapsed ? 80 : 200 }} > 
-            <Content style={{ padding: `0 ${isMobile() ? '0' : '24'}px` }}>
-              <Layout>
-                {children}
-              </Layout>
-            </Content>
-            <Footer style={{ textAlign: 'center' }}>This product is powered by the <A href="https://hippoai.org">Hippo AI Foundation</A></Footer>
-          </Layout>
+          </Header>
+          <Content style={{ padding: `0 ${isMobile() ? '0' : '24'}px`, marginTop: "64px" }}>
+            <Layout style={{ margin: `${layoutMargin}px 0` }}>
+              {children}
+            </Layout>
+          </Content>
+          <Footer style={{ textAlign: 'center' }}>This product is powered by the <A href="https://hippoai.org">Hippo AI Foundation</A></Footer>
         </Layout>
       </FeedbackVisibleContext.Provider>
       {session != null && status == "authenticated" &&
