@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {Paper} from "../pages";
+import { ChatMessage } from "../components/chat/chat";
 
 export function sendInstructionsEmail(recipient) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
@@ -35,7 +36,7 @@ interface DefaultEndpointOptions {
 interface ExtractDatasetsEndpointOptions extends DefaultEndpointOptions {
   paper: Paper
   resultsSpeedTradeoff: number
-  history: string[]
+  history: ChatMessage[]
 }
 
 
@@ -48,7 +49,7 @@ export function extractDatasets({ history, paper, email, accessToken, resultsSpe
       'Email': email
     },
     body: JSON.stringify({
-      history,
+      history: JSON.stringify(history),
       paper: JSON.stringify(paper),
       results_speed_trade_off: resultsSpeedTradeoff
     }),
@@ -78,7 +79,7 @@ export function generateSummary({ paper, email, accessToken }: GenerateSummaryEn
 interface ExplainSelectedTextProps extends DefaultEndpointOptions {
   text: string;
   paper: Paper;
-  history: string[]
+  history: ChatMessage[]
 }
 
 export function explainSelectedText({ text, history, paper, email, accessToken }: ExplainSelectedTextProps, options: RequestInit) {
@@ -91,7 +92,7 @@ export function explainSelectedText({ text, history, paper, email, accessToken }
     },
     body: JSON.stringify({
       text,
-      history,
+      history: JSON.stringify(history),
       paper: JSON.stringify(paper)
     }),
     ...options
@@ -99,7 +100,7 @@ export function explainSelectedText({ text, history, paper, email, accessToken }
 }
 
 interface AskOptions extends DefaultEndpointOptions {
-  history: string[],
+  history: ChatMessage[],
   paperHash: string,
   paper: Paper,
   resultsSpeedTradeoff: number,
@@ -117,7 +118,7 @@ export function askPaper({question, history, paper, email, accessToken, paperHas
     },
     body: JSON.stringify({
       question,
-      history,
+      history: JSON.stringify(history),
       paper: JSON.stringify(paper),
       paper_hash: paperHash,
       quote,

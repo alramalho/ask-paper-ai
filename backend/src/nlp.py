@@ -22,6 +22,7 @@ import time
 import asyncio
 import openai
 
+
 class QueueCallback(BaseCallbackHandler):
     """Callback handler for streaming LLM responses to a queue."""
 
@@ -254,7 +255,8 @@ def count_tokens(text) -> int:
     if text is None:
         return 0
     enc = tiktoken.encoding_for_model("gpt-3.5-turbo-0301")
-    result = int(len(enc.encode(text, disallowed_special=())) * 1.05) # Add 5% for safety
+    result = int(len(enc.encode(text, disallowed_special=()))
+                 * 1.05)  # Add 5% for safety
     return result
 
 
@@ -270,12 +272,11 @@ def split_text(text, chunk_size=3500):
     return texts
 
 
-
 def ask_json(text, completion_tokens=None) -> dict:
-    num_attempts=3
+    num_attempts = 3
     message_history = []
     last_exception = None
-    for i , _ in enumerate(range(num_attempts)):
+    for i, _ in enumerate(range(num_attempts)):
         text += "\n---\nYour answer must be only a valid JSON object. No other text is allowed, before or after the JSON object."
         response = ask_text(text, completion_tokens, message_history)
         try:
@@ -287,18 +288,26 @@ def ask_json(text, completion_tokens=None) -> dict:
                 return json.loads(response)
             except json.decoder.JSONDecodeError as e:
                 last_exception = e
-                message_history.append(OpenAIMessage(role="assistant", content=response))
-                message_history.append(OpenAIMessage(role="user", content=f"Not a Valid JSON Object. Error: \"{e}\""))
-                print(f"Attempt {i} failed: Response is not a valid JSON object")
+                message_history.append(OpenAIMessage(
+                    role="assistant", content=response))
+                message_history.append(OpenAIMessage(
+                    role="user", content=f"Not a Valid JSON Object. Error: \"{e}\""))
+                print(
+                    f"Attempt {i} failed: Response is not a valid JSON object")
                 print(f"Response: \n{response}")
                 raise e.message
-                
+
     raise last_exception
 
 
 class OpenAIMessage(BaseModel):
     role: Literal["user", "assistant"]
     content: str
+
+
+class ChatMessage(BaseModel):  # this should in sync with frontend
+    text: str
+    sender: Literal["user", "llm"]
 
 
 def ask_text(text, completion_tokens=None, message_history: List[OpenAIMessage] = []) -> str:
@@ -344,7 +353,6 @@ def ask_prompt(prompt: PromptTemplate, input_variables: dict, completion_tokens,
             callbacks=([QueueCallback(q)]),
         )
         chain = LLMChain(llm=llm, prompt=prompt)
-
         job_done = object()
 
         def task():
@@ -368,7 +376,8 @@ def ask_prompt(prompt: PromptTemplate, input_variables: dict, completion_tokens,
         llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
 
         chain = LLMChain(llm=llm, prompt=prompt)
-        yield chain.run(**input_variables) #workaround as Union[Generator[str, None, None], str] was not working
+        # workaround as Union[Generator[str, None, None], str] was not working
+        yield chain.run(**input_variables)
 
 
 def get_top_k_sections(k, text, labels):
@@ -396,11 +405,14 @@ def get_top_k_sections(k, text, labels):
 
 
 # todo: question currently contains chat_history, could lead to worse results
-def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=True, results_speed_trade_off: int = 0) ->Generator[str, None, None]:
+def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
     if history is None:
-        history = " "
+        s_history = "<Empty>"
     else:
-        history = f"Conversation history: \n{history}\n"
+        s_history = "\n".join(
+            [f"{history_item['sender']}: {history_item['text']}" for history_item in history])
+        s_history = f"Conversation history: \n{s_history}\n"
+        print("History: " + s_history)
 
     print("Asking paper")
     switcher = {
@@ -429,13 +441,16 @@ def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=Tru
 
     prompt = PromptTemplate(
         input_variables=["context", "request", "conversation_history"],
-        template=f"""Please respond to the following request, denoted by "User Request" in the best way possible with the
+        template=f"""You are an helpful assistant, that goes by the name "llm". You are helping a user to understand a paper.
+            Please respond to the following request, denoted by "User Request" in the best way possible with the
             given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
-            The context you're receiving is only a part of the paper, so, if the partial paper context does not enough information for confidently respond to the request, please respond with 
-            \"{NOT_ENOUGH_INFO_ANSWER}\".
-            Your answer must only include information that is explicitly present in the paper context.
-            Your answer must not include ANY links that are not present in the paper context.
-            Your answer must not include ANY numbers that are not exactly present in the paper context.
+            The context you're receiving is only a part of the paper, so there's a chance it won't contain sufficient information to answer the question.
+            If it happens, please say so instead of forging a low confidence answer.
+            Rules:
+            - Your answer must only include information that is explicitly present in the paper context.
+            - Your answer must not include ANY links that are not present in the paper context.
+            - Your answer must not include ANY numbers that are not exactly present in the paper context.
+            
             You also have access to the conversation history, denoted by "Conversation history" below.
             Start paper context:
             {{context}}
@@ -448,24 +463,32 @@ def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=Tru
     )
 
     completion_tokens = 700
-    context_max_tokens = LLM_MAX_TOKENS - \
-        completion_tokens - count_tokens(prompt.template)
-    print(f"context_max_tokens: {context_max_tokens}")
-
     full_context = paper.to_text()
+
+    context_max_tokens = LLM_MAX_TOKENS - completion_tokens - \
+        count_tokens(prompt.template) - count_tokens(question) - \
+        count_tokens(s_history)
 
     while True:
         contexts = split_text(full_context, context_max_tokens)
+        print(f"context_max_tokens: {context_max_tokens}")
 
         context_sizes = [count_tokens(context) for context in contexts]
         print("Context sizes: ", context_sizes)
 
         sequence_sizes = [context_size + count_tokens(
-            prompt.template + question) + completion_tokens for context_size in context_sizes]
+            prompt.template + question + s_history) + completion_tokens for context_size in context_sizes]
         print("Sequence sizes: ", sequence_sizes)
 
+        if count_tokens(s_history) > (context_max_tokens - count_tokens(prompt.template + question)):
+            print("History too big, shortening..")
+            s_history = ask_text(f"""
+            Please summarize the following conversation history.
+            {s_history}
+            """)
+
         if max(sequence_sizes) > LLM_MAX_TOKENS:
-            print("Sequences too big! Shortening..")
+            print("Sequences or too big! Shortening..")
             completion_tokens -= 60
             context_max_tokens -= 200
         else:
@@ -481,7 +504,8 @@ def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=Tru
     def multi_context_wrapper(request, context, index):
         print("Running chain nr " + str(index))
         start = time.time()
-        result = next(ask_prompt(prompt, {"request": request, "conversation_history": history, "context": context}, completion_tokens, stream=False))
+        result = next(ask_prompt(prompt, {
+                      "request": request, "conversation_history": s_history, "context": context}, completion_tokens, stream=False))
         elapsed_time = time.time() - start
         print(
             f"Elapsed time for chain nr {str(index)}: {elapsed_time:.2f} seconds")
@@ -498,12 +522,13 @@ def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=Tru
         responses = [f.result() for f in futures]
     else:
         print("Running single-context")
-        return ask_prompt(prompt, {"request": question, "conversation_history": history, "context": contexts[0]}, completion_tokens, stream=True)
+        return ask_prompt(prompt, {"request": question, "conversation_history": s_history, "context": contexts[0]}, completion_tokens, stream=True)
 
     if (len(responses) > 1):
         if merge_at_end:
             summary_prompt = PromptTemplate(
-                input_variables=["responses", "question", "conversation_history"],
+                input_variables=["responses",
+                                 "question", "conversation_history"],
                 template="""Please merge the following responses (denoted by 'Response N:').
                         All of these different responses were generated by taking into account only different parts of the paper. Hence they can be wrong.
                         You should merge them into a single response, using only the ones that positively answer the user request.
@@ -527,7 +552,7 @@ def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=Tru
             max_tokens = max(1000, LLM_MAX_TOKENS - summary_prompt_length)
             # assuming this is inside your function associated with the chatbot
 
-            return ask_prompt(summary_prompt, {"responses": responses, "conversation_history": history, "question": question}, completion_tokens=max_tokens, stream=True)
+            return ask_prompt(summary_prompt, {"responses": responses, "conversation_history": s_history, "question": question}, completion_tokens=max_tokens, stream=True)
 
         else:
             response = "\n".join(responses)
@@ -535,5 +560,5 @@ def ask_paper(question: str, paper: Paper, history: str = None, merge_at_end=Tru
 
     def string_as_generator(string):
         yield string
-        
+
     return string_as_generator(responses[-1])

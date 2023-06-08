@@ -10,7 +10,7 @@ test.describe.configure({ mode: 'serial' });
 let page: Page
 
 async function loginAsGuest(browser) {
-  page = await browser.newPage({acceptDownloads: true})
+  page = await browser.newPage({ acceptDownloads: true })
 
   await page.goto(process.env.APP_URL!)
 
@@ -86,7 +86,7 @@ test.describe('Normal upload', () => {
   });
 
   test('should be able to clear the conversation', async () => {
-    await page.getByTestId('clear-button').click(); 
+    await page.getByTestId('clear-button').click();
     await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
   });
 
@@ -211,7 +211,7 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("background", {ignoreCase: true});
+    await expect(page.getByTestId('answer-area').last()).toContainText("background", { ignoreCase: true });
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   })
 
@@ -290,7 +290,8 @@ test('should be able to extract all 5 datasets from chexPert', async ({ browser 
   await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
 });
 
-test.describe('Upload with URL', () => {
+test.describe('Different upload types', () => {
+
   test('should be able to upload the paper via URL', async ({ browser }) => {
     await loginAsGuest(browser);
 
@@ -302,9 +303,6 @@ test.describe('Upload with URL', () => {
 
     await expect(page.getByTestId("pdf")).toContainText("Toolformer: Language Models Can Teach Themselves to Use")
   })
-});
-
-test.describe('Upload the demo paper', () => {
   test('should be able to upload the demo paper', async ({ browser }) => {
     await loginAsGuest(browser);
 

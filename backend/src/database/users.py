@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from database.db import DynamoDBGateway
 from utils.constants import DB_GUEST_USERS, DB_DISCORD_USERS
-from nlp import ask_text, ask_json
+from nlp import ask_json
 from typing import List, Dict, Optional
 
 class GuestUser(BaseModel):

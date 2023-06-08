@@ -85,13 +85,6 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     return f
 
 
-def stringify_history(history: List) -> str:
-    history = "\n".join(history)
-    history.replace('llm', 'Assistant')
-    history.replace('user', 'User')
-    return history
-
-
 @app.post('/guest-login')
 async def guest_login(request: Request, response: Response):
     user_email = request.headers.get('Email').lower()
@@ -252,19 +245,18 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     try:
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         paper = nlp.Paper(**json.loads(data['paper']))
-        history = data['history']
-        history = stringify_history(history)
+        history = json.loads(data['history'])
         question = """
         Please extract the into a markdown table all the datasets mentioned in the following text.
         The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
         Here's a few caveats about how you should build your response:
-            - The resulting table should contain as many datasets as possible.
-            - The resulting table should contain only actionable datasets, meaning datasets that were already agreggated and put together.
             - Every resulting table entry contents must be explictly present from the paper context
+            - Include all datasets mentioned, even if they are not available online.
+            - Do not include subset of datasets, only the full dataset.
             - "Link to Data or Code" must be an URL.
             - "Extra Info" must be as succint as possible.
             - "Passage" must be the passage (phrase) of the paper where the dataset was explicitly mentioned.
-            - "Name" and "Passage" must not be N/A or undefined.
+            - "Name" and "Passage" must be present (not N/A or equivalent).
             - "Name" must be unique.
         """
     except KeyError as e:
@@ -355,8 +347,7 @@ async def ask(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = data['history']
-        history = stringify_history(history)
+        history = json.loads(data['history'])
         if data.get("paper", None) is None:
             paper = nlp.Paper(**process_paper(get_paper_from_url(
                 data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
@@ -364,7 +355,7 @@ async def ask(request: Request):
             paper = nlp.Paper(**json.loads(data['paper']))
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         quote = data['quote']
-    except KeyError as ed:
+    except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     if quote:
@@ -379,8 +370,7 @@ async def explain(request: Request):
     data = await request.json()
     try:
         text = data['text']
-        history = data['history']
-        history = stringify_history(history)
+        history = json.loads(data['history'])
         paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))

@@ -15,7 +15,7 @@ import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
 import { Breadcrumb, Button, Collapse, Layout, Space, Input, notification } from 'antd';
 import type { MenuProps } from 'antd';
-import { ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
+import { BorderOutlined, ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined, StopOutlined } from "@ant-design/icons";
 import { create } from "domain";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
@@ -70,7 +70,6 @@ export type Status = 'idle' | 'loading' | 'success' | 'error'
 const Home = () => {
   const [messageStatus, setMessageStatus] = useState<Status>('idle')
   const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
-  const [loadingText, setLoadingText] = useState<string | undefined>(undefined)
   const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
@@ -136,27 +135,6 @@ const Home = () => {
     setChatHistory(prev => [...prev, { text: text, sender: sender }]);
   }
 
-  function getChatHistory(): string[] {
-    const messages = chatHistory;
-
-    let lastSystemIndex = -1;
-
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].sender === "system") {
-        lastSystemIndex = i;
-        break;
-      }
-    }
-
-    if (lastSystemIndex === -1 || lastSystemIndex === messages.length - 1) {
-      // No system messages found or the last message is a system message
-      return [];
-    }
-
-    const messagesAfterLastSystem = messages.slice(lastSystemIndex + 1);
-
-    return messagesAfterLastSystem.filter(message => message.sender === "user" || message.sender === "llm").map(message => (message.sender + ": " + message.text));
-  }
 
   const handleSelection = () => {
     let selectedText = '';
@@ -192,7 +170,6 @@ const Home = () => {
   ) {
     if (messageStatus !== 'loading') {
       setMessageStatus('loading')
-      setLoadingText("Reading paper...")
       setInfoMessage(undefined)
       setActivePanelKeys(undefined)
       initializationCallback()
@@ -262,7 +239,7 @@ const Home = () => {
         <PaperUploader onFinish={(paper, pdf) => {
           setSelectedPaper(paper)
           setPdf(pdf)
-          addChatMessage(`Now reading "${paper.title}"`, "system")
+          setChatHistory([{ text: `Now reading "${paper.title}"`, sender: "system" } as ChatMessage])
         }} />
         {isUserLoggedInAsGuest &&
           <>
@@ -297,7 +274,15 @@ const Home = () => {
           <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
             {messageStatus === 'loading' &&
               <>
-                <Loading data-testid="loading-answer">{loadingText}</Loading>
+                <Loading data-testid="loading-answer">Reading paper...</Loading>
+                <Button
+                  size="large"
+                  shape="circle"
+                  data-testid="stop-button"
+                  icon={<BorderOutlined />}
+                  onClick={() => {
+                    cancelAllRequests()
+                  }} />
               </>
             }
             {infoMessage &&
@@ -341,7 +326,7 @@ const Home = () => {
                 if (!streaming) {
                   handleMessage(askPaper, () => addChatMessage(question ?? '', "user"), {
                     question: question ?? '',
-                    history: getChatHistory().slice(-6),
+                    history: chatHistory.filter(message => message.sender != 'system').slice(-6),
                     paper: JSON.parse(JSON.stringify(selectedPaper)),
                     // @ts-ignore
                     email: session!.user!.email,
@@ -377,7 +362,7 @@ const Home = () => {
                       handleMessage(extractDatasets, () => addChatMessage("Predefined Action: Extract Datasets", "user"),
                         {
                           paper: JSON.parse(JSON.stringify(selectedPaper)),
-                          history: getChatHistory().slice(-6),
+                          history: chatHistory.filter(message => message.sender != 'system').slice(-6),
                           // @ts-ignore
                           email: session!.user!.email,
                           // @ts-ignore
@@ -418,7 +403,7 @@ const Home = () => {
                         () => addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user"),
                         {
                           text: selectedText,
-                          history: getChatHistory().slice(-6),
+                          history: chatHistory.filter(message => message.sender != 'system').slice(-6),
                           paper: JSON.parse(JSON.stringify(selectedPaper)),
                           // @ts-ignore
                           email: session!.user!.email,
