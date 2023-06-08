@@ -250,14 +250,14 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
         Please extract the into a markdown table all the datasets mentioned in the following text.
         The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
         Here's a few caveats about how you should build your response:
-            - Every resulting table entry contents must be explictly present from the paper context
-            - Include all datasets mentioned, even if they are not available online.
-            - Do not include subset of datasets, only the full dataset.
-            - "Link to Data or Code" must be an URL.
-            - "Extra Info" must be as succint as possible.
-            - "Passage" must be the passage (phrase) of the paper where the dataset was explicitly mentioned.
-            - "Name" and "Passage" must be present (not N/A or equivalent).
-            - "Name" must be unique.
+        - Include every dataset referenced, regardless of its online availability.
+        - Only include complete datasets, not subsets.
+        - URLs are required for the "Link to Data or Code" field.
+        - Keep the "Extra Info" field brief and to the point.
+        - The "Passage" field should contain the exact excerpt from the paper where the dataset is mentioned.
+        - "Name" and "Passage" fields must be filled in, with no "N/A" or similar entries.
+        - Each dataset's "Name" must be unique.
+        - Ensure all table entries reflect only what's explicitly stated in the paper, avoid making inferences.
         """
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
@@ -362,7 +362,7 @@ async def ask(request: Request):
         question += "Please include at least one EXACT quote from the original paper."
 
     prompt = f"""{history}\nUser: {question}\nAI:"""
-    return StreamingResponse(content=nlp.ask_paper(question=prompt, history=history, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+    return StreamingResponse(content=nlp.ask_paper(question=prompt, message_history=history, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
 
 
 @app.post("/explain")
@@ -374,7 +374,7 @@ async def explain(request: Request):
         paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
-    return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, history=history, results_speed_trade_off=4), media_type="text/plain")
+    return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, message_history=history, results_speed_trade_off=4), media_type="text/plain")
 
 
 @app.post("/store-feedback")

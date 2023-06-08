@@ -22,6 +22,9 @@ import time
 import asyncio
 import openai
 
+def string_as_generator(string):
+    yield string
+
 
 class QueueCallback(BaseCallbackHandler):
     """Callback handler for streaming LLM responses to a queue."""
@@ -265,9 +268,9 @@ def decode(tokens) -> str:
     return enc.decode(tokens)
 
 
-def split_text(text, chunk_size=3500):
+def split_text(text, chunk_size=3500, separator="\n"):
     text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=chunk_size, chunk_overlap=20, separator="\n")
+        chunk_size=chunk_size, chunk_overlap=20, separator=separator)
     texts = text_splitter.split_text(text)
     return texts
 
@@ -278,7 +281,7 @@ def ask_json(text, completion_tokens=None) -> dict:
     last_exception = None
     for i, _ in enumerate(range(num_attempts)):
         text += "\n---\nYour answer must be only a valid JSON object. No other text is allowed, before or after the JSON object."
-        response = ask_text(text, completion_tokens, message_history)
+        response = next(ask_text(text, completion_tokens, message_history))
         try:
             response = json_utils.correct_json(response)
             return json.loads(response)
@@ -309,15 +312,17 @@ class ChatMessage(BaseModel):  # this should in sync with frontend
     text: str
     sender: Literal["user", "llm"]
 
+    def as_openai_message(self) -> OpenAIMessage:
+        sender = "assistant" if self.sender == "llm" else "user"
+        return OpenAIMessage(role=sender, content=self.text)
 
-def ask_text(text, completion_tokens=None, message_history: List[OpenAIMessage] = []) -> str:
-    token_length = count_tokens(text)
-    if token_length > LLM_MAX_TOKENS:
-        raise ValueError(
-            f"Text {token_length} tokens long, must be less than " + str(LLM_MAX_TOKENS) + " tokens")
+
+def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream = False) -> Generator[str, None, None]:
+    text_size = count_tokens(text) 
+    history_size = sum([count_tokens(message.text) + 3 for message in message_history])
 
     if completion_tokens is None:
-        completion_tokens = LLM_MAX_TOKENS - token_length
+        completion_tokens = LLM_MAX_TOKENS - text_size - history_size
 
     retries_remaining = 3
     while retries_remaining > 0:
@@ -327,11 +332,19 @@ def ask_text(text, completion_tokens=None, message_history: List[OpenAIMessage] 
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "user", "content": text},
-                    *message_history
-                ]
+                    *[dict(message.as_openai_message()) for message in message_history]
+                ],
+                stream=stream,
             )
-            response = response.choices[0].message.content
-            break
+            if stream:
+                for chunk in response:
+                    if chunk.choices[0].finish_reason == "stop":
+                        return
+                    if 'content' in chunk.choices[0].delta:
+                        yield chunk.choices[0].delta.content
+            else:
+                yield response.choices[0].message.content
+
         except Exception as e:
             print("Error: " + str(e))
             retries_remaining -= 1
@@ -342,44 +355,6 @@ def ask_text(text, completion_tokens=None, message_history: List[OpenAIMessage] 
 
     return response
 
-
-def ask_prompt(prompt: PromptTemplate, input_variables: dict, completion_tokens, stream=True) -> Generator[str, None, None]:
-    if stream:
-        q = Queue()
-        llm = ChatOpenAI(
-            temperature=0,
-            max_tokens=completion_tokens,
-            streaming=True,
-            callbacks=([QueueCallback(q)]),
-        )
-        chain = LLMChain(llm=llm, prompt=prompt)
-        job_done = object()
-
-        def task():
-            chain.run(**input_variables)
-            q.put(job_done)
-
-        t = Thread(target=task)
-        t.start()
-
-        while True:
-            try:
-                next_token = q.get(True, timeout=1)
-                if next_token is job_done:
-                    break
-                print(next_token, end="")
-                yield next_token
-                asyncio.sleep(0.25)
-            except Empty:
-                continue
-    else:
-        llm = ChatOpenAI(temperature=0, max_tokens=completion_tokens)
-
-        chain = LLMChain(llm=llm, prompt=prompt)
-        # workaround as Union[Generator[str, None, None], str] was not working
-        yield chain.run(**input_variables)
-
-
 def get_top_k_sections(k, text, labels):
     if len(labels) < k:
         print(f"Already has less than {k} sections, skipping")
@@ -388,12 +363,12 @@ def get_top_k_sections(k, text, labels):
     print(f"Getting top {k} labels")
     # Fetch it from LLMs since multi-class
     start = time.time()
-    result = ask_text(f"""
+    result = next(ask_text(f"""
         Give me a shortened list of the most relevant sections for the following text. 
         Text: {text}
         Sections: {str(labels)}
         Most relevant {k} sections in JSON array format:
-        """)
+        """))
     end = time.time()
     print("Result: " + result)
     print("Time taken to top k labels: " + str(end - start) + " seconds")
@@ -405,15 +380,10 @@ def get_top_k_sections(k, text, labels):
 
 
 # todo: question currently contains chat_history, could lead to worse results
-def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
-    if history is None:
-        s_history = "<Empty>"
-    else:
-        s_history = "\n".join(
-            [f"{history_item['sender']}: {history_item['text']}" for history_item in history])
-        s_history = f"Conversation history: \n{s_history}\n"
-        print("History: " + s_history)
-
+def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = None, merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
+    if type(message_history) is list and len(message_history) > 0 and type(message_history[0]) is not ChatMessage:
+        message_history = [ChatMessage(**message) for message in message_history]
+        
     print("Asking paper")
     switcher = {
         0: None,
@@ -439,9 +409,8 @@ def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, me
     paper.filter_sections(
         'exclude', ['reference', 'acknow', 'appendi', 'decl', 'supp', 'funding'])
 
-    prompt = PromptTemplate(
-        input_variables=["context", "request", "conversation_history"],
-        template=f"""You are an helpful assistant, that goes by the name "llm". You are helping a user to understand a paper.
+    def build_prompt(context, request):
+        return f"""You are an helpful assistant, that goes by the name "llm". You are helping a user to understand a paper.
             Please respond to the following request, denoted by "User Request" in the best way possible with the
             given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
             The context you're receiving is only a part of the paper, so there's a chance it won't contain sufficient information to answer the question.
@@ -451,24 +420,30 @@ def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, me
             - Your answer must not include ANY links that are not present in the paper context.
             - Your answer must not include ANY numbers that are not exactly present in the paper context.
             
-            You also have access to the conversation history, denoted by "Conversation history" below.
             Start paper context:
-            {{context}}
+            {context}
             :End paper context.
-            {{conversation_history}}
             
-            User Request: '{{request}}'
+            User Request: '{request}'
             Response:
-            """,
-    )
+            """
 
     completion_tokens = 700
     full_context = paper.to_text()
 
-    context_max_tokens = LLM_MAX_TOKENS - completion_tokens - \
-        count_tokens(prompt.template) - count_tokens(question) - \
-        count_tokens(s_history)
+    context_max_tokens = LLM_MAX_TOKENS - completion_tokens - count_tokens(build_prompt(context="", request=question))
 
+
+    history_size = sum([count_tokens(message.text) for message in message_history])
+    print(f"History size: {history_size}")
+
+    message_limit = 100
+    if history_size > LLM_MAX_TOKENS / 2:
+        print("History too long, truncating")
+        message_history = [split_text(message.text, message_limit)[0] for message in message_history]
+        history_size = sum([count_tokens(message['content']) for message in message_history])
+
+    
     while True:
         contexts = split_text(full_context, context_max_tokens)
         print(f"context_max_tokens: {context_max_tokens}")
@@ -476,19 +451,12 @@ def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, me
         context_sizes = [count_tokens(context) for context in contexts]
         print("Context sizes: ", context_sizes)
 
-        sequence_sizes = [context_size + count_tokens(
-            prompt.template + question + s_history) + completion_tokens for context_size in context_sizes]
+
+        sequence_sizes = [count_tokens(build_prompt(context=context, request=question)) + history_size + completion_tokens for context in contexts]
         print("Sequence sizes: ", sequence_sizes)
 
-        if count_tokens(s_history) > (context_max_tokens - count_tokens(prompt.template + question)):
-            print("History too big, shortening..")
-            s_history = ask_text(f"""
-            Please summarize the following conversation history.
-            {s_history}
-            """)
-
         if max(sequence_sizes) > LLM_MAX_TOKENS:
-            print("Sequences or too big! Shortening..")
+            print("Sequences too big! Shortening..")
             completion_tokens -= 60
             context_max_tokens -= 200
         else:
@@ -504,8 +472,7 @@ def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, me
     def multi_context_wrapper(request, context, index):
         print("Running chain nr " + str(index))
         start = time.time()
-        result = next(ask_prompt(prompt, {
-                      "request": request, "conversation_history": s_history, "context": context}, completion_tokens, stream=False))
+        result = next(ask_text(build_prompt(context=context, request=request), completion_tokens=completion_tokens, message_history=message_history))
         elapsed_time = time.time() - start
         print(
             f"Elapsed time for chain nr {str(index)}: {elapsed_time:.2f} seconds")
@@ -522,14 +489,14 @@ def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, me
         responses = [f.result() for f in futures]
     else:
         print("Running single-context")
-        return ask_prompt(prompt, {"request": question, "conversation_history": s_history, "context": contexts[0]}, completion_tokens, stream=True)
+        return ask_text(build_prompt(context=context, request=question), completion_tokens=completion_tokens, message_history=message_history, stream=True)
 
     if (len(responses) > 1):
         if merge_at_end:
-            summary_prompt = PromptTemplate(
-                input_variables=["responses",
-                                 "question", "conversation_history"],
-                template="""Please merge the following responses (denoted by 'Response N:').
+            def build_summary_prompt(responses, question):
+                return f"""
+                        You are an helpful assistant, that goes by the name "llm". You are helping a user to understand a paper.
+                        Please merge the following responses (denoted by 'Response N:').
                         All of these different responses were generated by taking into account only different parts of the paper. Hence they can be wrong.
                         You should merge them into a single response, using only the ones that positively answer the user request.
                         There a few important caveats that you must follow:
@@ -537,28 +504,24 @@ def ask_paper(question: str, paper: Paper, history: List[ChatMessage] = None, me
                         - You keep its sequentiality (i.e 'Response N+1' contents come after 'Response N').
                         - You must keep the style of the original responses (if for example they are all markdown tables, your response should be a markdown table too)
                         - If you include web links they must be exactely matching the link in it's original response.
-                        Your final answer must be a single response that answers the user request, uninteligible that it is a merge of multiple responses.
+                        - You must frame the response as a user response.
+                        - The final response must be uninteligible that it is a merge of multiple responses.
+                        - You must not refer to any information outside of the paper context. (THIS IS VERY IMPORTANT)
+
+                        Responses to Merge:
                         {responses}
 
-                        {conversation_history}
                         User Request:
                         {question}
-                        Response:
-                        """,
-            )
-            summary_prompt_length = count_tokens(summary_prompt.template) + sum(
-                [count_tokens(response) for response in responses]) + count_tokens(question)
-            print("Summary prompt length: ",  + summary_prompt_length)
-            max_tokens = max(1000, LLM_MAX_TOKENS - summary_prompt_length)
-            # assuming this is inside your function associated with the chatbot
 
-            return ask_prompt(summary_prompt, {"responses": responses, "conversation_history": s_history, "question": question}, completion_tokens=max_tokens, stream=True)
+                        Merged Response:
+                        """
 
+            return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
         else:
-            response = "\n".join(responses)
-            responses.append(response)
+            return string_as_generator("\n".join(responses))
 
-    def string_as_generator(string):
-        yield string
 
-    return string_as_generator(responses[-1])
+    if ENVIRONMENT == "dev":
+        with open("responses.txt", "w") as f:
+            f.write(response = "\n".join(responses))
