@@ -345,7 +345,8 @@ def get_top_k_sections(k, text, labels):
         Give me a shortened list of the most relevant sections for the following text. 
         Text: {text}
         Sections: {str(labels)}
-        Most relevant {k} sections in JSON array format:
+        The answer must be a valid JSON array of strings, e.g. ["Introduction", "Related Work"]
+        The answer must be contain at most {k} sections.
         """))
     end = time.time()
     print("Result: " + result)
