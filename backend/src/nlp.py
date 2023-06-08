@@ -4,11 +4,6 @@ from pydantic import BaseModel
 from typing import List, Union, Dict, Optional, Literal, Generator, Callable, Any
 
 from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS, NOT_ENOUGH_INFO_ANSWER
-from langchain.chat_models import ChatOpenAI
-from langchain.callbacks.streaming_stdout import BaseCallbackHandler
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain.schema import ChatMessage
 from langchain.text_splitter import CharacterTextSplitter
 import tiktoken
 from copy import deepcopy
@@ -16,28 +11,11 @@ import json
 from bs4 import BeautifulSoup
 from utils import json_utils
 from utils.constants import ENVIRONMENT
-from queue import Queue, Empty
-from threading import Thread
 import time
-import asyncio
 import openai
 
 def string_as_generator(string):
     yield string
-
-
-class QueueCallback(BaseCallbackHandler):
-    """Callback handler for streaming LLM responses to a queue."""
-
-    def __init__(self, q):
-        self.q = q
-
-    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
-        self.q.put(token)
-
-    def on_llm_end(self, *args, **kwargs: Any) -> None:
-        return self.q.empty()
-
 
 class CiteSpan(BaseModel):
     start: int
