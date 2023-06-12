@@ -243,7 +243,7 @@ async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
     try:
         results_speed_trade_off = data.get('results_speed_trade_off', None)
         paper = nlp.Paper(**json.loads(data['paper']))
-        history = json.loads(data['history'])
+        history = json.loads(data.get('history', '[]'))
         question = """
         Please extract the into a markdown table all the datasets mentioned in the following text.
         The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
@@ -345,7 +345,7 @@ async def ask_paper(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = json.loads(data['history'])
+        history = json.loads(data.get('history', '[]'))
         if data.get("paper", None) is None:
             paper = nlp.Paper(**process_paper(get_paper_from_url(
                 data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
@@ -364,7 +364,7 @@ async def ask_context(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = json.loads(data['history'])
+        history = json.loads(data.get('history', '[]'))
         context = data['context']
 
     except KeyError as e:
@@ -379,7 +379,7 @@ async def explain(request: Request):
     data = await request.json()
     try:
         text = data['text']
-        history = json.loads(data['history'])
+        history = json.loads(data.get('history', '[]'))
         paper = nlp.Paper(**json.loads(data['paper']))
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
