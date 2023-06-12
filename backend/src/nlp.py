@@ -1,21 +1,36 @@
 import concurrent.futures
-import time
-from pydantic import BaseModel
-from typing import List, Union, Dict, Optional, Literal, Generator, Callable, Any
-
-from utils.constants import MAX_CONTEXTS, LLM_MAX_TOKENS, NOT_ENOUGH_INFO_ANSWER
-from langchain.text_splitter import CharacterTextSplitter
-import tiktoken
-from copy import deepcopy
 import json
-from bs4 import BeautifulSoup
-from utils import json_utils
-from utils.constants import ENVIRONMENT
+import threading
 import time
+from copy import deepcopy
+from typing import (Any, Callable, Dict, Generator, List, Literal, Optional,
+                    Union)
+
 import openai
+import tiktoken
+from bs4 import BeautifulSoup
+from langchain.text_splitter import CharacterTextSplitter
+from pydantic import BaseModel
+from utils import json_utils
+from utils.constants import (ENVIRONMENT, LLM_MAX_TOKENS, MAX_CONTEXTS,
+                             NOT_ENOUGH_INFO_ANSWER)
+
+
+def elapsed_time(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        elapsed = end_time - start_time
+        thread_name = threading.current_thread().name
+        print(f"[{thread_name}] Elapsed time: {elapsed} seconds")
+        return result
+    return wrapper
+
 
 def string_as_generator(string):
     yield string
+
 
 class CiteSpan(BaseModel):
     start: int
@@ -295,9 +310,12 @@ class ChatMessage(BaseModel):  # this should in sync with frontend
         return OpenAIMessage(role=sender, content=self.text)
 
 
-def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream = False) -> Generator[str, None, None]:
-    text_size = count_tokens(text) 
-    history_size = sum([count_tokens(message.text) + 3 for message in message_history])
+@elapsed_time
+def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=False) -> Generator[str, None, None]:
+    print("Asking Text. Stream: ", stream)
+    text_size = count_tokens(text)
+    history_size = sum([count_tokens(message.text) +
+                       3 for message in message_history])
 
     if completion_tokens is None:
         completion_tokens = LLM_MAX_TOKENS - text_size - history_size
@@ -333,20 +351,21 @@ def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = 
 
     return response
 
-def get_top_k_sections(k, text, labels):
+
+def get_top_k_labels(k, text, labels):
     if len(labels) < k:
-        print(f"Already has less than {k} sections, skipping")
+        print(f"Already has less than {k} labels, skipping")
         return labels
 
     print(f"Getting top {k} labels")
     # Fetch it from LLMs since multi-class
     start = time.time()
-    result = next(ask_text(f"""
-        Give me a shortened list of the most relevant sections for the following text. 
+    result = next(ask_json(f"""
+        Give me a shortened list of the most relevant labels for the following text. 
         Text: {text}
-        Sections: {str(labels)}
+        labels: {str(labels)}
         The answer must be a valid JSON array of strings, e.g. ["Introduction", "Related Work"]
-        The answer must be contain at most {k} sections.
+        The answer must be contain at most {k} labels.
         """))
     end = time.time()
     print("Result: " + result)
@@ -358,11 +377,141 @@ def get_top_k_sections(k, text, labels):
         return labels
 
 
-# todo: question currently contains chat_history, could lead to worse results
-def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = None, merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
+def validate_message_history(message_history: List[ChatMessage]):
+    history_size = sum([count_tokens(message.text)
+                        for message in message_history])
+
+    message_token_limit = 400
+    while history_size > LLM_MAX_TOKENS / 2:
+        print("History too long, truncating")
+        message_history = [split_text(message.text, message_token_limit)[
+            0] for message in message_history]
+        history_size = sum([count_tokens(message.text)
+                           for message in message_history])
+        message_token_limit = message_token_limit * 0.85
+
+    print(f"History size: {history_size}")
+    return message_history
+
+
+def ask_context(question: str, full_context: str, message_history: List[ChatMessage] = [], prompt_override: str = None, merge_at_end=True) -> Generator[str, None, None]:
+    def build_prompt(question, context):
+        if prompt_override is None:
+            return f"""
+            You are a smart and helpful assistant that specializes in answering questions based on a given context.
+            Answer the following question based only on the given context.
+            Context:
+            {context}
+            
+            Question: 
+            {question}
+
+            Your Answer:
+            """
+        else:
+            if "{context}" not in prompt_override or "{question}" not in prompt_override:
+                raise ValueError(
+                    "Prompt override must contain {context} and {question}")
+
+            return prompt_override.replace("{context}", context).replace("{question}", question)
+
+    def build_summary_prompt(responses, question):
+        return f"""
+                You now are a smart assistant specializes in the merging responses task.
+                You will receive a user request and a list of responses, and your job is to merge them into one single response,
+                while obeying some rules:
+
+                - Do not include any responses that are not clearly related to the user's request.
+                - You should not contradict yourself.
+                - You should not repeat yourself.
+                - Your answer must be sequential (i.e 'Response N+1' contents come after 'Response N').
+                - You must mimic the structure & style of the original responses. (e.g. formal, informal, markdown table, code, json, etc.)
+                - The answer must be directed to the user, not to the original responses.
+                - The user only cares & knows about your given answer, not the original responses.
+                - The user must not know from the answer that it is a merge of multiple responses.
+                - You should not include any information that is not in the original responses (this is very important).
+
+                Responses to Merge:
+                {responses}
+
+                User Request:
+                {question}
+
+                Merged Response:
+                """
+
     if type(message_history) is list and len(message_history) > 0 and type(message_history[0]) is not ChatMessage:
-        message_history = [ChatMessage(**message) for message in message_history]
-        
+        message_history = [ChatMessage(**message)
+                           for message in message_history]
+
+    completion_tokens = 700
+    context_max_tokens = LLM_MAX_TOKENS - completion_tokens - \
+        count_tokens(build_prompt(context="", question=question))
+
+    message_history = validate_message_history(message_history)
+    history_size = sum([count_tokens(message.text)
+                       for message in message_history])
+
+    while True:
+        contexts = split_text(full_context, context_max_tokens)
+        print(f"context_max_tokens: {context_max_tokens}")
+
+        context_sizes = [count_tokens(context) for context in contexts]
+        print("Context sizes: ", context_sizes)
+
+        sequence_sizes = [count_tokens(build_prompt(
+            question, context)) + history_size + completion_tokens for context in contexts]
+        print("Sequence sizes: ", sequence_sizes)
+
+        if max(sequence_sizes) > LLM_MAX_TOKENS:
+            print("Sequences too big! Shortening..")
+            completion_tokens -= 60
+            context_max_tokens -= 200
+        else:
+            if ENVIRONMENT == "dev":
+                with open("full_context.txt", "w") as f:
+                    f.write(full_context)
+                with open("contexts.txt", "w") as f:
+                    f.write("\n".join(["\nContext nr " + str(i) + ": " +
+                            context + '\n' for i, context in enumerate(contexts)]))
+            break
+
+    def ask_chunk(chunk, stream):
+        return next(ask_text(
+            text=build_prompt(question, chunk),
+            completion_tokens=completion_tokens,
+            message_history=message_history,
+            stream=stream
+        ))
+
+    print("Contexts to ask: ", len(contexts))
+    futures = []
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for full_context in contexts[:MAX_CONTEXTS]:
+            futures.append(executor.submit(
+                ask_chunk, chunk=full_context, stream=len(contexts) == 1))
+
+    responses = [f.result() for f in futures]
+
+    if ENVIRONMENT == "dev":
+        with open("responses.txt", "w") as f:
+            f.write("\n\n".join(responses))
+
+    if (len(responses) > 1):
+        if merge_at_end:
+            return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
+        else:
+            return string_as_generator("\n".join(responses))
+
+
+def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
+    if "this is a load test" in question.lower():
+        return "This is a load test response"
+
+    if type(message_history) is list and len(message_history) > 0 and type(message_history[0]) is not ChatMessage:
+        message_history = [ChatMessage(**message)
+                           for message in message_history]
+
     print("Asking paper")
     switcher = {
         0: None,
@@ -377,130 +526,35 @@ def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = 
             "Invalid valid for speed_acc_trade_off, must be one of " + str(list(switcher.keys())))
 
     if switcher.get(results_speed_trade_off) is not None:
-        selected_sections = get_top_k_sections(
+        selected_sections = get_top_k_labels(
             k=top_k_sections, text=f"Question on paper article {paper.title}: {question}", labels=paper.get_sections())
         print("Selected sections: " + str(selected_sections))
         paper.filter_sections('include', selected_sections)
 
-    if "this is a load test" in question.lower():
-        return "This is a load test response"
-
     paper.filter_sections(
         'exclude', ['reference', 'acknow', 'appendi', 'decl', 'supp', 'funding'])
 
-    def build_prompt(context, request):
-        return f"""You are an helpful assistant, that goes by the name "llm". You are helping a user to understand a paper.
-            Please respond to the following request, denoted by "User Request" in the best way possible with the
-            given paper context that bounded by the paper context (it can be the full or a subpart of the paper).
-            The context you're receiving is only a part of the paper, so there's a chance it won't contain sufficient information to answer the question.
-            If it happens, please say so instead of forging a low confidence answer.
-            Rules:
-            - Your answer must only include information that is explicitly present in the paper context.
-            - Your answer must not include ANY links that are not present in the paper context.
-            - Your answer must not include ANY numbers that are not exactly present in the paper context.
-            
-            Start paper context:
-            {context}
-            :End paper context.
-            
-            User Request: '{request}'
-            Response:
-            """
+    context = paper.to_text()
 
-    completion_tokens = 700
-    full_context = paper.to_text()
+    prompt_override = """
+    Answer the following question based on the given paper context, according to the following rules:
 
-    context_max_tokens = LLM_MAX_TOKENS - completion_tokens - count_tokens(build_prompt(context="", request=question))
-
-
-    history_size = sum([count_tokens(message.text) for message in message_history])
-    print(f"History size: {history_size}")
-
-    message_limit = 100
-    if history_size > LLM_MAX_TOKENS / 2:
-        print("History too long, truncating")
-        message_history = [split_text(message.text, message_limit)[0] for message in message_history]
-        history_size = sum([count_tokens(message['content']) for message in message_history])
-
+    - Do not include any information that is not in the paper.
+    - If the paper context does not contain enough information to clearly answer the question, you must say so.
+    - You cannot use any information that is not in the paper context.
+    - Backup your answer with quotes from the paper.
     
-    while True:
-        contexts = split_text(full_context, context_max_tokens)
-        print(f"context_max_tokens: {context_max_tokens}")
+    Paper Context:
+    {context}
 
-        context_sizes = [count_tokens(context) for context in contexts]
-        print("Context sizes: ", context_sizes)
+    Question:
+    {question}    
+    """
 
-
-        sequence_sizes = [count_tokens(build_prompt(context=context, request=question)) + history_size + completion_tokens for context in contexts]
-        print("Sequence sizes: ", sequence_sizes)
-
-        if max(sequence_sizes) > LLM_MAX_TOKENS:
-            print("Sequences too big! Shortening..")
-            completion_tokens -= 60
-            context_max_tokens -= 200
-        else:
-            break
-
-    if ENVIRONMENT == "dev":
-        with open("paper.txt", "w") as f:
-            f.write(full_context)
-        with open("contexts.txt", "w") as f:
-            f.write("\n".join(["\nContext nr " + str(i) + ": " +
-                    context + '\n' for i, context in enumerate(contexts)]))
-
-    def multi_context_wrapper(request, context, index):
-        print("Running chain nr " + str(index))
-        start = time.time()
-        result = next(ask_text(build_prompt(context=context, request=request), completion_tokens=completion_tokens, message_history=message_history))
-        elapsed_time = time.time() - start
-        print(
-            f"Elapsed time for chain nr {str(index)}: {elapsed_time:.2f} seconds")
-        return result
-
-    if (len(contexts) > 1):
-        print("Running multi-context")
-        futures = []
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            for index, context in enumerate(contexts[:MAX_CONTEXTS]):
-                futures.append(executor.submit(
-                    multi_context_wrapper, request=question, context=context, index=index))
-
-        responses = [f.result() for f in futures]
-    else:
-        print("Running single-context")
-        return ask_text(build_prompt(context=context, request=question), completion_tokens=completion_tokens, message_history=message_history, stream=True)
-
-    if (len(responses) > 1):
-        if merge_at_end:
-            def build_summary_prompt(responses, question):
-                return f"""
-                        You are an helpful assistant, that goes by the name "llm". You are helping a user to understand a paper.
-                        Please merge the following responses (denoted by 'Response N:').
-                        All of these different responses were generated by taking into account only different parts of the paper. Hence they can be wrong.
-                        You should merge them into a single response, using only the ones that positively answer the user request.
-                        There a few important caveats that you must follow:
-                        - You should duplicate any information that positively answers the user request.
-                        - You keep its sequentiality (i.e 'Response N+1' contents come after 'Response N').
-                        - You must keep the style of the original responses (if for example they are all markdown tables, your response should be a markdown table too)
-                        - If you include web links they must be exactely matching the link in it's original response.
-                        - You must frame the response as a user response.
-                        - The final response must be uninteligible that it is a merge of multiple responses.
-                        - You must not refer to any information outside of the paper context. (THIS IS VERY IMPORTANT)
-
-                        Responses to Merge:
-                        {responses}
-
-                        User Request:
-                        {question}
-
-                        Merged Response:
-                        """
-
-            return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
-        else:
-            return string_as_generator("\n".join(responses))
-
-
-    if ENVIRONMENT == "dev":
-        with open("responses.txt", "w") as f:
-            f.write(response = "\n".join(responses))
+    return ask_context(
+        question=question,
+        full_context=context,
+        message_history=message_history,
+        merge_at_end=merge_at_end,
+        prompt_override=prompt_override
+    )

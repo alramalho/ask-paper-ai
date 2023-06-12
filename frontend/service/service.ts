@@ -109,7 +109,7 @@ interface AskOptions extends DefaultEndpointOptions {
 }
 
 export function askPaper({question, history, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions, options: RequestInit) {
-  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask`, {
+  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask-paper`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

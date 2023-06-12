@@ -1,29 +1,27 @@
 import datetime
-import os.path
-
-from fastapi import FastAPI, Request, UploadFile, HTTPException, BackgroundTasks, Response
-from fastapi.middleware.cors import CORSMiddleware
-from typing import Union, Tuple, List, Dict
-
-from doc2json.grobid2json.process_pdf import process_pdf_file
-import os
 import json
-from mangum import Mangum
-from utils.constants import (
-    FILESYSTEM_BASE, EMAIL_SENDER, ASK_PAPER_BANNER_IMG,
-    DB_EMAILS_SENT, DB_JSON_PAPERS, DB_FEEDBACK, NOT_ENOUGH_INFO_ANSWER
-)
-import aws
-import middleware
-from botocore.exceptions import ClientError
-import nlp
-from database.db import DynamoDBGateway
-from database.users import GuestUsersGateway, UserDoesNotExistException, DiscordUsersGateway
+import os
+import os.path
 import re
 import uuid
-from utils.constants import ENVIRONMENT
-from fastapi.responses import StreamingResponse
+from typing import Dict, List, Tuple, Union
 
+import aws
+import middleware
+import nlp
+from botocore.exceptions import ClientError
+from database.db import DynamoDBGateway
+from database.users import (DiscordUsersGateway, GuestUsersGateway,
+                            UserDoesNotExistException)
+from doc2json.grobid2json.process_pdf import process_pdf_file
+from fastapi import (BackgroundTasks, FastAPI, HTTPException, Request,
+                     Response, UploadFile)
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+from mangum import Mangum
+from utils.constants import (ASK_PAPER_BANNER_IMG, DB_EMAILS_SENT, DB_FEEDBACK,
+                             DB_JSON_PAPERS, EMAIL_SENDER, ENVIRONMENT,
+                             FILESYSTEM_BASE, NOT_ENOUGH_INFO_ANSWER)
 
 app = FastAPI()
 
@@ -342,8 +340,8 @@ async def summarize(request: Request):
     return StreamingResponse(content=nlp.ask_paper(question, paper, merge_at_end=False), media_type="text/plain")
 
 
-@app.post("/ask")
-async def ask(request: Request):
+@app.post("/ask-paper")
+async def ask_paper(request: Request):
     data = await request.json()
     try:
         question = data['question']
@@ -358,11 +356,23 @@ async def ask(request: Request):
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
-    if quote:
-        question += "Please include at least one EXACT quote from the original paper."
-
     prompt = f"""{history}\nUser: {question}\nAI:"""
     return StreamingResponse(content=nlp.ask_paper(question=prompt, message_history=history, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+
+
+@app.post("/ask-context")
+async def ask_context(request: Request):
+    data = await request.json()
+    try:
+        question = data['question']
+        history = json.loads(data['history'])
+        context = data['context']
+
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
+
+    return StreamingResponse(content=nlp.ask_context(question, context, history), media_type="text/plain")
+
 
 
 @app.post("/explain")
@@ -396,7 +406,8 @@ async def store_feedback(request: Request):
 
 if __name__ == "__main__":
     import asyncio
-    from hypercorn.config import Config
+
     from hypercorn.asyncio import serve
+    from hypercorn.config import Config
     asyncio.run(serve(app, Config()))
     # trying out hypercorn instead of uvicorn – https://github.com/encode/httpx/issues/96

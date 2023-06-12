@@ -8,6 +8,7 @@ temp
 *.zip
 src_dependencies
 build
-paper.txt
-contexts.txt
-responses.txt
+**/*paper.txt
+**/*contexts.txt
+**/*responses.txt
+**/*full_context.txt
