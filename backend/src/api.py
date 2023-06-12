@@ -352,7 +352,6 @@ async def ask_paper(request: Request):
         else:
             paper = nlp.Paper(**json.loads(data['paper']))
         results_speed_trade_off = data.get('results_speed_trade_off', None)
-        quote = data['quote']
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 

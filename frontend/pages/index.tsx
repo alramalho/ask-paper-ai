@@ -1,22 +1,21 @@
-import { Badge, Loading, Spacer, Switch, Text, Textarea, useInput, Image, Divider, Card, Grid } from "@nextui-org/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import MarkdownView from "react-showdown";
-import { Box, FeedbackVisibleContext, headerHeight, isMobile, } from "../components/layout";
-import { Flex } from "../components/styles/flex";
-import PaperUploader from "../components/paper-uploader";
-import { GuestUserContext, useGuestSession } from "../hooks/session";
-import dynamic from "next/dynamic";
-import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor, sendAnswerEmail, updateDatasets } from "../service/service";
-import RemainingRequests from "../components/remaining-requests";
+import { BorderOutlined, ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
+import { Loading, Spacer } from "@nextui-org/react";
+import type { MenuProps } from 'antd';
+import { Button, Collapse, Input, Layout, notification } from 'antd';
 import { AxiosResponse } from "axios";
-import IconSlider from "../components/slider/slider";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
+import { useContext, useEffect, useState } from "react";
+import MarkdownView from "react-showdown";
 import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
-import { Breadcrumb, Button, Collapse, Layout, Space, Input, notification } from 'antd';
-import type { MenuProps } from 'antd';
-import { BorderOutlined, ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightOutlined, HighlightTwoTone, SendOutlined, StopOutlined } from "@ant-design/icons";
-import { create } from "domain";
+import { FeedbackVisibleContext, headerHeight, isMobile } from "../components/layout";
+import PaperUploader from "../components/paper-uploader";
+import RemainingRequests from "../components/remaining-requests";
+import IconSlider from "../components/slider/slider";
+import { Flex } from "../components/styles/flex";
+import { GuestUserContext, useGuestSession } from "../hooks/session";
+import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor } from "../service/service";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -70,7 +69,6 @@ export type Status = 'idle' | 'loading' | 'success' | 'error'
 const Home = () => {
   const [messageStatus, setMessageStatus] = useState<Status>('idle')
   const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
-  const [quoteChecked, setQuoteChecked] = useState<boolean>(true)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
@@ -332,7 +330,6 @@ const Home = () => {
                     email: session!.user!.email,
                     // @ts-ignore
                     accessToken: session!.accessToken,
-                    quote: quoteChecked,
                     // @ts-ignore
                     paperHash: selectedPaper!.hash,
                     resultsSpeedTradeoff: resultsSpeedTradeoff
@@ -346,12 +343,6 @@ const Home = () => {
 
           <Collapse size="small" style={{ width: "100%" }} activeKey={activePanelKeys} onChange={key => setActivePanelKeys(key)}>
             <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
-              <Flex css={{ gap: "$2", justifyContent: 'flex-start' }}>
-                <Switch bordered initialChecked checked={quoteChecked}
-                  onChange={() => setQuoteChecked(previous => !previous)}></Switch>
-                <Text small>Quote paper</Text>
-              </Flex>
-              <Spacer y={1} />
               <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
             </Panel>
             <Panel data-testid="predefined-actions-panel" header="📦 Predefined actions" key="2" >

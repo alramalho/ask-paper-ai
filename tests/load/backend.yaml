@@ -19,7 +19,6 @@ scenarios:
             context: "dummy context"
             question: "this is a load test"
             email: "load@test"
-            quote: true
           expect:
             - statusCode: 200
 

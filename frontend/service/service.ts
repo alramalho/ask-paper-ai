@@ -105,10 +105,9 @@ interface AskOptions extends DefaultEndpointOptions {
   paper: Paper,
   resultsSpeedTradeoff: number,
   question: string,
-  quote: boolean
 }
 
-export function askPaper({question, history, paper, email, accessToken, paperHash, quote, resultsSpeedTradeoff}: AskOptions, options: RequestInit) {
+export function askPaper({question, history, paper, email, accessToken, paperHash, resultsSpeedTradeoff}: AskOptions, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask-paper`, {
     method: 'POST',
     headers: {
@@ -121,7 +120,6 @@ export function askPaper({question, history, paper, email, accessToken, paperHas
       history: JSON.stringify(history),
       paper: JSON.stringify(paper),
       paper_hash: paperHash,
-      quote,
       results_speed_trade_off: resultsSpeedTradeoff
     }),
     ...options
