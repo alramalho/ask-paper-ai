@@ -476,20 +476,27 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
                             context + '\n' for i, context in enumerate(contexts)]))
             break
 
-    def ask_chunk(chunk, stream):
+    print("Contexts to ask: ", len(contexts))
+    if len(contexts) == 1:
+        return ask_text(
+            text=build_prompt(question, contexts[0]),
+            completion_tokens=completion_tokens,
+            message_history=message_history,
+            stream=True
+        )
+
+    def ask_chunk(chunk):
         return next(ask_text(
             text=build_prompt(question, chunk),
             completion_tokens=completion_tokens,
             message_history=message_history,
-            stream=stream
+            stream=False
         ))
 
-    print("Contexts to ask: ", len(contexts))
     futures = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for full_context in contexts[:MAX_CONTEXTS]:
-            futures.append(executor.submit(
-                ask_chunk, chunk=full_context, stream=len(contexts) == 1))
+            futures.append(executor.submit(ask_chunk, chunk=full_context))
 
     responses = [f.result() for f in futures]
 
@@ -497,11 +504,10 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
         with open("responses.txt", "w") as f:
             f.write("\n\n".join(responses))
 
-    if (len(responses) > 1):
-        if merge_at_end:
-            return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
-        else:
-            return string_as_generator("\n".join(responses))
+    if merge_at_end:
+        return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
+    else:
+        return string_as_generator("\n".join(responses))
 
 
 def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
