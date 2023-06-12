@@ -1,13 +1,18 @@
-from fastapi.responses import JSONResponse
-from fastapi import Request, BackgroundTasks
 import datetime
-import requests
-import traceback
-from utils.constants import LATEST_COMMIT_ID, DB_FUNCTION_INVOCATIONS, DISCORD_WHITELIST_ROLENAME, HIPPOAI_DISCORD_SERVER_ID, DISCORD_CLIENT_BOT_TOKEN
-from database.users import GuestUsersGateway, DiscordUsersGateway, UserDoesNotExistException
-from database.db import DynamoDBGateway
 import json
+import traceback
 import uuid
+
+import requests
+from database.db import DynamoDBGateway
+from database.users import (DiscordUsersGateway, GuestUsersGateway,
+                            UserDoesNotExistException)
+from fastapi import BackgroundTasks, Request
+from fastapi.responses import JSONResponse
+from utils.constants import (DB_FUNCTION_INVOCATIONS, DISCORD_CLIENT_BOT_TOKEN,
+                             DISCORD_WHITELIST_ROLENAME,
+                             HIPPOAI_DISCORD_SERVER_ID, LATEST_COMMIT_ID)
+
 
 async def set_body(request: Request, body: bytes):
     async def receive():
@@ -76,16 +81,20 @@ async def verify_login(request: Request, call_next):
         return await call_next(request)
 
     guest_users_gateway = GuestUsersGateway()
-    if guest_users_gateway.is_guest_user_allowed(email):
-        print("User is an allowed guest")
-        response = await call_next(request)
+    try:
+        if guest_users_gateway.is_guest_user_allowed(email):
+            print("User is an allowed guest")
+            response = await call_next(request)
 
-        if request.url.path in ['/ask', '/summarize', '/extract-datasets', '/explain'] and response.status_code // 100 == 2: 
-            # TODO, the following logic isn't the best way due to following reasons:
-            # 1. if the user has very low latency, his browser might make several
-            #    requests to ask at once, then he ends up only getting one response or none
-            guest_users_gateway.decrement_remaining_trial_requests(email)
-        return response
+            if request.url.path in ['/ask', '/summarize', '/extract-datasets', '/explain'] and response.status_code // 100 == 2: 
+                # TODO, the following logic isn't the best way due to following reasons:
+                # 1. if the user has very low latency, his browser might make several
+                #    requests to ask at once, then he ends up only getting one response or none
+                guest_users_gateway.decrement_remaining_trial_requests(email)
+            return response
+    except UserDoesNotExistException as e:
+        print("User is not a guest")
+        pass
 
     return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
 
