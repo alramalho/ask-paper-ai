@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import traceback
 import uuid
 
@@ -64,6 +65,12 @@ async def verify_login(request: Request, call_next):
     email = body.get('email', request.headers.get('Email', None))
 
     auth_header = request.headers.get('Authorization', None)
+    
+    bypass_auth_token = os.getenv('ASK_PAPER_BYPASS_AUTH_TOKEN', None)
+    if bypass_auth_token and bypass_auth_token in auth_header:
+        print("Using auth token")
+        return await call_next(request)
+
     discord_users_gateway = DiscordUsersGateway()
     
     user_discord_id, discord_email = await get_id_and_email_from_token(auth_header)
