@@ -1,5 +1,3 @@
-processing_output
-
 .venv
 .idea
 papers
@@ -8,7 +6,3 @@ temp
 *.zip
 src_dependencies
 build
-**/*paper.txt
-**/*contexts.txt
-**/*responses.txt
-**/*full_context.txt

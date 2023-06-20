@@ -1,16 +1,16 @@
-import { Button, Spacer, Image, Text } from "@nextui-org/react"
+import { DownOutlined, FileTextOutlined, MailOutlined, SaveOutlined } from "@ant-design/icons"
+import { Button, Image, Spacer, Text } from "@nextui-org/react"
+import { Button as AntButton, Dropdown, Space, notification } from "antd"
 import { useSession } from "next-auth/react"
 import { useContext, useMemo, useRef, useState } from "react"
 import MarkdownView from "react-showdown"
 import { GuestUserContext, useGuestSession } from "../../hooks/session"
 import { Paper, Status, makeLinksClickable } from "../../pages"
-import { updateDatasets, sendAnswerEmail } from "../../service/service"
+import { sendAnswerEmail, updateDatasets } from "../../service/service"
 import { storeFeedback } from "../feedback-modal"
 import { Box } from "../layout"
 import { Flex } from "../styles/flex"
 import { ChatMessage } from "./chat"
-import { Button as AntButton, Dropdown, Space, notification } from "antd"
-import { DownOutlined, FileTextOutlined, MailOutlined, SaveOutlined } from "@ant-design/icons"
 
 export const RobotAnswer = ({ children, ...props }) => {
     return (
@@ -121,7 +121,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                 icon={<SaveOutlined />}
                                 loading={saveStatus == 'loading'}
                             >
-                                Save
+                                Save to My Datasets
                             </AntButton>
                         }
                         <AntButton

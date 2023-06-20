@@ -400,6 +400,10 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
             return f"""
             You are a smart and helpful assistant that specializes in answering questions based on a given context.
             Answer the following question based only on the given context.
+            Take into account the following rules:
+            - Your answer must be based only on the given context, making references and quotes whenever fit.
+            - When the context does not contain enough information to answer the question, you must say so.
+            
             Context:
             {context}
             
@@ -469,9 +473,9 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
             context_max_tokens -= 200
         else:
             if ENVIRONMENT == "dev":
-                with open("full_context.txt", "w") as f:
+                with open("debug/full_context.txt", "w") as f:
                     f.write(full_context)
-                with open("contexts.txt", "w") as f:
+                with open("debug/contexts.txt", "w") as f:
                     f.write("\n".join(["\nContext nr " + str(i) + ": " +
                             context + '\n' for i, context in enumerate(contexts)]))
             break
@@ -501,7 +505,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
     responses = [f.result() for f in futures]
 
     if ENVIRONMENT == "dev":
-        with open("responses.txt", "w") as f:
+        with open("debug/responses.txt", "w") as f:
             f.write("\n\n".join(responses))
 
     if merge_at_end:

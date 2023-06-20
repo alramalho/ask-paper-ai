@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import {Paper} from "../pages";
+import { Paper } from "../pages";
 import { ChatMessage } from "../components/chat/chat";
 
 export function sendInstructionsEmail(recipient) {
@@ -15,7 +15,7 @@ interface SendAnswerEmailProps {
   paperTitle: string
 }
 
-export function sendAnswerEmail({email, question, paperTitle, answer}: SendAnswerEmailProps) {
+export function sendAnswerEmail({ email, question, paperTitle, answer }: SendAnswerEmailProps) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`, {
     recipient: email,
     question: question,
@@ -107,7 +107,7 @@ interface AskOptions extends DefaultEndpointOptions {
   question: string,
 }
 
-export function askPaper({question, history, paper, email, accessToken, paperHash, resultsSpeedTradeoff}: AskOptions, options: RequestInit) {
+export function askPaper({ question, history, paper, email, accessToken, paperHash, resultsSpeedTradeoff }: AskOptions, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask-paper`, {
     method: 'POST',
     headers: {
@@ -152,7 +152,7 @@ interface UpdateDatasetsOptions {
 }
 
 
-export function updateDatasets({ datasets, paperTitle, email, accessToken }: UpdateDatasetsOptions): Promise<AxiosResponse>{
+export function updateDatasets({ datasets, paperTitle, email, accessToken }: UpdateDatasetsOptions): Promise<AxiosResponse> {
   return axios.put(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/update-datasets`, {
     datasets: JSON.stringify(datasets),
     paper_title: paperTitle

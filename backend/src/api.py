@@ -197,10 +197,11 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
 
 
 @app.post("/upload-paper")
-async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks: BackgroundTasks):
+async def upload_paper(pdf_file: UploadFile, request: Request, response: Response, background_tasks: BackgroundTasks):
 
     try:
         email = request.headers['Email']
+        accept = request.headers['Accept']
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
@@ -234,7 +235,11 @@ async def upload_paper(pdf_file: UploadFile, request: Request, background_tasks:
 
     json_paper['hash'] = paper_hash
 
-    return json_paper
+    if accept == 'text/plain':
+        response.headers["Content-Type"] = "text/plain"
+        return nlp.Paper(**json_paper).to_text()
+    else:
+        return json_paper
 
 
 @app.post("/extract-datasets")

@@ -20,6 +20,8 @@ pdf2json-api/output
 spike
 localstack
 
-paper.txt
-contexts.txt
-responses.txt
+**/*processing_output
+**/*paper.txt
+**/*contexts.txt
+**/*responses.txt
+**/*full_context.txt
