@@ -242,35 +242,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
         return json_paper
 
 
-@app.post("/extract-datasets")
-async def extract_datasets(request: Request, background_tasks: BackgroundTasks):
-    data = await request.json()
-    try:
-        results_speed_trade_off = data.get('results_speed_trade_off', None)
-        paper = nlp.Paper(**json.loads(data['paper']))
-        history = json.loads(data.get('history', '[]'))
-        question = """
-        Please extract the into a markdown table all the datasets mentioned in the following text.
-        The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
-        Here's a few caveats about how you should build your response:
-        - Include every dataset referenced, regardless of its online availability.
-        - Only include complete datasets, not subsets.
-        - URLs are required for the "Link to Data or Code" field.
-        - Keep the "Extra Info" field brief and to the point.
-        - The "Passage" field should contain the exact excerpt from the paper where the dataset is mentioned.
-        - "Name" and "Passage" fields must be filled in, with no "N/A" or similar entries.
-        - Each dataset's "Name" must be unique.
-        - Ensure all table entries reflect only what's explicitly stated in the paper, avoid making inferences.
-        """
-    except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
-
-    if results_speed_trade_off is not None and results_speed_trade_off > 0:
-        paper.filter_sections('include', ['data', 'inclusion criteria'])
-
-    return StreamingResponse(nlp.ask_paper(question, paper, history, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
-
-
 @app.post("/save-datasets")
 async def save_datasets(request: Request):
     data = await request.json()
@@ -329,21 +300,6 @@ async def user_datasets(request: Request):
     return {'datasets': json.dumps(user.datasets)}
 
 
-@app.post("/summarize")
-async def summarize(request: Request):
-    data = await request.json()
-    try:
-        paper = nlp.Paper(**json.loads(data['paper']))
-        question = """
-        Please provide me a summary of the paper per section, if present. Sections are denoted by a markdown header (denoted by several '#') or a dash.
-        Each section summary should contain only the main section takeways. You're only allowed to include mardkdown headers that are present in the given paper context.
-        """
-    except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
-
-    paper.filter_sections('exclude', ['abstract'])
-    return StreamingResponse(content=nlp.ask_paper(question, paper, merge_at_end=False), media_type="text/plain")
-
 
 @app.post("/ask-paper")
 async def ask_paper(request: Request):
@@ -351,17 +307,13 @@ async def ask_paper(request: Request):
     try:
         question = data['question']
         history = json.loads(data.get('history', '[]'))
-        if data.get("paper", None) is None:
-            paper = nlp.Paper(**process_paper(get_paper_from_url(
-                data['paper_url']), data['paper_url'][data.get('paper_url').rfind('/'):]))
-        else:
-            paper = nlp.Paper(**json.loads(data['paper']))
-        results_speed_trade_off = data.get('results_speed_trade_off', None)
+        paper = nlp.Paper(**json.loads(data['paper']))
+
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     prompt = f"""{history}\nUser: {question}\nAI:"""
-    return StreamingResponse(content=nlp.ask_paper(question=prompt, message_history=history, paper=paper, results_speed_trade_off=results_speed_trade_off), media_type="text/plain")
+    return StreamingResponse(content=nlp.ask_paper(question=prompt, message_history=history, paper=paper), media_type="text/plain")
 
 
 @app.post("/ask-context")
@@ -378,17 +330,6 @@ async def ask_context(request: Request):
     return StreamingResponse(content=nlp.ask_context(question, context, history), media_type="text/plain")
 
 
-
-@app.post("/explain")
-async def explain(request: Request):
-    data = await request.json()
-    try:
-        text = data['text']
-        history = json.loads(data.get('history', '[]'))
-        paper = nlp.Paper(**json.loads(data['paper']))
-    except KeyError as e:
-        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
-    return StreamingResponse(nlp.ask_paper(f"Please explain the following text in simpler words. If possible, try to explain it in the context of the paper. \"{text}\"", paper, message_history=history, results_speed_trade_off=4), media_type="text/plain")
 
 
 @app.post("/store-feedback")

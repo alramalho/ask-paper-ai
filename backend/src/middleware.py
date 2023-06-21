@@ -65,10 +65,12 @@ async def verify_login(request: Request, call_next):
     email = body.get('email', request.headers.get('Email', None))
 
     auth_header = request.headers.get('Authorization', None)
-    
     bypass_auth_token = os.getenv('ASK_PAPER_BYPASS_AUTH_TOKEN', None)
-    if bypass_auth_token and bypass_auth_token in auth_header:
+    print(f"Auth header: {auth_header}")
+    print(f"Bypass auth token: {bypass_auth_token}")
+    if bypass_auth_token is not None and bypass_auth_token in auth_header:
         print("Using auth token")
+        request.state.user_discord_id = None
         return await call_next(request)
 
     discord_users_gateway = DiscordUsersGateway()
@@ -93,7 +95,7 @@ async def verify_login(request: Request, call_next):
             print("User is an allowed guest")
             response = await call_next(request)
 
-            if request.url.path in ['/ask', '/summarize', '/extract-datasets', '/explain'] and response.status_code // 100 == 2: 
+            if request.url.path in ['/ask-context', '/ask-paper'] and response.status_code // 100 == 2: 
                 # TODO, the following logic isn't the best way due to following reasons:
                 # 1. if the user has very low latency, his browser might make several
                 #    requests to ask at once, then he ends up only getting one response or none

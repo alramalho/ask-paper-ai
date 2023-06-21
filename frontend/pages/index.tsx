@@ -15,7 +15,7 @@ import RemainingRequests from "../components/remaining-requests";
 import IconSlider from "../components/slider/slider";
 import { Flex } from "../components/styles/flex";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
-import { askPaper, explainSelectedText, extractDatasets, generateSummary, getRemainingRequestsFor } from "../service/service";
+import { askPaper, getRemainingRequestsFor } from "../service/service";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -67,7 +67,7 @@ export type Paper = {
 export type Status = 'idle' | 'loading' | 'success' | 'error'
 
 const Home = () => {
-  const [messageStatus, setMessageStatus] = useState<Status>('idle')
+  const [responseStatus, setResponseStatus] = useState<Status>('idle')
   const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
   const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
@@ -79,26 +79,17 @@ const Home = () => {
   const [selectedText, setSelectedText] = useState('');
   const [question, setQuestion] = useState('');
   const [activePanelKeys, setActivePanelKeys] = useState<string[] | string | undefined>(undefined);
-  const [streaming, setStreaming] = useState<boolean>(false)
   const [requestControllers, setRequestControllers] = useState<AbortController[]>([])
   const [notificationApi, contextHolder] = notification.useNotification();
 
 
-  useEffect(() => {
-    if (messageStatus == 'loading') {
-      if (document.getElementById('loading-answer')) {
-        // @ts-ignore
-        document.getElementById('loading-answer').scrollIntoView()
-      }
+  function scrollToLastSelector(selector: string) {
+    const elements = document.querySelectorAll(selector)
+    if (elements.length > 0) {
+      elements[elements.length - 1].scrollIntoView()
     }
-    if (messageStatus !== 'loading' && messageStatus !== 'idle') {
-      if (document.getElementById('answer-area')) {
-        // @ts-ignore
-        document.getElementById('answer-area').scrollIntoView()
-      }
-    }
-  }, [messageStatus])
-
+  }
+  
   useEffect(() => {
     if (chatHistory.length > 0) {
       const chatElement = document.getElementById('chat')
@@ -159,20 +150,24 @@ const Home = () => {
     setRequestControllers([])
   }
 
-  useEffect(() => { console.log(messageStatus) }, [messageStatus])
 
-  function handleSubmitFunc<T extends any[], R>(
-    func: (...args: T) => Promise<Response>,
-    initializationCallback: () => void,
-    ...args: T
-  ) {
-    if (messageStatus !== 'loading') {
-      setMessageStatus('loading')
+  function handleAskButtonClick() {
+    if (responseStatus !== 'loading') {
+      setResponseStatus('loading')
       setInfoMessage(undefined)
       setActivePanelKeys(undefined)
-      initializationCallback()
+      addChatMessage(question ?? '', "user")
 
-      func(...args)
+      askPaper({
+        question: question ?? '',
+        paper: selectedPaper!,
+        email: session!.user!.email!,
+        history: chatHistory.filter(message => message.sender != 'system'),
+        // @ts-ignore
+        accessToken: session!.accessToken,
+      }, {
+        signal: createAbortController().signal,
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error(`Response status ${response.status}: ${response.statusText}`);
@@ -181,11 +176,9 @@ const Home = () => {
           let messageCreated = false
 
           function readStream() {
-            setStreaming(true)
             return reader.read().then(({ done, value }) => {
               if (done) {
-                setMessageStatus('success')
-                setStreaming(false)
+                setResponseStatus('success')
                 updateRemainingRequests()
                 return;
               }
@@ -194,6 +187,7 @@ const Home = () => {
               if (!messageCreated) {
                 addChatMessage(chunk, "llm")
                 messageCreated = true
+                scrollToLastSelector('#answer-area')
               } else {
                 setChatHistory(prev => [...prev.slice(0, -1), { text: prev[prev.length - 1].text + chunk, sender: "llm" }])
               }
@@ -206,14 +200,13 @@ const Home = () => {
           return readStream();
         })
         .catch(error => {
-          setStreaming(false)
           if (error.response) {
             setInfoMessage("Something went wrong with server's response...</br>Details: " + error.response.data.detail + "<br/> Please try again later or contact support")
           } else {
             setInfoMessage("Something went wrong...</br>Technical Details: " + error.message + "<br/> Please try again later or contact support")
           }
           console.error(error)
-          setMessageStatus('error')
+          setResponseStatus('error')
         })
     } else {
       notificationApi['info']({
@@ -267,10 +260,10 @@ const Home = () => {
           height: "100%",
           flexWrap: 'nowrap'
         }}>
-          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} messageStatus={messageStatus} />
+          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} messageStatus={responseStatus} />
 
           <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
-            {messageStatus === 'loading' &&
+            {responseStatus === 'loading' &&
               <>
                 <Loading data-testid="loading-answer">Reading paper...</Loading>
                 <Button
@@ -319,24 +312,9 @@ const Home = () => {
               type="text"
               data-testid="ask-button"
               icon={<SendOutlined />}
-              style={{ position: 'absolute', right: '0.85rem', bottom: '0.85rem' }}
+              style={{ position: 'absolute', right: '1.7rem', bottom: '0.85rem' }}
               onClick={() => {
-                if (!streaming) {
-                  handleSubmitFunc(askPaper, () => addChatMessage(question ?? '', "user"), {
-                    question: question ?? '',
-                    history: chatHistory.filter(message => message.sender != 'system').slice(-6),
-                    paper: JSON.parse(JSON.stringify(selectedPaper)),
-                    // @ts-ignore
-                    email: session!.user!.email,
-                    // @ts-ignore
-                    accessToken: session!.accessToken,
-                    // @ts-ignore
-                    paperHash: selectedPaper!.hash,
-                    resultsSpeedTradeoff: resultsSpeedTradeoff
-                  }, {
-                    signal: createAbortController().signal,
-                  })
-                }
+                handleAskButtonClick()
               }
               } />
           </div>
@@ -345,67 +323,41 @@ const Home = () => {
             <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
               <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
             </Panel>
-            <Panel data-testid="predefined-actions-panel" header="📦 Predefined actions" key="2" >
+            <Panel data-testid="predefined-actions-panel" header="📦 Predefined prompts" key="2" >
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
                 <Button
                   onClick={() => {
-                    if (!streaming) {
-                      handleSubmitFunc(extractDatasets, () => addChatMessage("Predefined Action: Extract Datasets", "user"),
-                        {
-                          paper: JSON.parse(JSON.stringify(selectedPaper)),
-                          history: chatHistory.filter(message => message.sender != 'system').slice(-6),
-                          // @ts-ignore
-                          email: session!.user!.email,
-                          // @ts-ignore
-                          accessToken: session!.accessToken,
-                          resultsSpeedTradeoff: resultsSpeedTradeoff
-                        },
-                        {
-                          signal: createAbortController().signal,
-                        })
-                    }
-                  }}
+                    setQuestion(`Please extract the into a markdown table all the datasets mentioned in the following text.
+                              The table should have the following columns: "Name", "Size", "Demographic information", "Origin", "Link to Data or Code", "Passage" and "Extra Info".
+                              Here's a few caveats about how you should build your response:
+                              - Include every dataset referenced, regardless of its online availability.
+                              - Only include complete datasets, not subsets.
+                              - URLs are required for the "Link to Data or Code" field.
+                              - Keep the "Extra Info" field brief and to the point.
+                              - The "Passage" field should contain the exact excerpt from the paper where the dataset is mentioned.
+                              - "Name" and "Passage" fields must be filled in, with no "N/A" or similar entries.
+                              - Each dataset's "Name" must be unique.
+                              - Ensure all table entries reflect only what's explicitly stated in the paper, avoid making inferences.`.replaceAll("  ", ""))
+                  }
+                  }
                   icon={<DotChartOutlined />}
                 >Extract datasets</Button>
                 <Button
                   onClick={() => {
-                    if (!streaming) {
-                      handleSubmitFunc(generateSummary,
-                        () => addChatMessage("Predefined Action: Generate Summary", "user"),
-                        {
-                          paper: JSON.parse(JSON.stringify(selectedPaper)),
-                          // @ts-ignore
-                          email: session!.user!.email,
-                          // @ts-ignore
-                          accessToken: session!.accessToken
-                        },
-                        {
-                          signal: createAbortController().signal,
-                        })
-                    }
-                  }}
+                    setQuestion(`
+                      Please provide me a per-section summary of the paper. Each section summary should contain the main takewaways.
+                      The summary should be as detailed as possible.
+                      `.replaceAll("    ", ""))
+                  }
+                  }
                   icon={<FileTextTwoTone />}
                 >Generate Summary
                 </Button>
                 <Button
                   onClick={() => {
-                    if (!streaming) {
-                      handleSubmitFunc(explainSelectedText,
-                        () => addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user"),
-                        {
-                          text: selectedText,
-                          history: chatHistory.filter(message => message.sender != 'system').slice(-6),
-                          paper: JSON.parse(JSON.stringify(selectedPaper)),
-                          // @ts-ignore
-                          email: session!.user!.email,
-                          // @ts-ignore
-                          accessToken: session!.accessToken,
-                        }, {
-                        signal: createAbortController().signal,
-                      })
-
-                    }
-                  }}
+                    setQuestion(`Please explain the following text in simple words. If possible, try to explain it in the context of the paper. "${selectedText}"`)
+                  }
+                  }
                   icon={<HighlightTwoTone twoToneColor="#FFC400" />}
                 >Explain selected text
                 </Button>
@@ -436,10 +388,6 @@ const Home = () => {
   </>
   )
 };
-
-function fixNewlines(text: string) {
-  return text.replace(/\\n/g, '\n').replace(/  /g, '')
-}
 
 export function makeLinksClickable(text: string) {
   return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");

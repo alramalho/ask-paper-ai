@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { Paper } from "../pages";
 import { ChatMessage } from "../components/chat/chat";
+import { Paper } from "../pages";
 
 export function sendInstructionsEmail(recipient) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
@@ -28,86 +28,16 @@ export function sendAnswerEmail({ email, question, paperTitle, answer }: SendAns
   })
 }
 
-interface DefaultEndpointOptions {
-  email: string
+
+interface AskOptions {
+  history: ChatMessage[],
+  paper: Paper,
+  email: string,
+  question: string,
   accessToken: string
 }
 
-interface ExtractDatasetsEndpointOptions extends DefaultEndpointOptions {
-  paper: Paper
-  resultsSpeedTradeoff: number
-  history: ChatMessage[]
-}
-
-
-export function extractDatasets({ history, paper, email, accessToken, resultsSpeedTradeoff }: ExtractDatasetsEndpointOptions, options: RequestInit) {
-  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/extract-datasets`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-      'Email': email
-    },
-    body: JSON.stringify({
-      history: JSON.stringify(history),
-      paper: JSON.stringify(paper),
-      results_speed_trade_off: resultsSpeedTradeoff
-    }),
-    ...options
-  })
-}
-
-interface GenerateSummaryEndpointOptions extends DefaultEndpointOptions {
-  paper: Paper
-}
-
-export function generateSummary({ paper, email, accessToken }: GenerateSummaryEndpointOptions, options: RequestInit) {
-  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/summarize`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-      'Email': email
-    },
-    body: JSON.stringify({
-      paper: JSON.stringify(paper)
-    }),
-    ...options
-  })
-}
-
-interface ExplainSelectedTextProps extends DefaultEndpointOptions {
-  text: string;
-  paper: Paper;
-  history: ChatMessage[]
-}
-
-export function explainSelectedText({ text, history, paper, email, accessToken }: ExplainSelectedTextProps, options: RequestInit) {
-  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/explain`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-      'Email': email
-    },
-    body: JSON.stringify({
-      text,
-      history: JSON.stringify(history),
-      paper: JSON.stringify(paper)
-    }),
-    ...options
-  })
-}
-
-interface AskOptions extends DefaultEndpointOptions {
-  history: ChatMessage[],
-  paperHash: string,
-  paper: Paper,
-  resultsSpeedTradeoff: number,
-  question: string,
-}
-
-export function askPaper({ question, history, paper, email, accessToken, paperHash, resultsSpeedTradeoff }: AskOptions, options: RequestInit) {
+export function askPaper({ question, history, email, paper, accessToken }: AskOptions, options: RequestInit) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask-paper`, {
     method: 'POST',
     headers: {
@@ -118,9 +48,7 @@ export function askPaper({ question, history, paper, email, accessToken, paperHa
     body: JSON.stringify({
       question,
       history: JSON.stringify(history),
-      paper: JSON.stringify(paper),
-      paper_hash: paperHash,
-      results_speed_trade_off: resultsSpeedTradeoff
+      paper: JSON.stringify(paper)
     }),
     ...options
   });
@@ -166,7 +94,9 @@ export function updateDatasets({ datasets, paperTitle, email, accessToken }: Upd
 }
 
 
-interface SaveDatasetsOptions extends DefaultEndpointOptions {
+interface SaveDatasetsOptions {
+  email: string,
+  accessToken: string,
   datasets: object,
   changes: object
 }

@@ -1,9 +1,10 @@
-import { Avatar, Text } from "@nextui-org/react"
+import { Avatar } from "@nextui-org/react"
 import { useSession } from "next-auth/react"
-import { Box } from "../tweet-button"
-import { Flex } from "../styles/flex"
 import { useContext } from "react"
+import MarkdownView from "react-showdown"
 import { GuestUserContext, useGuestSession } from "../../hooks/session"
+import { Flex } from "../styles/flex"
+import { Box } from "../tweet-button"
 
 const UserResponse = ({ text }: { text: string }) => {
     const { isUserLoggedInAsGuest } = useContext(GuestUserContext)
@@ -18,7 +19,11 @@ const UserResponse = ({ text }: { text: string }) => {
                 padding: '$4 $8',
                 borderRadius: '20px 20px 0 20px',
             }}>
-                <Text css={{ color: "white", fontSize: 'small' }}>{text}</Text>
+                <MarkdownView
+                    style={{ color: "white", fontSize: 'small' }}
+                    markdown={text}
+                    options={{ tables: true, emoji: true, }}
+                />
             </Box>
             <Avatar
                 size="md"
