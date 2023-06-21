@@ -2,6 +2,13 @@
 
 Visit me on [askpaper.ai](https://askpaper.ai)!
 
+## todo
+
+- Refactor backend organization to Clean Architecture (https://github.com/lsoares/clean-architecture-sample)
+- Fix linting
+- Refactor to single endpoint /ask, with tagging mechanism for analytics (receive and log 'tags' in body)
+
+
 ## ✅ Coordination 
 
 We currently have our backlog in [this notion page](https://www.notion.so/hippoteam/Ask-Paper-Development-d724d73c83b54c01a5bedb32de6ad075)

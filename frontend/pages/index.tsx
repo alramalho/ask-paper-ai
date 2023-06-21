@@ -161,7 +161,7 @@ const Home = () => {
 
   useEffect(() => { console.log(messageStatus) }, [messageStatus])
 
-  function handleMessage<T extends any[], R>(
+  function handleSubmitFunc<T extends any[], R>(
     func: (...args: T) => Promise<Response>,
     initializationCallback: () => void,
     ...args: T
@@ -322,7 +322,7 @@ const Home = () => {
               style={{ position: 'absolute', right: '0.85rem', bottom: '0.85rem' }}
               onClick={() => {
                 if (!streaming) {
-                  handleMessage(askPaper, () => addChatMessage(question ?? '', "user"), {
+                  handleSubmitFunc(askPaper, () => addChatMessage(question ?? '', "user"), {
                     question: question ?? '',
                     history: chatHistory.filter(message => message.sender != 'system').slice(-6),
                     paper: JSON.parse(JSON.stringify(selectedPaper)),
@@ -350,7 +350,7 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     if (!streaming) {
-                      handleMessage(extractDatasets, () => addChatMessage("Predefined Action: Extract Datasets", "user"),
+                      handleSubmitFunc(extractDatasets, () => addChatMessage("Predefined Action: Extract Datasets", "user"),
                         {
                           paper: JSON.parse(JSON.stringify(selectedPaper)),
                           history: chatHistory.filter(message => message.sender != 'system').slice(-6),
@@ -370,7 +370,7 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     if (!streaming) {
-                      handleMessage(generateSummary,
+                      handleSubmitFunc(generateSummary,
                         () => addChatMessage("Predefined Action: Generate Summary", "user"),
                         {
                           paper: JSON.parse(JSON.stringify(selectedPaper)),
@@ -390,7 +390,7 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     if (!streaming) {
-                      handleMessage(explainSelectedText,
+                      handleSubmitFunc(explainSelectedText,
                         () => addChatMessage("Predefined Action: Explain selected text \"" + selectedText + "\"", "user"),
                         {
                           text: selectedText,
