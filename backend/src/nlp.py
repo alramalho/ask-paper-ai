@@ -311,7 +311,6 @@ class ChatMessage(BaseModel):  # this should in sync with frontend
 
 @elapsed_time
 def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=False) -> Generator[str, None, None]:
-    print("Asking Text. Stream: ", stream)
     text_size = count_tokens(text)
     history_size = sum([count_tokens(message.text) +
                        3 for message in message_history])
@@ -383,17 +382,16 @@ def validate_message_history(message_history: List[ChatMessage]):
     message_token_limit = 400
     while history_size > LLM_MAX_TOKENS / 2:
         print("History too long, truncating")
-        message_history = [split_text(message.text, message_token_limit)[
-            0] for message in message_history]
+        message_history = [ChatMessage(text=split_text(message.text, message_token_limit)[0], sender=message.sender) for message in message_history]
         history_size = sum([count_tokens(message.text)
                            for message in message_history])
-        message_token_limit = message_token_limit * 0.85
+        message_token_limit = int(message_token_limit * 0.85)
 
     print(f"History size: {history_size}")
     return message_history
 
 
-def ask_context(question: str, full_context: str, message_history: List[ChatMessage] = [], prompt_override: str = None, merge_at_end=True) -> Generator[str, None, None]:
+def ask_context(question: str, full_context: str, message_history: List[ChatMessage] = [], prompt_override: Union[str, None] = None, merge_at_end=True) -> Generator[str, None, None]:
     def build_prompt(question, context):
         if prompt_override is None:
             return f"""
@@ -452,9 +450,6 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
                 Merged Response:
                 """
 
-    if type(message_history) is list and len(message_history) > 0 and type(message_history[0]) is not ChatMessage:
-        message_history = [ChatMessage(**message)
-                           for message in message_history]
 
     completion_tokens = 700
     context_max_tokens = LLM_MAX_TOKENS - completion_tokens - \
@@ -517,6 +512,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
             f.write("\n\n".join(responses))
 
     if merge_at_end:
+        print("Question: ", question)
         return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
     else:
         return string_as_generator("\n".join(responses))
@@ -524,11 +520,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
 
 def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
     if "this is a load test" in question.lower():
-        return "This is a load test response"
-
-    if type(message_history) is list and len(message_history) > 0 and type(message_history[0]) is not ChatMessage:
-        message_history = [ChatMessage(**message)
-                           for message in message_history]
+        return string_as_generator("This is a load test response")
 
     print("Asking paper")
     switcher = {

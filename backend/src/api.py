@@ -21,6 +21,7 @@ from fastapi import (BackgroundTasks, FastAPI, HTTPException, Request,
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from mangum import Mangum
+from pydantic import parse_obj_as
 from utils.constants import (ASK_PAPER_BANNER_IMG, DB_EMAILS_SENT, DB_FEEDBACK,
                              DB_JSON_PAPERS, EMAIL_SENDER, ENVIRONMENT,
                              FILESYSTEM_BASE, NOT_ENOUGH_INFO_ANSWER)
@@ -350,14 +351,13 @@ async def ask_paper(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = json.loads(data.get('history', '[]'))
+        history = parse_obj_as(List[nlp.ChatMessage], json.loads(data.get('history', '[]')))
         paper = nlp.Paper(**json.loads(data['paper']))
 
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
-    prompt = f"""{history}\nUser: {question}\nAI:"""
-    return StreamingResponse(content=nlp.ask_paper(question=prompt, message_history=history, paper=paper), media_type="text/plain")
+    return StreamingResponse(content=nlp.ask_paper(question=question, message_history=history, paper=paper), media_type="text/plain")
 
 
 @lambda_streaming_decorator
@@ -366,7 +366,7 @@ async def ask_context(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = json.loads(data.get('history', '[]'))
+        history = parse_obj_as(List[nlp.ChatMessage], json.loads(data.get('history', '[]')))
         context = data['context']
 
     except KeyError as e:
