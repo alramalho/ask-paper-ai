@@ -22,7 +22,7 @@ export class ApiStack extends cdk.Stack {
         this.fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
             functionName: `${CAMEL_CASE_PREFIX}FastAPI${props.environment}`,
             code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'backend', 'build.zip')),
-            handler: 'api.handler',
+            handler: 'run_lambda.sh',
             runtime: lambda.Runtime.PYTHON_3_8,
             timeout: cdk.Duration.seconds(150),
             memorySize: 3008,
@@ -35,7 +35,16 @@ export class ApiStack extends cdk.Stack {
                 HIPPOAI_DISCORD_SERVER_ID: process.env.HIPPOAI_DISCORD_SERVER_ID!,
                 DISCORD_CLIENT_BOT_TOKEN: process.env.DISCORD_CLIENT_BOT_TOKEN!,
                 ASK_PAPER_BYPASS_AUTH_TOKEN: process.env.ASK_PAPER_BYPASS_AUTH_TOKEN!,
-            },
+                AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
+                AWS_LWA_INVOKE_MODE: 'response_stream',
+              },
+              layers: [
+                lambda.LayerVersion.fromLayerVersionArn(
+                  this,
+                  'LambdaAdapterLayer',
+                  `arn:aws:lambda:${this.region}:753240598075:layer:LambdaAdapterLayerX86:16`
+                ),
+              ],
         });
         this.fastApiLambda.addToRolePolicy(new iam.PolicyStatement({
             actions: ['ses:SendEmail', 'SES:SendRawEmail'],
