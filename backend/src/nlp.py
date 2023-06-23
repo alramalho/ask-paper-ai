@@ -311,6 +311,7 @@ class ChatMessage(BaseModel):  # this should in sync with frontend
 
 @elapsed_time
 def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=False) -> Generator[str, None, None]:
+    print("asking text:\n", text)
     text_size = count_tokens(text)
     history_size = sum([count_tokens(message.text) +
                        3 for message in message_history])
@@ -447,7 +448,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
                 User Request:
                 {question}
 
-                Merged Response:
+                Assistant Merged Response:
                 """
 
 
@@ -559,6 +560,8 @@ def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = 
 
     Question:
     {question}    
+
+    Answer:
     """
 
     return ask_context(
