@@ -11,6 +11,56 @@ require('dotenv').config()
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const browsers = [
+  {
+    name: 'chromium',
+    use: {
+      ...devices['Desktop Chrome'],
+    },
+  },
+  //
+  // {
+  //   name: 'webkit',
+  //   use: {
+  //     ...devices['Desktop Safari'],
+  //   },
+  // },
+  //
+  // /* Test against mobile viewports. */
+  // {
+  //   name: 'Mobile Chrome',
+  //   use: {
+  //     ...devices['Pixel 5'],
+  //   },
+  // },
+  // {
+  //   name: 'Mobile Safari',
+  //   use: {
+  //     ...devices['iPhone 12'],
+  //   },
+  // },
+
+  /* Test against branded browsers. */
+  // {
+  //   name: 'Microsoft Edge',
+  //   use: {
+  //     channel: 'msedge',
+  //   },
+  // },
+  // {
+  //   name: 'Google Chrome',
+  //   use: {
+  //     channel: 'chrome',
+  //   },
+  // },
+]
+process.env.CI && browsers.push({
+  name: 'firefox',
+  use: {
+    ...devices['Desktop Firefox'],
+  },
+})
 const config: PlaywrightTestConfig = {
   testDir: './tests',
   /* Maximum time one test can run for. */
@@ -46,55 +96,7 @@ const config: PlaywrightTestConfig = {
   },
 
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-      },
-    },
-    //
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //   },
-    // },
-    //
-    // /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: {
-    //     ...devices['Pixel 5'],
-    //   },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //   },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
-    //   },
-    // },
-  ],
+  projects: browsers,
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   outputDir: 'playwright-test-output/',
