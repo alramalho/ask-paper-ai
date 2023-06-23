@@ -6,7 +6,7 @@ Visit me on [askpaper.ai](https://askpaper.ai)!
 
 - Refactor backend organization to Clean Architecture (https://github.com/lsoares/clean-architecture-sample)
 - Fix linting
-- Refactor to single endpoint /ask, with tagging mechanism for analytics (receive and log 'tags' in body)
+- Implement Lambda Python streaming (custom runtime?)
 - move grobid to own repo and import as dependency
 
 
