@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import { Construct } from 'constructs';
 import * as path from "path";
 import { CAMEL_CASE_PREFIX, PASCAL_CASE_PREFIX } from './utils/constants';
 
@@ -34,6 +34,7 @@ export class ApiStack extends cdk.Stack {
                 S3_BUCKET_NAME: props.destinationBucketName,
                 HIPPOAI_DISCORD_SERVER_ID: process.env.HIPPOAI_DISCORD_SERVER_ID!,
                 DISCORD_CLIENT_BOT_TOKEN: process.env.DISCORD_CLIENT_BOT_TOKEN!,
+                ASK_PAPER_BYPASS_AUTH_TOKEN: process.env.ASK_PAPER_BYPASS_AUTH_TOKEN!,
             },
         });
         this.fastApiLambda.addToRolePolicy(new iam.PolicyStatement({
