@@ -21,8 +21,10 @@ zip ../build.zip -r .
 cd -
 
 echo "${BLUE}Adding source code... 🌊${NOCOLOR}"
+cp run_lambda.sh src
 cd src
 zip ../build.zip -u . -r
+rm run_lambda.sh
 cd -
 
 echo "${GREEN}Done ✅${NOCOLOR}"
