@@ -40,37 +40,6 @@ app.middleware("http")(middleware.log_function_invocation_to_dynamo)
 
 handler = Mangum(app)
 
-def lambda_streaming_decorator(func):
-    print("Running streaming decorator")
-    print(ENVIRONMENT)
-    def wrapper(*args, **kwargs):
-        if ENVIRONMENT != 'dev':
-            headers = {
-                'Lambda-Runtime-Function-Response-Mode': 'streaming',
-                'Transfer-Encoding': 'chunked',
-                'Trailer': 'Lambda-Runtime-Function-Error-Type, Lambda-Runtime-Function-Error-Body'
-            }
-            try:
-                response = func(*args, **kwargs)
-                response.headers = headers
-                return response
-            except Exception as e:
-                error_type = type(e).__name__
-                error_body = {
-                    'errorMessage': str(e),
-                    'errorType': error_type
-                }
-                headers['Lambda-Runtime-Function-Error-Type'] = error_type
-                headers['Lambda-Runtime-Function-Error-Body'] = base64.b64encode(json.dumps(error_body).encode('utf-8')).decode('utf-8')
-                response = func(*args, **kwargs)
-                response.headers = headers
-                return response
-        else:
-            print("Running in dev mode, ignoring streaming decorator")
-            return func(*args, **kwargs)
-    return wrapper
-
-
 async def streamer():
     for i in range(10):
         await asyncio.sleep(1)
