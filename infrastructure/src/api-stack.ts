@@ -17,7 +17,7 @@ export class ApiStack extends cdk.Stack {
 
     constructor(scope: Construct, id: string, props: ApiStackProps) {
         super(scope, id);
- 
+
 
         this.fastApiLambda = new lambda.Function(this, 'FastAPILambda', {
             functionName: `${CAMEL_CASE_PREFIX}FastAPI${props.environment}`,
@@ -37,14 +37,14 @@ export class ApiStack extends cdk.Stack {
                 ASK_PAPER_BYPASS_AUTH_TOKEN: process.env.ASK_PAPER_BYPASS_AUTH_TOKEN!,
                 AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
                 AWS_LWA_INVOKE_MODE: 'response_stream',
-              },
-              layers: [
+            },
+            layers: [
                 lambda.LayerVersion.fromLayerVersionArn(
-                  this,
-                  'LambdaAdapterLayer',
-                  `arn:aws:lambda:${this.region}:753240598075:layer:LambdaAdapterLayerX86:16`
+                    this,
+                    'LambdaAdapterLayer',
+                    `arn:aws:lambda:${this.region}:753240598075:layer:LambdaAdapterLayerX86:16`
                 ),
-              ],
+            ],
         });
         this.fastApiLambda.addToRolePolicy(new iam.PolicyStatement({
             actions: ['ses:SendEmail', 'SES:SendRawEmail'],
@@ -54,7 +54,8 @@ export class ApiStack extends cdk.Stack {
 
 
         const lambdaUrl = this.fastApiLambda.addFunctionUrl({
-            authType: lambda.FunctionUrlAuthType.NONE
+            authType: lambda.FunctionUrlAuthType.NONE,
+            invokeMode: lambda.InvokeMode.RESPONSE_STREAM,
         });
 
 
