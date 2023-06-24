@@ -82,7 +82,6 @@ async def index():
     return StreamingResponse(streamer(), media_type="text/plain; charset=utf-8")
 
 
-@lambda_streaming_decorator
 @app.post('/hello')
 async def hello(request: Request):
     def chunked_content():
@@ -356,7 +355,6 @@ async def user_datasets(request: Request):
 
 
 
-@lambda_streaming_decorator
 @app.post("/ask-paper")
 async def ask_paper(request: Request):
     data = await request.json()
@@ -371,7 +369,6 @@ async def ask_paper(request: Request):
     return StreamingResponse(content=nlp.ask_paper(question=question, message_history=history, paper=paper), media_type="text/plain")
 
 
-@lambda_streaming_decorator
 @app.post("/ask-context")
 async def ask_context(request: Request):
     data = await request.json()
