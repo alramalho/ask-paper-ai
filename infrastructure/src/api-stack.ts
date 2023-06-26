@@ -27,6 +27,7 @@ export class ApiStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(150),
             memorySize: 3008,
             environment: {
+                PORT: "8000",
                 OPENAI_API_KEY: props.openaiApiKey,
                 ENVIRONMENT: props.environment,
                 LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
