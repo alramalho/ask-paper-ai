@@ -39,7 +39,7 @@ async def get_id_and_email_from_token(bearer_token: str):
         print(response.json())
         return {'id': response.json()['id'], 'email': response.json()['email']}
     else:
-        print(f"Failed to get discord id from token: {response.status_code}")
+        print(f"Failed to get discord id from token: {bearer_token}")
         return None
 
 
