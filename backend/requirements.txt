@@ -13,7 +13,6 @@ python-magic
 latex2mathml
 itsdangerous
 python-multipart
-mangum
 langchain
 tiktoken
 pydantic

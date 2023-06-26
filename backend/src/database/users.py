@@ -88,7 +88,11 @@ class GuestUsersGateway:
         return GuestUser(**data)
 
     def is_guest_user_allowed(self, email: str) -> bool:
-        user = self.get_user_by_email(email)
+        try:
+            user = self.get_user_by_email(email)
+        except UserDoesNotExistException:
+            print("User does not exist")
+            return False
         return user.remaining_trial_requests > 0
 
     def create_user(self, email: str) -> GuestUser:

@@ -13,7 +13,7 @@ from fastapi.responses import JSONResponse
 from utils.constants import (DB_FUNCTION_INVOCATIONS,
                              DISCORD_WHITELIST_ROLENAME,
                              HIPPOAI_DISCORD_SERVER_ID, LATEST_COMMIT_ID,
-                             UNAUTHENTICATED_ENDPOINTS)
+                             UNAUTHENTICATED_ENDPOINTS, GUEST_BILLABLE_ENDPOINTS)
 
 
 async def set_body(request: Request, body: bytes):
@@ -37,75 +37,73 @@ async def get_id_and_email_from_token(bearer_token: str):
         allow_redirects=True)
     if response.status_code // 100 == 2:
         print(response.json())
-        return response.json()['id'], response.json()['email']
+        return {'id': response.json()['id'], 'email': response.json()['email']}
     else:
         print(f"Failed to get discord id from token: {response.status_code}")
-        return None, None
+        return None
+
+
+async def verify_discord_login(bearer_token: str):
+    discord_object = await get_id_and_email_from_token(bearer_token)
     
+    if discord_object is not None:
+        user_discord_id, discord_email = discord_object['id'], discord_object['email']
+        discord_users_gateway = DiscordUsersGateway()
+        try:
+            user = discord_users_gateway.get_user_by_email(discord_email)
+        except UserDoesNotExistException as e:
+            # todo: should we really be creating the user here?
+            user = discord_users_gateway.create_user(
+                discord_email, user_discord_id, created_at=str(datetime.datetime.utcnow()))
+
+        return user.discord_id
+
+
 
 async def verify_login(request: Request, call_next):
+    auth_header = request.headers.get('Authorization', None)
+
     if request.method == 'OPTIONS':
         return await call_next(request)
-    
+
+    if (auth_header == os.environ['ASK_PAPER_BYPASS_AUTH_TOKEN']):
+        print("Bypassing auth")
+        return await call_next(request)
+
     if request.url.path in UNAUTHENTICATED_ENDPOINTS:
         print("Endpoint is unaunthenticated, bypassing verify login")
         return await call_next(request)
 
-    body = await get_body(request) 
-    email = body.get('email', request.headers.get('Email', None))
-
-    auth_header = request.headers.get('Authorization', None)
-
     if auth_header is None:
-        return JSONResponse(status_code=401, content={"message": "Unauthorized user. No authorization header"})
+        return JSONResponse(status_code=401, content={"message": "Unauthorized. Missing Auth Header"})
 
-    bypass_auth_token = os.getenv('ASK_PAPER_BYPASS_AUTH_TOKEN', None)
-    print(f"Auth header: {auth_header}")
-    print(f"Bypass auth token: {bypass_auth_token}")
-    if bypass_auth_token is not None and bypass_auth_token in auth_header:
-        print("Using auth token")
-        request.state.user_discord_id = None
-        return await call_next(request)
-
-    discord_users_gateway = DiscordUsersGateway()
-    
-    user_discord_id, discord_email = await get_id_and_email_from_token(auth_header)
-    
-    if email is None:
-        email = discord_email
+    user_discord_id = await verify_discord_login(auth_header)
 
     if user_discord_id is not None:
         request.state.user_discord_id = user_discord_id
-        try:
-            discord_users_gateway.get_user_by_email(email)
-        except UserDoesNotExistException as e:
-            # todo: should we really be creating the user here?
-            discord_users_gateway.create_user(email, user_discord_id, created_at=str(datetime.datetime.utcnow()))  
+        print("Discord login verified")
         return await call_next(request)
 
+
+    email = request.headers['Email']
     guest_users_gateway = GuestUsersGateway()
-    try:
-        if guest_users_gateway.is_guest_user_allowed(email):
-            print("User is an allowed guest")
-            response = await call_next(request)
-
-            if request.url.path in ['/ask-context', '/ask-paper'] and response.status_code // 100 == 2: 
-                # TODO, the following logic isn't the best way due to following reasons:
-                # 1. if the user has very low latency, his browser might make several
-                #    requests to ask at once, then he ends up only getting one response or none
-                guest_users_gateway.decrement_remaining_trial_requests(email)
-            return response
-    except UserDoesNotExistException as e:
-        print("User is not a guest")
-        pass
-
-    return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
-
+    if guest_users_gateway.is_guest_user_allowed(email):
+        print("Guest user verified")
+        response = await call_next(request)
+    
+        if request.url.path in GUEST_BILLABLE_ENDPOINTS and response.status_code // 100 == 2: 
+            # TODO, the following logic isn't the best way due to following reasons:
+            # 1. if the user has very low latency, his browser might make several
+            #    requests to ask at once, then he ends up only getting one response or none
+            guest_users_gateway.decrement_remaining_trial_requests(email)
+        return response
+    else:
+        return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
 
 
 async def log_function_invocation_to_dynamo(request: Request, call_next):
     start = datetime.datetime.utcnow()
-    body = await get_body(request) 
+    body = await get_body(request)
 
     email = body.get('email', request.headers.get('Email', None))
 

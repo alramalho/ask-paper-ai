@@ -20,7 +20,14 @@ DB_DISCORD_USERS = f'{SNAKE_CASE_PREFIX}_discord_users'
 
 ASK_PAPER_BANNER_IMG = "https://hippoai-assets.s3.eu-central-1.amazonaws.com/askpaperbanner.png"
 
-UNAUTHENTICATED_ENDPOINTS = []
+UNAUTHENTICATED_ENDPOINTS = [
+    '/health',
+    '/test',
+    '/user-remaining-requests-count',
+    '/send-instructions-email',
+    '/send-answer-email',
+]
+GUEST_BILLABLE_ENDPOINTS = ['/ask-paper', '/ask-context']
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
