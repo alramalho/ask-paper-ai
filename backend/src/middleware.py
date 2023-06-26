@@ -10,9 +10,10 @@ from database.users import (DiscordUsersGateway, GuestUsersGateway,
                             UserDoesNotExistException)
 from fastapi import BackgroundTasks, Request
 from fastapi.responses import JSONResponse
-from utils.constants import (DB_FUNCTION_INVOCATIONS, DISCORD_CLIENT_BOT_TOKEN,
+from utils.constants import (DB_FUNCTION_INVOCATIONS,
                              DISCORD_WHITELIST_ROLENAME,
-                             HIPPOAI_DISCORD_SERVER_ID, LATEST_COMMIT_ID)
+                             HIPPOAI_DISCORD_SERVER_ID, LATEST_COMMIT_ID,
+                             UNAUTHENTICATED_ENDPOINTS)
 
 
 async def set_body(request: Request, body: bytes):
@@ -45,26 +46,19 @@ async def get_id_and_email_from_token(bearer_token: str):
 async def verify_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
-
-    if request.url.path == '/send-instructions-email':
-        print("Sending instructions email, bypassing verify login")
-        return await call_next(request)
-
-    if request.url.path == '/send-answer-email':
-        print("Sending answers email, bypassing verify login")
-        return await call_next(request)
-
-    if request.url.path == '/guest-login':
-        print("Logging in as guest, bypassing verify login")
-        return await call_next(request)
-
-    if request.url.path == '/user-remaining-requests-count':
+    
+    if request.url.path in UNAUTHENTICATED_ENDPOINTS:
+        print("Endpoint is unaunthenticated, bypassing verify login")
         return await call_next(request)
 
     body = await get_body(request) 
     email = body.get('email', request.headers.get('Email', None))
 
     auth_header = request.headers.get('Authorization', None)
+
+    if auth_header is None:
+        return JSONResponse(status_code=401, content={"message": "Unauthorized user. No authorization header"})
+
     bypass_auth_token = os.getenv('ASK_PAPER_BYPASS_AUTH_TOKEN', None)
     print(f"Auth header: {auth_header}")
     print(f"Bypass auth token: {bypass_auth_token}")

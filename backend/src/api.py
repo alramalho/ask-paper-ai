@@ -24,7 +24,7 @@ from mangum import Mangum
 from pydantic import parse_obj_as
 from utils.constants import (ASK_PAPER_BANNER_IMG, DB_EMAILS_SENT, DB_FEEDBACK,
                              DB_JSON_PAPERS, EMAIL_SENDER, ENVIRONMENT,
-                             FILESYSTEM_BASE, NOT_ENOUGH_INFO_ANSWER)
+                             FILESYSTEM_BASE, UNAUTHENTICATED_ENDPOINTS)
 
 app = FastAPI()
 
@@ -106,6 +106,17 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
     return f
 
 
+
+def unauthenticated(func):
+    async def wrapper(*args, **kwargs):
+        request = args[0]
+        UNAUTHENTICATED_ENDPOINTS.append(request.url.path)
+        response = await func(*args, **kwargs)
+        return response
+    return wrapper
+
+
+@unauthenticated
 @app.post('/guest-login')
 async def guest_login(request: Request, response: Response):
     user_email = request.headers.get('Email').lower()
@@ -126,6 +137,7 @@ async def guest_login(request: Request, response: Response):
     return {'remaining_trial_requests': user.remaining_trial_requests}
 
 
+@unauthenticated
 @app.get('/user-remaining-requests-count')
 async def get_user_remaining_requests_count(request: Request):
     user_email = request.headers.get('Email')
@@ -142,6 +154,7 @@ async def get_user_remaining_requests_count(request: Request):
     return {'remaining_trial_requests': user.remaining_trial_requests}
 
 
+@unauthenticated
 @app.post('/send-instructions-email')
 async def send_instructions_email(request: Request, background_tasks: BackgroundTasks):
     body = await request.json()
@@ -181,6 +194,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     return {'message': f"Email sent! Message ID: {response['MessageId']}"}
 
 
+@unauthenticated
 @app.post('/send-answer-email')
 async def send_answer_email(request: Request, background_tasks: BackgroundTasks):
     data = await request.json()

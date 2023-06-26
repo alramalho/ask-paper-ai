@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,6 +19,8 @@ DB_GUEST_USERS = f'{SNAKE_CASE_PREFIX}_guest_users'
 DB_DISCORD_USERS = f'{SNAKE_CASE_PREFIX}_discord_users'
 
 ASK_PAPER_BANNER_IMG = "https://hippoai-assets.s3.eu-central-1.amazonaws.com/askpaperbanner.png"
+
+UNAUTHENTICATED_ENDPOINTS = []
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')
