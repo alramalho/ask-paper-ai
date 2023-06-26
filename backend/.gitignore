@@ -6,3 +6,4 @@ temp
 *.zip
 src_dependencies
 build
+.aws
