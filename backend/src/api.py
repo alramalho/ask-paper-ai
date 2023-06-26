@@ -40,25 +40,6 @@ app.middleware("http")(middleware.log_function_invocation_to_dynamo)
 
 handler = Mangum(app)
 
-async def streamer():
-    for i in range(10):
-        await asyncio.sleep(1)
-        yield b"This is streaming from Lambda \n"
-
-
-@app.get("/test")
-async def index():
-    return StreamingResponse(streamer(), media_type="text/plain; charset=utf-8")
-
-
-@app.post('/hello')
-async def hello(request: Request):
-    def chunked_content():
-        for e in ['hello', ' ', 'world', '', '!']:
-            time.sleep(0.5)
-            yield e
-    return StreamingResponse(content=chunked_content(), media_type="text/plain")
-
 
 
 def generate_hash(content: Union[str, bytes]):
@@ -114,6 +95,24 @@ def unauthenticated(func):
         response = await func(*args, **kwargs)
         return response
     return wrapper
+
+
+async def streamer():
+    for i in range(10):
+        time.sleep(1)
+        yield b"This is streaming from Lambda \n"
+
+
+@unauthenticated
+@app.get("/test")
+async def index():
+    return StreamingResponse(streamer(), media_type="text/plain; charset=utf-8")
+
+
+@unauthenticated
+@app.get('/health')
+async def health(request: Request):
+    return {'status': 'ok'}
 
 
 @unauthenticated
@@ -364,8 +363,6 @@ async def ask_context(request: Request):
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
     return StreamingResponse(content=nlp.ask_context(question, context, history), media_type="text/plain")
-
-
 
 
 @app.post("/store-feedback")
