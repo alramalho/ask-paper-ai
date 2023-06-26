@@ -3,9 +3,8 @@ import { ChatMessage } from "../components/chat/chat";
 import { Paper } from "../pages";
 
 
-function normalizeUrl(url: string): string {
-  const urlObj = new URL(url);
-  return urlObj.href;
+function normalizeUrl(url) {
+  return url.replace(/([^:]\/)\/+/g, "$1");
 }
 
 export function uploadPaper(accessToken, email, formData) {
