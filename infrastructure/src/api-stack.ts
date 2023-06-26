@@ -37,6 +37,7 @@ export class ApiStack extends cdk.Stack {
                 DISCORD_CLIENT_BOT_TOKEN: process.env.DISCORD_CLIENT_BOT_TOKEN!,
                 ASK_PAPER_BYPASS_AUTH_TOKEN: process.env.ASK_PAPER_BYPASS_AUTH_TOKEN!,
                 AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
+                AWS_LWA_READINESS_CHECK_PATH: '/health'
             },
             layers: [
                 lambda.LayerVersion.fromLayerVersionArn(
