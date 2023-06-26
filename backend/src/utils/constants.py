@@ -23,6 +23,7 @@ ASK_PAPER_BANNER_IMG = "https://hippoai-assets.s3.eu-central-1.amazonaws.com/ask
 UNAUTHENTICATED_ENDPOINTS = [
     '/health',
     '/test',
+    '/guest-login',
     '/user-remaining-requests-count',
     '/send-instructions-email',
     '/send-answer-email',

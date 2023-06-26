@@ -311,7 +311,6 @@ class ChatMessage(BaseModel):  # this should in sync with frontend
 
 @elapsed_time
 def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=False) -> Generator[str, None, None]:
-    print("asking text:\n", text)
     text_size = count_tokens(text)
     history_size = sum([count_tokens(message.text) +
                        3 for message in message_history])
