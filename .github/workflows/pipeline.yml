@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-jobs:
 
+jobs:
 
   Deploy-To-Sandbox:
     runs-on: ubuntu-latest
@@ -35,9 +35,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.8'
-      - uses: aws-actions/setup-sam@v2
-        with:
-          use-installer: true
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

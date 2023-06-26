@@ -37,7 +37,7 @@ export class ApiStack extends cdk.Stack {
                 ASK_PAPER_BYPASS_AUTH_TOKEN: process.env.ASK_PAPER_BYPASS_AUTH_TOKEN!,
                 AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
                 AWS_LWA_READINESS_CHECK_PATH: '/health',
-                AWS_LWA_INVOKE_MODE: 'response-stream',
+                AWS_LWA_INVOKE_MODE: 'response_stream',
                 PORT: "8000",
             },
             layers: [
