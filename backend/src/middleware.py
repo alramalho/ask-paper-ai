@@ -85,7 +85,9 @@ async def verify_login(request: Request, call_next):
         return await call_next(request)
 
 
-    email = request.headers['Email']
+    email = request.headers.get('Email', None)
+    if email is None:
+        return JSONResponse(status_code=401, content={"message": "Unauthorized. Missing Email Header"})
     guest_users_gateway = GuestUsersGateway()
     if guest_users_gateway.is_guest_user_allowed(email):
         print("Guest user verified")

@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios, { AxiosError } from 'axios';
-import { Link, Loading, Spacer, styled, Text } from "@nextui-org/react";
-import { Flex } from "./styles/flex";
-import XIcon from "./icons/x-icon";
-import CheckIcon from "./icons/check-icon";
-import { Paper } from "../pages";
-import { Box } from "./layout";
-import { GuestUserContext, useGuestSession } from "../hooks/session";
-import MarkdownView from "react-showdown";
-import FileInput, { MinimalFileInput } from "./input";
-import UploadIcon from "./icons/upload-icon";
-import { useSession } from 'next-auth/react';
-import { Input, Button, Space, Card, Divider } from 'antd'
 import { UploadOutlined } from '@ant-design/icons';
+import { Loading, Spacer } from "@nextui-org/react";
+import { Button, Card, Divider, Input, Space } from 'antd';
+import { useSession } from 'next-auth/react';
+import React, { useContext, useEffect, useState } from 'react';
+import MarkdownView from "react-showdown";
+import { GuestUserContext, useGuestSession } from "../hooks/session";
+import { Paper } from "../pages";
+import { uploadPaper } from "../service/service";
+import CheckIcon from "./icons/check-icon";
+import XIcon from "./icons/x-icon";
+import FileInput, { MinimalFileInput } from "./input";
+import { Box } from "./layout";
+import { Flex } from "./styles/flex";
 
 interface PaperUploaderProps {
   onFinish: (paper: Paper, pdf: File) => void
@@ -53,14 +52,8 @@ const PaperUploader = ({ onFinish, alternative }: PaperUploaderProps) => {
     // notice that this 'name' must match the name of the field read in the backend
     formData.append('pdf_file', file);
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/upload-paper`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Email': session!.user!.email,
-          // @ts-ignore
-          'Authorization': `Bearer ${session!.accessToken}`,
-        },
-      });
+      // @ts-ignore
+      const res = await uploadPaper(session!.accessToken, session!.user!.email, formData)
       setUploadedPaper(res.data as Paper)
       setPdf(file)
       setStatus('uploaded')

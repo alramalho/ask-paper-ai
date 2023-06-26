@@ -2,8 +2,25 @@ import axios, { AxiosResponse } from "axios";
 import { ChatMessage } from "../components/chat/chat";
 import { Paper } from "../pages";
 
+
+function normalizeUrl(url: string): string {
+  const urlObj = new URL(url);
+  return urlObj.href;
+}
+
+export function uploadPaper(accessToken, email, formData) {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/upload-paper`), formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Email': email,
+      // @ts-ignore
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+}
+
 export function sendInstructionsEmail(recipient) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`, {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-instructions-email`), {
     "recipient": recipient,
   })
 }
@@ -16,7 +33,7 @@ interface SendAnswerEmailProps {
 }
 
 export function sendAnswerEmail({ email, question, paperTitle, answer }: SendAnswerEmailProps) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`, {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/send-answer-email`), {
     recipient: email,
     question: question,
     answer: answer,
@@ -38,7 +55,7 @@ interface AskOptions {
 }
 
 export function askPaper({ question, history, email, paper, accessToken }: AskOptions, options: RequestInit) {
-  return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask-paper`, {
+  return fetch(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/ask-paper`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +73,7 @@ export function askPaper({ question, history, email, paper, accessToken }: AskOp
 
 
 export function getRemainingRequestsFor(email: string) {
-  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/user-remaining-requests-count`, {
+  return axios.get(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/user-remaining-requests-count`), {
     headers: {
       'Email': email
     }
@@ -64,7 +81,7 @@ export function getRemainingRequestsFor(email: string) {
 }
 
 export function loadDatasetsForUser(email: string, accessToken: string) {
-  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/get-datasets`, {
+  return axios.get(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/get-datasets`), {
     headers: {
       'Email': email,
       'Authorization': `Bearer ${accessToken}`, // todo: we should have the user ID in the frontend. this is weird
@@ -81,7 +98,7 @@ interface UpdateDatasetsOptions {
 
 
 export function updateDatasets({ datasets, paperTitle, email, accessToken }: UpdateDatasetsOptions): Promise<AxiosResponse> {
-  return axios.put(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/update-datasets`, {
+  return axios.put(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/update-datasets`), {
     datasets: JSON.stringify(datasets),
     paper_title: paperTitle
   }, {
@@ -102,7 +119,7 @@ interface SaveDatasetsOptions {
 }
 
 export function saveDatasets({ datasets, changes, email, accessToken }: SaveDatasetsOptions) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/save-datasets`, {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/save-datasets`), {
     datasets: JSON.stringify(datasets),
     changes: JSON.stringify(changes)
   }, {
