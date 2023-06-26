@@ -21,7 +21,6 @@ from fastapi import (BackgroundTasks, FastAPI, HTTPException, Request,
                      Response, UploadFile)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from mangum import Mangum
 from pydantic import parse_obj_as
 from utils.constants import (ASK_PAPER_BANNER_IMG, DB_EMAILS_SENT, DB_FEEDBACK,
                              DB_JSON_PAPERS, EMAIL_SENDER, ENVIRONMENT,
