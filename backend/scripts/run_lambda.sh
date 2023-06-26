@@ -1,3 +1,5 @@
 #!/bin/bash
 
-PATH=$PATH:$LAMBDA_TASK_ROOT/bin PYTHONPATH=$LAMBDA_TASK_ROOT exec python -m uvicorn api:app --port 8000 --host 0.0.0.0
+PATH=$PATH:$LAMBDA_TASK_ROOT/bin
+PYTHONPATH=$LAMBDA_TASK_ROOT
+exec python -m uvicorn api:app --port 8000
