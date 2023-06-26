@@ -27,7 +27,6 @@ export class ApiStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(150),
             memorySize: 3008,
             environment: {
-                PORT: "8000",
                 OPENAI_API_KEY: props.openaiApiKey,
                 ENVIRONMENT: props.environment,
                 LATEST_COMMIT_ID: process.env.LATEST_COMMIT_ID!,
@@ -37,7 +36,9 @@ export class ApiStack extends cdk.Stack {
                 DISCORD_CLIENT_BOT_TOKEN: process.env.DISCORD_CLIENT_BOT_TOKEN!,
                 ASK_PAPER_BYPASS_AUTH_TOKEN: process.env.ASK_PAPER_BYPASS_AUTH_TOKEN!,
                 AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
-                AWS_LWA_READINESS_CHECK_PATH: '/health'
+                AWS_LWA_READINESS_CHECK_PATH: '/health',
+                AWS_LWA_INVOKE_MODE: 'response-stream',
+                PORT: "8000",
             },
             layers: [
                 lambda.LayerVersion.fromLayerVersionArn(
