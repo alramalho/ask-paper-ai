@@ -18,7 +18,7 @@ import OverviewBlock from "./overview-block";
 import { Button, Input, Space, Divider, Card, Alert } from 'antd';
 import Icon, { DownloadOutlined, LoginOutlined, MailOutlined } from '@ant-design/icons';
 import { useMyToken } from '../pages/_app';
-import Info from './info';
+import {loginAsGuest} from "../service/service";
 
 
 
@@ -55,14 +55,6 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const [underText, setUnderText] = useState<string | undefined>(undefined);
   const { token } = useMyToken();
 
-
-  function loginAsGuest(email) {
-    return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/guest-login`, {}, {
-      headers: {
-        "Email": email,
-      }
-    })
-  }
 
   const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {

@@ -7,6 +7,15 @@ function normalizeUrl(url) {
   return url.replace(/([^:]\/)\/+/g, "$1");
 }
 
+export function loginAsGuest(email) {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/guest-login`), {}, {
+    headers: {
+      "Email": email,
+    }
+  })
+}
+
+
 export function uploadPaper(accessToken, email, formData) {
   return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/upload-paper`), formData, {
     headers: {
