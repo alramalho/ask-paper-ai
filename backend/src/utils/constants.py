@@ -28,7 +28,7 @@ UNAUTHENTICATED_ENDPOINTS = [
     '/send-instructions-email',
     '/send-answer-email',
 ]
-GUEST_BILLABLE_ENDPOINTS = ['/ask-paper', '/ask-context']
+CONTENT_ENDPOINTS = ['/ask-paper', '/ask-context']
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LATEST_COMMIT_ID = os.getenv("LATEST_COMMIT_ID", 'local')

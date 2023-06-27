@@ -24,7 +24,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import parse_obj_as
 from utils.constants import (ASK_PAPER_BANNER_IMG, DB_EMAILS_SENT, DB_FEEDBACK,
                              DB_JSON_PAPERS, EMAIL_SENDER, ENVIRONMENT,
-                             FILESYSTEM_BASE, UNAUTHENTICATED_ENDPOINTS)
+                             FILESYSTEM_BASE)
 
 app = FastAPI()
 
@@ -37,7 +37,7 @@ app.add_middleware(
 )
 app.middleware("http")(middleware.verify_login)
 app.middleware("http")(middleware.log_function_invocation_to_dynamo)
-
+app.middleware("http")(middleware.shutdown_after_request)
 
 def generate_hash(content: Union[str, bytes]):
     import hashlib
@@ -82,7 +82,6 @@ def process_paper(pdf_file_content, pdf_file_name) -> dict:
         print("Removed files")
 
     return f
-
 
 
 async def streamer():
@@ -231,25 +230,25 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
 
     existing_paper = DynamoDBGateway(DB_JSON_PAPERS).read('id', paper_hash)
     if existing_paper is None:
-        print("Creating new paper in Dynamo")
+        print("Creating new paper in S3 and DynamoDB")
         json_paper = process_paper(pdf_file_content, pdf_file_name)
         aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
+
+        def safe_write():
+            try:
+                DynamoDBGateway(DB_JSON_PAPERS).write({
+                    'id': paper_hash,
+                    'paper_title': json_paper['title'],
+                    'paper_json': json.dumps(json_paper),
+                    'email': email,
+                })
+            except ClientError as e:
+                print(
+                    f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
+
+        background_tasks.add_task(safe_write)
     else:
         json_paper = json.loads(existing_paper['paper_json'])
-
-    def safe_write():
-        try:
-            DynamoDBGateway(DB_JSON_PAPERS).write({
-                'id': paper_hash,
-                'paper_title': json_paper['title'],
-                'paper_json': json.dumps(json_paper),
-                'email': email,
-            })
-        except ClientError as e:
-            print(
-                f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
-
-    background_tasks.add_task(safe_write)
 
     json_paper['hash'] = paper_hash
 
@@ -318,13 +317,13 @@ async def user_datasets(request: Request):
     return {'datasets': json.dumps(user.datasets)}
 
 
-
 @app.post("/ask-paper")
 async def ask_paper(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = parse_obj_as(List[nlp.ChatMessage], json.loads(data.get('history', '[]')))
+        history = parse_obj_as(
+            List[nlp.ChatMessage], json.loads(data.get('history', '[]')))
         paper = nlp.Paper(**json.loads(data['paper']))
 
     except KeyError as e:
@@ -338,7 +337,8 @@ async def ask_context(request: Request):
     data = await request.json()
     try:
         question = data['question']
-        history = parse_obj_as(List[nlp.ChatMessage], json.loads(data.get('history', '[]')))
+        history = parse_obj_as(
+            List[nlp.ChatMessage], json.loads(data.get('history', '[]')))
         context = data['context']
 
     except KeyError as e:
