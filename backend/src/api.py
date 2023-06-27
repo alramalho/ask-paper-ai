@@ -354,8 +354,6 @@ async def ask_context(request: Request):
 async def store_feedback(request: Request):
     body = await request.json()
 
-    if 'table_name' not in body:
-        raise HTTPException(status_code=400, detail="Missing table_name")
     if 'data' not in body:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 

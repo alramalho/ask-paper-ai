@@ -28,7 +28,6 @@ interface FeedbackProps {
 
 export function storeFeedback(email: string, data: any, accessToken: any) {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/store-feedback`, {
-    "table_name": "HippoPrototypeFeedback",
     "data": data,
   }, {
     headers: {
