@@ -391,7 +391,7 @@ def validate_message_history(message_history: List[ChatMessage]):
     return message_history
 
 
-def ask_context(question: str, full_context: str, message_history: List[ChatMessage] = [], prompt_override: Union[str, None] = None, merge_at_end=True) -> Generator[str, None, None]:
+def ask_context(question: str, full_context: str, message_history: List[ChatMessage] = [], prompt_override: Union[str, None] = None) -> Generator[str, None, None]:
     def build_prompt(question, context):
         if prompt_override is None:
             return f"""
@@ -511,14 +511,11 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
         with open("responses.txt", "w") as f:
             f.write("\n\n".join(responses))
 
-    if merge_at_end:
-        print("Question: ", question)
-        return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
-    else:
-        return string_as_generator("\n".join(responses))
+    print("Question: ", question)
+    return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
 
 
-def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], merge_at_end=True, results_speed_trade_off: int = 0) -> Generator[str, None, None]:
+def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], results_speed_trade_off: int = 0) -> Generator[str, None, None]:
     if "this is a load test" in question.lower():
         return string_as_generator("This is a load test response")
 
@@ -567,6 +564,5 @@ def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = 
         question=question,
         full_context=context,
         message_history=message_history,
-        merge_at_end=merge_at_end,
         prompt_override=prompt_override
     )
