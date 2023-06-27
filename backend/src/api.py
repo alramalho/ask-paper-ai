@@ -234,6 +234,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
         aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
 
         def safe_write():
+            print("Writing paper to DynamoDB")
             try:
                 DynamoDBGateway(DB_JSON_PAPERS).write({
                     'id': paper_hash,
