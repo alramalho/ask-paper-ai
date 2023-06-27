@@ -1,8 +1,8 @@
-import {Text} from "@nextui-org/react";
-import {Box} from "./layout";
-import React, {useContext} from "react";
-import {sendInstructionsEmail} from "../service/service";
-import {GuestUserContext} from "../hooks/session";
+import { Text } from "@nextui-org/react";
+import { useContext } from "react";
+import { GuestUserContext } from "../hooks/session";
+import { sendInstructionsEmail } from "../service/service";
+import { Box } from "./layout";
 
 const RemainingRequests = ({value}: {value: number}) => {
   const {userEmail} = useContext(GuestUserContext)
@@ -14,7 +14,7 @@ const RemainingRequests = ({value}: {value: number}) => {
       border: '1px solid #aaaa',
       width: '600px',
       maxWidth: '95%',
-      margin: "$4",
+      margin: "$4 auto",
       borderRadius: '10px'
     }}>
       <Text h4>You have <Text as="span" color="warning" data-testid="remaining-requests">{value}</Text> remaining requests!</Text>
