@@ -70,7 +70,7 @@ async def verify_login(request: Request, call_next):
     if request.method == 'OPTIONS':
         return await call_next(request)
 
-    if (auth_header == os.environ['ASK_PAPER_BYPASS_AUTH_TOKEN']):
+    if (auth_header == f"Bearer {os.environ['ASK_PAPER_BYPASS_AUTH_TOKEN']}"):
         print("Bypassing auth")
         return await call_next(request)
 
