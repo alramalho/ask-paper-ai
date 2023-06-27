@@ -217,6 +217,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
 
     try:
         email = request.headers['Email']
+        print("received email was ", email)
         accept = request.headers['Accept']
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
@@ -236,6 +237,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
         def safe_write(title, paper, email):
             print("Writing paper to DynamoDB")
             try:
+                print("using email :", email)
                 DynamoDBGateway(DB_JSON_PAPERS).write({
                     'id': paper_hash,
                     'paper_title': title,
