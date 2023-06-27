@@ -37,7 +37,6 @@ app.add_middleware(
 )
 app.middleware("http")(middleware.verify_login)
 app.middleware("http")(middleware.log_function_invocation_to_dynamo)
-app.middleware("http")(middleware.shutdown_after_request)
 
 def generate_hash(content: Union[str, bytes]):
     import hashlib

@@ -148,24 +148,3 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
             'traceback': traceback.format_exc(),
         })
         return JSONResponse(status_code=500, content="Internal Server Error: \n" + str(e))
-
-
-async def shutdown_after_request(request: Request, call_next):
-    if ENVIRONMENT == 'dev':
-        return await call_next(request)
-    else:
-        response = await call_next(request)
-
-        def kill():
-            time.sleep(1)
-            ppid = os.getppid()
-            print(f"Current ppid: {ppid}")
-            os.kill(ppid, signal.SIGINT)
-
-        # TODO: this stinks. How can we solve the probem that lambda does not spawn a new sv per request?
-        if request.method != 'OPTIONS' and request.url.path in CONTENT_ENDPOINTS:
-            background_tasks = BackgroundTasks()
-            background_tasks.add_task(kill)
-            response.background = background_tasks
-            
-        return response
