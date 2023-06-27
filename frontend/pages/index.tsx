@@ -389,8 +389,5 @@ const Home = () => {
   )
 };
 
-export function makeLinksClickable(text: string) {
-  return text.replace(/(https?:\/\/[^\s]+)/g, "<a target=\"__blank\" href='$1'>$1</a>");
-}
 
 export default Home;

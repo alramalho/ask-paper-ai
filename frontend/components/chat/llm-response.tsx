@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"
 import { useContext, useMemo, useRef, useState } from "react"
 import MarkdownView from "react-showdown"
 import { GuestUserContext, useGuestSession } from "../../hooks/session"
-import { Paper, Status, makeLinksClickable } from "../../pages"
+import { Paper, Status } from "../../pages"
 import { sendAnswerEmail, updateDatasets } from "../../service/service"
 import { storeFeedback } from "../feedback-modal"
 import { Box } from "../layout"
@@ -87,7 +87,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
         <RobotAnswer id="llm-response">
             <Box id="answer" ref={answerRef} css={{ padding: "$5" }}>
                 <MarkdownView
-                    markdown={makeLinksClickable(text)}
+                    markdown={text}
                     options={{ tables: true, emoji: true, }}
                 />
             </Box>
