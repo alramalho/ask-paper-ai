@@ -250,6 +250,7 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
 
         background_tasks.add_task(safe_write, json_paper['title'], json_paper, email)
     else:
+        print("Paper already exists in DynamoDB!")
         json_paper = json.loads(existing_paper['paper_json'])
 
     json_paper['hash'] = paper_hash
