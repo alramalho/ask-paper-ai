@@ -92,19 +92,25 @@ async def verify_login(request: Request, call_next):
         return JSONResponse(status_code=401, content={"message": "Unauthorized. Missing Email Header"})
     
     guest_users_gateway = GuestUsersGateway()
-    if guest_users_gateway.is_guest_user_allowed(email):
-        print("Guest user verified")
-        response = await call_next(request)
-    
-        if request.url.path in GUEST_BILLABLE_ENDPOINTS and response.status_code // 100 == 2: 
-            # TODO, the following logic isn't the best way due to following reasons:
-            # 1. if the user has very low latency, his browser might make several
-            #    requests to ask at once, then he ends up only getting one response or none
-            guest_users_gateway.decrement_remaining_trial_requests(email)
-        return response
-    else:
-        return JSONResponse(status_code=401, content={"message": "Unauthorized user. If you're logged in as guest, this means you're out of trial requests"})
+    try:
+        if (guest_users_gateway.has_remaining_requests(email)):
+            print("Guest user verified")
+            response = await call_next(request)
+        
+            if request.url.path in GUEST_BILLABLE_ENDPOINTS and response.status_code // 100 == 2: 
+                # TODO, the following logic isn't the best way due to following reasons:
+                # 1. if the user has very low latency, his browser might make several
+                #    requests to ask at once, then he ends up only getting one response or none
+                guest_users_gateway.decrement_remaining_trial_requests(email)
 
+            return response
+        else: 
+            return JSONResponse(status_code=401, content={"message": "You're out of trial requests. Join us in discord for full access."})
+    except UserDoesNotExistException as e:
+        guest_users_gateway.create_user(email)
+
+    return await call_next(request)
+        
 
 async def log_function_invocation_to_dynamo(request: Request, call_next):
     start = datetime.datetime.utcnow()

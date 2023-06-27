@@ -1,12 +1,16 @@
-from pydantic import BaseModel
+import datetime
+from typing import Dict, List, Optional
+
 from database.db import DynamoDBGateway
-from utils.constants import DB_GUEST_USERS, DB_DISCORD_USERS
 from nlp import ask_json
-from typing import List, Dict, Optional
+from pydantic import BaseModel
+from utils.constants import DB_DISCORD_USERS, DB_GUEST_USERS
+
 
 class GuestUser(BaseModel):
     email: str
     remaining_trial_requests: int
+    created_at: str
 
 
 class DiscordUser(BaseModel):
@@ -37,14 +41,14 @@ class DiscordUsersGateway:
             print("Discord user does not exist")
             raise UserDoesNotExistException()
         return DiscordUser(**data)
-    
+
     def create_user(self, email: str, discord_id: str, created_at: str) -> DiscordUser:
-        user = DiscordUser(email=email, discord_id=discord_id, created_at=created_at)
+        user = DiscordUser(email=email, discord_id=discord_id,
+                           created_at=created_at)
         self.db_gateway.write(user.dict())
         print(f"Discord user created for email {email}")
         return user
-    
-    
+
     def override_user_datasets(self, discord_id: str, new_datasets: List[Dict]) -> DiscordUser:
         print("Overriding user datasets")
         user = self.get_user_by_id(discord_id)
@@ -58,7 +62,6 @@ class DiscordUsersGateway:
         user.datasets = ask_json(prompt)
         self.db_gateway.write(user.dict())
         print("User datasets updated")
-
 
     def update_user_datasets(self, discord_id: str, new_datasets: List[Dict]) -> DiscordUser:
         print("Updating user datasets")
@@ -74,8 +77,7 @@ class DiscordUsersGateway:
         self.db_gateway.write(user.dict())
         print("User datasets updated")
 
-    
-    
+
 class GuestUsersGateway:
     def __init__(self):
         self.db_gateway = DynamoDBGateway(table_name=DB_GUEST_USERS)
@@ -87,20 +89,20 @@ class GuestUsersGateway:
             raise UserDoesNotExistException()
         return GuestUser(**data)
 
-    def is_guest_user_allowed(self, email: str) -> bool:
-        try:
-            user = self.get_user_by_email(email)
-        except UserDoesNotExistException:
-            print("User does not exist")
-            return False
+    def has_remaining_requests(self, email: str) -> bool:
+        user = self.get_user_by_email(email)
         return user.remaining_trial_requests > 0
 
     def create_user(self, email: str) -> GuestUser:
         if email.endswith('@e2e.test'):
             demo_requests = 1000
         else:
-            demo_requests = 5    
-        user = GuestUser(email=email, remaining_trial_requests=demo_requests)
+            demo_requests = 5
+        user = GuestUser(
+            email=email,
+            remaining_trial_requests=demo_requests,
+            created_at=str(datetime.datetime.utcnow())
+        )
         self.db_gateway.write(user.dict())
         print("User created")
         return user
@@ -113,5 +115,6 @@ class GuestUsersGateway:
             print("User has no remaining trial requests")
             return user
         user.remaining_trial_requests -= 1
-        self.db_gateway.write(user.dict()) # todo: should be update instead of write
+        # todo: should be update instead of write
+        self.db_gateway.write(user.dict())
         return user
