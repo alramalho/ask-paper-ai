@@ -13,10 +13,16 @@ require('dotenv').config()
  */
 
 const browsers = [
+  // {
+  //   name: 'chromium',
+  //   use: {
+  //     ...devices['Desktop Chrome'],
+  //   },
+  // },
   {
-    name: 'chromium',
+    name: 'firefox',
     use: {
-      ...devices['Desktop Chrome'],
+      ...devices['Desktop Firefox'],
     },
   },
   //
@@ -55,12 +61,12 @@ const browsers = [
   //   },
   // },
 ]
-process.env.CI && browsers.push({
-  name: 'firefox',
-  use: {
-    ...devices['Desktop Firefox'],
-  },
-})
+// process.env.CI && browsers.push({
+//   name: 'firefox',
+//   use: {
+//     ...devices['Desktop Firefox'],
+//   },
+// })
 const config: PlaywrightTestConfig = {
   testDir: './tests',
   /* Maximum time one test can run for. */

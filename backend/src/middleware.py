@@ -123,7 +123,11 @@ async def log_function_invocation_to_dynamo(request: Request, call_next):
         response = await call_next(request)
         time_elapsed = str(datetime.datetime.utcnow() - start)
         print(f"Elapsed time for {request.url.path}: {time_elapsed}")
-        background_tasks = BackgroundTasks()
+        if response.background is None:
+            background_tasks = BackgroundTasks()
+        else:
+            background_tasks = response.background
+
         background_tasks.add_task(DynamoDBGateway(DB_FUNCTION_INVOCATIONS).write, {
             'id': str(uuid.uuid4()),
             'email': email,
