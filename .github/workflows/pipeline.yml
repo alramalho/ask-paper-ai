@@ -21,7 +21,7 @@ jobs:
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: sandbox
       APP_URL: https://sandbox--ask-paper.netlify.app
-      ASK_PAPER_BYPASS_AUTH_TOKEN: ${{ secrets.ASK_PAPER_BYPASS_AUTH_TOKEN }}
+      ASK_PAPER_BYPASS_AUTH_TOKEN: ${{ secrets.ASK_PAPER_BYPASS_AUTH_TOKEN_SANDBOX }}
       
 
     steps:
@@ -154,7 +154,7 @@ jobs:
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: production
-      ASK_PAPER_BYPASS_AUTH_TOKEN: ${{ secrets.ASK_PAPER_BYPASS_AUTH_TOKEN }}
+      ASK_PAPER_BYPASS_AUTH_TOKEN: ${{ secrets.ASK_PAPER_BYPASS_AUTH_TOKEN_PRODUCTION }}
 
     steps:
 
