@@ -332,12 +332,12 @@ const Home = () => {
                               Here's a few caveats about how you should build your response:
                               - Include every dataset referenced, regardless of its online availability.
                               - Only include complete datasets, not subsets.
-                              - URLs are required for the "Link to Data or Code" field.
+                              - "Link to Data or Code" field must point to the datasets url
                               - Keep the "Extra Info" field brief and to the point.
                               - The "Passage" field should contain the exact excerpt from the paper where the dataset is mentioned.
                               - "Name" and "Passage" fields must be filled in, with no "N/A" or similar entries.
                               - Each dataset's "Name" must be unique.
-                              - Ensure all table entries reflect only what's explicitly stated in the paper, avoid making inferences.`.replaceAll("  ", ""))
+                              - Ensure all table entries reflect only what's explicitly stated in the paper.`.replaceAll("  ", ""))
                   }
                   }
                   icon={<DotChartOutlined />}
