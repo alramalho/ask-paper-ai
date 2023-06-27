@@ -3,6 +3,7 @@ import json
 import os
 import traceback
 import uuid
+from typing import Union
 
 import requests
 from database.db import DynamoDBGateway
@@ -12,8 +13,9 @@ from fastapi import BackgroundTasks, Request
 from fastapi.responses import JSONResponse
 from utils.constants import (DB_FUNCTION_INVOCATIONS,
                              DISCORD_WHITELIST_ROLENAME,
+                             GUEST_BILLABLE_ENDPOINTS,
                              HIPPOAI_DISCORD_SERVER_ID, LATEST_COMMIT_ID,
-                             UNAUTHENTICATED_ENDPOINTS, GUEST_BILLABLE_ENDPOINTS)
+                             UNAUTHENTICATED_ENDPOINTS)
 
 
 async def set_body(request: Request, body: bytes):
@@ -43,7 +45,8 @@ async def get_id_and_email_from_token(auth_header: str):
         return None
 
 
-async def verify_discord_login(auth_header: str):
+async def verify_discord_login(auth_header: Union[str,  None]):
+    if auth_header is None: return None
     discord_object = await get_id_and_email_from_token(auth_header)
     
     if discord_object is not None:
@@ -62,6 +65,7 @@ async def verify_discord_login(auth_header: str):
 
 async def verify_login(request: Request, call_next):
     auth_header = request.headers.get('Authorization', None)
+    email = request.headers.get('Email', None)
 
     if request.method == 'OPTIONS':
         return await call_next(request)
@@ -74,8 +78,8 @@ async def verify_login(request: Request, call_next):
         print("Endpoint is unaunthenticated, bypassing verify login")
         return await call_next(request)
 
-    if auth_header is None:
-        return JSONResponse(status_code=401, content={"message": "Unauthorized. Missing Auth Header"})
+    if auth_header is None and email is None:
+        return JSONResponse(status_code=401, content={"message": "Unauthorized. Missing Auth or Email Header"})
 
     user_discord_id = await verify_discord_login(auth_header)
 
@@ -84,10 +88,9 @@ async def verify_login(request: Request, call_next):
         print("Discord login verified")
         return await call_next(request)
 
-
-    email = request.headers.get('Email', None)
     if email is None:
         return JSONResponse(status_code=401, content={"message": "Unauthorized. Missing Email Header"})
+    
     guest_users_gateway = GuestUsersGateway()
     if guest_users_gateway.is_guest_user_allowed(email):
         print("Guest user verified")
