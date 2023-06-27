@@ -2,6 +2,6 @@
 
 set -e
 
-# uvicorn main:app --reload --port 8000 &
 pushd src
-hypercorn api:app --reload --bind 0.0.0.0:8000 
+uvicorn api:app --reload --port 8000 --workers 1
+# hypercorn api:app --reload --bind 0.0.0.0:8000 --workers 1

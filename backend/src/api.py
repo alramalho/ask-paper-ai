@@ -158,7 +158,7 @@ async def send_instructions_email(request: Request, background_tasks: Background
     try:
         response = aws.ses_send_email(
             recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
+        DynamoDBGateway(DB_EMAILS_SENT).write({
             'id': str(uuid.uuid4()),
             'recipient': recipient,
             'subject': subject,
@@ -196,7 +196,7 @@ async def send_answer_email(request: Request, background_tasks: BackgroundTasks)
 
         response = aws.ses_send_email(
             recipient, subject, body_html, EMAIL_SENDER)
-        background_tasks.add_task(DynamoDBGateway(DB_EMAILS_SENT).write, {
+        DynamoDBGateway(DB_EMAILS_SENT).write({
             'id': str(uuid.uuid4()),
             'recipient': recipient,
             'subject': subject,
@@ -234,21 +234,19 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
         json_paper = process_paper(pdf_file_content, pdf_file_name)
         aws.store_paper_in_s3(pdf_file_content, f"{paper_hash}.pdf")
 
-        def safe_write(paper, email):
-            print("Writing paper to DynamoDB")
-            try:
-                print("using email :", email)
-                DynamoDBGateway(DB_JSON_PAPERS).write({
-                    'id': paper_hash,
-                    'paper_title': paper['title'],
-                    'paper_json': json.dumps(paper),
-                    'email': email,
-                })
-            except ClientError as e:
-                print(
-                    f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
+        print("Writing paper to DynamoDB")
+        try:
+            print("using email :", email)
+            DynamoDBGateway(DB_JSON_PAPERS).write({
+                'id': paper_hash,
+                'paper_title': json_paper['title'],
+                'paper_json': json.dumps(json_paper),
+                'email': email,
+            })
+        except ClientError as e:
+            print(
+                f"ERROR: Failed to write paper to Dynamo: {e.response['Error']['Message']}")
 
-        background_tasks.add_task(safe_write, json_paper, email)
     else:
         print("Paper already exists in DynamoDB!")
         json_paper = json.loads(existing_paper['paper_json'])
