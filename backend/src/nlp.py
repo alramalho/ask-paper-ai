@@ -323,7 +323,7 @@ def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = 
         try:
             response = openai.ChatCompletion.create(
                 max_tokens=int(completion_tokens),
-                model="gpt-3.5-turbo",
+                model="gpt-3.5-turbo-16k",
                 messages=[
                     {"role": "user", "content": text},
                     *[dict(message.as_openai_message()) for message in message_history]
