@@ -61,12 +61,12 @@ const browsers = [
   //   },
   // },
 ]
-// process.env.CI && browsers.push({
-//   name: 'firefox',
-//   use: {
-//     ...devices['Desktop Firefox'],
-//   },
-// })
+process.env.CI && browsers.push({
+  name: 'chromium',
+  use: {
+    ...devices['Desktop Chrome'],
+  },
+})
 const config: PlaywrightTestConfig = {
   testDir: './tests',
   /* Maximum time one test can run for. */
