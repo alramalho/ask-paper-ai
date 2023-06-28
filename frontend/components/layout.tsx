@@ -1,22 +1,19 @@
-import { CSS, Text, styled } from '@nextui-org/react';
-import { NextSeo } from 'next-seo';
-import { OpenGraphMedia } from 'next-seo/lib/types';
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import FeedbackModal from './feedback-modal';
-import { GuestUserContext, useGuestSession } from '../hooks/session';
+import Icon, { BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
+import { styled } from '@nextui-org/react';
+import { Layout, Menu, MenuProps } from 'antd';
 import { useSession } from 'next-auth/react';
-import { Avatar, Layout, Menu, MenuProps } from 'antd';
-const { Sider, Content, Footer, Header } = Layout;
-import Icon, { BulbFilled, BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
-import Link from 'next/link';
+import Router from "next/router";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import { GuestUserContext, useGuestSession } from '../hooks/session';
+import FeedbackModal from './feedback-modal';
 import DiscordIcon from './icons/discord-icon';
 import { Flex } from './styles/flex';
-import Router from "next/router";
+const { Sider, Content, Footer, Header } = Layout;
 
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const twitterLink = "https://twitter.com/intent/tweet?text=%F0%9F%93%9D+askpaper.ai+-+Understand+any+paper%21%0D%0ACurrently+in+love+with+this+new+AI+tool.+It+let%27s+you+ask+open+questions%2C+generate+great+summaries+%26+extract+data+from+papers.+%0D%0APerfect+for+researchers+trying+to+ramp+up+their+paper+reading+game%21+"
+const twitterLink = "https://twitter.com/intent/tweet?text=%F0%9F%93%9D%20Stumbled%20upon%20askpaper.ai%20and%20it%27s%20changing%20how%20I%20interact%20with%20papers.%20It%20allows%20you%20to%20ask%20questions%2C%20generate%20insightful%20summaries%2C%20and%20pull%20out%20crucial%20data%20points.%20Essential%20for%20any%20researcher%20looking%20to%20up%20their%20reading%20game.%20Check%20it%20out%21%20%F0%9F%91%8D%0A%40hippoai%20%40_alexramalho%20"
 
 export const Code = styled('code', {
 
