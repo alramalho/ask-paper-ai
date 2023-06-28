@@ -54,7 +54,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
 
     const answerRef = useRef(null)
 
-    const markdownTable = useMemo(() => extractMarkdownTable(text), [text])
+    const markdownTable = useMemo(() => extractMarkdownTable(text), [text, loading])
 
     function handleExportClick({ key }) {
         if (key == 'csv') {
@@ -228,9 +228,7 @@ function extractMarkdownTable(text: string): string | null {
         if (lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
             if (startIndex === -1) {
                 // A markdown table should at least have a header and a separator line
-                if (lines.length > i + 1 && lines[i + 1].trim().match(/^\|(:?-+:?\|)+$/)) {
-                    startIndex = i;
-                }
+                startIndex = i;
             } else if (endIndex === -1 && !lines[i + 1]?.trim().startsWith('|')) {
                 endIndex = i;
                 break;
