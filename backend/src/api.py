@@ -353,7 +353,7 @@ async def store_feedback(request: Request):
     body = await request.json()
 
     if 'data' not in body:
-        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
+        raise HTTPException(status_code=400, detail="Missing data.")
 
     body['data']['id'] = str(uuid.uuid4())
 
