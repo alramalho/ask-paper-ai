@@ -1,12 +1,12 @@
-import { ReactNode, useContext, useEffect, useMemo, useState } from "react"
-import { GuestUserContext, useGuestSession } from "../hooks/session"
-import { signOut, useSession } from "next-auth/react"
-import { Flex } from "../components/styles/flex"
+import { DeleteOutlined } from "@ant-design/icons"
 import { Loading, Spacer, Text } from "@nextui-org/react"
-import Info from "../components/info"
-import { loadDatasetsForUser, saveDatasets } from "../service/service"
 import { Alert, Avatar, Button, Table, notification } from "antd"
-import { DeleteFilled, DeleteOutlined } from "@ant-design/icons"
+import { signOut, useSession } from "next-auth/react"
+import { ReactNode, useContext, useEffect, useMemo, useState } from "react"
+import Info from "../components/info"
+import { Flex } from "../components/styles/flex"
+import { GuestUserContext, useGuestSession } from "../hooks/session"
+import { loadDatasetsForUser, saveDatasets } from "../service/service"
 import { Status } from "./index"
 
 
@@ -158,6 +158,13 @@ const Profile = () => {
                 <Text>{session!.user!.email}</Text>
                 <Button onClick={() => signOut()}>Log out</Button>
             </Flex>
+            <Spacer y={2} />
+            <Alert
+                message="👋 Hey! This is an experimental page"
+                description={`We are working on improving both accuracy and customizability of this page. It might not work as expected. Please contact us if you have any feedback.`}
+                type="info"
+                closable
+            />
             <Spacer y={2} />
             <Flex direction='column' css={{ margin: "$3", alignItems: 'flex-start', maxWidth: "100%" }} data-testid="profile-dataset-area">
                 <Text h4>📊 My Extracted Datasets</Text>
