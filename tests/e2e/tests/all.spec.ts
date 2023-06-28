@@ -23,6 +23,9 @@ test.describe('Normal upload', () => {
 
     await loginAsGuest(browser);
 
+    const fracNetPaperHash = "39eee3d413713f47ed3d25957c7cd32dfbdc437652e9083ea2eea649c6b11897"
+    await deleteFromDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'id', fracNetPaperHash)
+
     page.on("filechooser", (fileChooser: FileChooser) => {
       fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
     });
@@ -40,9 +43,10 @@ test.describe('Normal upload', () => {
     await expect(page.getByTestId('upload-successful')).toBeVisible();
     await expect(page.getByTestId("pdf")).toContainText("Deep-learning-assisted detection and segmentation of rib fractures from")
 
-    verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
       paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
     })
+
   })
 
   test('should have all requests left', async () => {
@@ -334,6 +338,11 @@ function verifyIfInDynamo(tableName: string, indexField: string, indexValue: str
   } else {
     require('child_process').execSync(`aws dynamodb query --table-name ${tableName} ${query}`);
   }
+}
+
+function deleteFromDynamo(tableName: string, keyField: string, keyValue) {
+  const command = `aws dynamodb delete-item --table-name ${tableName} --key '{ "${keyField}": {"S": "${keyValue}"} }' || exit 1`
+  require('child_process').execSync(command);
 }
 
 function formatAttributes(obj: { [key: string]: string | boolean }): string {
