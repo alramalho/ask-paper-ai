@@ -7,6 +7,19 @@ function normalizeUrl(url) {
   return url.replace(/([^:]\/)\/+/g, "$1");
 }
 
+export function storeFeedback(email: string, data: any, accessToken: any) {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/store-feedback`), {
+    "data": data,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      // @ts-ignore
+      'Authorization': `Bearer ${accessToken}`,
+      'Email': email,
+    },
+  })
+}
+
 export function loginAsGuest(email) {
   return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/guest-login`), {}, {
     headers: {

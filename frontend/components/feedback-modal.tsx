@@ -7,6 +7,7 @@ import {GuestUserContext, useGuestSession} from "../hooks/session";
 import {Box} from "./layout";
 import { useSession } from 'next-auth/react';
 import Nps from './nps';
+import {storeFeedback} from "../service/service"
 
 const StyledRadio = styled(Radio, {
   margin: '0 $5',
@@ -24,19 +25,6 @@ interface FeedbackProps {
   css?: CSS,
   visible: boolean,
   setVisible: (visible: boolean) => void,
-}
-
-export function storeFeedback(email: string, data: any, accessToken: any) {
-  return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/store-feedback`, {
-    "data": data,
-  }, {
-    headers: {
-      'Content-Type': 'application/json',
-      // @ts-ignore
-      'Authorization': `Bearer ${accessToken}`,
-      'Email': email,
-    },
-  })
 }
 
 const FeedbackModal = ({css, userEmail, visible, setVisible}: FeedbackProps) => {
