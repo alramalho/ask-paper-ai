@@ -337,7 +337,8 @@ const Home = () => {
                               - The "Passage" field should contain the exact excerpt from the paper where the dataset is mentioned.
                               - "Name" and "Passage" fields must be filled in, with no "N/A" or similar entries.
                               - Each dataset's "Name" must be unique.
-                              - Ensure all table entries reflect only what's explicitly stated in the paper.`.replaceAll("  ", ""))
+                              - Ensure all table entries reflect only what's explicitly stated in the paper.
+                              - Only add datasets which you have an high degree of confidence that are actually a dataset.`.replaceAll("  ", ""))
                   }
                   }
                   icon={<DotChartOutlined />}
