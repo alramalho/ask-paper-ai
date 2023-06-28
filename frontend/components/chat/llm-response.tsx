@@ -54,7 +54,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
 
     const answerRef = useRef(null)
 
-    const markdownTable = useMemo(() => extractMarkdownTable(text), [text, loading])
+    const markdownTable = useMemo(() => extractMarkdownTable(text), [text, messageStatus])
 
     function handleExportClick({ key }) {
         if (key == 'csv') {
