@@ -183,6 +183,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                 '&:hover': { color: 'white', backgroundColor: '"$success"' },
                             }}
                             onPress={() => {
+                                setUnderFeedbackText('Saving...')
                                 storeFeedback(session!.user!.email!, {
                                     email: session!.user!.email,
                                     was_answer_accurate: true,
@@ -191,13 +192,16 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     paper_hash: selectedPaper?.hash ?? '',
                                     // @ts-ignore
                                 }, session!.accessToken)
-                                setUnderFeedbackText('Thank you! 🙏')
+                                    .then(() => {
+                                        setUnderFeedbackText('Thank you! 🙏')
+                                    })
                             }}
                         >
                             👍
                         </Button>
                         <Button css={{ padding: '10px' }} ghost auto
                             onPress={() => {
+                                setUnderFeedbackText('Saving...')
                                 storeFeedback(session!.user!.email!, {
                                     email: session!.user!.email,
                                     was_answer_accurate: false,
@@ -206,7 +210,9 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     paper_hash: selectedPaper?.hash ?? '',
                                     // @ts-ignore
                                 }, session!.accessToken)
-                                setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')
+                                    .then(() => {
+                                        setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')
+                                    })
                             }}
                         >
                             👎
