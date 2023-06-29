@@ -1,5 +1,5 @@
 import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from database.db import DynamoDBGateway
 from nlp import ask_json
@@ -17,7 +17,7 @@ class DiscordUser(BaseModel):
     email: str
     discord_id: str
     created_at: str
-    datasets: Optional[List[Dict]]
+    datasets: Optional[Union[List[Dict], str]]
 
 
 class UserDoesNotExistException(Exception):
@@ -68,9 +68,9 @@ class DiscordUsersGateway:
         user = self.get_user_by_id(discord_id)
         if user.datasets is None or user.datasets == '':
             user.datasets = new_datasets
-        prompt = f"""Here's a JSON file representing several datasets and their charactersitics:
+        prompt = f"""Here's a JSON file (or a markdown table) representing several datasets and their charactersitics:
         {user.datasets}
-        Your task is to update that JSON information with these new datasets entries:
+        Your task is to update that information with these new datasets entries:
         {new_datasets}
         """
         user.datasets = ask_json(prompt)
