@@ -45,6 +45,7 @@ const Profile = () => {
                 let datasets = res.data.datasets
                 if (typeof datasets === 'string' && isMarkdownTable(datasets)) {
                     console.log("datasets are markdown")
+                    console.log(datasets)
                     datasets = markdownTableToJson(datasets)
                 }
 
@@ -220,20 +221,25 @@ interface KeyDefinition {
 
 function isMarkdownTable(str) {
     str = str.trim();
-    
+
     if (str.startsWith('"') && str.endsWith('"')) {
-      str = str.slice(1, -1);
+        str = str.slice(1, -1);
     }
-  
+
     if (str.startsWith('|')) {
-      return true;
+        return true;
     }
-  
+
     return false;
-  }
+}
 
 function markdownTableToJson(markdown) {
-    // Split the Markdown table by lines
+    if (markdown.startsWith('"') && markdown.endsWith('"')) {
+        markdown = markdown.slice(1, -1);
+    }
+    
+    markdown = markdown.replaceAll("\\n", "\n")
+
     const lines = markdown.trim().split('\n');
 
     // Extract headers
