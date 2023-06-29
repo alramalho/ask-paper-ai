@@ -1,6 +1,4 @@
 fastapi>=0.87.0
-hypercorn # for local 
-uvicorn # for lambda
 openai
 python-dotenv
 tqdm

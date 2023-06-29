@@ -22,9 +22,12 @@ cd -
 
 echo "${BLUE}Adding source code... 🌊${NOCOLOR}"
 cp scripts/run_lambda.sh src
+
 cd src
 zip ../build.zip -u . -r
 rm run_lambda.sh
 cd -
 
 echo "${GREEN}Done ✅${NOCOLOR}"
+du -k build.zip | awk -v f="$file" -v green="$GREEN" -v reset="$NOCOLOR" '{ printf green "📦 Source code is %s KB" reset "\n", $1 }'
+
