@@ -43,7 +43,7 @@ const Profile = () => {
                 }
 
                 let datasets = res.data.datasets
-                if (typeof datasets === 'string' && datasets.trim().startsWith('|')) {
+                if (typeof datasets === 'string' && isMarkdownTable(datasets)) {
                     console.log("datasets are markdown")
                     datasets = markdownTableToJson(datasets)
                 }
@@ -218,11 +218,19 @@ interface KeyDefinition {
     render?: (value: any, record: object, index: number) => ReactNode | undefined
 }
 
-function isMarkdownTable(input) {
-    const firstNonEmptyChar = input.trim()[0];
-    return firstNonEmptyChar === '|';
-}
-
+function isMarkdownTable(str) {
+    str = str.trim();
+    
+    if (str.startsWith('"') && str.endsWith('"')) {
+      str = str.slice(1, -1);
+    }
+  
+    if (str.startsWith('|')) {
+      return true;
+    }
+  
+    return false;
+  }
 
 function markdownTableToJson(markdown) {
     // Split the Markdown table by lines
