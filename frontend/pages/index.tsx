@@ -292,7 +292,7 @@ const Home = () => {
               shape="circle"
               data-testid="clear-button"
               icon={<ClearOutlined />}
-              style={{ position: 'absolute', right: '0.85rem', top: '-3rem', zIndex: 1 }}
+              style={{ position: 'absolute', right: '0.85rem', top: '-3rem', zIndex: 10 }}
               onClick={() => {
                 cancelAllRequests()
                 setChatHistory(previous => previous.filter((e: any) => e.sender == "system"))

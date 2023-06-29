@@ -180,6 +180,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                 padding: '10px',
                                 color: '"$success"',
                                 '&:hover': { color: 'white', backgroundColor: '"$success"' },
+                                zIndex: 2,
                             }}
                             onPress={() => {
                                 setUnderFeedbackText('Saving...')
@@ -207,6 +208,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     question: question,
                                     answer: text,
                                     paper_hash: selectedPaper?.hash ?? '',
+                                    zIndex: 2,
                                     // @ts-ignore
                                 }, session!.accessToken)
                                     .then(() => {
