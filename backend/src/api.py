@@ -360,3 +360,12 @@ async def store_feedback(request: Request):
     DynamoDBGateway(DB_FEEDBACK).write(body['data'])
 
     return {"message": "success"}
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    from hypercorn.asyncio import serve
+    from hypercorn.config import Config
+    asyncio.run(serve(app, Config()))
+    # trying out hypercorn instead of uvicorn – https://github.com/encode/httpx/issues/96
