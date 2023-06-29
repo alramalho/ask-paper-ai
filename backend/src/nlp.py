@@ -3,6 +3,7 @@ import json
 import threading
 import time
 from copy import deepcopy
+from queue import Queue
 from typing import (Any, Callable, Dict, Generator, List, Literal, Optional,
                     Union)
 
@@ -309,6 +310,29 @@ class ChatMessage(BaseModel):  # this should in sync with frontend
         return OpenAIMessage(role=sender, content=self.text)
 
 
+def ask_text_stream_buffered(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=True) -> Generator[str, None, None]:
+    token_queue = Queue()  # Queue for storing tokens
+
+    # Create generator from ask_text function
+    token_gen = ask_text(text, completion_tokens, message_history, stream)
+
+    for token in token_gen:
+        token_queue.put(token)  # Add token to queue
+
+        if token_queue.qsize() >= 5:  # If queue has 5 or more elements
+            grouped_tokens = ""
+            for _ in range(5):  # Group five tokens
+                grouped_tokens += token_queue.get()
+            yield grouped_tokens  # Yield grouped tokens
+
+    # Group and yield remaining items in the queue (if any)
+    grouped_tokens = ""
+    while not token_queue.empty():
+        grouped_tokens += token_queue.get()
+    if grouped_tokens:
+        yield grouped_tokens
+
+
 @elapsed_time
 def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=False) -> Generator[str, None, None]:
     text_size = count_tokens(text)
@@ -485,7 +509,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
 
     print("Contexts to ask: ", len(contexts))
     if len(contexts) == 1:
-        return ask_text(
+        return ask_text_stream_buffered(
             text=build_prompt(question, contexts[0]),
             completion_tokens=completion_tokens,
             message_history=message_history,
@@ -512,7 +536,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
             f.write("\n\n".join(responses))
 
     print("Question: ", question)
-    return ask_text(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
+    return ask_text_stream_buffered(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
 
 
 def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], results_speed_trade_off: int = 0) -> Generator[str, None, None]:
