@@ -32,19 +32,25 @@ const Profile = () => {
         return `(${result.join(", ")})`
     }, [pendingChanges])
 
-
     function refreshDatasets() {
         setIsLoading(true)
         // @ts-ignore 
         loadDatasetsForUser(session!.user!.email, session!.accessToken)
             .then(res => {
-                const datasets = JSON.parse(res.data.datasets)
-                console.log(datasets)
-                if (datasets == undefined || datasets == null) {
-                    setUserDatasets([])
-                } else {
-                    setUserDatasets(datasets)
+                if (!('datasets' in res.data)) {
+                    console.error("No datasets key in response")
+                    throw new Error("No datasets key in response")
                 }
+
+                let datasets = res.data.datasets
+                if (typeof datasets === 'string' && datasets.trim().startsWith('|')) {
+                    console.log("datasets are markdown")
+                    datasets = markdownTableToJson(datasets)
+                }
+
+                datasets = JSON.parse(datasets)
+                console.log(datasets)
+                setUserDatasets(datasets)
                 setIsLoading(false)
             })
             .catch(err => {
@@ -109,7 +115,8 @@ const Profile = () => {
 
     function generateColumnDefinitions(data: any[]): KeyDefinition[] {
         const keyDefinitions: KeyDefinition[] = [];
-
+        console.log("typeof data", typeof data)
+        console.log("data", data)
         data.forEach((item, index) => {
             Object.keys(item).forEach((key) => {
                 if (!keyDefinitions.find((e) => e.title === key)) {
@@ -131,10 +138,11 @@ const Profile = () => {
         });
 
         const nameIndex = keyDefinitions.findIndex((e) => e.title.toLowerCase() === 'name')
-        const nameColumn = keyDefinitions[nameIndex]
-        keyDefinitions.splice(nameIndex, 1)
-        keyDefinitions.unshift(nameColumn)
-
+        if (nameIndex != -1) {
+            const nameColumn = keyDefinitions[nameIndex]
+            keyDefinitions.splice(nameIndex, 1)
+            keyDefinitions.unshift(nameColumn)
+        }
         keyDefinitions.push({
             title: 'Delete',
             key: 'delete',
@@ -210,16 +218,44 @@ interface KeyDefinition {
     render?: (value: any, record: object, index: number) => ReactNode | undefined
 }
 
+function isMarkdownTable(input) {
+    const firstNonEmptyChar = input.trim()[0];
+    return firstNonEmptyChar === '|';
+}
 
-function snakeCaseKeys(obj: any): any {
-    const result: any = {};
 
-    for (const key in obj) {
-        const snakeCaseKey = key.replace(/ /g, '_').toLowerCase();
-        result[snakeCaseKey] = obj[key];
+function markdownTableToJson(markdown) {
+    // Split the Markdown table by lines
+    const lines = markdown.trim().split('\n');
+
+    // Extract headers
+    const headers = lines[0].split('|').map(header => header.trim()).filter(Boolean);
+
+    // Initialize the JSON array
+    const json = [];
+
+    // Process each row after the headers
+    for (let i = 2; i < lines.length; i++) {
+        const row = {};
+        const cells = lines[i].split('|').map(cell => cell.trim()).filter(Boolean);
+
+        // Skip rows that don't have the same number of cells as headers
+        if (cells.length !== headers.length) {
+            continue;
+        }
+
+        // Map cells to corresponding headers
+        for (let j = 0; j < headers.length; j++) {
+            row[headers[j]] = cells[j];
+        }
+
+        // Add the row to the JSON array
+        // @ts-ignore
+        json.push(row);
     }
 
-    return result;
+    // Return the resulting JSON
+    return JSON.stringify(json);
 }
 
 
