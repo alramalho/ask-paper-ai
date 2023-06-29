@@ -180,7 +180,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                 padding: '10px',
                                 color: '"$success"',
                                 '&:hover': { color: 'white', backgroundColor: '"$success"' },
-                                zIndex: 2,
+                                zIndex: 11,
                             }}
                             onPress={() => {
                                 setUnderFeedbackText('Saving...')
@@ -199,7 +199,8 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                         >
                             👍
                         </Button>
-                        <Button css={{ padding: '10px' }} ghost auto
+                        <Button ghost auto
+                            css={{ padding: '10px', zIndex: 11}} 
                             onPress={() => {
                                 setUnderFeedbackText('Saving...')
                                 storeFeedback(session!.user!.email!, {
