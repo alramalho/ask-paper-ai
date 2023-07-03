@@ -56,7 +56,6 @@ test.describe('Normal upload', () => {
 
   test('should be able to only send one message in a row', async () => {
     await page.getByTestId("ask-textarea").fill("who are the authors?");
-    await page.getByTestId("configuration-panel").click();
     await page.getByTestId('ask-button').click();
     await page.waitForTimeout(1000);
     await page.getByTestId('ask-button').click();
@@ -99,7 +98,6 @@ test.describe('Normal upload', () => {
   test('should be able ask a question that needs information from a figure caption', async () => {
     await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
-    await page.getByTestId("configuration-panel").click();
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
@@ -113,7 +111,6 @@ test.describe('Normal upload', () => {
   // test('should be able ask a question that needs information from a table', async () => {
   //   await page.getByTestId('clear-button').click();
   //   await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2.");
-  //   await page.getByTestId("configuration-panel").click();
   //   await page.getByTestId('ask-button').click();
 
   //   await expect(page.getByTestId('loading-answer')).toBeVisible();
