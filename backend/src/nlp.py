@@ -539,32 +539,11 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
     return ask_text_stream_buffered(build_summary_prompt(responses=responses, question=question), message_history=message_history, stream=True)
 
 
-def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = [], results_speed_trade_off: int = 0) -> Generator[str, None, None]:
+def ask_paper(question: str, paper: Paper, message_history: List[ChatMessage] = []) -> Generator[str, None, None]:
     if "this is a load test" in question.lower():
         return string_as_generator("This is a load test response")
 
     print("Asking paper")
-    switcher = {
-        0: None,
-        1: 20,
-        2: 14,
-        3: 8,
-        4: 3
-    }
-    top_k_sections = switcher.get(results_speed_trade_off, "invalid")
-    if top_k_sections == "invalid":
-        raise ValueError(
-            "Invalid valid for speed_acc_trade_off, must be one of " + str(list(switcher.keys())))
-
-    if switcher.get(results_speed_trade_off) is not None:
-        selected_sections = get_top_k_labels(
-            k=top_k_sections, text=f"Question on paper article {paper.title}: {question}", labels=paper.get_sections())
-        print("Selected sections: " + str(selected_sections))
-        paper.filter_sections('include', selected_sections)
-
-    paper.filter_sections(
-        'exclude', ['reference', 'acknow', 'appendi', 'decl', 'supp', 'funding'])
-
     context = paper.to_text()
 
     prompt_override = """

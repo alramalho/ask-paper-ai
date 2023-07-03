@@ -13,7 +13,6 @@ import { FeedbackVisibleContext, headerHeight, isMobile } from "../components/la
 import PaperSectionSelector from "../components/paper-section-selector";
 import PaperUploader from "../components/paper-uploader";
 import RemainingRequests from "../components/remaining-requests";
-import IconSlider from "../components/slider/slider";
 import { Flex } from "../components/styles/flex";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import { askPaper, getRemainingRequestsFor } from "../service/service";
@@ -76,7 +75,6 @@ const Home = () => {
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
   const setIsFeedbackModalVisible = useContext(FeedbackVisibleContext)
-  const [resultsSpeedTradeoff, setResultsSpeedTradeoff] = useState<number>(0)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
   const [question, setQuestion] = useState('');
@@ -329,7 +327,7 @@ const Home = () => {
 
           <Collapse size="small" style={{ width: "100%" }} activeKey={activePanelKeys} onChange={key => setActivePanelKeys(key)}>
             <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
-              <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+              <h4>Paper sections in use:</h4>
               <PaperSectionSelector uploadedPaper={uploadedPaper} setFilteredPaper={setFilteredPaper} />
             </Panel>
             <Panel data-testid="predefined-actions-panel" header="📦 Predefined prompts" key="2" >
