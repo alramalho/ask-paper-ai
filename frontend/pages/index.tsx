@@ -266,7 +266,7 @@ const Home = () => {
           height: "100%",
           flexWrap: 'nowrap'
         }}>
-          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} paper={filteredPaper} messageStatus={responseStatus} />
+          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} paper={filteredPaper!} messageStatus={responseStatus} />
 
           <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
             {responseStatus === 'loading' &&

@@ -17,7 +17,7 @@ interface ChatProps {
   [otherPropName: string]: any;
 }
 
-const Chat = ({ chatHistory, paper: paper, css, ...props }: ChatProps) => {
+const Chat = ({ chatHistory, paper, css, ...props }: ChatProps) => {
 
   return (
     <Box id="chat" css={{ flexGrow: 1, alignContent: 'end', overflow: 'auto', minWidth: "100%", maxWidth: "100%", ...css }} {...props}>
