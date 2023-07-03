@@ -13,6 +13,7 @@
     "start-sandbox": "export APP_URL=https://sandbox--ask-paper.netlify.app/ && export ENVIRONMENT='sandbox' && npx playwright test"
   },
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "next-auth": "^4.19.1"
   }
 }
