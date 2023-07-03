@@ -9,8 +9,8 @@ export function verifyIfInDynamo(tableName: string, indexField: string, indexVal
     }
   }
   
-  export function deleteFromDynamo(tableName: string, keyField: string, keyValue) {
-    const command = `aws dynamodb delete-item --table-name ${tableName} --key '{ "${keyField}": {"S": "${keyValue}"} }' || exit 1`
+  export function safeDeleteFromDynamo(tableName: string, keyField: string, keyValue) {
+    const command = `aws dynamodb delete-item --table-name ${tableName} --key '{ "${keyField}": {"S": "${keyValue}"} }' || exit 0`
     require('child_process').execSync(command);
   }
   

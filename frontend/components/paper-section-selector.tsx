@@ -148,7 +148,7 @@ const PaperSectionSelector = ({ uploadedPaper, setFilteredPaper }: PaperSectionS
         setFilteredPaper(filterPaperSections(uploadedPaper, checkedKeys as string[]))
     }, [checkedKeys])
 
-    return <>
+    return <div data-testid="paper-section-selector">
         <Tree
             checkable
             selectable={false}
@@ -160,7 +160,7 @@ const PaperSectionSelector = ({ uploadedPaper, setFilteredPaper }: PaperSectionS
             checkedKeys={checkedKeys}
             treeData={treeData}
         />
-    </>
+    </div>
 }
 
 function isDigit(char) {

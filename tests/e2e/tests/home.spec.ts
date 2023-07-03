@@ -1,5 +1,5 @@
 import { expect, FileChooser, Page, test } from '@playwright/test';
-import { deleteFromDynamo, verifyIfInDynamo } from './utils/aws';
+import { safeDeleteFromDynamo, verifyIfInDynamo } from './utils/aws';
 import { SNAKE_CASE_PREFIX } from './utils/constants';
 var crypto = require("crypto");
 var fs = require('fs')
@@ -25,7 +25,7 @@ test.describe('Normal upload', () => {
     await loginAsGuest(browser);
 
     const fracNetPaperHash = "39eee3d413713f47ed3d25957c7cd32dfbdc437652e9083ea2eea649c6b11897"
-    await deleteFromDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'id', fracNetPaperHash)
+    await safeDeleteFromDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'id', fracNetPaperHash)
 
     page.on("filechooser", (fileChooser: FileChooser) => {
       fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
@@ -57,25 +57,11 @@ test.describe('Normal upload', () => {
   test('should be able to only send one message in a row', async () => {
     await page.getByTestId("ask-textarea").fill("who are the authors?");
     await page.getByTestId("configuration-panel").click();
-    await page.click('text=Best Speed');
     await page.getByTestId('ask-button').click();
     await page.waitForTimeout(1000);
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByText("Please wait until the current request is finished.")).toBeVisible();
-  });
-
-  test('should be able to ask a question with best speed', async () => {
-    await page.getByTestId("ask-textarea").fill("who are the authors?");
-    await page.getByTestId("configuration-panel").click();
-    await page.click('text=Best Speed');
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("Ming Li");
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
 
   test('should be able to ask a follow up question', async () => {
@@ -96,25 +82,24 @@ test.describe('Normal upload', () => {
   });
 
 
-  test('should be able to ask a question with best results', async () => {
+  test('should be able to ask a question with partial sections', async () => {
     await page.getByTestId('clear-button').click();
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
     await page.getByTestId("configuration-panel").click();
-    await page.click('text=Best Results');
+    await page.getByText("Acknowledgments").last().click();
+    
+    await page.getByTestId("ask-textarea").fill("do they mention Acknowledgments? answer only \"Yes\" or \"No\".");
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
 
-    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+    await expect(page.getByTestId('answer-area').last()).toContainText("No");
   });
 
   test('should be able ask a question that needs information from a figure caption', async () => {
     await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
     await page.getByTestId("configuration-panel").click();
-    await page.click('text=Best Results');
     await page.getByTestId('ask-button').click();
 
     await expect(page.getByTestId('loading-answer')).toBeVisible();
@@ -129,7 +114,6 @@ test.describe('Normal upload', () => {
   //   await page.getByTestId('clear-button').click();
   //   await page.getByTestId("ask-textarea").fill("Give me the Tuning Segmentation IoU present shown in Table 2.");
   //   await page.getByTestId("configuration-panel").click();
-  //   await page.click('text=Best Results');
   //   await page.getByTestId('ask-button').click();
 
   //   await expect(page.getByTestId('loading-answer')).toBeVisible();
