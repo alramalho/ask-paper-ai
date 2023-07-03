@@ -62,7 +62,7 @@ interface PaperSectionSelectorProps {
     setFilteredPaper: (a: Paper) => void;
 }
 
-const PaperSectionSelector = ({ uploadedPaper, setFilteredPaper }: PaperSectionSelectorProps) => {
+const SectionSelector = ({ uploadedPaper, setFilteredPaper }: PaperSectionSelectorProps) => {
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
@@ -167,4 +167,4 @@ function isDigit(char) {
     return /^\d$/.test(char);
 }
 
-export default PaperSectionSelector
+export default SectionSelector

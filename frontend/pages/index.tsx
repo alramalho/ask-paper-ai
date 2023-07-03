@@ -10,7 +10,7 @@ import MarkdownView from "react-showdown";
 import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
 import { FeedbackVisibleContext, headerHeight, isMobile } from "../components/layout";
-import PaperSectionSelector from "../components/paper-section-selector";
+import SectionSelector from "../components/section-selector";
 import PaperUploader from "../components/paper-uploader";
 import RemainingRequests from "../components/remaining-requests";
 import { Flex } from "../components/styles/flex";
@@ -230,7 +230,7 @@ const Home = () => {
 
   return (<>
     {contextHolder}
-    {(!isMobile() || filteredPaper === undefined) &&
+    {(!isMobile() || uploadedPaper === undefined) &&
       <Content style={{ backgroundColor: "transparent" }}>
         <Spacer y={2} />
         <PaperUploader onFinish={(paper, pdf) => {
@@ -328,7 +328,7 @@ const Home = () => {
           <Collapse size="small" style={{ width: "100%" }} activeKey={activePanelKeys} onChange={key => setActivePanelKeys(key)}>
             <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
               <h4>Paper sections in use:</h4>
-              <PaperSectionSelector uploadedPaper={uploadedPaper} setFilteredPaper={setFilteredPaper} />
+              <SectionSelector uploadedPaper={uploadedPaper} setFilteredPaper={setFilteredPaper} />
             </Panel>
             <Panel data-testid="predefined-actions-panel" header="📦 Predefined prompts" key="2" >
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
