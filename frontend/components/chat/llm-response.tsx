@@ -35,14 +35,14 @@ export const RobotAnswer = ({ children, ...props }) => {
 }
 
 interface LLMResponseProps {
-    selectedPaper: Paper
+    paper: Paper
     chatHistory: ChatMessage[]
     text: string
     messageStatus: Status
 }
 
 
-const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMResponseProps) => {
+const LLMResponse = ({ paper, chatHistory, text, messageStatus }: LLMResponseProps) => {
     const [underFeedbackText, setUnderFeedbackText] = useState<string | undefined>(undefined)
     const [emailStatus, setEmailStatus] = useState<Status>('idle')
     const [saveStatus, setSaveStatus] = useState<Status>('idle')
@@ -99,7 +99,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                             <AntButton onClick={() => {
                                 setSaveStatus('loading')
                                 updateDatasets({
-                                    paperTitle: selectedPaper!.title,
+                                    paperTitle: paper!.title,
                                     datasets: markdownTableToJSON(markdownTable),
                                     email: session!.user!.email!,
                                     // @ts-ignore
@@ -133,7 +133,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     question: question,
                                     // @ts-ignore
                                     answer: answerRef.current.innerHTML, // to keep the html format
-                                    paperTitle: selectedPaper!.title
+                                    paperTitle: paper!.title
                                 }).then(() => {
                                     setEmailStatus('success')
                                     setTimeout(() => {
@@ -189,7 +189,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     was_answer_accurate: true,
                                     question: question,
                                     answer: text,
-                                    paper_hash: selectedPaper?.hash ?? '',
+                                    paper_hash: paper?.hash ?? '',
                                     // @ts-ignore
                                 }, session!.accessToken)
                                     .then(() => {
@@ -208,7 +208,7 @@ const LLMResponse = ({ selectedPaper, chatHistory, text, messageStatus }: LLMRes
                                     was_answer_accurate: false,
                                     question: question,
                                     answer: text,
-                                    paper_hash: selectedPaper?.hash ?? '',
+                                    paper_hash: paper?.hash ?? '',
                                     zIndex: 2,
                                     // @ts-ignore
                                 }, session!.accessToken)

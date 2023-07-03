@@ -10,6 +10,7 @@ import MarkdownView from "react-showdown";
 import Chat, { ChatMessage } from "../components/chat/chat";
 import Info from "../components/info";
 import { FeedbackVisibleContext, headerHeight, isMobile } from "../components/layout";
+import PaperSectionSelector from "../components/paper-section-selector";
 import PaperUploader from "../components/paper-uploader";
 import RemainingRequests from "../components/remaining-requests";
 import IconSlider from "../components/slider/slider";
@@ -69,7 +70,8 @@ export type Status = 'idle' | 'loading' | 'success' | 'error'
 const Home = () => {
   const [responseStatus, setResponseStatus] = useState<Status>('idle')
   const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
-  const [selectedPaper, setSelectedPaper] = useState<Paper | undefined | null>(undefined)
+  const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
+  const [filteredPaper, setFilteredPaper] = useState<Paper>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
@@ -89,7 +91,7 @@ const Home = () => {
       elements[elements.length - 1].scrollIntoView()
     }
   }
-  
+
   useEffect(() => {
     if (chatHistory.length > 0) {
       const chatElement = document.getElementById('chat')
@@ -99,6 +101,12 @@ const Home = () => {
       }
     }
   }, [chatHistory])
+
+  useEffect(() => {
+    if (uploadedPaper !== null && uploadedPaper !== undefined) {
+      setFilteredPaper(uploadedPaper)
+    }
+  }, [uploadedPaper])
 
 
   function updateRemainingRequests() {
@@ -160,7 +168,7 @@ const Home = () => {
 
       askPaper({
         question: question ?? '',
-        paper: selectedPaper!,
+        paper: filteredPaper!,
         email: session!.user!.email!,
         history: chatHistory.filter(message => message.sender != 'system'),
         // @ts-ignore
@@ -224,11 +232,11 @@ const Home = () => {
 
   return (<>
     {contextHolder}
-    {(!isMobile() || selectedPaper === undefined) &&
+    {(!isMobile() || filteredPaper === undefined) &&
       <Content style={{ backgroundColor: "transparent" }}>
         <Spacer y={2} />
         <PaperUploader onFinish={(paper, pdf) => {
-          setSelectedPaper(paper)
+          setUploadedPaper(paper)
           setPdf(pdf)
           setChatHistory([{ text: `Now reading "${paper.title}"`, sender: "system" } as ChatMessage])
         }} />
@@ -237,7 +245,7 @@ const Home = () => {
             <RemainingRequests value={remainingTrialRequests} />
           </>
         }
-        {selectedPaper &&
+        {uploadedPaper &&
           <>
             <Spacer y={4} />
             {pdf && <PdfViewer pdf={pdf} onMouseUp={handleSelection} />}
@@ -245,7 +253,7 @@ const Home = () => {
         }
       </Content >
     }
-    {selectedPaper &&
+    {uploadedPaper &&
       <Sider width={isMobile() ? "100%" : "50%"} style={{
         overflow: "auto",
         maxHeight: 'calc(100vh - ' + headerHeight + 'px)',
@@ -260,7 +268,7 @@ const Home = () => {
           height: "100%",
           flexWrap: 'nowrap'
         }}>
-          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} selectedPaper={selectedPaper} messageStatus={responseStatus} />
+          <Chat data-testid="chat" chatHistory={chatHistory} setChatHistory={setChatHistory} paper={filteredPaper} messageStatus={responseStatus} />
 
           <Flex css={{ flexShrink: 1, alignContent: 'end' }}>
             {responseStatus === 'loading' &&
@@ -322,6 +330,7 @@ const Home = () => {
           <Collapse size="small" style={{ width: "100%" }} activeKey={activePanelKeys} onChange={key => setActivePanelKeys(key)}>
             <Panel data-testid="configuration-panel" header="🛠 Configuration" key="1">
               <IconSlider min={0} max={4} onChange={setResultsSpeedTradeoff} value={resultsSpeedTradeoff} />
+              <PaperSectionSelector uploadedPaper={uploadedPaper} setFilteredPaper={setFilteredPaper} />
             </Panel>
             <Panel data-testid="predefined-actions-panel" header="📦 Predefined prompts" key="2" >
               <Flex css={{ gap: '$7', justifyContent: "flex-start" }}>
@@ -373,7 +382,7 @@ const Home = () => {
             {isMobile() &&
               <Panel header="⬆️ Upload another paper" key="3">
                 <PaperUploader alternative onFinish={(paper, pdf) => {
-                  setSelectedPaper(paper)
+                  setUploadedPaper(paper)
                   setPdf(pdf)
                   addChatMessage(`Now reading "${paper.title}"`, "system")
                 }} />
