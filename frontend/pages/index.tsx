@@ -70,7 +70,7 @@ const Home = () => {
   const [responseStatus, setResponseStatus] = useState<Status>('idle')
   const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
   const [uploadedPaper, setUploadedPaper] = useState<Paper | undefined | null>(undefined)
-  const [filteredPaper, setFilteredPaper] = useState<Paper>(undefined)
+  const [filteredPaper, setFilteredPaper] = useState<Paper | undefined>(undefined)
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
