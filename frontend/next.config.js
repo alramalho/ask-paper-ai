@@ -17,6 +17,7 @@ const nextConfig = {
         filename: "static/worker/[hash][ext][query]"
       }
     });
+    config.optimization.minimize = process.env.ENVIRONMENT === 'production';
 
     return config;
   }
