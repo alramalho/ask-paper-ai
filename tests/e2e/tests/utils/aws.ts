@@ -10,7 +10,12 @@ export function verifyIfInDynamo(tableName: string, indexField: string, indexVal
   }
   
   export function safeDeleteFromDynamo(tableName: string, keyField: string, keyValue) {
-    const command = `aws dynamodb delete-item --table-name ${tableName} --key '{ "${keyField}": {"S": "${keyValue}"} }' || exit 0`
+    let command = `dynamodb delete-item --table-name ${tableName} --key '{ "${keyField}": {"S": "${keyValue}"} }' || exit 0`
+    if (process.env.ENVIRONMENT === 'dev') {
+      command = `aws --endpoint-url=http://localhost:4566 ` + command
+    } else {
+      command = `aws ` + command
+    }
     require('child_process').execSync(command);
   }
   
