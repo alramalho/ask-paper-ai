@@ -17,7 +17,7 @@ jobs:
       DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
       DISCORD_CLIENT_BOT_TOKEN: ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
       HIPPOAI_DISCORD_SERVER_ID: "1022781602893414410"
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET_SANDBOX }}
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: sandbox
       APP_URL: https://sandbox--ask-paper.netlify.app
@@ -82,6 +82,7 @@ jobs:
       APP_URL: https://sandbox--ask-paper.netlify.app
       ENVIRONMENT: sandbox
       CI: true
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET_SANDBOX }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -151,7 +152,7 @@ jobs:
       DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
       DISCORD_CLIENT_BOT_TOKEN: ${{ secrets.DISCORD_CLIENT_BOT_TOKEN }}
       HIPPOAI_DISCORD_SERVER_ID: "1022781602893414410"
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET_PRODUCTION }}
       LATEST_COMMIT_ID: ${{ github.sha }}
       ENVIRONMENT: production
       ASK_PAPER_BYPASS_AUTH_TOKEN: ${{ secrets.ASK_PAPER_BYPASS_AUTH_TOKEN_PRODUCTION }}

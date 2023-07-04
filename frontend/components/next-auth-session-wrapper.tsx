@@ -60,6 +60,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
       // @ts-ignore
       getVerifiedUser(session!.accessToken)
         .then((response) => {
+          // TODO: We should move all of this to the backend and use discord.py instead of discord.js (I tried to do this but it was too much work for now)
           axios.get(`/api/discord/${requiredRole}?userId=${response.data.discord_id}`)
             .then(res => {
               setUserWhitelisted(res.data.hasRole)
