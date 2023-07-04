@@ -40,6 +40,19 @@ app.middleware("http")(middleware.verify_login)
 app.middleware("http")(middleware.log_function_invocation_to_dynamo)
 
 
+def discord_authenticated(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        request = kwargs.get('request') or args[0]
+        if hasattr(request.state, 'user_discord_id') and request.state.user_discord_id is not None:
+            return await func(*args, **kwargs)
+        else:
+            raise HTTPException(
+                status_code=401, detail="Discord Auth failed, please contact support"
+            )
+    return wrapper
+
+
 def generate_hash(content: Union[str, bytes]):
     import hashlib
     if isinstance(content, str):
@@ -91,14 +104,27 @@ async def streamer():
         yield b"This is streaming from Lambda \n"
 
 
-@app.get("/test")
-async def index():
+@app.get("/test-stream")
+async def test_stream():
     return StreamingResponse(streamer(), media_type="text/plain; charset=utf-8")
 
 
 @app.get('/health')
 async def health(request: Request):
     return {'status': 'ok'}
+
+
+@discord_authenticated
+@app.get("/get-verified-user")
+async def get_verified_user(request: Request):
+    discord_id = request.state.user_discord_id
+    users_gateway = DiscordUsersGateway()
+    try:
+        user = users_gateway.get_user_by_id(discord_id)
+    except UserDoesNotExistException:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
 
 
 @app.post('/guest-login')
@@ -262,19 +288,6 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
         return json_paper
 
 
-def discord_authenticated(func):
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        request = kwargs.get('request') or args[0]
-        if hasattr(request.state, 'user_discord_id') and request.state.user_discord_id is not None:
-            return await func(*args, **kwargs)
-        else:
-            raise HTTPException(
-                status_code=401, detail="Discord Auth failed, please contact support"
-            )
-    return wrapper
-
-
 @discord_authenticated
 @app.post("/save-datasets")
 async def save_datasets(request: Request):
@@ -300,7 +313,8 @@ async def update_datasets(request: Request):
         for dataset in datasets:
             dataset['Found In'] = paper_title
 
-        DiscordUsersGateway().update_user_datasets(request.state.user_discord_id, datasets)
+        DiscordUsersGateway().update_user_datasets(
+            request.state.user_discord_id, datasets)
         return {'message': "done"}
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
@@ -328,13 +342,14 @@ async def save_custom_prompt(request: Request):
     try:
         title = data['title']
         prompt = data['prompt']
-        DiscordUsersGateway().save_user_custom_prompt(request.state.user_discord_id, title, prompt)
+        DiscordUsersGateway().save_user_custom_prompt(
+            request.state.user_discord_id, title, prompt)
         return {'message': "done"}
     except PromptAlreadyExistsException as e:
-        raise HTTPException(status_code=400, detail="A prompt with this title already exists.")
+        raise HTTPException(
+            status_code=400, detail="A prompt with this title already exists.")
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
-
 
 
 @discord_authenticated
@@ -349,9 +364,9 @@ async def get_custom_prompts(request: Request):
 @app.delete("/delete-custom-prompt/{title}")
 async def delete_custom_prompt(title: str, request: Request):
     title = unquote(title)
-    DiscordUsersGateway().delete_user_custom_prompt(request.state.user_discord_id, title)
+    DiscordUsersGateway().delete_user_custom_prompt(
+        request.state.user_discord_id, title)
     return {'message': "done"}
-
 
 
 @app.post("/ask-paper")

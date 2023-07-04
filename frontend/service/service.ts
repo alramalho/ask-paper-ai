@@ -10,6 +10,15 @@ function urlEncode(string) {
   return string.replace(/ /g, "%20");
 }
 
+export function getVerifiedUser(accessToken: string) {
+  return axios.get(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/get-verified-user`), {
+    headers: {
+      // @ts-ignore
+      "Authorization": `Bearer ${accessToken}`
+    },
+  })
+}
+
 export function deleteCustomPrompt(title: string, email: string, accessToken: string) {
   return axios.delete(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/delete-custom-prompt/${urlEncode(title)}`), {
     headers: {

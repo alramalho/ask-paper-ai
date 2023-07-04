@@ -73,6 +73,7 @@ async def verify_login(request: Request, call_next):
 
     if (auth_header == f"Bearer {os.environ['ASK_PAPER_BYPASS_AUTH_TOKEN']}"):
         print("Bypassing auth")
+        request.state.user_discord_id = "258012200847802369" # walex id
         return await call_next(request)
 
     if request.url.path in UNAUTHENTICATED_ENDPOINTS:

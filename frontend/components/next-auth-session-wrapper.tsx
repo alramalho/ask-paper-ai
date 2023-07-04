@@ -1,24 +1,22 @@
+import Icon, { LoginOutlined } from '@ant-design/icons';
 import {
   Avatar,
-  Image,
-  Link,
   Loading,
   Spacer,
   styled,
   Text
 } from '@nextui-org/react';
-import { Flex } from "./styles/flex";
-import { signIn, signOut, useSession } from "next-auth/react"
-import { useEffect, useState } from "react";
+import { Button, Card, Input, Space } from 'antd';
 import axios from "axios";
-import DiscordIcon from "./icons/discord-icon";
-import { Code, Div } from "./layout";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { GuestUserContext } from "../hooks/session";
-import OverviewBlock from "./overview-block";
-import { Button, Input, Space, Divider, Card, Alert } from 'antd';
-import Icon, { DownloadOutlined, LoginOutlined, MailOutlined } from '@ant-design/icons';
 import { useMyToken } from '../pages/_app';
-import {loginAsGuest} from "../service/service";
+import { getVerifiedUser, loginAsGuest } from "../service/service";
+import DiscordIcon from "./icons/discord-icon";
+import { Code } from "./layout";
+import OverviewBlock from "./overview-block";
+import { Flex } from "./styles/flex";
 
 
 
@@ -59,22 +57,19 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {
     if (!isUserLoggedInAsGuest && session != undefined && userWhitelisted == undefined) {
-      axios.get("https://discord.com/api/users/@me", {
-        headers: {
-          // @ts-ignore
-          "Authorization": `Bearer ${session?.accessToken}`
-        },
-      }).then((response) => {
-        axios.get(`/api/discord/${requiredRole}?userId=${response.data.id}`)
-          .then(res => {
-            setUserWhitelisted(res.data.hasRole)
-            setUserInDiscord(res.data.inDiscord)
-          })
-          .catch(e => {
-            console.log(e)
-            setUserWhitelisted(false)
-          })
-      })
+      // @ts-ignore
+      getVerifiedUser(session!.accessToken)
+        .then((response) => {
+          axios.get(`/api/discord/${requiredRole}?userId=${response.data.discord_id}`)
+            .then(res => {
+              setUserWhitelisted(res.data.hasRole)
+              setUserInDiscord(res.data.inDiscord)
+            })
+            .catch(e => {
+              console.log(e)
+              setUserWhitelisted(false)
+            })
+        })
         .catch((error) => {
           console.log(error)
         })
@@ -190,7 +185,7 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
         <AbsoluteCenter>
           <p>You're not in our discord community!</p>
           <p><a href="https://discord.gg/6rVU4hrc9f">Click here</a> to join us! </p>
-          <br/>
+          <br />
           <p>If you believe this is an error, <Button type="text" onClick={() => signOut()}>click here</Button></p>
           <p><small> If the error persists, please open a support ticket</small></p>
         </AbsoluteCenter>

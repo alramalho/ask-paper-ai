@@ -1,6 +1,10 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 require('dotenv').config()
+var crypto = require("crypto");
+var id = crypto.randomUUID();
+
+export const TEST_EMAIL = ((process.env.ENVIRONMENT ?? 'local') + "-" + id) + '@e2e.test';
 
 /**
  * Read environment variables from file.

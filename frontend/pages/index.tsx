@@ -352,8 +352,7 @@ const Home = () => {
                               - The "Passage" field should contain the exact excerpt from the paper where the dataset is mentioned, and it must not be empty.
                               - Each dataset's "Name" must be unique, and always present.
                               - Ensure all table entries reflect only what's explicitly stated in the paper.
-                              - Only add datasets which you have an high degree of confidence that are actually a dataset.
-                              Remember to only add actual palpable datasets. Normally these will have a succint characteristic name.`.replaceAll("  ", ""))
+                              - Remember to only add actual palpable datasets. Normally these will have a succint characteristic name.`.replaceAll("  ", ""))
                   }
                   }
                   icon={<DotChartOutlined />}

@@ -62,14 +62,7 @@ class DiscordUsersGateway:
     def override_user_datasets(self, discord_id: str, new_datasets: List[Dict]) -> DiscordUser:
         print("Overriding user datasets")
         user = self.get_user_by_id(discord_id)
-        if user.datasets is None or user.datasets == '':
-            user.datasets = new_datasets
-        prompt = f"""Here's a JSON file representing several datasets and their charactersitics:
-        {user.datasets}
-        Your task is to update that JSON information with these new datasets entries:
-        {new_datasets}
-        """
-        user.datasets = ask_json(prompt)
+        user.datasets = new_datasets
         self.db_gateway.write(user.dict())
         print("User datasets updated")
         return user

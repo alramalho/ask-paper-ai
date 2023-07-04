@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "npx playwright test --headed",
-    "start-local": "export APP_URL=http://127.0.0.1:3000 && export ENVIRONMENT='dev' && npx playwright test --headed",
+    "start-local": "export APP_URL=http://127.0.0.1:3000 && export ENVIRONMENT='dev' && export ASK_PAPER_BYPASS_AUTH_TOKEN=1234 && npx playwright test --headed",
     "start-sandbox": "export APP_URL=https://sandbox--ask-paper.netlify.app/ && export ENVIRONMENT='sandbox' && npx playwright test"
   },
   "dependencies": {

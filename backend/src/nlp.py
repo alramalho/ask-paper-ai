@@ -300,6 +300,9 @@ class OpenAIMessage(BaseModel):
     role: Literal["user", "assistant"]
     content: str
 
+    def as_openai_message(self):
+        return self
+
 
 class ChatMessage(BaseModel):  # this should in sync with frontend
     text: str
@@ -336,7 +339,7 @@ def ask_text_stream_buffered(text, completion_tokens=None, message_history: List
 @elapsed_time
 def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = [], stream=False) -> Generator[str, None, None]:
     text_size = count_tokens(text)
-    history_size = sum([count_tokens(message.text) +
+    history_size = sum([count_tokens(message.as_openai_message().content) +
                        3 for message in message_history])
 
     if completion_tokens is None:
