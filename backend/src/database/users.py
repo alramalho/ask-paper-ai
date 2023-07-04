@@ -1,4 +1,5 @@
 import datetime
+import json
 from typing import Dict, List, Optional, Union
 
 from database.db import DynamoDBGateway
@@ -13,14 +14,24 @@ class GuestUser(BaseModel):
     created_at: str
 
 
+class CustomPrompt(BaseModel):
+    title: str
+    prompt: str
+
+
 class DiscordUser(BaseModel):
     email: str
     discord_id: str
     created_at: str
-    datasets: Optional[Union[List[Dict], str]]
+    datasets: Optional[Union[List[Dict], str]] = None
+    custom_prompts: Optional[List[CustomPrompt]] = None
 
 
 class UserDoesNotExistException(Exception):
+    pass
+
+
+class PromptAlreadyExistsException(Exception):
     pass
 
 
@@ -43,8 +54,7 @@ class DiscordUsersGateway:
         return DiscordUser(**data)
 
     def create_user(self, email: str, discord_id: str, created_at: str) -> DiscordUser:
-        user = DiscordUser(email=email, discord_id=discord_id,
-                           created_at=created_at)
+        user = DiscordUser(email=email, discord_id=discord_id, created_at=created_at)
         self.db_gateway.write(user.dict())
         print(f"Discord user created for email {email}")
         return user
@@ -62,6 +72,7 @@ class DiscordUsersGateway:
         user.datasets = ask_json(prompt)
         self.db_gateway.write(user.dict())
         print("User datasets updated")
+        return user
 
     def update_user_datasets(self, discord_id: str, new_datasets: List[Dict]) -> DiscordUser:
         print("Updating user datasets")
@@ -76,7 +87,37 @@ class DiscordUsersGateway:
         user.datasets = ask_json(prompt)
         self.db_gateway.write(user.dict())
         print("User datasets updated")
+        return user
 
+
+    def save_user_custom_prompt(self, discord_id: str, title: str, prompt: str) -> DiscordUser:
+        print("Saving user custom prompt")
+        user = self.get_user_by_id(discord_id)
+        obj = CustomPrompt(title=title, prompt=prompt)
+
+        if user.custom_prompts is None:
+            user.custom_prompts = [obj]
+        else:
+            if title not in [p.title for p in user.custom_prompts]:
+                user.custom_prompts.append(obj)
+            else:
+                raise PromptAlreadyExistsException("Custom prompt with that title already exists")
+
+        self.db_gateway.write(user.dict())
+        print("User custom prompt saved")
+        return user
+    
+    def delete_user_custom_prompt(self, discord_id: str, title: str) -> DiscordUser:
+        print("Deleting user custom prompt")
+        user = self.get_user_by_id(discord_id)
+        if user.custom_prompts is not None:
+            user.custom_prompts = [p for p in user.custom_prompts if p.title != title]
+            
+        self.db_gateway.write(user.dict())
+        print("User custom prompt deleted")
+        return user
+
+        
 
 class GuestUsersGateway:
     def __init__(self):

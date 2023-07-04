@@ -7,6 +7,7 @@ import time
 import uuid
 from functools import wraps
 from typing import Dict, List, Tuple, Union
+from urllib.parse import unquote
 
 import aws
 import middleware
@@ -14,6 +15,7 @@ import nlp
 from botocore.exceptions import ClientError
 from database.db import DynamoDBGateway
 from database.users import (DiscordUsersGateway, GuestUsersGateway,
+                            PromptAlreadyExistsException,
                             UserDoesNotExistException)
 from doc2json.grobid2json.process_pdf import process_pdf_file
 from fastapi import (BackgroundTasks, FastAPI, HTTPException, Request,
@@ -36,6 +38,7 @@ app.add_middleware(
 )
 app.middleware("http")(middleware.verify_login)
 app.middleware("http")(middleware.log_function_invocation_to_dynamo)
+
 
 def generate_hash(content: Union[str, bytes]):
     import hashlib
@@ -259,6 +262,20 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
         return json_paper
 
 
+def discord_authenticated(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        request = kwargs.get('request') or args[0]
+        if hasattr(request.state, 'user_discord_id') and request.state.user_discord_id is not None:
+            return await func(*args, **kwargs)
+        else:
+            raise HTTPException(
+                status_code=401, detail="Discord Auth failed, please contact support"
+            )
+    return wrapper
+
+
+@discord_authenticated
 @app.post("/save-datasets")
 async def save_datasets(request: Request):
     data = await request.json()
@@ -266,20 +283,14 @@ async def save_datasets(request: Request):
         datasets = json.loads(data['datasets'])
         # todo: this is unused. only for analytics purposes
         changes = json.loads(data['changes'])
-        if hasattr(request.state, 'user_discord_id'):
-            user_discord_id = request.state.user_discord_id
-            print(f"User discord id: {user_discord_id}")
-            if user_discord_id is not None:
-                DiscordUsersGateway().override_user_datasets(
-                    request.state.user_discord_id, datasets)
-        else:
-            raise HTTPException(
-                status_code=401, detail="Discord Auth failed, please contact support")
+        DiscordUsersGateway().override_user_datasets(
+            request.state.user_discord_id, datasets)
         return {'message': "done"}
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
 
+@discord_authenticated
 @app.put("/update-datasets")
 async def update_datasets(request: Request):
     data = await request.json()
@@ -289,21 +300,13 @@ async def update_datasets(request: Request):
         for dataset in datasets:
             dataset['Found In'] = paper_title
 
-        if hasattr(request.state, 'user_discord_id'):
-            user_discord_id = request.state.user_discord_id
-            print(f"User discord id: {user_discord_id}")
-            if user_discord_id is not None:
-                DiscordUsersGateway().update_user_datasets(
-                    request.state.user_discord_id, datasets)
-        else:
-            raise HTTPException(
-                status_code=401, detail="Discord Auth failed, please contact support")
-
+        DiscordUsersGateway().update_user_datasets(request.state.user_discord_id, datasets)
         return {'message': "done"}
     except KeyError as e:
         raise HTTPException(status_code=400, detail="Missing data: " + str(e))
 
 
+@discord_authenticated
 @app.get('/get-datasets')
 async def user_datasets(request: Request):
     user_discord_id = request.state.user_discord_id
@@ -315,6 +318,40 @@ async def user_datasets(request: Request):
         raise HTTPException(status_code=404, detail="User not found")
 
     return {'datasets': json.dumps(user.datasets)}
+
+
+@discord_authenticated
+@app.post("/save-custom-prompt")
+async def save_custom_prompt(request: Request):
+    data = await request.json()
+    print(data)
+    try:
+        title = data['title']
+        prompt = data['prompt']
+        DiscordUsersGateway().save_user_custom_prompt(request.state.user_discord_id, title, prompt)
+        return {'message': "done"}
+    except PromptAlreadyExistsException as e:
+        raise HTTPException(status_code=400, detail="A prompt with this title already exists.")
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail="Missing data: " + str(e))
+
+
+
+@discord_authenticated
+@app.get("/get-custom-prompts")
+async def get_custom_prompts(request: Request):
+    # TODO: improvement: get only partial fields instead of all for performance boost
+    user = DiscordUsersGateway().get_user_by_id(request.state.user_discord_id)
+    return user.custom_prompts
+
+
+@discord_authenticated
+@app.delete("/delete-custom-prompt/{title}")
+async def delete_custom_prompt(title: str, request: Request):
+    title = unquote(title)
+    DiscordUsersGateway().delete_user_custom_prompt(request.state.user_discord_id, title)
+    return {'message': "done"}
+
 
 
 @app.post("/ask-paper")

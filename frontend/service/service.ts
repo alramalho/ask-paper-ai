@@ -6,6 +6,44 @@ import { Paper } from "../pages";
 function normalizeUrl(url) {
   return url.replace(/([^:]\/)\/+/g, "$1");
 }
+function urlEncode(string) {
+  return string.replace(/ /g, "%20");
+}
+
+export function deleteCustomPrompt(title: string, email: string, accessToken: string) {
+  return axios.delete(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/delete-custom-prompt/${urlEncode(title)}`), {
+    headers: {
+      'Content-Type': 'application/json',
+      // @ts-ignore
+      'Authorization': `Bearer ${accessToken}`,
+      'Email': email,
+    },
+  })
+}
+export function loadCustomPrompts(email: string, accessToken: string) {
+  return axios.get(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/get-custom-prompts`), {
+    headers: {
+      'Content-Type': 'application/json',
+      // @ts-ignore
+      'Authorization': `Bearer ${accessToken}`,
+      'Email': email,
+    },
+  })
+}
+
+export function saveCustomPrompt(title: string, prompt: string, email: string, accessToken: string) {
+  return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/save-custom-prompt`), {
+    "title": title,
+    "prompt": prompt,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      // @ts-ignore
+      'Authorization': `Bearer ${accessToken}`,
+      'Email': email,
+    },
+  })
+}
 
 export function storeFeedback(email: string, data: any, accessToken: any) {
   return axios.post(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/store-feedback`), {
@@ -105,7 +143,7 @@ export function loadDatasetsForUser(email: string, accessToken: string) {
   return axios.get(normalizeUrl(`${process.env.NEXT_PUBLIC_BACKEND_HTTP_APIURL}/get-datasets`), {
     headers: {
       'Email': email,
-      'Authorization': `Bearer ${accessToken}`, // todo: we should have the user ID in the frontend. this is weird
+      'Authorization': `Bearer ${accessToken}`,
     }
   })
 }

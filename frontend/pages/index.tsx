@@ -1,4 +1,4 @@
-import { BorderOutlined, ClearOutlined, DotChartOutlined, FileTextTwoTone, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
+import { BorderOutlined, ClearOutlined, DotChartOutlined, EditOutlined, FileTextTwoTone, HighlightTwoTone, SendOutlined } from "@ant-design/icons";
 import { Loading, Spacer } from "@nextui-org/react";
 import type { MenuProps } from 'antd';
 import { Button, Collapse, Input, Layout, notification } from 'antd';
@@ -8,11 +8,12 @@ import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 import MarkdownView from "react-showdown";
 import Chat, { ChatMessage } from "../components/chat/chat";
+import CustomPromptManager from "../components/custom-prompt-manager";
 import Info from "../components/info";
-import { FeedbackVisibleContext, headerHeight, isMobile } from "../components/layout";
-import SectionSelector from "../components/section-selector";
+import { headerHeight, isMobile } from "../components/layout";
 import PaperUploader from "../components/paper-uploader";
 import RemainingRequests from "../components/remaining-requests";
+import SectionSelector from "../components/section-selector";
 import { Flex } from "../components/styles/flex";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import { askPaper, getRemainingRequestsFor } from "../service/service";
@@ -66,6 +67,12 @@ export type Paper = {
 
 export type Status = 'idle' | 'loading' | 'success' | 'error'
 
+export type CustomPrompt = {
+  title: string
+  prompt: string
+}
+
+
 const Home = () => {
   const [responseStatus, setResponseStatus] = useState<Status>('idle')
   const [infoMessage, setInfoMessage] = useState<string | undefined>(undefined)
@@ -74,13 +81,14 @@ const Home = () => {
   const { isUserLoggedInAsGuest, remainingTrialRequests, setRemainingTrialRequests } = useContext(GuestUserContext)
   const { data: session } = isUserLoggedInAsGuest ? useGuestSession() : useSession()
   const [pdf, setPdf] = useState<File | undefined>(undefined);
-  const setIsFeedbackModalVisible = useContext(FeedbackVisibleContext)
+  const [isCustomPromptModalVisible, setIsCustomPromptModalVisible] = useState(false)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [selectedText, setSelectedText] = useState('');
   const [question, setQuestion] = useState('');
   const [activePanelKeys, setActivePanelKeys] = useState<string[] | string | undefined>(undefined);
   const [requestControllers, setRequestControllers] = useState<AbortController[]>([])
   const [notificationApi, contextHolder] = notification.useNotification();
+  const [customPrompts, setCustomPrompts] = useState<CustomPrompt[]>([])
 
 
   function scrollToLastSelector(selector: string) {
@@ -371,10 +379,20 @@ const Home = () => {
                 <Button
                   type="dashed"
                   onClick={() => {
-                    setIsFeedbackModalVisible(true)
+                    setIsCustomPromptModalVisible(true)
                   }}
-                >🚀 Decide what goes here
+                  icon={<EditOutlined />}
+                >Manage Custom Prompts
                 </Button>
+                {customPrompts && customPrompts.length > 0 && customPrompts.map(({title, prompt}) => {
+                  return <Button
+                    type="dashed"
+                    key={title}
+                    onClick={() => {
+                      setQuestion(prompt)
+                    }}
+                  >{title}</Button>
+                })}
               </Flex>
             </Panel>
             {isMobile() &&
@@ -391,7 +409,11 @@ const Home = () => {
         </Flex>
       </Sider>
     }
-
+    <CustomPromptManager
+      isVisible={isCustomPromptModalVisible}
+      setIsVisible={setIsCustomPromptModalVisible}
+      customPrompts={customPrompts}
+      setCustomPrompts={setCustomPrompts} />
   </>
   )
 };
