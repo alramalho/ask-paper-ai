@@ -90,13 +90,14 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
     return (<>
         {contextHolder}
         <Modal
+            closable={false}
             title="Creating prompt"
             open={isVisible}
             footer={[
                 <Button key="back" onClick={() => setIsVisible(false)}>
                     Cancel
                 </Button>,
-                <Button key="save" type="primary" loading={status == 'loading'} onClick={handleOk}>
+                <Button data-testid="create-button" key="save" type="primary" loading={status == 'loading'} onClick={handleOk}>
                     Create new
                 </Button>,
             ]}
@@ -114,10 +115,10 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
 
             <h3 style={{ fontSize: '1.1rem' }}>Create a new prompt 👇</h3>
             <h4>Title</h4>
-            <Input value={newPromptTitle} onChange={(e) => setNewPromptTitle(e.target.value)} />
+            <Input data-testid="title-input" value={newPromptTitle} onChange={(e) => setNewPromptTitle(e.target.value)} />
 
             <h4>Text</h4>
-            <TextArea value={newPrompt} onChange={(e) => setNewPrompt(e.target.value)} rows={4} />
+            <TextArea data-testid="text-input"  value={newPrompt} onChange={(e) => setNewPrompt(e.target.value)} rows={4} />
         </Modal >
     </>)
 }

@@ -8,102 +8,12 @@ var fs = require('fs')
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('When logged in as guest', () => {
-
-  let page: Page
-
-  test.beforeAll(async ({ browser }) => {
-
-    page = await loginAsGuest(browser, page, TEST_EMAIL);
-
-    const fracNetPaperHash = "39eee3d413713f47ed3d25957c7cd32dfbdc437652e9083ea2eea649c6b11897"
-    await safeDeleteFromDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'id', fracNetPaperHash)
-
-    page.on("filechooser", (fileChooser: FileChooser) => {
-      fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
-    });
-    await page.getByTestId('file-upload').click();
-
-    await expect(page.getByTestId('upload-loading')).toBeVisible();
-    await expect(page.getByTestId('upload-successful')).toBeVisible();
-  })
-
-  test.afterAll(async () => {
-    await page.close();
-  });
-
-  test('should be able to upload a paper', async () => {
-    await expect(page.getByTestId('upload-successful')).toBeVisible();
-    await expect(page.getByTestId("pdf")).toContainText("Deep-learning-assisted detection and segmentation of rib fractures from")
-
-    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
-      paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
-    })
-
-  })
-
-  test('should have all requests left', async () => {
-    await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
-  })
-
-  test('should be able to ask a question', async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId("predefined-actions-panel").click();
-    await page.click('text=Extract Datasets');
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-  });
-
-  test('should have less requests remaining', async () => {
-    await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
-  })
-
-  test('should be able to store accurate feedback', async () => {
-    await page.click('text=👍');
-
-    await page.getByText('Thank you')
-
-    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
-      was_answer_accurate: true,
-    });
-  })
-
-  test('should be able to store feedback', async () => {
-
-    await page.click('text=Feedback?');
-    // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
-    await page.getByTestId('nps-select').getByText('8').click();
-    await page.click('text=🔍 Inline data exploration tool');
-    const selectedNextFeature = 'data-exploration';
-
-    const writtenMessage = "dummy";
-    await page.getByTestId("message").fill(writtenMessage);
-
-    await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded();
-    await page.locator('button[data-testid="feedback-submit"]').click();
-
-    await expect(page.getByTestId('feedback-successful')).toBeVisible();
-
-    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
-      nps: 8,
-      next_feature: selectedNextFeature,
-      message: writtenMessage,
-    });
-  })
-
-});
-
 test.describe('When logged in as Discord User', () => {
   let page: Page
 
   test.beforeAll(async ({ browser }) => {
 
-    page = await loginAsDiscordUser(browser, page);
+    page = await loginAsDiscordUser(browser, TEST_EMAIL);
 
     const fracNetPaperHash = "39eee3d413713f47ed3d25957c7cd32dfbdc437652e9083ea2eea649c6b11897"
     await safeDeleteFromDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'id', fracNetPaperHash)
@@ -161,6 +71,7 @@ test.describe('When logged in as Discord User', () => {
     await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
   });
 
+
   test('should be able to ask a question with partial sections', async () => {
     await page.getByTestId('clear-button').click();
     await page.getByTestId("configuration-panel").click();
@@ -174,6 +85,36 @@ test.describe('When logged in as Discord User', () => {
 
     await expect(page.getByTestId('answer-area').last()).toContainText("No");
   });
+
+  test('should be able to create and ask custom prompt', async () => {
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.getByText("Manage Custom Prompts").click();
+
+    await page.getByTestId("title-input").fill("Wubba Lubba Dub Dub");
+    await page.getByTestId("text-input").fill("Rick and Morty");
+
+    await page.getByTestId("create-button").click();
+    await page.getByText("Prompt saved!");
+
+    await page.getByText("Wubba Lubba Dub Dub").click();
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toContainText("Rick and Morty");
+  })
+
+  test('should be able to delete custom prompt', async () => {
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.getByText("Manage Custom Prompts").click();
+
+    await page.getByText("Delete").first().click();
+
+    await page.getByTestId("create-button").click();
+    await page.getByText("Prompt deleted!");
+
+    await expect(page.getByTestId("predefined-actions-panel")).not.toContainText("Rick and Morty");
+  })
+
 
   test('should be able ask a question that needs information from a figure caption', async () => {
     await page.getByTestId('clear-button').click();
@@ -203,16 +144,16 @@ test.describe('When logged in as Discord User', () => {
   test('should have less requests remaining', async () => {
     await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
   })
-  
+
   test('should be able to extract datasets', async () => {
     await page.getByTestId('clear-button').click();
     await page.getByTestId("predefined-actions-panel").click();
     await page.click('text=Extract Datasets');
     await page.getByTestId('ask-button').click();
-  
+
     await expect(page.getByTestId('loading-answer')).toBeVisible();
     await expect(page.getByTestId('answer-area').last()).toBeVisible();
-  
+
     await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
@@ -299,6 +240,96 @@ test.describe('When logged in as Discord User', () => {
     await page.click('text=Email me this');
     await expect(page.getByTestId('email-sent')).toBeVisible();
     // await verifyEmailSentInLastXMinutes(1);
+  })
+
+  test('should be able to store accurate feedback', async () => {
+    await page.click('text=👍');
+
+    await page.getByText('Thank you')
+
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+      was_answer_accurate: true,
+    });
+  })
+
+  test('should be able to store feedback', async () => {
+
+    await page.click('text=Feedback?');
+    // todo: add verification that slider is working. I spent too much time trying to do it, skipping for now
+    await page.getByTestId('nps-select').getByText('8').click();
+    await page.click('text=🔍 Inline data exploration tool');
+    const selectedNextFeature = 'data-exploration';
+
+    const writtenMessage = "dummy";
+    await page.getByTestId("message").fill(writtenMessage);
+
+    await page.locator('button[data-testid="feedback-submit"]').scrollIntoViewIfNeeded();
+    await page.locator('button[data-testid="feedback-submit"]').click();
+
+    await expect(page.getByTestId('feedback-successful')).toBeVisible();
+
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_feedback_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+      nps: 8,
+      next_feature: selectedNextFeature,
+      message: writtenMessage,
+    });
+  })
+
+});
+
+test.describe('When logged in as guest', () => {
+
+  let page: Page
+
+  test.beforeAll(async ({ browser }) => {
+
+    page = await loginAsGuest(browser, page, TEST_EMAIL);
+
+    const fracNetPaperHash = "39eee3d413713f47ed3d25957c7cd32dfbdc437652e9083ea2eea649c6b11897"
+    await safeDeleteFromDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'id', fracNetPaperHash)
+
+    page.on("filechooser", (fileChooser: FileChooser) => {
+      fileChooser.setFiles([process.cwd() + '/tests/fixtures/fracnet_paper.pdf']);
+    });
+    await page.getByTestId('file-upload').click();
+
+    await expect(page.getByTestId('upload-loading')).toBeVisible();
+    await expect(page.getByTestId('upload-successful')).toBeVisible();
+  })
+
+  test.afterAll(async () => {
+    await page.close();
+  });
+
+  test('should be able to upload a paper', async () => {
+    await expect(page.getByTestId('upload-successful')).toBeVisible();
+    await expect(page.getByTestId("pdf")).toContainText("Deep-learning-assisted detection and segmentation of rib fractures from")
+
+    await verifyIfInDynamo(`${SNAKE_CASE_PREFIX}_json_papers_${process.env.ENVIRONMENT}`, 'email', TEST_EMAIL, {
+      paper_title: 'Deep-learning-assisted detection and segmentation of rib fractures from CT scans: Development and validation of FracNet',
+    })
+
+  })
+
+  test('should have all requests left', async () => {
+    await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
+  })
+
+  test('should be able to ask a question', async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.click('text=Extract Datasets');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
+  test('should have less requests remaining', async () => {
+    await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
   })
 
   test('should be able to store accurate feedback', async () => {
