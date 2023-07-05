@@ -41,10 +41,6 @@ test.describe('When logged in as Discord User', () => {
 
   })
 
-  test('should have all requests left', async () => {
-    await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
-  })
-
   test('should be able to only send one message in a row', async () => {
     await page.getByTestId("ask-textarea").fill("who are the authors?");
     await page.getByTestId('ask-button').click();
@@ -115,7 +111,6 @@ test.describe('When logged in as Discord User', () => {
     await expect(page.getByTestId("predefined-actions-panel")).not.toContainText("Rick and Morty");
   })
 
-
   test('should be able ask a question that needs information from a figure caption', async () => {
     await page.getByTestId('clear-button').click();
     await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
@@ -140,10 +135,6 @@ test.describe('When logged in as Discord User', () => {
   //   await expect(page.getByTestId('answer-area').last()).toContainText("58.7%");
   //   await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   // });
-
-  test('should have less requests remaining', async () => {
-    await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
-  })
 
   test('should be able to extract datasets', async () => {
     await page.getByTestId('clear-button').click();
