@@ -1,16 +1,15 @@
-import '../styles/globals.scss';
-import type { AppProps } from 'next/app';
+import { createTheme } from '@nextui-org/react';
+import { ConfigProvider, theme } from 'antd';
 import { Session } from "next-auth";
-import { createTheme, NextUIProvider, Text } from '@nextui-org/react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { SessionProvider } from "next-auth/react";
-import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
-import { MyLayout } from "../components/layout";
-import { ConfigProvider } from 'antd';
-import { theme } from "antd"
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import type { AppProps } from 'next/app';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { MyLayout } from "../components/layout";
+import NextAuthSessionWrapper from "../components/next-auth-session-wrapper";
 import { SEO } from '../components/seo';
+import '../styles/globals.scss';
 
 const primaryColor = "#ff6372"
 const discordColor = "#5865F2"
