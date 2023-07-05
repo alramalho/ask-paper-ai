@@ -119,7 +119,7 @@ jobs:
         working-directory: tests
         run: |
           pip install -r requirements.txt
-          python cleanup_sandbox.py
+          python scripts/cleanup_sandbox.py
 
       - name: Run Playwright tests
         working-directory: tests/e2e

@@ -8,9 +8,9 @@
     "@types/node": "^20.3.2"
   },
   "scripts": {
-    "start": "npx playwright test --headed",
-    "start-local": "export APP_URL=http://127.0.0.1:3000 && export ENVIRONMENT='dev' && export ASK_PAPER_BYPASS_AUTH_TOKEN=1234 && npx playwright test --headed",
-    "start-sandbox": "export APP_URL=https://sandbox--ask-paper.netlify.app/ && export ENVIRONMENT='sandbox' && npx playwright test"
+    "start": "npx playwright test",
+    "start-local": "source ../scripts/load_dotenv.sh .env.local && yarn start --headed",
+    "start-sandbox": "source ../scripts/load_dotenv.sh .env.sandbox && yarn start"
   },
   "dependencies": {
     "dotenv": "^16.0.3",

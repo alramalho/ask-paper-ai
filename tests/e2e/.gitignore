@@ -5,3 +5,6 @@ node_modules/
 
 storageState.json
 playwright-test-output
+
+.env*
+!.env.template
