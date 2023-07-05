@@ -25,7 +25,7 @@ export async function loginAsDiscordUser(browser, email) {
         iat: 1,
         exp: 1,
     };
-    const sessionToken = await jwt.encode({ token: credentials, secret: process.env.NEXTAUTH_SECRET! })
+    const sessionToken = await jwt.encode({ token: credentials, secret: process.env.NEXTAUTH_SECRET!, maxAge: 3600 })
     await createCookie(page, 'next-auth.session-token', sessionToken);
     await page.reload();
     return page
