@@ -1,3 +1,4 @@
+#!/bin/bash
 export $( grep -vE "^(#.*|\s*)$" $1 )
 
 line_count=$(grep -v "^#" $1 | wc -l)
