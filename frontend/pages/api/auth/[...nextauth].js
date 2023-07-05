@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import DiscordProvider from "next-auth/providers/discord"
+import NextAuth from "next-auth";
+import DiscordProvider from "next-auth/providers/discord";
 
 export const authOptions = {
     providers: [
@@ -29,7 +29,18 @@ export const authOptions = {
             return token;
         }
     },
-    secret: process.env.NEXTAUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET,
+    cookies: {
+        sessionToken: {
+          name: `next-auth.session-token`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true
+          }
+        }
+    }
 }
 
 export default NextAuth(authOptions)
