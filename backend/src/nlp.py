@@ -422,12 +422,13 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
     def build_prompt(question, context):
         if prompt_override is None:
             return f"""
-            You are a smart and helpful assistant that specializes in answering questions based on a given (partial) context.
-            Answer the following question based only on the given context. The context might come as raw text or markdown.
+            You are a smart and helpful assistant that specializes in answering user's questions/requests. For that you may use a given (partial) context.
+            Any question must be answered based only on the given context. The context might come as raw text or markdown.
             Take into account the following rules:
             - Your answer must only contain information that is present in the context.
             - When the context does not contain enough information to answer the question, you must say so.
             - Your answer must be as detailed as possible 
+            - Your answer must be in markdown format
 
             The presented context has been split, which means you're only seeing a part of it. You must nevertheless 
             answer the question based on the context you're given.
@@ -435,7 +436,7 @@ def ask_context(question: str, full_context: str, message_history: List[ChatMess
             Context:
             {context}
             
-            Question: 
+            Users's question/request to you: 
             {question}
 
             Your Answer:
