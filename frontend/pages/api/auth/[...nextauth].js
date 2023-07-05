@@ -2,9 +2,6 @@ import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 
 export const authOptions = {
-    session: {
-        strategy: "jwt",
-    },
     providers: [
         DiscordProvider({
             clientId: process.env.DISCORD_CLIENT_ID,
@@ -25,8 +22,8 @@ export const authOptions = {
             return session;
         },
 
-        async jwt({ token, account }){
-            if (account){
+        async jwt({ token, account }) {
+            if (account) {
                 token.accessToken = account.access_token
             }
             return token;
