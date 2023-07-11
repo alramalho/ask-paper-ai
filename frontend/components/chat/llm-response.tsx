@@ -102,7 +102,6 @@ const LLMResponse = ({ paper, chatHistory, text, messageStatus }: LLMResponsePro
                                     paperTitle: paper!.title,
                                     datasets: markdownTableToJSON(markdownTable),
                                     email: session!.user!.email!,
-                                    // @ts-ignore
                                     accessToken: session!.accessToken
                                 }).then(() => {
                                     setSaveStatus('success')
@@ -190,7 +189,6 @@ const LLMResponse = ({ paper, chatHistory, text, messageStatus }: LLMResponsePro
                                     question: question,
                                     answer: text,
                                     paper_hash: paper?.hash ?? '',
-                                    // @ts-ignore
                                 }, session!.accessToken)
                                     .then(() => {
                                         setUnderFeedbackText('Thank you! 🙏')
@@ -210,7 +208,6 @@ const LLMResponse = ({ paper, chatHistory, text, messageStatus }: LLMResponsePro
                                     answer: text,
                                     paper_hash: paper?.hash ?? '',
                                     zIndex: 2,
-                                    // @ts-ignore
                                 }, session!.accessToken)
                                     .then(() => {
                                         setUnderFeedbackText('Thats unfortunate... Would you care to tell us more via the feedback form? 🙏')

@@ -57,7 +57,6 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
   const requiredRole = 'Ask Paper Pilot'
   useEffect(() => {
     if (!isUserLoggedInAsGuest && session != undefined && userWhitelisted == undefined) {
-      // @ts-ignore
       getVerifiedUser(session!.accessToken)
         .then((response) => {
           // TODO: We should move all of this to the backend and use discord.py instead of discord.js (I tried to do this but it was too much work for now)

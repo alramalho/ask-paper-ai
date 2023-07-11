@@ -1,13 +1,11 @@
-import {Button, CSS, Divider, Input, Loading, Modal, Radio, styled, Text, Textarea} from '@nextui-org/react';
-import {Flex} from "./styles/flex";
-import React, {useContext, useEffect, useState} from "react";
-import axios from "axios";
-import {Paper} from "../pages";
-import {GuestUserContext, useGuestSession} from "../hooks/session";
-import {Box} from "./layout";
+import { Button, CSS, Divider, Input, Loading, Modal, Radio, styled, Text, Textarea } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
+import { useContext, useEffect, useState } from "react";
+import { GuestUserContext, useGuestSession } from "../hooks/session";
+import { storeFeedback } from "../service/service";
+import { Box } from "./layout";
 import Nps from './nps';
-import {storeFeedback} from "../service/service"
+import { Flex } from "./styles/flex";
 
 const StyledRadio = styled(Radio, {
   margin: '0 $5',
@@ -138,7 +136,6 @@ const FeedbackModal = ({css, userEmail, visible, setVisible}: FeedbackProps) => 
                           nps,
                           next_feature: nextFeature,
                           message,
-                          // @ts-ignore
                         }, session!.accessToken)
                           .then(() => setStatus('success'))
                           .catch(e => {

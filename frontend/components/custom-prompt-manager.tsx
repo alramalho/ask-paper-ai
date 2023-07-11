@@ -24,8 +24,7 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
     const [notificationApi, contextHolder] = notification.useNotification();
 
     const loadPrompts = () => {
-        // @ts-ignore
-        loadCustomPrompts(session!.user!.email, session!.accessToken)
+        loadCustomPrompts(session!.user!.email!, session!.accessToken)
             .then(res => {
                 setCustomPrompts(res.data)
             })
@@ -45,8 +44,7 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
     function handleOk() {
         if (newPrompt !== "" && newPromptTitle !== "") {
             setStatus('loading')
-            // @ts-ignore
-            saveCustomPrompt(newPromptTitle, newPrompt, session!.user!.email, session!.accessToken)
+            saveCustomPrompt(newPromptTitle, newPrompt, session!.user!.email!, session!.accessToken)
                 .then(data => {
                     setIsVisible(false)
                     setStatus('success')
@@ -72,8 +70,7 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
         notificationApi['info']({
             message: 'Deleting prompt...',
         });
-        // @ts-ignore
-        deleteCustomPrompt(title, session!.user!.email, session!.accessToken)
+        deleteCustomPrompt(title, session!.user!.email!, session!.accessToken)
             .then(data => {
                 notificationApi['success']({
                     message: 'Prompt deleted!',

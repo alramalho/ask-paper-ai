@@ -52,7 +52,6 @@ const PaperUploader = ({ onFinish, alternative }: PaperUploaderProps) => {
     // notice that this 'name' must match the name of the field read in the backend
     formData.append('pdf_file', file);
     try {
-      // @ts-ignore
       const res = await uploadPaper(session!.accessToken, session!.user!.email, formData)
       setUploadedPaper(res.data as Paper)
       setPdf(file)

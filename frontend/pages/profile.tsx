@@ -64,7 +64,6 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        // @ts-ignore 
         if (!session!.accessToken || !session!.user!.email) return
         refreshDatasets()
     }, [session])
@@ -94,7 +93,6 @@ const Profile = () => {
         setSaveStatus('loading')
         saveDatasets({
             email: session!.user!.email!,
-            // @ts-ignore
             accessToken: session!.accessToken,
             datasets: userDatasets,
             changes: pendingChanges

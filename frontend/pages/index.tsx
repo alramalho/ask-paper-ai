@@ -177,7 +177,6 @@ const Home = () => {
         paper: filteredPaper!,
         email: session!.user!.email!,
         history: chatHistory.filter(message => message.sender != 'system'),
-        // @ts-ignore
         accessToken: session!.accessToken,
       }, {
         signal: createAbortController().signal,
