@@ -83,6 +83,7 @@ test.describe('When logged in as Discord User', () => {
   });
 
   test('should be able to create and ask custom prompt', async () => {
+    await page.getByTestId('clear-button').click();
     await page.getByTestId("predefined-actions-panel").click();
     await page.getByText("Manage Custom Prompts").click();
 
@@ -359,7 +360,8 @@ test.describe('When logged in as guest', () => {
 });
 
 test('should be able to extract all 5 datasets from chexPert', async ({ browser }) => {
-  await loginAsGuest(browser);
+
+  const page = await browser.newPage({ acceptDownloads: true })
 
   page.on("filechooser", (fileChooser: FileChooser) => {
     fileChooser.setFiles([process.cwd() + '/tests/fixtures/chexpert_paper.pdf']);
@@ -386,8 +388,14 @@ test('should be able to extract all 5 datasets from chexPert', async ({ browser 
 
 test.describe('Different upload types', () => {
 
+  let page: Page;
+
+  test.beforeEach(async ({ browser }) => {
+    page = await browser.newPage({ acceptDownloads: true })
+    await loginAsGuest(browser, page, TEST_EMAIL);
+  })
+
   test('should be able to upload the paper via URL', async ({ browser }) => {
-    await loginAsGuest(browser);
 
     await page.getByTestId('upload-url-input').fill('https://arxiv.org/pdf/2302.04761.pdf');
     await page.getByTestId('upload-url-button').click();
@@ -398,8 +406,6 @@ test.describe('Different upload types', () => {
     await expect(page.getByTestId("pdf")).toContainText("Toolformer: Language Models Can Teach Themselves to Use")
   })
   test('should be able to upload the demo paper', async ({ browser }) => {
-    await loginAsGuest(browser);
-
     await page.getByTestId('upload-demo-paper').click();
 
     await expect(page.getByTestId('upload-loading')).toBeVisible();
@@ -413,4 +419,5 @@ test.describe('Different upload types', () => {
 
 // todo: missing test cases
 // - test secondary upload in mobile
+// - test too big of a paper for dynamodb
 
