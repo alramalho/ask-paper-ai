@@ -124,7 +124,7 @@ jobs:
       - name: Run Playwright tests
         working-directory: tests/e2e
         run: |
-          yarn start-sandbox
+          yarn start
           
       - uses: actions/upload-artifact@v3
         if: always()
@@ -179,7 +179,7 @@ jobs:
           sudo apt install python3.8
           python3.8 --version
 
-          
+
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install --update
