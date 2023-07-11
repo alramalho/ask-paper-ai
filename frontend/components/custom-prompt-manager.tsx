@@ -37,7 +37,9 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
     }
 
     useEffect(() => {
-        loadPrompts()
+        if (!isUserLoggedInAsGuest) {
+            loadPrompts()
+        }
     }, [])
 
     function handleOk() {
@@ -118,7 +120,7 @@ const CustomPromptManager = ({ isVisible, setIsVisible, customPrompts, setCustom
             <Input data-testid="title-input" value={newPromptTitle} onChange={(e) => setNewPromptTitle(e.target.value)} />
 
             <h4>Text</h4>
-            <TextArea data-testid="text-input"  value={newPrompt} onChange={(e) => setNewPrompt(e.target.value)} rows={4} />
+            <TextArea data-testid="text-input" value={newPrompt} onChange={(e) => setNewPrompt(e.target.value)} rows={4} />
         </Modal >
     </>)
 }

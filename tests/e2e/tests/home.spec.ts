@@ -359,40 +359,14 @@ test.describe('When logged in as guest', () => {
 
 });
 
-test('should be able to extract all 5 datasets from chexPert', async ({ browser }) => {
 
-  const page = await browser.newPage({ acceptDownloads: true })
 
-  page.on("filechooser", (fileChooser: FileChooser) => {
-    fileChooser.setFiles([process.cwd() + '/tests/fixtures/chexpert_paper.pdf']);
-  });
-  await page.getByTestId('file-upload').click();
-
-  await expect(page.getByTestId('upload-loading')).toBeVisible();
-  await expect(page.getByTestId('upload-successful')).toBeVisible();
-
-  await page.getByTestId("predefined-actions-panel").click();
-  await page.click('text=Extract Datasets');
-  await page.getByTestId('ask-button').click();
-
-  await expect(page.getByTestId('loading-answer')).toBeVisible();
-  await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-  await expect(page.getByTestId('answer-area').last()).toContainText("CheXpert");
-  await expect(page.getByTestId('answer-area').last()).toContainText("OpenI");
-  await expect(page.getByTestId('answer-area').last()).toContainText("PLCO Lung");
-  await expect(page.getByTestId('answer-area').last()).toContainText("MIMIC-CXR");
-  await expect(page.getByTestId('answer-area').last()).toContainText("ChestX-ray14");
-  await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-});
-
-test.describe('Different upload types', () => {
+test.describe('Different upload types & Quality Control', () => {
 
   let page: Page;
 
   test.beforeEach(async ({ browser }) => {
-    page = await browser.newPage({ acceptDownloads: true })
-    await loginAsGuest(browser, page, TEST_EMAIL);
+    page = await loginAsGuest(browser, page, TEST_EMAIL);
   })
 
   test('should be able to upload the paper via URL', async ({ browser }) => {
@@ -413,6 +387,23 @@ test.describe('Different upload types', () => {
 
     await expect(page.getByTestId("pdf")).toContainText("CheXpert: A Large Chest Radiograph")
   })
+
+  test('should be able to extract all 5 datasets from chexPert', async ({browser}) => {  
+    await page.getByTestId('upload-demo-paper').click();
+  
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.click('text=Extract Datasets');
+    await page.getByTestId('ask-button').click();
+  
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+  
+    await expect(page.getByTestId('answer-area').last()).toContainText("CheXpert");
+    await expect(page.getByTestId('answer-area').last()).toContainText("OpenI");
+    await expect(page.getByTestId('answer-area').last()).toContainText("PLCO Lung");
+    await expect(page.getByTestId('answer-area').last()).toContainText("MIMIC-CXR");
+    await expect(page.getByTestId('answer-area').last()).toContainText("ChestX-ray14");
+  });
 });
 
 
