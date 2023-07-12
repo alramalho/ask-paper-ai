@@ -28,7 +28,10 @@ async function extractDatasets(page) {
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
 }
 
-test.describe('when testing profile page', () => {
+/*
+Check home.spec skip
+*/ 
+test.describe.skip('when testing profile page', () => {
     test.beforeAll(async ({ browser }) => {
         page = await loginAsDiscordUser(browser, TEST_EMAIL);
     })

@@ -8,11 +8,19 @@ var fs = require('fs')
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('When logged in as Discord User', () => {
+test.describe.skip('When logged in as Discord User', () => {
   let page: Page
 
   test.beforeAll(async ({ browser }) => {
 
+    /*
+    This describe is archived as I spent 1 week trying to properly fake the auth flow
+    Best I got was here:
+    1. Creating custom session-token cookie with JWT
+    2. Using that cookie to login
+    More info:
+      https://answers.netlify.com/t/netlify-resetting-session-token-cookies-in-next-auth-only-in-netlify-deploy/96522
+    */
     page = await loginAsDiscordUser(browser, TEST_EMAIL);
 
     const fracNetPaperHash = "39eee3d413713f47ed3d25957c7cd32dfbdc437652e9083ea2eea649c6b11897"
@@ -41,15 +49,6 @@ test.describe('When logged in as Discord User', () => {
 
   })
 
-  test('should be able to only send one message in a row', async () => {
-    await page.getByTestId("ask-textarea").fill("who are the authors?");
-    await page.getByTestId('ask-button').click();
-    await page.waitForTimeout(1000);
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByText("Please wait until the current request is finished.")).toBeVisible();
-  });
-
   test('should be able to ask a follow up question', async () => {
     await expect(page.getByTestId('loading-answer')).not.toBeVisible();
     await page.getByTestId("ask-textarea").fill("can you say that again, but only mention their last names?");
@@ -60,26 +59,6 @@ test.describe('When logged in as Discord User', () => {
 
     await expect(page.getByTestId('answer-area').last()).toContainText("Li");
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Jin");
-  });
-
-  test('should be able to clear the conversation', async () => {
-    await page.getByTestId('clear-button').click();
-    await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
-  });
-
-
-  test('should be able to ask a question with partial sections', async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId("configuration-panel").click();
-    await page.getByText("Acknowledgments").last().click();
-
-    await page.getByTestId("ask-textarea").fill("do they mention Acknowledgments? answer only \"Yes\" or \"No\".");
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("No");
   });
 
   test('should be able to create and ask custom prompt', async () => {
@@ -112,18 +91,6 @@ test.describe('When logged in as Discord User', () => {
     await expect(page.getByTestId("predefined-actions-panel")).not.toContainText("Rick and Morty");
   })
 
-  test('should be able ask a question that needs information from a figure caption', async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("FROC curves");
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-  });
-
   // TODO: this test is flaky and needs to be redone -> maybe move to backend
   // test('should be able ask a question that needs information from a table', async () => {
   //   await page.getByTestId('clear-button').click();
@@ -137,102 +104,6 @@ test.describe('When logged in as Discord User', () => {
   //   await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   // });
 
-  test('should be able to extract datasets', async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId("predefined-actions-panel").click();
-    await page.click('text=Extract Datasets');
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-  });
-
-
-  test('should download the datasets CSV file', async () => {
-    const downloadPromise = page.waitForEvent('download');
-
-    await page.getByTestId('export-dropdown').click()
-    await page.waitForSelector('[data-menu-id$="csv"]');
-    await page.click('[data-menu-id$="csv"]')
-
-    // await prepareDownload(page);
-
-    const download = await downloadPromise;
-
-    const filePath = await download.path();
-
-    expect(download.suggestedFilename()).toContain('.csv');
-    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
-    // Add assertions to test the file contents
-    expect(fileContents).toContain('Size');
-
-  });
-
-  test('should download the datasets JSON file', async () => {
-    const downloadPromise = page.waitForEvent('download');
-
-    await page.getByTestId('export-dropdown').click()
-    await page.waitForSelector('[data-menu-id$="json"]');
-    await page.click('[data-menu-id$="json"]')
-
-    // await prepareDownload(page);
-
-    const download = await downloadPromise;
-
-    const filePath = await download.path();
-
-    expect(download.suggestedFilename()).toContain('.json');
-    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
-    // Add assertions to test the file contents
-    expect(fileContents).toContain('Size');
-
-  });
-
-  test('should be able to generate summary', async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId("predefined-actions-panel").click();
-    await page.click('text=Generate Summary');
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("FracNet",);
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-  });
-
-  test("should be able to explain selected text", async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId('pdf').scrollIntoViewIfNeeded()
-    await page.dblclick('text=Background')
-    await page.getByTestId("predefined-actions-panel").click();
-    await page.click('text=Explain Selected Text');
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("background", { ignoreCase: true });
-    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
-  })
-
-  test('should be able to receive the results email', async () => {
-    await page.getByTestId('clear-button').click();
-    await page.getByTestId("ask-textarea").fill("What is the paper about?");
-    await page.getByTestId('ask-button').click();
-
-    await expect(page.getByTestId('loading-answer')).toBeVisible();
-    await expect(page.getByTestId('answer-area').last()).toBeVisible();
-
-    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
-
-    await page.click('text=Email me this');
-    await expect(page.getByTestId('email-sent')).toBeVisible();
-    // await verifyEmailSentInLastXMinutes(1);
-  })
 
   test('should be able to store accurate feedback', async () => {
     await page.click('text=👍');
@@ -303,6 +174,15 @@ test.describe('When logged in as guest', () => {
 
   })
 
+  test('should be able to only send one message in a row', async () => {
+    await page.getByTestId("ask-textarea").fill("who are the authors?");
+    await page.getByTestId('ask-button').click();
+    await page.waitForTimeout(1000);
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByText("Please wait until the current request is finished.")).toBeVisible();
+  });
+
   test('should have all requests left', async () => {
     await expect(page.getByTestId('remaining-requests')).toHaveText("1000");
   })
@@ -318,6 +198,133 @@ test.describe('When logged in as guest', () => {
 
     await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
+  test('should be able to clear the conversation', async () => {
+    await page.getByTestId('clear-button').click();
+    await expect(page.getByTestId("chat")).not.toContainText("Which sections did you get that from?");
+  });
+
+  test('should be able ask a question that needs information from a figure caption', async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId("ask-textarea").fill("What is the exact figure 3 caption?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("FROC curves");
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
+  test('should be able to ask a question with partial sections', async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId("configuration-panel").click();
+    await page.getByText("Acknowledgments").last().click();
+
+    await page.getByTestId("ask-textarea").fill("do they mention Acknowledgments? answer only \"Yes\" or \"No\".");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("No");
+  });
+
+  test('should be able to extract datasets', async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.click('text=Extract Datasets');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
+  test('should be able to generate summary', async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.click('text=Generate Summary');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("FracNet",);
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  });
+
+  test("should be able to explain selected text", async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId('pdf').scrollIntoViewIfNeeded()
+    await page.dblclick('text=Background')
+    await page.getByTestId("predefined-actions-panel").click();
+    await page.click('text=Explain Selected Text');
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("background", { ignoreCase: true });
+    await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
+  })
+
+  test('should be able to receive the results email', async () => {
+    await page.getByTestId('clear-button').click();
+    await page.getByTestId("ask-textarea").fill("What is the paper about?");
+    await page.getByTestId('ask-button').click();
+
+    await expect(page.getByTestId('loading-answer')).toBeVisible();
+    await expect(page.getByTestId('answer-area').last()).toBeVisible();
+
+    await expect(page.getByTestId('answer-area').last()).toContainText("fracture");
+
+    await page.click('text=Email me this');
+    await expect(page.getByTestId('email-sent')).toBeVisible();
+    // await verifyEmailSentInLastXMinutes(1);
+  })
+
+  test('should download the datasets CSV file', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByTestId('export-dropdown').click()
+    await page.waitForSelector('[data-menu-id$="csv"]');
+    await page.click('[data-menu-id$="csv"]')
+
+    // await prepareDownload(page);
+
+    const download = await downloadPromise;
+
+    const filePath = await download.path();
+
+    expect(download.suggestedFilename()).toContain('.csv');
+    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
+    // Add assertions to test the file contents
+    expect(fileContents).toContain('Size');
+
+  });
+
+  test('should download the datasets JSON file', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByTestId('export-dropdown').click()
+    await page.waitForSelector('[data-menu-id$="json"]');
+    await page.click('[data-menu-id$="json"]')
+
+    // await prepareDownload(page);
+
+    const download = await downloadPromise;
+
+    const filePath = await download.path();
+
+    expect(download.suggestedFilename()).toContain('.json');
+    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
+    // Add assertions to test the file contents
+    expect(fileContents).toContain('Size');
+
   });
 
   test('should have less requests remaining', async () => {
@@ -359,8 +366,6 @@ test.describe('When logged in as guest', () => {
 
 });
 
-
-
 test.describe('Different upload types & Quality Control', () => {
 
   let page: Page;
@@ -379,6 +384,7 @@ test.describe('Different upload types & Quality Control', () => {
 
     await expect(page.getByTestId("pdf")).toContainText("Toolformer: Language Models Can Teach Themselves to Use")
   })
+  
   test('should be able to upload the demo paper', async ({ browser }) => {
     await page.getByTestId('upload-demo-paper').click();
 
