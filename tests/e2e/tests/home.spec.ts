@@ -243,6 +243,46 @@ test.describe('When logged in as guest', () => {
     await expect(page.getByTestId('answer-area').last()).toContainText("Size",);
     await expect(page.getByTestId('answer-area').last()).not.toContainText("Sorry");
   });
+  
+  test('should download the datasets CSV file', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByTestId('export-dropdown').click()
+    await page.waitForSelector('[data-menu-id$="csv"]');
+    await page.click('[data-menu-id$="csv"]')
+
+    // await prepareDownload(page);
+
+    const download = await downloadPromise;
+
+    const filePath = await download.path();
+
+    expect(download.suggestedFilename()).toContain('.csv');
+    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
+    // Add assertions to test the file contents
+    expect(fileContents).toContain('Size');
+
+  });
+
+  test('should download the datasets JSON file', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByTestId('export-dropdown').click()
+    await page.waitForSelector('[data-menu-id$="json"]');
+    await page.click('[data-menu-id$="json"]')
+
+    // await prepareDownload(page);
+
+    const download = await downloadPromise;
+
+    const filePath = await download.path();
+
+    expect(download.suggestedFilename()).toContain('.json');
+    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
+    // Add assertions to test the file contents
+    expect(fileContents).toContain('Size');
+
+  });
 
   test('should be able to generate summary', async () => {
     await page.getByTestId('clear-button').click();
@@ -286,46 +326,6 @@ test.describe('When logged in as guest', () => {
     await expect(page.getByTestId('email-sent')).toBeVisible();
     // await verifyEmailSentInLastXMinutes(1);
   })
-
-  test('should download the datasets CSV file', async () => {
-    const downloadPromise = page.waitForEvent('download');
-
-    await page.getByTestId('export-dropdown').click()
-    await page.waitForSelector('[data-menu-id$="csv"]');
-    await page.click('[data-menu-id$="csv"]')
-
-    // await prepareDownload(page);
-
-    const download = await downloadPromise;
-
-    const filePath = await download.path();
-
-    expect(download.suggestedFilename()).toContain('.csv');
-    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
-    // Add assertions to test the file contents
-    expect(fileContents).toContain('Size');
-
-  });
-
-  test('should download the datasets JSON file', async () => {
-    const downloadPromise = page.waitForEvent('download');
-
-    await page.getByTestId('export-dropdown').click()
-    await page.waitForSelector('[data-menu-id$="json"]');
-    await page.click('[data-menu-id$="json"]')
-
-    // await prepareDownload(page);
-
-    const download = await downloadPromise;
-
-    const filePath = await download.path();
-
-    expect(download.suggestedFilename()).toContain('.json');
-    const fileContents = fs.readFileSync(filePath, 'utf-8'); // Read the file contents
-    // Add assertions to test the file contents
-    expect(fileContents).toContain('Size');
-
-  });
 
   test('should have less requests remaining', async () => {
     await expect(page.getByTestId('remaining-requests')).not.toHaveText("1000");
@@ -384,7 +384,7 @@ test.describe('Different upload types & Quality Control', () => {
 
     await expect(page.getByTestId("pdf")).toContainText("Toolformer: Language Models Can Teach Themselves to Use")
   })
-  
+
   test('should be able to upload the demo paper', async ({ browser }) => {
     await page.getByTestId('upload-demo-paper').click();
 
