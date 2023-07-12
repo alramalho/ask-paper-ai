@@ -112,6 +112,9 @@ const SectionSelector = ({ uploadedPaper, setFilteredPaper }: PaperSectionSelect
     }, [uploadedPaper])
 
     useEffect(() => {
+        if (!treeData) {
+            return;
+        }
         setCheckedKeys(treeData.map(node => node.key))
     }, [treeData])
 
@@ -144,7 +147,9 @@ const SectionSelector = ({ uploadedPaper, setFilteredPaper }: PaperSectionSelect
 
             return filteredPaper;
         }
-
+        if (!uploadedPaper) {
+            return;
+        }
         setFilteredPaper(filterPaperSections(uploadedPaper, checkedKeys as string[]))
     }, [checkedKeys])
 
