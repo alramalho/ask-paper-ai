@@ -1,7 +1,8 @@
-from botocore.exceptions import ClientError
-from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID
-from utils.aws_client import aws_resource, AWSResource
 import datetime
+
+from botocore.exceptions import ClientError
+from utils.aws_client import AWSResource, aws_resource
+from utils.constants import ENVIRONMENT, LATEST_COMMIT_ID
 
 
 class DynamoDBGateway:

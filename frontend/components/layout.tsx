@@ -1,4 +1,4 @@
-import Icon, { BulbTwoTone, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
+import Icon, { BulbTwoTone, ChromeOutlined, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
 import { styled } from '@nextui-org/react';
 import { Layout, Menu, MenuProps } from 'antd';
 import { useSession } from 'next-auth/react';
@@ -97,6 +97,7 @@ export const MyLayout = ({ children }) => {
   const items: MenuItem[] = [
     getItem('App', '/', <ExperimentOutlined />, "/"),
     getItem('My Dashboard', '/profile', <DotChartOutlined />, "/profile"),
+    getItem('Browser Extension', '6', <ChromeOutlined />, "https://chrome.google.com/webstore/detail/askpaper-%E2%80%93-research-chatg/eabkffkifnfojefnnoohamhdfjajgepm?hl=en&authuser=1" ),
     getItem('Feedback?', '5', <BulbTwoTone twoToneColor={"orange"} />, () => setIsFeedbackModalVisible(true)),
     getItem('Community', '3', <Icon component={DiscordIcon} />, "https://discord.gg/6rVU4hrc9f"),
     getItem('Share', '4', <TwitterOutlined />, twitterLink),
