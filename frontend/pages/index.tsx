@@ -359,8 +359,7 @@ const Home = () => {
                 <Button
                   onClick={() => {
                     setQuestion(`
-                      Please provide me a per-section summary of the paper. Each section summary should contain the main takewaways.
-                      The summary should be as detailed as possible.
+                      Sum up this paper for learning. Remove any repetition, and simplify the wording whenever possible, never loosing the truthfulness and accuracy. Answer in markdown. Keep every important information
                       `.replaceAll("    ", ""))
                   }
                   }
@@ -383,7 +382,7 @@ const Home = () => {
                   icon={<EditOutlined />}
                 >Manage Custom Prompts
                 </Button>
-                {customPrompts && customPrompts.length > 0 && customPrompts.map(({title, prompt}) => {
+                {customPrompts && customPrompts.length > 0 && customPrompts.map(({ title, prompt }) => {
                   return <Button
                     type="dashed"
                     key={title}
