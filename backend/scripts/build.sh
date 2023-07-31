@@ -19,7 +19,6 @@ docker run -v "$PWD":/var/task "lambci/lambda:build-python3.8" /bin/sh -c "pip i
 cd src_dependencies
 zip ../build.zip -r .
 cd -
-rm -rf src_dependencies
 
 echo "${BLUE}Adding source code... 🌊${NOCOLOR}"
 cp scripts/run_lambda.sh src
