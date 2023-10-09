@@ -124,7 +124,10 @@ export const MyLayout = ({ children }) => {
               {children}
             </Layout>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>This product is powered by the <A href="https://hippoai.org">Hippo AI Foundation</A></Footer>
+          <Footer style={{ textAlign: 'center' }}>
+            <p>Developed by <A href="https://www.linkedin.com/in/alexandre-francisco-ramalho/">Alex</A></p>
+            <p>Powered by <A href="https://hippoai.org">Hippo AI Foundation</A></p>
+            </Footer>
         </Layout>
       </FeedbackVisibleContext.Provider>
       {session != null && status == "authenticated" &&
