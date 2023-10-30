@@ -103,6 +103,13 @@ async def streamer():
         time.sleep(1)
         yield b"This is streaming from Lambda \n"
 
+def remove_empty_dicts(d):
+    """Recursively remove empty dictionaries."""
+    if not isinstance(d, dict):
+        return d
+    clean = {k: remove_empty_dicts(v) for k, v in d.items() if v and v != {}}
+    return clean
+
 
 @app.get("/test-stream")
 async def test_stream():
@@ -283,7 +290,8 @@ async def upload_paper(pdf_file: UploadFile, request: Request, response: Respons
 
     if accept == 'text/plain':
         response.headers["Content-Type"] = "text/plain"
-        return nlp.Paper(**json_paper).to_text()
+        json_paper_cleaned = remove_empty_dicts(json_paper)
+        return nlp.Paper(**json_paper_cleaned).to_text()
     else:
         return json_paper
 
