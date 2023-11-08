@@ -125,7 +125,7 @@ export const MyLayout = ({ children }) => {
             </Layout>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            <p>Developed by <A href="https://www.linkedin.com/in/alexandre-francisco-ramalho/">Alex</A></p>
+            <p>Follow the <A href="https://twitter.com/_alexramalho">dev</A> (news coming soon!)</p>
             <p>Powered by <A href="https://hippoai.org">Hippo AI Foundation</A></p>
             </Footer>
         </Layout>
