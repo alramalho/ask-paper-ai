@@ -352,8 +352,8 @@ def ask_text(text, completion_tokens=None, message_history: List[ChatMessage] = 
                 max_tokens=int(completion_tokens),
                 model="gpt-3.5-turbo-16k",
                 messages=[
-                    *[dict(message.as_openai_message()) for message in message_history]
-                    {"role": "user", "content": text},
+                    *[dict(message.as_openai_message()) for message in message_history],
+                    {"role": "user", "content": text}
                 ],
                 stream=stream,
             )
