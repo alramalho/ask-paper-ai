@@ -14,6 +14,7 @@ import { GuestUserContext } from "../hooks/session";
 import { useMyToken } from '../pages/_app';
 import { getVerifiedUser, loginAsGuest } from "../service/service";
 import DiscordIcon from "./icons/discord-icon";
+import JarvisBlock from './jarvis-block';
 import { Code } from "./layout";
 import OverviewBlock from "./overview-block";
 import { Flex } from "./styles/flex";
@@ -135,6 +136,9 @@ const NextAuthSessionWrapper = ({ children }: ChildrenOnlyProps) => {
 
         <p style={{ marginTop: "1rem" }}><em>By signing in & using our tool, you are accepting our <a href='https://www.notion.so/hippoteam/Terms-Conditions-4f7eb4679c154b3ab8a26890ad06d9cb?pvs=4'>Terms &
           Conditions</a></em></p>
+        <Spacer y={2}/>
+        <JarvisBlock />
+
       </Card>
 
       <Spacer y={3} />

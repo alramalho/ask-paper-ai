@@ -1,7 +1,7 @@
-import Icon, { BulbTwoTone, ChromeOutlined, DotChartOutlined, ExperimentOutlined, TwitterOutlined } from "@ant-design/icons";
+import Icon, { BulbTwoTone, ChromeOutlined, DotChartOutlined, ExperimentOutlined, LogoutOutlined, TwitterOutlined } from "@ant-design/icons";
 import { styled } from '@nextui-org/react';
 import { Layout, Menu, MenuProps } from 'antd';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Router from "next/router";
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { GuestUserContext, useGuestSession } from '../hooks/session';
@@ -101,6 +101,7 @@ export const MyLayout = ({ children }) => {
     getItem('Feedback?', '5', <BulbTwoTone twoToneColor={"orange"} />, () => setIsFeedbackModalVisible(true)),
     getItem('Community', '3', <Icon component={DiscordIcon} />, "https://discord.gg/6rVU4hrc9f"),
     getItem('Share', '4', <TwitterOutlined />, twitterLink),
+    getItem('Logout', '7', <LogoutOutlined />, () => signOut()),
   ];
 
 
