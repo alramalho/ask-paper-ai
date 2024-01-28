@@ -28,7 +28,7 @@ export const Box = styled('div', {
   boxSizing: 'border-box',
 });
 
-const AbsoluteCenter = styled('div', {
+export const AbsoluteCenter = styled('div', {
   width: '100vw',
   height: '100vh',
   display: 'flex',

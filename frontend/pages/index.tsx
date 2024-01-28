@@ -17,6 +17,7 @@ import SectionSelector from "../components/section-selector";
 import { Flex } from "../components/styles/flex";
 import { GuestUserContext, useGuestSession } from "../hooks/session";
 import { askPaper, getRemainingRequestsFor } from "../service/service";
+import DeprecationModal from "../components/deprecation-modal";
 const { Header, Sider, Content, Footer } = Layout;
 const { TextArea } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -237,6 +238,7 @@ const Home = () => {
 
   return (<>
     {contextHolder}
+    <DeprecationModal/>
     {(!isMobile() || uploadedPaper === undefined) &&
       <Content style={{ backgroundColor: "transparent" }}>
         <Spacer y={2} />
