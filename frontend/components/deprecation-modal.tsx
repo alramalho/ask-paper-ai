@@ -23,10 +23,10 @@ const DeprecationModal: React.FC = () => {
         <p>This initiative was part of my founding role in the Hippo AI Foundation, which unfortunately was terminated due to diverging values.<br/>
         I've developed it at my own cost, but the running costs were covered by the foundation. <br/>
         As so, I no longer have the time or the money to maintain this project running.</p>
-        <p>I have made all the code <a href="https://github.com/alramalho/ask-paper">open source</a> and I invite you all to either help maintain it or <a href="https://ko-fi.com/alexramalho">donate</a> so that I can do it myself.</p>
-        <p>I'm keeping the UI as is, even though it is not working, to have the minimal changes necessary in the possible case of a revamp / fix. </p>
+        <p>I have made all the code <a href="https://github.com/alramalho/ask-paper-ai">open source</a> and I invite you all to either help maintain it or <a href="https://ko-fi.com/alexramalho">donate</a> so that I can do it myself.</p>
+        <p>In the donate link you will find a 1000€ target pool, which is roughly the necessary amount to pay any outstanding fees, and put in the work to convert it to a BYOK model.</p>
 
-        <p>Thank you to all that used the product. If you have enjoyed it while it lasted, I invite you to follow me on <a href="https://twitter.com/alexramalho">X</a>, as I intend on bringing another projects that go in the same direction as AskPaper.<br/>Best, Alex<br/></p>
+        <p>Thank you to all that used the product. Feel free to reach out to me on <a href="https://twitter.com/alexramalho">X</a>, with ideas or suggestions.<br/>Best, Alex<br/></p>
         
       </Modal>
     </>
