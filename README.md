@@ -14,7 +14,7 @@ There is still (some) hope though:
 1. You can contribute here and change it accoringly.
 2. I have created a [ko-fi](https://ko-fi.com/alexramalho) donation page with a target amount for me to step in, fix the bugs and change the subscription model to BYOK (bring your own key)
  
-I also would like to try and reach out to @bartthehippo here, as the domain is his ownership, and embedded in the identity of the tool. Hence I ask again: What would you like to do with it? 
+That's all, cheers!
 
 ---
 
